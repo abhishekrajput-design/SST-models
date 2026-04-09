@@ -1,0 +1,24 @@
+# ===================================
+# Multi-Speaker Call Processor
+# Requirements — Python 3.10+
+# ===================================
+
+# Core ML frameworks
+torch>=2.0.0
+torchaudio>=2.0.0
+
+# Speaker diarization
+pyannote.audio>=3.1.0
+
+# Speaker recognition (ECAPA-TDNN embeddings)
+speechbrain>=1.0.0
+
+# Fast Whisper transcription (CTranslate2-based, int8 support)
+faster-whisper>=1.0.0
+
+# Audio processing
+soundfile>=0.12.0
+numpy>=1.24.0
+
+# Utilities
+huggingface_hub>=0.20.0
