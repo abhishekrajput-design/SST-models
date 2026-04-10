@@ -47,3 +47,4 @@ granite-4.0-1b-speech/
 
 # Processed call results
 call_processor/data/processed/
+.env

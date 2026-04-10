@@ -4,6 +4,17 @@ Centralized configuration for the call processing pipeline.
 
 import os
 from dataclasses import dataclass
+from pathlib import Path
+
+# Load .env file
+env_path = Path(__file__).parent.parent.parent / ".env"
+if env_path.exists():
+    with open(env_path) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, value = line.split("=", 1)
+                os.environ[key.strip()] = value.strip()
 
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
