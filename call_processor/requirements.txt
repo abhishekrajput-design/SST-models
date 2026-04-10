@@ -18,7 +18,7 @@ faster-whisper>=1.0.0
 
 # Audio processing
 soundfile>=0.12.0
-numpy>=1.24.0
+numpy<2.0
 
 # Utilities
 huggingface_hub>=0.20.0

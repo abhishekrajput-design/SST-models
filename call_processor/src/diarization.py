@@ -6,12 +6,14 @@ Detects who spoke when in a call recording.
 import os
 import gc
 import logging
+from pathlib import Path
 from typing import List, Dict, Optional
 
 import torch
 import torchaudio
 import soundfile as sf
 import numpy as np
+import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +27,7 @@ class Diarizer:
         device: str = "cuda",
         min_segment_duration: float = 1.0,
         merge_gap: float = 0.5,
+        cache_dir: Optional[str] = None,
     ):
         """
         Args:
@@ -37,7 +40,63 @@ class Diarizer:
         self.device = torch.device(device if torch.cuda.is_available() else "cpu")
         self.min_segment_duration = min_segment_duration
         self.merge_gap = merge_gap
+        self.cache_dir = cache_dir
         self.pipeline = None
+
+    @staticmethod
+    def _hf_cache_root() -> Path:
+        hf_home = os.environ.get(
+            "HF_HOME",
+            os.path.join(os.path.expanduser("~"), ".cache", "huggingface"),
+        )
+        return Path(hf_home) / "hub"
+
+    @classmethod
+    def _find_local_snapshot(cls, model_id: str) -> Optional[Path]:
+        cache_name = f"models--{model_id.replace('/', '--')}"
+        snapshot_root = cls._hf_cache_root() / cache_name / "snapshots"
+        if not snapshot_root.exists():
+            return None
+
+        snapshots = [path for path in snapshot_root.iterdir() if path.is_dir()]
+        if not snapshots:
+            return None
+
+        return max(snapshots, key=lambda path: path.stat().st_mtime)
+
+    @classmethod
+    def _build_local_checkpoint(cls, model_id: str):
+        snapshot_dir = cls._find_local_snapshot(model_id)
+        if snapshot_dir is None:
+            return model_id
+
+        config_path = snapshot_dir / "config.yaml"
+        if not config_path.exists():
+            return str(snapshot_dir)
+
+        with open(config_path, "r", encoding="utf-8") as handle:
+            config = yaml.safe_load(handle)
+
+        pipeline_params = config.get("pipeline", {}).get("params", {})
+        for key in ("embedding", "segmentation", "plda"):
+            value = pipeline_params.get(key)
+            if isinstance(value, str) and "/" in value:
+                local_submodel = cls._find_local_snapshot(value)
+                if local_submodel is not None:
+                    pipeline_params[key] = str(local_submodel)
+
+        if "plda" not in pipeline_params:
+            community_snapshot = cls._find_local_snapshot(
+                "pyannote/speaker-diarization-community-1"
+            )
+            if community_snapshot is not None:
+                pipeline_params["plda"] = {
+                    "checkpoint": str(community_snapshot),
+                    "subfolder": "plda",
+                }
+
+        logger.info("Using local HF cache for %s", model_id)
+        return config
 
     def load_model(self):
         """Load pyannote diarization pipeline."""
@@ -46,10 +105,12 @@ class Diarizer:
 
         from pyannote.audio import Pipeline
 
+        checkpoint = self._build_local_checkpoint("pyannote/speaker-diarization-3.1")
         logger.info("Loading pyannote diarization pipeline...")
         self.pipeline = Pipeline.from_pretrained(
-            "pyannote/speaker-diarization-3.1",
-            use_auth_token=self.hf_token,
+            checkpoint,
+            token=self.hf_token,
+            cache_dir=self.cache_dir,
         )
         self.pipeline.to(self.device)
         logger.info(f"Diarization pipeline loaded on {self.device}")
@@ -65,6 +126,13 @@ class Diarizer:
             torch.cuda.ipc_collect()
         logger.info("Diarization model unloaded, VRAM cleared")
 
+    @staticmethod
+    def _load_waveform(audio_path: str) -> tuple[torch.Tensor, int]:
+        """Load audio with soundfile to avoid torchcodec issues on Windows."""
+        waveform_np, sample_rate = sf.read(audio_path, always_2d=True)
+        waveform = torch.from_numpy(waveform_np.T).float()
+        return waveform, sample_rate
+
     def diarize(self, audio_path: str) -> List[Dict]:
         """
         Run diarization on an audio file.
@@ -78,7 +146,15 @@ class Diarizer:
         self.load_model()
 
         logger.info(f"Diarizing: {audio_path}")
-        diarization = self.pipeline(audio_path)
+        waveform, sample_rate = self._load_waveform(audio_path)
+        diarization = self.pipeline(
+            {
+                "waveform": waveform,
+                "sample_rate": sample_rate,
+            }
+        )
+        if hasattr(diarization, "speaker_diarization"):
+            diarization = diarization.speaker_diarization
 
         # Extract raw segments
         raw_segments = []
@@ -138,7 +214,7 @@ class Diarizer:
         """
         os.makedirs(output_dir, exist_ok=True)
 
-        waveform, sample_rate = torchaudio.load(audio_path)
+        waveform, sample_rate = self._load_waveform(audio_path)
 
         # Convert to mono if stereo
         if waveform.shape[0] > 1:

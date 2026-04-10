@@ -1,6 +1,6 @@
 """
-Speech transcription using Whisper Large v3 via faster-whisper.
-Optimized for 4GB VRAM with int8 quantization.
+Speech transcription using faster-whisper.
+Optimized for 4GB VRAM with GPU int8 quantization.
 """
 
 import gc
@@ -13,27 +13,32 @@ logger = logging.getLogger(__name__)
 
 
 class Transcriber:
-    """Transcribe audio segments using Whisper Large v3."""
+    """Transcribe audio segments using faster-whisper."""
 
     def __init__(
         self,
-        model_size: str = "large-v3",
-        device: str = "cuda",
+        model_size: str = "medium",
+        device: str = "auto",
         compute_type: str = "int8",
         language: str = "en",
+        download_root: Optional[str] = None,
     ):
         """
         Args:
-            model_size: Whisper model size ('large-v3', 'large-v2', 'base', etc.).
-            device: 'cuda' or 'cpu'.
+            model_size: Whisper model size ('medium', 'large-v3', 'base', etc.).
+            device: 'auto', 'cuda', or 'cpu'.
             compute_type: Quantization type - 'int8' recommended for 4GB VRAM,
                           'float16' if more VRAM available.
             language: Language code for transcription.
         """
         self.model_size = model_size
-        self.device = device if torch.cuda.is_available() else "cpu"
+        if device == "auto":
+            self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        else:
+            self.device = device if torch.cuda.is_available() or device == "cpu" else "cpu"
         self.compute_type = compute_type if self.device == "cuda" else "float32"
         self.language = language
+        self.download_root = download_root
         self.model = None
 
     def load_model(self):
@@ -52,6 +57,7 @@ class Transcriber:
             self.model_size,
             device=self.device,
             compute_type=self.compute_type,
+            download_root=self.download_root,
         )
         logger.info("Whisper model loaded")
 
@@ -82,11 +88,8 @@ class Transcriber:
             audio_path,
             language=self.language,
             beam_size=5,
-            vad_filter=True,
-            vad_parameters=dict(
-                min_silence_duration_ms=300,
-                speech_pad_ms=200,
-            ),
+            vad_filter=False,  # segments are already diarized; re-running VAD can drop valid speech
+            condition_on_previous_text=False,
         )
 
         text_parts = []

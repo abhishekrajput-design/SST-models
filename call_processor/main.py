@@ -3,8 +3,8 @@ Multi-Speaker Call Processor — CLI Entry Point
 
 Usage:
     python main.py --input path/to/audio.wav
-    python main.py --input path/to/audio.wav --threshold 0.3 --whisper-model large-v2
-    python main.py --input path/to/audio.wav --device cpu
+    python main.py --input path/to/audio.wav --threshold 0.3 --whisper-model medium
+    python main.py --input path/to/audio.wav --device cpu --whisper-device cuda
 
 Requirements:
     1. Set HF_TOKEN environment variable (HuggingFace token for pyannote)
@@ -58,9 +58,9 @@ def main():
     )
     parser.add_argument(
         "--whisper-model",
-        default="large-v3",
+        default="medium",
         choices=["large-v3", "large-v2", "medium", "small", "base", "tiny"],
-        help="Whisper model size (default: large-v3)",
+        help="Whisper model size (default: medium, recommended for 4GB GPU)",
     )
     parser.add_argument(
         "--compute-type",
@@ -75,9 +75,15 @@ def main():
     )
     parser.add_argument(
         "--device",
-        default="cuda",
+        default="cpu",
         choices=["cuda", "cpu"],
-        help="Device to use (default: cuda)",
+        help="Device for diarization and speaker ID stages (default: cpu)",
+    )
+    parser.add_argument(
+        "--whisper-device",
+        default="auto",
+        choices=["auto", "cuda", "cpu"],
+        help="Device for Whisper transcription stage (default: auto)",
     )
     parser.add_argument(
         "--min-segment",
@@ -128,6 +134,7 @@ def main():
         model_cache_dir="models",
         whisper_model=args.whisper_model,
         whisper_compute_type=args.compute_type,
+        whisper_device=args.whisper_device,
         language=args.language,
         device=args.device,
         similarity_threshold=args.threshold,

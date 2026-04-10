@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Models and data
+call_processor/data/raw_calls/*
+!call_processor/data/raw_calls/.gitkeep
+call_processor/data/agent_samples/*
+!call_processor/data/agent_samples/.gitkeep
+call_processor/embeddings/*
+!call_processor/embeddings/.gitkeep
+call_processor/models/*
+!call_processor/models/.gitkeep
+call_processor/processed/*
+*.mp3
+*.wav
+*.m4a
+*.flac
+*.ogg
+
+# Logs
+*.log
+*.err.log
+*.out.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/
+
+# Embedded git repositories (submodules)
+faster-whisper/
+speechbrain/
+granite-4.0-1b-speech/
+
+# Jupyter notebooks
+*.ipynb
+
+# Processed call results
+call_processor/data/processed/

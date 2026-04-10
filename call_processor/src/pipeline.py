@@ -11,6 +11,8 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Optional
 
+from src.conversation_roles import build_conversation_view
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,10 +33,11 @@ class CallProcessor:
         hf_token: str,
         embeddings_path: str = "embeddings/agent_embeddings.pkl",
         model_cache_dir: str = "models",
-        whisper_model: str = "large-v3",
+        whisper_model: str = "medium",
         whisper_compute_type: str = "int8",
+        whisper_device: str = "auto",
         language: str = "en",
-        device: str = "cuda",
+        device: str = "cpu",
         similarity_threshold: float = 0.25,
         min_segment_duration: float = 1.0,
         output_dir: str = "data/processed",
@@ -44,6 +47,7 @@ class CallProcessor:
         self.model_cache_dir = model_cache_dir
         self.whisper_model = whisper_model
         self.whisper_compute_type = whisper_compute_type
+        self.whisper_device = whisper_device
         self.language = language
         self.device = device
         self.similarity_threshold = similarity_threshold
@@ -74,7 +78,14 @@ class CallProcessor:
 
         if not segments:
             logger.warning("No speech segments found!")
-            return {"segments": [], "metadata": {"error": "no segments found"}}
+            return {
+                "audio_file": audio_path,
+                "processed_at": datetime.now().isoformat(),
+                "processing_time_seconds": round(time.time() - start_time, 2),
+                "total_segments": 0,
+                "segments": [],
+                "error": "no segments found",
+            }
 
         # ── Stage 2: Speaker Identification ───────────────────────
         logger.info("\n[Stage 2/3] Speaker Identification")
@@ -113,6 +124,7 @@ class CallProcessor:
             hf_token=self.hf_token,
             device=self.device,
             min_segment_duration=self.min_segment_duration,
+            cache_dir=os.path.join(self.model_cache_dir, "pyannote"),
         )
 
         try:
@@ -163,9 +175,10 @@ class CallProcessor:
 
         transcriber = Transcriber(
             model_size=self.whisper_model,
-            device=self.device,
+            device=self.whisper_device,
             compute_type=self.whisper_compute_type,
             language=self.language,
+            download_root=os.path.join(self.model_cache_dir, "faster-whisper"),
         )
 
         try:
@@ -185,28 +198,69 @@ class CallProcessor:
 
     @staticmethod
     def save_transcript(result: Dict, output_path: str):
-        """Save human-readable transcript."""
+        """Save chat-style transcript with Agent vs Customer split."""
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        segments, speaker_groups = build_conversation_view(result.get("segments", []))
+
+        def fmt(sec):
+            return f"{int(sec//60):02d}:{int(sec%60):02d}"
+
+        agent_segs = [s for s in segments if s["role"] == "Agent"]
+        cust_segs = [s for s in segments if s["role"] == "Customer"]
+        agent_speakers = [g for g in speaker_groups if g["role"] == "Agent"]
+        customer_speakers = [g for g in speaker_groups if g["role"] == "Customer"]
+        agent_time = sum(s["end"] - s["start"] for s in agent_segs)
+        cust_time = sum(s["end"] - s["start"] for s in cust_segs)
+        total = agent_time + cust_time
 
         lines = []
-        lines.append(f"Call Transcript")
-        lines.append(f"Audio: {result['audio_file']}")
-        lines.append(f"Processed: {result['processed_at']}")
-        lines.append(f"Processing Time: {result['processing_time_seconds']}s")
-        lines.append("=" * 60)
+        # Header
+        lines.append("=" * 70)
+        lines.append(f"  CALL TRANSCRIPT")
+        lines.append(f"  Audio: {result.get('audio_file', 'N/A')}")
+        lines.append(f"  Processed: {result.get('processed_at', '')}")
+        lines.append(
+            f"  Segments: {len(segments)} | "
+            f"Agents: {len(agent_speakers)} ({fmt(agent_time)}) | "
+            f"Customer Speakers: {len(customer_speakers)} ({fmt(cust_time)})"
+        )
+        if total > 0:
+            lines.append(f"  Talk ratio: Agent {agent_time/total:.0%} / Customer {cust_time/total:.0%}")
+        lines.append("=" * 70)
         lines.append("")
 
-        for seg in result["segments"]:
-            speaker = seg.get("identified_speaker", seg.get("speaker", "Unknown"))
-            start = seg["start"]
-            end = seg["end"]
-            text = seg.get("text", "")
-            confidence = seg.get("confidence", 0)
-
-            timestamp = f"[{_format_time(start)} → {_format_time(end)}]"
-            lines.append(f"{timestamp} {speaker} (conf: {confidence:.2f})")
-            lines.append(f"  {text}")
+        # Chronological conversation
+        lines.append("-" * 70)
+        lines.append("  CONVERSATION")
+        lines.append("-" * 70)
+        for seg in segments:
+            text = seg.get("text", "").strip()
+            if not text:
+                continue
+            conf = seg.get("confidence", 0)
+            lines.append(
+                f"  [{fmt(seg['start'])}-{fmt(seg['end'])}] "
+                f"{seg['role'].upper()} ({seg['display_speaker']}, {seg['speaker_label']}) "
+                f"[{conf:.0%}]"
+            )
+            lines.append(f"    {text}")
             lines.append("")
+
+        # Speaker-level dialogue
+        lines.append("-" * 70)
+        lines.append("  SPEAKER TRANSCRIPTS")
+        lines.append("-" * 70)
+        for group in speaker_groups:
+            lines.append(
+                f"  {group['display_speaker']} [{group['speaker_label']}] "
+                f"{group['segment_count']} segments / {fmt(group['talk_time'])}"
+            )
+            if group["text"]:
+                lines.append(f"    {group['text']}")
+            lines.append("")
+
+        lines.append("")
+        lines.append("=" * 70)
 
         with open(output_path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))

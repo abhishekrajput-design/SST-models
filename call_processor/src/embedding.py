@@ -3,177 +3,200 @@ Speaker embedding extraction using SpeechBrain ECAPA-TDNN.
 Generates 192-dimensional speaker voice embeddings.
 """
 
-import os
 import gc
-import pickle
 import logging
+import os
+import pickle
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 
+import numpy as np
+import soundfile as sf
 import torch
 import torchaudio
-import numpy as np
 
 logger = logging.getLogger(__name__)
 
 TARGET_SAMPLE_RATE = 16000
+MAX_EMBEDDING_AUDIO_SECONDS = 30
 
 
 class EmbeddingExtractor:
-    """Extract speaker embeddings using SpeechBrain ECAPA-TDNN pretrained model."""
+    """Extract speaker embeddings using SpeechBrain ECAPA-TDNN."""
 
     def __init__(
         self,
         device: str = "cuda",
         model_dir: str = "./models/spkrec-ecapa",
     ):
-        """
-        Args:
-            device: 'cuda' or 'cpu'.
-            model_dir: Local directory to cache the pretrained model.
-        """
         self.device = device if torch.cuda.is_available() else "cpu"
         self.model_dir = model_dir
         self.model = None
 
     def load_model(self):
-        """Load SpeechBrain ECAPA-TDNN speaker recognition model."""
+        """Load the pretrained SpeechBrain speaker recognition model."""
         if self.model is not None:
             return
 
         from speechbrain.inference.speaker import SpeakerRecognition
 
         logger.info("Loading SpeechBrain ECAPA-TDNN model...")
-        self.model = SpeakerRecognition.from_hparams(
+        kwargs = dict(
             source="speechbrain/spkrec-ecapa-voxceleb",
             savedir=self.model_dir,
             run_opts={"device": self.device},
         )
+        # LocalStrategy.COPY available only in newer SpeechBrain versions
+        try:
+            from speechbrain.utils.fetching import LocalStrategy
+            kwargs["local_strategy"] = LocalStrategy.COPY
+        except ImportError:
+            pass
+
+        self.model = SpeakerRecognition.from_hparams(**kwargs)
         self.model.eval()
-        logger.info(f"ECAPA-TDNN loaded on {self.device}")
+        logger.info("ECAPA-TDNN loaded on %s", self.device)
 
     def unload_model(self):
-        """Free GPU memory."""
+        """Free model memory."""
         if self.model is not None:
             del self.model
             self.model = None
         gc.collect()
         if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-            torch.cuda.ipc_collect()
+            try:
+                torch.cuda.empty_cache()
+                torch.cuda.ipc_collect()
+            except Exception as exc:
+                logger.warning("GPU cleanup skipped after CUDA error: %s", exc)
         logger.info("Embedding model unloaded, VRAM cleared")
 
-    def _load_audio(self, audio_path: str) -> torch.Tensor:
-        """Load and preprocess audio to 16kHz mono tensor.
+    def _load_audio(self, audio_path: str, channel: Optional[int] = None) -> torch.Tensor:
+        """Load an audio file as 16kHz waveform, optionally selecting one channel."""
+        waveform_np, sample_rate = sf.read(audio_path, always_2d=True)
+        waveform = torch.from_numpy(waveform_np.T).float()
 
-        Uses SpeechBrain's native loader when available (handles format
-        conversion automatically), with torchaudio as fallback.
-        """
-        try:
-            # SpeechBrain's load_audio handles resampling + mono internally
-            waveform = self.model.load_audio(audio_path)
-            # Returns shape (time,) — add batch dim → (1, time)
-            if waveform.dim() == 1:
-                waveform = waveform.unsqueeze(0)
-            return waveform
-        except Exception:
-            # Fallback: manual loading via torchaudio
-            waveform, sample_rate = torchaudio.load(audio_path)
+        if channel is not None and waveform.shape[0] > 1:
+            channel = max(0, min(channel, waveform.shape[0] - 1))
+            waveform = waveform[channel:channel + 1, :]
+        elif waveform.shape[0] > 1:
+            waveform = waveform.mean(dim=0, keepdim=True)
 
-            # Convert to mono
-            if waveform.shape[0] > 1:
-                waveform = waveform.mean(dim=0, keepdim=True)
+        if sample_rate != TARGET_SAMPLE_RATE:
+            resampler = torchaudio.transforms.Resample(sample_rate, TARGET_SAMPLE_RATE)
+            waveform = resampler(waveform)
 
-            # Resample to 16kHz
-            if sample_rate != TARGET_SAMPLE_RATE:
-                resampler = torchaudio.transforms.Resample(sample_rate, TARGET_SAMPLE_RATE)
-                waveform = resampler(waveform)
+        max_samples = TARGET_SAMPLE_RATE * MAX_EMBEDDING_AUDIO_SECONDS
+        if waveform.shape[1] > max_samples:
+            waveform = waveform[:, :max_samples]
 
-            return waveform
+        return waveform
 
-    def extract_embedding(self, audio_path: str) -> np.ndarray:
-        """
-        Extract a 192-dim speaker embedding from an audio file.
+    @staticmethod
+    def _cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
+        norm_a = np.linalg.norm(a)
+        norm_b = np.linalg.norm(b)
+        if norm_a == 0 or norm_b == 0:
+            return 0.0
+        return float(np.dot(a, b) / (norm_a * norm_b))
 
-        Args:
-            audio_path: Path to audio file.
+    def _candidate_score(self, embeddings: List[np.ndarray], expected_count: int) -> float:
+        if len(embeddings) < 2 or expected_count <= 0:
+            return 0.0
 
-        Returns:
-            numpy array of shape (192,).
-        """
+        scores = []
+        for idx in range(len(embeddings)):
+            for jdx in range(idx + 1, len(embeddings)):
+                scores.append(self._cosine_similarity(embeddings[idx], embeddings[jdx]))
+
+        coverage = len(embeddings) / expected_count
+        return float(np.mean(scores)) * coverage if scores else 0.0
+
+    def extract_embedding(self, audio_path: str, channel: Optional[int] = None) -> np.ndarray:
+        """Extract a 192-dimensional speaker embedding from an audio file."""
         self.load_model()
-
-        waveform = self._load_audio(audio_path)
+        waveform = self._load_audio(audio_path, channel=channel)
 
         with torch.no_grad():
             embedding = self.model.encode_batch(waveform.to(self.device))
 
-        # Shape: (1, 1, 192) → (192,)
         return embedding.squeeze().cpu().numpy()
 
-    def extract_embeddings_batch(self, audio_paths: List[str]) -> List[np.ndarray]:
-        """
-        Extract embeddings for multiple audio files.
-        Processes one at a time to conserve VRAM.
-
-        Args:
-            audio_paths: List of audio file paths.
-
-        Returns:
-            List of numpy arrays, each shape (192,).
-        """
+    def extract_embeddings_batch(self, audio_paths: List[str]) -> List[Optional[np.ndarray]]:
+        """Extract embeddings one file at a time to conserve VRAM."""
         self.load_model()
 
-        embeddings = []
+        embeddings: List[Optional[np.ndarray]] = []
         for path in audio_paths:
             try:
-                emb = self.extract_embedding(path)
-                embeddings.append(emb)
-            except Exception as e:
-                logger.warning(f"Failed to extract embedding for {path}: {e}")
+                embeddings.append(self.extract_embedding(path))
+            except Exception as exc:
+                logger.warning("Failed to extract embedding for %s: %s", path, exc)
                 embeddings.append(None)
 
         return embeddings
 
     def enroll_agent(self, sample_dir: str) -> Optional[np.ndarray]:
-        """
-        Create an average embedding for an agent from multiple voice samples.
-
-        Args:
-            sample_dir: Directory containing WAV files for one agent.
-
-        Returns:
-            Average embedding as numpy array (192,), or None if no valid samples.
-        """
-        sample_dir = Path(sample_dir)
-        audio_files = list(sample_dir.glob("*.wav")) + list(sample_dir.glob("*.mp3")) + list(sample_dir.glob("*.flac"))
+        """Average multiple samples into a single normalized agent embedding."""
+        sample_path = Path(sample_dir)
+        audio_files = (
+            list(sample_path.glob("*.wav"))
+            + list(sample_path.glob("*.mp3"))
+            + list(sample_path.glob("*.flac"))
+        )
 
         if not audio_files:
-            logger.warning(f"No audio files found in {sample_dir}")
+            logger.warning("No audio files found in %s", sample_path)
             return None
 
-        logger.info(f"Enrolling agent from {len(audio_files)} samples in {sample_dir.name}")
+        logger.info(
+            "Enrolling agent from %s samples in %s",
+            len(audio_files),
+            sample_path.name,
+        )
 
-        embeddings = []
-        for audio_file in audio_files:
-            try:
-                emb = self.extract_embedding(str(audio_file))
-                embeddings.append(emb)
-            except Exception as e:
-                logger.warning(f"Skipping {audio_file.name}: {e}")
+        candidate_channels: List[Optional[int]] = [None]
+        if any(sf.info(str(audio_file)).channels > 1 for audio_file in audio_files):
+            candidate_channels.extend([0, 1])
+
+        best_channel: Optional[int] = None
+        best_score = float("-inf")
+        best_embeddings: List[np.ndarray] = []
+
+        for candidate_channel in candidate_channels:
+            channel_embeddings: List[np.ndarray] = []
+            for audio_file in audio_files:
+                try:
+                    channel_embeddings.append(
+                        self.extract_embedding(str(audio_file), channel=candidate_channel)
+                    )
+                except Exception as exc:
+                    logger.warning("Skipping %s: %s", audio_file.name, exc)
+
+            score = self._candidate_score(channel_embeddings, len(audio_files))
+            if score > best_score:
+                best_channel = candidate_channel
+                best_score = score
+                best_embeddings = channel_embeddings
+
+        embeddings = best_embeddings
 
         if not embeddings:
             return None
 
-        # Average all embeddings to create a robust agent voiceprint
         avg_embedding = np.mean(embeddings, axis=0)
-
-        # L2 normalize the average embedding
         norm = np.linalg.norm(avg_embedding)
         if norm > 0:
             avg_embedding = avg_embedding / norm
 
-        logger.info(f"Agent {sample_dir.name}: enrolled from {len(embeddings)} samples")
+        channel_label = "mono" if best_channel is None else f"channel {best_channel}"
+        logger.info(
+            "Agent %s: enrolled from %s samples using %s (score=%.4f)",
+            sample_path.name,
+            len(embeddings),
+            channel_label,
+            best_score,
+        )
         return avg_embedding
 
     def enroll_all_agents(
@@ -181,38 +204,32 @@ class EmbeddingExtractor:
         agents_dir: str,
         output_path: str = "embeddings/agent_embeddings.pkl",
     ) -> Dict[str, np.ndarray]:
-        """
-        Process all agent sample directories and save embeddings database.
-
-        Args:
-            agents_dir: Parent directory containing agent_NAME/ subdirectories.
-            output_path: Path to save the embeddings pickle file.
-
-        Returns:
-            Dict mapping agent names to their average embeddings.
-        """
+        """Process all agent sample folders and save the embedding database."""
         self.load_model()
 
-        agents_dir = Path(agents_dir)
-        agent_embeddings = {}
+        agents_path = Path(agents_dir)
+        agent_embeddings: Dict[str, np.ndarray] = {}
 
-        for agent_folder in sorted(agents_dir.iterdir()):
+        for agent_folder in sorted(agents_path.iterdir()):
             if not agent_folder.is_dir():
                 continue
 
-            agent_name = agent_folder.name  # e.g., "agent_abhishek"
+            agent_name = agent_folder.name
             embedding = self.enroll_agent(str(agent_folder))
 
             if embedding is not None:
                 agent_embeddings[agent_name] = embedding
-                logger.info(f"Enrolled: {agent_name}")
+                logger.info("Enrolled: %s", agent_name)
             else:
-                logger.warning(f"Skipped: {agent_name} (no valid samples)")
+                logger.warning("Skipped: %s (no valid samples)", agent_name)
 
-        # Save to pickle
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "wb") as f:
-            pickle.dump(agent_embeddings, f)
+        with open(output_path, "wb") as handle:
+            pickle.dump(agent_embeddings, handle)
 
-        logger.info(f"Saved {len(agent_embeddings)} agent embeddings to {output_path}")
+        logger.info(
+            "Saved %s agent embeddings to %s",
+            len(agent_embeddings),
+            output_path,
+        )
         return agent_embeddings

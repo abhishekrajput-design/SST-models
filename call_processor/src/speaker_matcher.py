@@ -140,6 +140,6 @@ class SpeakerMatcher:
 
         logger.info("Speaker mapping:")
         for diar_label, (name, conf) in speaker_map.items():
-            logger.info(f"  {diar_label} → {name} (confidence: {conf:.4f})")
+            logger.info(f"  {diar_label} -> {name} (confidence: {conf:.4f})")
 
         return segments
