@@ -193,25 +193,28 @@ CONDA_PIP="$MINICONDA_DIR/envs/$CONDA_ENV/bin/pip"
 "$CONDA_PIP" install --quiet --upgrade pip setuptools wheel
 
 # Install uv inside the conda env for fast dependency resolution
+# uv needs --python to target conda envs (it does not auto-detect them)
 echo "  Installing uv (fast resolver)..."
 "$CONDA_PIP" install --quiet uv
 CONDA_UV="$MINICONDA_DIR/envs/$CONDA_ENV/bin/uv"
+# Wrapper: always pass --python so uv installs into the conda env
+uv_install() { "$CONDA_UV" pip install --python "$CONDA_PY" "$@"; }
 
 echo "  Python: $($CONDA_PY --version)"
 
 # ─── [5] PYTORCH (CUDA) ──────────────────────────────────────────────────────
-step "[5/11] Installing PyTorch with CUDA via conda"
+step "[5/11] Installing PyTorch with CUDA (pip wheels)"
+# Use official pip wheels — more reliable than conda channel for CUDA builds
 
-# Use conda to install PyTorch — gets the right CUDA-linked binaries automatically
-conda install -n "$CONDA_ENV" -y --quiet \
-    pytorch torchaudio "$PYTORCH_CHANNEL" \
-    -c pytorch -c nvidia --override-channels \
-    || {
-        warn "conda install for PyTorch failed — falling back to pip wheels"
-        "$CONDA_UV" pip install --quiet \
-            torch torchaudio \
-            --index-url "https://download.pytorch.org/whl/cu124"
-    }
+if [[ "$PYTORCH_CHANNEL" == "cpuonly" ]]; then
+    PIP_TORCH_INDEX="https://download.pytorch.org/whl/cpu"
+else
+    PIP_TORCH_INDEX="https://download.pytorch.org/whl/cu124"
+fi
+
+uv_install torch torchaudio --index-url "$PIP_TORCH_INDEX" \
+    || "$CONDA_PIP" install torch torchaudio --index-url "$PIP_TORCH_INDEX" \
+    || die "PyTorch installation failed"
 
 "$CONDA_PY" -c "import torch; print(f'  torch={torch.__version__}  cuda={torch.cuda.is_available()}  device_count={torch.cuda.device_count()}')"
 
@@ -220,18 +223,18 @@ step "[6/11] Installing project requirements"
 
 # Pre-install numba>=0.59 before librosa — older numba fails on Python 3.12
 echo "  Pre-installing numba (Python 3.12 compat)..."
-"$CONDA_UV" pip install --quiet "numba>=0.59.0"
+uv_install "numba>=0.59.0"
 
 # Pin lightning to avoid deep resolver issues from pyannote.audio
 echo "  Pre-pinning lightning to avoid resolution-too-deep..."
-"$CONDA_UV" pip install --quiet "lightning>=2.0,<2.5" "pytorch-lightning>=2.0,<2.5"
+uv_install "lightning>=2.0,<2.5" "pytorch-lightning>=2.0,<2.5"
 
 echo "  Installing requirements.txt..."
-"$CONDA_UV" pip install -r "$APP_DIR/requirements.txt" \
+uv_install -r "$APP_DIR/requirements.txt" \
     || "$CONDA_PIP" install --use-deprecated=legacy-resolver -r "$APP_DIR/requirements.txt"
 
 # Additional packages not in requirements.txt but needed at runtime
-"$CONDA_UV" pip install --quiet \
+uv_install \
     "python-dotenv" \
     "deepgram-sdk>=3.0.0" \
     "ctranslate2>=4.0.0"
