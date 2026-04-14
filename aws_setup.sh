@@ -61,35 +61,46 @@ die()  { echo -e "${RED}[ERROR]${NC} $*" >&2; exit 1; }
 step "[1/10] Installing system packages"
 export DEBIAN_FRONTEND=noninteractive
 
-echo "  apt-get update..."
+echo "  Fixing any broken package state..."
 apt-get update -y
+apt --fix-broken install -y 2>/dev/null || true
+dpkg --configure -a 2>/dev/null || true
 
-echo "  Installing required packages..."
-apt-get install -y \
-    software-properties-common curl wget git unzip \
-    build-essential pkg-config \
-    ffmpeg \
-    python3 python3-venv python3-dev python3-pip \
-    libsndfile1 libsndfile1-dev \
-    sox \
-    || die "apt-get failed — check output above"
+echo "  Installing core packages..."
+# Install in small batches — easier to pinpoint failures
+apt-get install -y curl wget git unzip build-essential pkg-config \
+    || die "Failed to install core build tools"
 
-# python3.11 if available, fall back to whatever python3 is installed
-if apt-get install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-venv python${PYTHON_VERSION}-dev 2>/dev/null; then
-    echo "  python${PYTHON_VERSION} installed"
+apt-get install -y ffmpeg \
+    || die "Failed to install ffmpeg"
+
+# python3-venv may need the matching python3.X-venv; try both
+apt-get install -y python3 python3-dev python3-pip || true
+apt-get install -y python3-venv 2>/dev/null \
+    || apt-get install -y python3.12-venv 2>/dev/null \
+    || apt-get install -y python3.11-venv 2>/dev/null \
+    || warn "python3-venv install failed — will try python -m venv directly"
+
+# libsndfile (audio I/O for speechbrain/soundfile) — dev headers optional
+apt-get install -y libsndfile1 2>/dev/null || true
+apt-get install -y libsndfile1-dev 2>/dev/null || true   # may have unmet deps on some AMIs
+
+# Optional monitoring / server tools — never fail the script
+echo "  Installing optional packages (non-fatal)..."
+for pkg in htop iotop nvtop nginx sox portaudio19-dev; do
+    apt-get install -y "$pkg" 2>/dev/null || true
+done
+
+# Detect which python3.X is available and set PYTHON_VERSION accordingly
+if python${PYTHON_VERSION} --version &>/dev/null 2>&1; then
+    echo "  python${PYTHON_VERSION} available"
 else
-    warn "python${PYTHON_VERSION} not found in default repos — using system python3"
-    PYTHON_VERSION=$(python3 --version 2>&1 | grep -oP '3\.\d+')
-    echo "  Using python${PYTHON_VERSION}"
+    PYTHON_VERSION=$(python3 --version 2>&1 | grep -oP '3\.\d+' | head -1)
+    warn "python${PYTHON_VERSION_:-3.11} not found — using python${PYTHON_VERSION}"
 fi
 
-# Optional packages — failures are non-fatal
-echo "  Installing optional packages..."
-apt-get install -y portaudio19-dev libsox-fmt-all htop iotop nginx 2>/dev/null || true
-apt-get install -y nvtop 2>/dev/null || true   # nvtop not in all Ubuntu repos
-
-echo "  ffmpeg: $(ffmpeg -version 2>&1 | head -1)"
-echo "  python: $(python${PYTHON_VERSION} --version 2>&1 || python3 --version)"
+echo "  ffmpeg:  $(ffmpeg -version 2>&1 | head -1)"
+echo "  python:  $(python3 --version)"
 
 # ─── [2] CUDA CHECK / INSTALL ────────────────────────────────────────────────
 step "[2/10] Checking CUDA installation"
