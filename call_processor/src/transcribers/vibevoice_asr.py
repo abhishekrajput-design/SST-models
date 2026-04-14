@@ -54,24 +54,29 @@ class VibeVoiceAsrTranscriber(BaseTranscriber):
         proc_sources.append(MODEL_ID)
 
         processor_loaded = False
+        errors: list = []
         for src in proc_sources:
+            is_local = src != MODEL_ID
             for proc_cls_name in ("AutoProcessor", "WhisperProcessor", "AutoFeatureExtractor"):
                 try:
                     proc_cls = getattr(__import__("transformers"), proc_cls_name)
                     self.processor = proc_cls.from_pretrained(
                         src, cache_dir=cache_dir, trust_remote_code=True,
-                        local_files_only=(src != MODEL_ID),
+                        local_files_only=is_local,
                     )
                     processor_loaded = True
                     print(f"  [VibeVoice] processor loaded via {proc_cls_name} from {os.path.basename(src)}")
                     break
                 except Exception as pe:
-                    print(f"  [VibeVoice] {proc_cls_name} from {os.path.basename(src)}: {pe}")
+                    msg = f"{proc_cls_name}({'local' if is_local else 'remote'}): {pe}"
+                    errors.append(msg)
+                    print(f"  [VibeVoice] attempt failed — {msg}")
             if processor_loaded:
                 break
 
         if not processor_loaded:
-            raise RuntimeError("Could not load any processor for VibeVoice-ASR")
+            summary = " | ".join(str(e)[:80] for e in errors)
+            raise RuntimeError(f"VibeVoice-ASR processor load failed: {summary}")
 
         model_src = local_snap if local_snap else MODEL_ID
         self.model = AutoModel.from_pretrained(model_src, **kwargs)

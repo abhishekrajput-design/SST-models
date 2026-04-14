@@ -36,16 +36,25 @@ class Qwen3AsrTranscriber(BaseTranscriber):
 
     @staticmethod
     def _patch_transformers_check_model_inputs() -> None:
-        """Monkey-patch transformers 5.6.0.dev0 bug where check_model_inputs()
-        is called without its required 'func' positional argument."""
-        try:
-            from transformers.generation import utils as _gen_utils
-            if hasattr(_gen_utils, "check_model_inputs"):
-                _gen_utils.check_model_inputs = (
-                    lambda func=None, **kw: func if func is not None else (lambda f: f)
-                )
-        except Exception:
-            pass
+        """Patch check_model_inputs in every transformers-related module currently
+        loaded, including trust_remote_code modules.  Safe to call multiple times."""
+        import sys
+        patched = lambda func=None, *args, **kw: (
+            func if callable(func) else lambda f: f
+        )
+        for mod_name in list(sys.modules.keys()):
+            if not mod_name:
+                continue
+            if "transformers" not in mod_name:
+                continue
+            mod = sys.modules.get(mod_name)
+            if mod is None:
+                continue
+            if hasattr(mod, "check_model_inputs"):
+                try:
+                    setattr(mod, "check_model_inputs", patched)
+                except Exception:
+                    pass
 
     def load(self) -> None:
         if self.model is not None:
@@ -54,6 +63,7 @@ class Qwen3AsrTranscriber(BaseTranscriber):
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
+        # Patch before loading so existing modules are covered
         self._patch_transformers_check_model_inputs()
 
         model_path = LOCAL_MODEL_DIR if os.path.isdir(LOCAL_MODEL_DIR) else HF_MODEL_ID
@@ -79,6 +89,8 @@ class Qwen3AsrTranscriber(BaseTranscriber):
                 device=0 if self.device == "cuda" else -1,
                 trust_remote_code=True,
             )
+            # Patch again: trust_remote_code may have added new modules to sys.modules
+            self._patch_transformers_check_model_inputs()
             self._backend = "transformers"
 
     def _audio_duration(self, audio_path: str) -> float:
