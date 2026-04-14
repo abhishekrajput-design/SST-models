@@ -855,6 +855,7 @@
                     const segs     = (typeof c === 'object') ? (c.segments || 0) : 0;
                     const meta     = (typeof c === 'object') ? (c.orig_meta || {}) : {};
                     const procTime = (typeof c === 'object') ? (c.processing_time_s || 0) : 0;
+                    const procAt   = (typeof c === 'object') ? (c.processed_at || '') : '';
 
                     const badgeColor = modelBadgeColor(model);
                     const modelLabel = shortModelName(model);
@@ -865,17 +866,23 @@
                     const chStr     = meta.channels === 1 ? 'Mono' : meta.channels === 2 ? 'Stereo' : '—';
                     const srStr     = meta.sample_rate ? `${Math.round(meta.sample_rate/1000)}kHz` : '—';
                     const procStr   = procTime ? `${Math.round(procTime)}s` : '—';
+                    const agoStr    = procAt ? timeAgo(procAt) : '';
+                    const latestBadge = idx === 0 ? `<span style="flex-shrink:0;background:#1e3a5f;color:#60a5fa;font-size:0.62rem;font-weight:700;padding:2px 5px;border-radius:3px;margin-top:1px;">LATEST</span>` : '';
 
                     return `
                     <div class="call-card" onclick="loadCallData('${id}', this)">
                         <div class="call-title" style="font-size:0.8rem; word-break:break-all; margin-bottom:6px; display:flex; align-items:flex-start; gap:6px;">
                             <span style="flex-shrink:0; background:#334155; color:#94a3b8; font-size:0.65rem; font-weight:700; padding:2px 5px; border-radius:3px; margin-top:1px;">#${num}</span>
+                            ${latestBadge}
                             <span>📞 ${id}</span>
                         </div>
 
-                        <div style="margin-bottom:5px;">
-                            <span style="display:inline-block; background:${badgeColor}; color:#fff; font-size:0.68rem; font-weight:600; padding:2px 7px; border-radius:4px; letter-spacing:0.3px;">${modelLabel}</span>
-                            <span style="font-size:0.68rem; color:#94a3b8; margin-left:6px;">${segs} segs · ${procStr}</span>
+                        <div style="margin-bottom:5px; display:flex; align-items:center; justify-content:space-between;">
+                            <div>
+                                <span style="display:inline-block; background:${badgeColor}; color:#fff; font-size:0.68rem; font-weight:600; padding:2px 7px; border-radius:4px; letter-spacing:0.3px;">${modelLabel}</span>
+                                <span style="font-size:0.68rem; color:#94a3b8; margin-left:6px;">${segs} segs · ${procStr}</span>
+                            </div>
+                            ${agoStr ? `<span style="font-size:0.65rem; color:#64748b; white-space:nowrap;">${agoStr}</span>` : ''}
                         </div>
 
                         <div style="font-size:0.7rem; color:#64748b; background:#0f172a; border-radius:4px; padding:5px 7px; margin-bottom:5px; line-height:1.6;">
@@ -892,9 +899,26 @@
                         </div>
                     </div>`;
                 }).join('');
+
+                // Auto-load the newest call on first page load
+                if (calls.length > 0 && !DOM.chatContainer.querySelector('.segment')) {
+                    const firstId = (typeof calls[0] === 'string') ? calls[0] : calls[0].id;
+                    const firstCard = DOM.callList.querySelector('.call-card');
+                    if (firstCard) loadCallData(firstId, firstCard);
+                }
+
             } catch (err) {
                 DOM.callList.innerHTML = `<div style="color:#ef4444; padding:20px;">Error loading data. Is the server running?</div>`;
             }
+        }
+
+        function timeAgo(iso) {
+            if (!iso) return '';
+            const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+            if (diff < 60)  return `${diff}s ago`;
+            if (diff < 3600) return `${Math.floor(diff/60)} min ago`;
+            if (diff < 86400) return `${Math.floor(diff/3600)} hr ago`;
+            return `${Math.floor(diff/86400)}d ago`;
         }
 
         // Format MM:SS
