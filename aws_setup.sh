@@ -103,30 +103,46 @@ echo "  ffmpeg:  $(ffmpeg -version 2>&1 | head -1)"
 echo "  python:  $(python3 --version)"
 
 # ─── [2] CUDA CHECK / INSTALL ────────────────────────────────────────────────
-step "[2/10] Checking CUDA installation"
-if command -v nvcc &>/dev/null; then
-    echo "  CUDA already installed: $(nvcc --version | grep release)"
-elif nvidia-smi &>/dev/null; then
-    echo "  GPU detected, installing CUDA ${CUDA_VERSION} toolkit..."
-    wget -q https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
-    dpkg -i cuda-keyring_1.1-1_all.deb
-    apt-get update -qq
-    apt-get install -y -qq cuda-toolkit-${CUDA_VERSION} 2>/dev/null
-    export PATH=/usr/local/cuda/bin:$PATH
-    echo "  CUDA installed: $(nvcc --version | grep release)"
-    rm -f cuda-keyring_1.1-1_all.deb
-else
-    warn "No GPU detected — will install CPU-only PyTorch (transcription will be slow)"
-    TORCH_INDEX="https://download.pytorch.org/whl/cpu"
+step "[2/10] Checking CUDA / NVIDIA driver"
+
+# Try loading the nvidia module if it exists but isn't loaded yet
+modprobe nvidia 2>/dev/null || true
+
+GPU_INFO=$(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null || echo "")
+
+if [[ -z "$GPU_INFO" ]]; then
+    # No GPU visible — try installing NVIDIA open drivers
+    warn "nvidia-smi not available. Attempting to install NVIDIA drivers..."
+    apt-get install -y ubuntu-drivers-common 2>/dev/null || true
+    ubuntu-drivers install 2>/dev/null || apt-get install -y nvidia-driver-535 2>/dev/null || true
+    modprobe nvidia 2>/dev/null || true
+    GPU_INFO=$(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null || echo "")
 fi
 
-GPU_INFO=$(nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null || echo "No GPU")
-echo "  GPU: $GPU_INFO"
-
-# Warn if T4 (16 GB) and VibeVoice not skipped
-if echo "$GPU_INFO" | grep -qi "T4" && [[ -z "$SKIP_MODELS" ]]; then
-    warn "T4 GPU detected (16 GB VRAM). VibeVoice-ASR needs ~18 GB."
-    warn "Set SKIP_MODELS=vibevoice to skip it, or use g5.xlarge (A10G 24 GB)."
+if [[ -n "$GPU_INFO" ]]; then
+    echo "  GPU: $GPU_INFO"
+    # Warn if T4 (16 GB) and VibeVoice not skipped
+    if echo "$GPU_INFO" | grep -qi "T4" && [[ -z "$SKIP_MODELS" ]]; then
+        warn "T4 GPU (16 GB VRAM) — VibeVoice needs ~18 GB. Set SKIP_MODELS=vibevoice to skip."
+    fi
+    # Install CUDA toolkit if nvcc missing
+    if ! command -v nvcc &>/dev/null; then
+        echo "  Installing CUDA ${CUDA_VERSION} toolkit..."
+        wget -q https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb \
+            && dpkg -i cuda-keyring_1.1-1_all.deb \
+            && apt-get update -y \
+            && apt-get install -y cuda-toolkit-${CUDA_VERSION} 2>/dev/null \
+            && export PATH=/usr/local/cuda/bin:$PATH \
+            && echo "  CUDA toolkit installed" \
+            || warn "CUDA toolkit install failed — PyTorch CUDA wheels will still work via driver API"
+        rm -f cuda-keyring_1.1-1_all.deb
+    else
+        echo "  CUDA toolkit: $(nvcc --version | grep release)"
+    fi
+else
+    warn "No GPU found — installing CPU-only PyTorch. Transcription will be slow."
+    warn "If this is a GPU instance, reboot after setup: sudo reboot"
+    TORCH_INDEX="https://download.pytorch.org/whl/cpu"
 fi
 
 # ─── [3] PYTHON VIRTUAL ENVIRONMENT ──────────────────────────────────────────
@@ -146,7 +162,13 @@ step "[4/10] Installing PyTorch with CUDA"
 
 # ─── [5] PROJECT REQUIREMENTS ────────────────────────────────────────────────
 step "[5/10] Installing project requirements"
-"$VENV_PIP" install --quiet -r "$APP_DIR/requirements.txt"
+
+# Pre-install numba>=0.59 before librosa — older numba fails on Python 3.12
+echo "  Pre-installing numba (Python 3.12 compat)..."
+"$VENV_PIP" install --quiet "numba>=0.59.0"
+
+echo "  Installing requirements.txt..."
+"$VENV_PIP" install -r "$APP_DIR/requirements.txt"
 
 # Additional packages not in requirements.txt but needed at runtime
 "$VENV_PIP" install --quiet \
