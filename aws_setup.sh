@@ -272,6 +272,25 @@ step "[10/11] Creating systemd service: callproc.service"
 mkdir -p "$LOG_DIR"
 chown -R "$SERVICE_USER:$SERVICE_USER" "$LOG_DIR"
 
+# Create a template .env if none exists — service will start without API keys
+# and user can fill them in later with: nano $REPO_DIR/.env
+if [[ ! -f "$REPO_DIR/.env" ]]; then
+    warn ".env not found — creating empty template at $REPO_DIR/.env"
+    cat > "$REPO_DIR/.env" <<'ENVEOF'
+# Call Processor environment variables
+# Fill in your API keys, then restart: sudo systemctl restart callproc
+
+# Required for pyannote diarization (get token at https://huggingface.co/settings/tokens)
+HF_TOKEN=
+
+# Required for Deepgram Nova-3 transcription (get key at https://console.deepgram.com)
+DEEPGRAM_API_KEY=
+ENVEOF
+    chown "$SERVICE_USER:$SERVICE_USER" "$REPO_DIR/.env"
+    chmod 600 "$REPO_DIR/.env"
+    echo "  Template .env created — edit it and add your API keys"
+fi
+
 cat > /etc/systemd/system/callproc.service <<EOF
 [Unit]
 Description=AI Call Processor Dashboard
@@ -281,7 +300,8 @@ After=network.target
 Type=simple
 User=$SERVICE_USER
 WorkingDirectory=$APP_DIR
-EnvironmentFile=$REPO_DIR/.env
+# Leading dash makes EnvironmentFile optional — service starts even without .env
+EnvironmentFile=-$REPO_DIR/.env
 Environment="PATH=$MINICONDA_DIR/envs/$CONDA_ENV/bin:$MINICONDA_DIR/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ExecStart=$MINICONDA_DIR/envs/$CONDA_ENV/bin/python ui.py
 Restart=on-failure
