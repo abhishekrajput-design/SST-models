@@ -43,7 +43,7 @@ PORT=8080
 PYTHON_VERSION="3.11"
 CONDA_ENV="callproc"
 MINICONDA_DIR="/opt/miniconda3"
-MINICONDA_INSTALLER="/tmp/miniconda.sh"
+MINICONDA_INSTALLER="/tmp/miniforge.sh"
 CUDA_VERSION="12-4"                  # used for apt package names
 # Models to skip on small GPUs (T4 16 GB).  Set to "" to download all.
 # SKIP_MODELS="vibevoice"            # uncomment for g4dn (T4 16 GB)
@@ -127,45 +127,53 @@ else
     PYTORCH_CHANNEL="cpuonly"
 fi
 
-# ─── [3] MINICONDA ───────────────────────────────────────────────────────────
-step "[3/11] Installing Miniconda3"
+# ─── [3] MINIFORGE ───────────────────────────────────────────────────────────
+step "[3/11] Installing Miniforge3 (conda-forge, no ToS required)"
+# Miniforge uses conda-forge by default — no Anaconda Terms of Service issues.
+# If Miniconda is already installed at the same path we reuse it but accept ToS.
 
 if [[ -f "$MINICONDA_DIR/bin/conda" ]]; then
-    echo "  Miniconda already installed at $MINICONDA_DIR"
+    echo "  conda already installed at $MINICONDA_DIR"
 else
-    echo "  Downloading Miniconda installer..."
-    wget -q "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh" \
+    echo "  Downloading Miniforge installer..."
+    wget -q "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh" \
         -O "$MINICONDA_INSTALLER" \
-        || die "Failed to download Miniconda"
+        || die "Failed to download Miniforge"
 
-    echo "  Installing Miniconda to $MINICONDA_DIR..."
+    echo "  Installing Miniforge to $MINICONDA_DIR..."
     bash "$MINICONDA_INSTALLER" -b -p "$MINICONDA_DIR" \
-        || die "Miniconda installation failed"
+        || die "Miniforge installation failed"
     rm -f "$MINICONDA_INSTALLER"
-    echo "  Miniconda installed"
+    echo "  Miniforge installed"
 fi
 
 # Make conda available in this shell
 export PATH="$MINICONDA_DIR/bin:$PATH"
 source "$MINICONDA_DIR/etc/profile.d/conda.sh"
 
+# Accept Anaconda ToS for any default channels that may be configured
+# (needed if Miniconda was already installed instead of Miniforge)
+echo "  Accepting conda channel ToS (if required)..."
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main 2>/dev/null || true
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r    2>/dev/null || true
+
 # Also make conda available system-wide for all users
 if ! grep -q "miniconda3" /etc/environment 2>/dev/null; then
-    echo "PATH=\"$MINICONDA_DIR/bin:$(cat /etc/environment | grep -oP '(?<=PATH=\")[^\"]+')\"" \
+    echo "PATH=\"$MINICONDA_DIR/bin:$(cat /etc/environment | grep -oP '(?<=PATH=\")[^\"]+' || echo '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin')\"" \
         > /etc/environment 2>/dev/null || true
 fi
 
 # Add to the service user's bashrc
 BASHRC="/home/$SERVICE_USER/.bashrc"
-if [[ -f "$BASHRC" ]] && ! grep -q "miniconda3" "$BASHRC"; then
+if [[ -f "$BASHRC" ]] && ! grep -q "$MINICONDA_DIR" "$BASHRC"; then
     echo "" >> "$BASHRC"
-    echo "# Miniconda" >> "$BASHRC"
+    echo "# Conda (Miniforge)" >> "$BASHRC"
     echo "export PATH=\"$MINICONDA_DIR/bin:\$PATH\"" >> "$BASHRC"
     echo "source \"$MINICONDA_DIR/etc/profile.d/conda.sh\"" >> "$BASHRC"
 fi
 
 conda --version
-conda update -n base -c defaults conda -y --quiet 2>/dev/null || true
+conda update -n base -c conda-forge conda -y --quiet 2>/dev/null || true
 
 # ─── [4] CONDA ENVIRONMENT ───────────────────────────────────────────────────
 step "[4/11] Creating conda environment: $CONDA_ENV (Python $PYTHON_VERSION)"
@@ -173,7 +181,7 @@ step "[4/11] Creating conda environment: $CONDA_ENV (Python $PYTHON_VERSION)"
 if conda env list | grep -q "^$CONDA_ENV "; then
     echo "  Environment '$CONDA_ENV' already exists — skipping create"
 else
-    conda create -n "$CONDA_ENV" python="$PYTHON_VERSION" -y --quiet \
+    conda create -n "$CONDA_ENV" python="$PYTHON_VERSION" -c conda-forge -y --quiet \
         || die "Failed to create conda environment"
     echo "  Created conda env: $CONDA_ENV"
 fi
@@ -197,7 +205,7 @@ step "[5/11] Installing PyTorch with CUDA via conda"
 # Use conda to install PyTorch — gets the right CUDA-linked binaries automatically
 conda install -n "$CONDA_ENV" -y --quiet \
     pytorch torchaudio "$PYTORCH_CHANNEL" \
-    -c pytorch -c nvidia \
+    -c pytorch -c nvidia --override-channels \
     || {
         warn "conda install for PyTorch failed — falling back to pip wheels"
         "$CONDA_UV" pip install --quiet \
