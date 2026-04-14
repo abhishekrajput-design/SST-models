@@ -267,6 +267,11 @@ set -o allexport; [[ -f "$REPO_DIR/.env" ]] && source "$REPO_DIR/.env"; set +o a
 "$CONDA_PY" download_models.py $SKIP_FLAGS 2>&1 | tee "$LOG_DIR/download_models.log"
 echo "  Models saved to: $APP_DIR/models/"
 
+# Fix ownership — models are downloaded as root but service runs as $SERVICE_USER
+echo "  Fixing model directory ownership for $SERVICE_USER..."
+chown -R "$SERVICE_USER:$SERVICE_USER" "$APP_DIR/models/" 2>/dev/null || true
+find "$APP_DIR/models" -name "*.lock" -delete 2>/dev/null || true
+
 # ─── [10] SYSTEMD SERVICE ────────────────────────────────────────────────────
 step "[10/11] Creating systemd service: callproc.service"
 mkdir -p "$LOG_DIR"
