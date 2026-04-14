@@ -30,6 +30,8 @@ if [ -z "$BASH_VERSION" ]; then exec bash "$0" "$@"; fi
 # =============================================================================
 
 set -euo pipefail
+# Uncomment for verbose debug output:
+# set -x
 
 # ─── CONFIGURATION ───────────────────────────────────────────────────────────
 REPO_DIR="${REPO_DIR:-$(cd "$(dirname "$0")" && pwd)}"
@@ -58,21 +60,36 @@ die()  { echo -e "${RED}[ERROR]${NC} $*" >&2; exit 1; }
 # ─── [1] SYSTEM PACKAGES ─────────────────────────────────────────────────────
 step "[1/10] Installing system packages"
 export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq
-apt-get install -y -qq \
+
+echo "  apt-get update..."
+apt-get update -y
+
+echo "  Installing required packages..."
+apt-get install -y \
     software-properties-common curl wget git unzip \
     build-essential pkg-config \
-    ffmpeg libavcodec-dev libavformat-dev libavfilter-dev \
-    python${PYTHON_VERSION} python${PYTHON_VERSION}-venv python${PYTHON_VERSION}-dev \
-    python3-pip \
+    ffmpeg \
+    python3 python3-venv python3-dev python3-pip \
     libsndfile1 libsndfile1-dev \
-    portaudio19-dev \
-    sox libsox-fmt-all \
-    htop nvtop iotop \
-    nginx \
-    2>/dev/null
+    sox \
+    || die "apt-get failed — check output above"
+
+# python3.11 if available, fall back to whatever python3 is installed
+if apt-get install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-venv python${PYTHON_VERSION}-dev 2>/dev/null; then
+    echo "  python${PYTHON_VERSION} installed"
+else
+    warn "python${PYTHON_VERSION} not found in default repos — using system python3"
+    PYTHON_VERSION=$(python3 --version 2>&1 | grep -oP '3\.\d+')
+    echo "  Using python${PYTHON_VERSION}"
+fi
+
+# Optional packages — failures are non-fatal
+echo "  Installing optional packages..."
+apt-get install -y portaudio19-dev libsox-fmt-all htop iotop nginx 2>/dev/null || true
+apt-get install -y nvtop 2>/dev/null || true   # nvtop not in all Ubuntu repos
+
 echo "  ffmpeg: $(ffmpeg -version 2>&1 | head -1)"
-echo "  python: $(python${PYTHON_VERSION} --version)"
+echo "  python: $(python${PYTHON_VERSION} --version 2>&1 || python3 --version)"
 
 # ─── [2] CUDA CHECK / INSTALL ────────────────────────────────────────────────
 step "[2/10] Checking CUDA installation"
