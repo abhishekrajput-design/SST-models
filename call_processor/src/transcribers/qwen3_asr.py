@@ -145,6 +145,18 @@ class Qwen3AsrTranscriber(BaseTranscriber):
 
         # --- Backend 2: transformers manual load (no pipeline) ---
         print("  [Qwen3-ASR] qwen-asr not installed — loading via transformers directly")
+
+        # Force-load transformers.generation.utils NOW and patch it before
+        # trust_remote_code runs.  The custom model code does:
+        #   from transformers.generation.utils import check_model_inputs
+        # If we patch the source module first, the import picks up our no-op.
+        try:
+            import transformers.generation.utils as _tgu
+            _tgu.check_model_inputs = _noop_check_model_inputs
+        except Exception:
+            pass
+        _patch_all_transformers_modules()  # patch everything else now loaded
+
         from transformers import AutoProcessor
 
         self._processor = AutoProcessor.from_pretrained(

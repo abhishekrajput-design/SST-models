@@ -6,6 +6,9 @@ from typing import List, Dict, Any
 from .base import BaseTranscriber
 
 MODEL_ID = "microsoft/VibeVoice-ASR"
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+# download_models.py saves to a flat Org__Model directory
+LOCAL_MODEL_DIR = os.path.join(_THIS_DIR, "..", "..", "models", "hf", "microsoft__VibeVoice-ASR")
 
 
 class VibeVoiceAsrTranscriber(BaseTranscriber):
@@ -44,12 +47,14 @@ class VibeVoiceAsrTranscriber(BaseTranscriber):
         else:
             kwargs["torch_dtype"] = torch.bfloat16 if (self.device == "cuda" and torch.cuda.is_available()) else torch.float32
 
-        # Build list of sources to try: local snapshot first (avoids remote class lookup),
-        # then fall back to HF model ID.
-        local_snap = self._find_local_snapshot(cache_dir, MODEL_ID)
+        # Build list of sources to try.
+        # Priority: flat local dir (download_models.py format) → HF snapshot → remote ID
         proc_sources = []
-        if local_snap:
-            print(f"  [VibeVoice] found local snapshot: {local_snap}")
+        if os.path.isdir(LOCAL_MODEL_DIR):
+            print(f"  [VibeVoice] using local model dir: {LOCAL_MODEL_DIR}")
+            proc_sources.append(LOCAL_MODEL_DIR)
+        local_snap = self._find_local_snapshot(cache_dir, MODEL_ID)
+        if local_snap and local_snap not in proc_sources:
             proc_sources.append(local_snap)
         proc_sources.append(MODEL_ID)
 
@@ -78,7 +83,9 @@ class VibeVoiceAsrTranscriber(BaseTranscriber):
             summary = " | ".join(str(e)[:80] for e in errors)
             raise RuntimeError(f"VibeVoice-ASR processor load failed: {summary}")
 
-        model_src = local_snap if local_snap else MODEL_ID
+        model_src = proc_sources[0] if proc_sources else MODEL_ID
+        if model_src == MODEL_ID:
+            model_src = LOCAL_MODEL_DIR if os.path.isdir(LOCAL_MODEL_DIR) else MODEL_ID
         self.model = AutoModel.from_pretrained(model_src, **kwargs)
         if not self.load_in_4bit:
             self.model = self.model.to(self.device)
