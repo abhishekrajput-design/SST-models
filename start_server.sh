@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Re-exec with bash if invoked via sh (Ubuntu sh = dash, no pipefail support)
+if [ -z "$BASH_VERSION" ]; then exec bash "$0" "$@"; fi
 # =============================================================================
 #  start_server.sh — Start / restart the Call Processor dashboard
 #
