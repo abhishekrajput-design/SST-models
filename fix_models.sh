@@ -39,32 +39,45 @@ DRIVER_UPGRADED=false
 # ─── [1] NVIDIA DRIVER UPGRADE ───────────────────────────────────────────────
 step "[1/3] Checking NVIDIA driver (need >= 550 for CUDA 12.4)"
 
-CUDA_VER=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader 2>/dev/null | head -1 || echo "")
+# Try to load the kernel module first (may not be loaded after initial install)
+modprobe nvidia 2>/dev/null || true
+
+# Get driver version — extract only the numeric version, ignore any error text
+CUDA_VER=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader 2>/dev/null \
+    | grep -oP '^\d+\.\d+' | head -1 || echo "")
+
 if [[ -z "$CUDA_VER" ]]; then
-    warn "nvidia-smi not available — skipping driver check"
+    warn "nvidia-smi not returning a valid version — driver may not be loaded."
+    warn "Proceeding with driver upgrade anyway..."
+    MAJOR=0
 else
     echo "  Current driver: $CUDA_VER"
     MAJOR=$(echo "$CUDA_VER" | cut -d. -f1)
-    if (( MAJOR >= 550 )); then
-        ok "Driver $CUDA_VER is >= 550 — no upgrade needed"
-    else
-        echo "  Driver $CUDA_VER < 550 — upgrading to nvidia-driver-550..."
-        export DEBIAN_FRONTEND=noninteractive
-        apt-get update -y -q
-        apt-get install -y nvidia-driver-550 2>/dev/null \
-            || apt-get install -y nvidia-driver-545 2>/dev/null \
-            || apt-get install -y nvidia-driver-535 2>/dev/null \
-            || warn "Driver upgrade failed — GPU models may not work until driver is updated"
+fi
 
-        # Reinstall PyTorch matching the new driver
-        echo "  Reinstalling PyTorch cu124 wheels for new driver..."
-        uv_install --upgrade torch torchaudio \
-            --index-url "https://download.pytorch.org/whl/cu124" \
-            || "$CONDA_PIP" install --upgrade torch torchaudio \
-               --index-url "https://download.pytorch.org/whl/cu124"
-        ok "PyTorch reinstalled"
-        DRIVER_UPGRADED=true
-    fi
+# Convert to integer safely
+MAJOR="${MAJOR//[^0-9]/}"
+MAJOR="${MAJOR:-0}"
+
+if (( MAJOR >= 550 )); then
+    ok "Driver $CUDA_VER is >= 550 — no upgrade needed"
+else
+    echo "  Driver version $MAJOR < 550 — upgrading to nvidia-driver-550..."
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update -y -q
+    apt-get install -y nvidia-driver-550 2>/dev/null \
+        || apt-get install -y nvidia-driver-545 2>/dev/null \
+        || apt-get install -y nvidia-driver-535 2>/dev/null \
+        || warn "Driver upgrade failed — GPU models may not work until driver is updated"
+
+    # Reinstall PyTorch matching the new driver
+    echo "  Reinstalling PyTorch cu124 wheels for new driver..."
+    uv_install --upgrade torch torchaudio \
+        --index-url "https://download.pytorch.org/whl/cu124" \
+        || "$CONDA_PIP" install --upgrade torch torchaudio \
+           --index-url "https://download.pytorch.org/whl/cu124"
+    ok "PyTorch reinstalled"
+    DRIVER_UPGRADED=true
 fi
 
 # ─── [2] QWEN-ASR PACKAGE ────────────────────────────────────────────────────
