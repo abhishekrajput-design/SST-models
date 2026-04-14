@@ -58,15 +58,15 @@ def main():
     )
     parser.add_argument(
         "--whisper-model",
-        default="medium",
-        choices=["large-v3", "large-v2", "medium", "small", "base", "tiny"],
-        help="Whisper model size (default: medium, recommended for 4GB GPU)",
+        default="large-v3",
+        choices=["large-v3", "large-v3-turbo", "distil-large-v3", "large-v2", "medium", "small", "base", "tiny"],
+        help="Whisper model size (default: large-v3 for 6GB VRAM)",
     )
     parser.add_argument(
         "--compute-type",
-        default="int8",
+        default="float16",
         choices=["int8", "float16", "float32"],
-        help="Whisper compute type — int8 for 4GB VRAM (default: int8)",
+        help="Whisper compute type — float16 for 6GB VRAM, int8 for 4GB (default: float16)",
     )
     parser.add_argument(
         "--language",
@@ -74,10 +74,15 @@ def main():
         help="Language code for transcription (default: en)",
     )
     parser.add_argument(
+        "--initial-prompt",
+        default="CarPlanet car dealership. Agent speaking with customer.",
+        help="Initial prompt for Whisper to prime domain context (reduces hallucination)",
+    )
+    parser.add_argument(
         "--device",
-        default="cpu",
-        choices=["cuda", "cpu"],
-        help="Device for diarization and speaker ID stages (default: cpu)",
+        default="auto",
+        choices=["auto", "cuda", "cpu"],
+        help="Device for diarization and speaker ID stages (default: auto)",
     )
     parser.add_argument(
         "--whisper-device",
@@ -125,6 +130,12 @@ def main():
         print("Run 'python enroll_agents.py' first to enroll agent voices.")
         print("Proceeding without speaker identification...\n")
 
+    # Resolve device (auto → cuda if available, else cpu)
+    import torch
+    device = args.device
+    if device == "auto":
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+
     # Run pipeline
     from src.pipeline import CallProcessor
 
@@ -136,10 +147,11 @@ def main():
         whisper_compute_type=args.compute_type,
         whisper_device=args.whisper_device,
         language=args.language,
-        device=args.device,
+        device=device,
         similarity_threshold=args.threshold,
         min_segment_duration=args.min_segment,
         output_dir=args.output,
+        initial_prompt=args.initial_prompt,
     )
 
     result = processor.process(args.input)

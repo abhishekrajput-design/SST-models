@@ -29,12 +29,28 @@ PORT = 8080
 PROCESSED_DIR = "data/processed"
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 
-# FFmpeg filter: safe chain for phone audio
+# FFmpeg filter: aggressive desk-recording voice enhancement chain
+# 1. highpass 100 Hz   → remove AC rumble / desk thumps
+# 2. lowpass 7.5 kHz   → remove hiss (voice sits <6 kHz anyway)
+# 3. afftdn  nr=25     → aggressive spectral noise reduction (−25 dB floor)
+# 4. EQ −4 dB @ 300 Hz → tame muddiness
+# 5. EQ +5 dB @ 3 kHz  → voice presence / intelligibility
+# 6. EQ +4 dB @ 5 kHz  → consonant clarity ("s", "t", "sh")
+# 7. compand           → heavy compression = consistent perceived loudness
+# 8. volume 6x         → loud boost (≈ +15 dB)
+# 9. loudnorm −14 LUFS → broadcast-loud target (most streaming platforms)
+# 10. alimiter         → final peak limiter so nothing clips
 AUDIO_FILTER = (
-    "highpass=f=80,"
-    "afftdn=nf=-20:nt=w,"
-    "volume=3.0,"
-    "loudnorm"
+    "highpass=f=100,"
+    "lowpass=f=7500,"
+    "afftdn=nr=25:nf=-25:nt=w,"
+    "equalizer=f=300:t=q:w=2:g=-4,"
+    "equalizer=f=3000:t=q:w=1.5:g=5,"
+    "equalizer=f=5000:t=q:w=1.5:g=4,"
+    "compand=attacks=0:points=-80/-80|-40/-20|-20/-10|-5/-5|0/-3:soft-knee=6,"
+    "volume=6.0,"
+    "loudnorm=I=-14:TP=-1.5:LRA=5,"
+    "alimiter=level_in=1:level_out=0.97:limit=0.97"
 )
 
 # ── Pipeline status (shared) ──────────────────────────────────────────────────
@@ -121,7 +137,30 @@ def _enhance_noisereduce(input_path: str, output_path: str, max_seconds: int = 3
                 os.remove(p)
 
 
-# ── Pipeline 3: DeepFilterNet3 — neural (GPU, soundfile I/O) ─────────────────
+# ── Pipeline 3: angelina 10-stage desk-recording cleanup ─────────────────────
+def _enhance_angelina(input_path: str, output_path: str, max_seconds: int = 300):
+    """
+    Run the angelina cleanup pipeline (src/audio_cleanup.py):
+    two-pass noise gate · bandpass 85-6500 Hz · VAD · energy gate ·
+    clarity gate · per-segment normalization · DRC · crossfade
+    Outputs 16 kHz mono WAV (re-encoded to MP3 for browser preview).
+    """
+    import sys as _sys
+    import os as _os
+    _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+    from src.audio_cleanup import clean_audio
+
+    wav = _to_wav(input_path, max_seconds=max_seconds)
+    out_wav = output_path.replace(".mp3", ".wav")
+    try:
+        clean_audio(wav, out_wav)
+        _wav_to_mp3(out_wav, output_path)
+    finally:
+        if _os.path.exists(wav):
+            _os.remove(wav)
+
+
+# ── Pipeline 3b: DeepFilterNet3 — neural (GPU, soundfile I/O) ────────────────
 def _enhance_deepfilternet(input_path: str, output_path: str, max_seconds: int = 300):
     """
     DeepFilterNet3 neural noise suppression.
@@ -231,10 +270,94 @@ def _derive_paths(original_path: str) -> dict:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+#  Whisper-only transcription (fallback when HF_TOKEN not set)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-turbo") -> str:
+    """
+    Run any registered transcriber in-process (Whisper, Cohere, Parakeet, Qwen3, VibeVoice).
+    Returns result_id (basename of FFmpeg-enhanced file).
+    Writes result.json to data/processed/<result_id>/.
+    """
+    import time
+    from datetime import datetime
+    import sys as _sys
+    _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from src.transcribers import get_transcriber
+
+    base     = os.path.splitext(os.path.basename(audio_path))[0]
+    # Use a per-model directory so each model run is stored separately
+    dir_name = f"{base}__{whisper_model}"
+    out_dir  = os.path.join("data", "processed", dir_name)
+    os.makedirs(out_dir, exist_ok=True)
+
+    # Normalize to 16 kHz mono WAV once (shared across models for the same audio)
+    norm_dir = os.path.join("data", "processed", base)
+    os.makedirs(norm_dir, exist_ok=True)
+    norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
+    if not os.path.exists(norm_wav):
+        _set_status(1, "Transcription", "Normalizing audio to 16 kHz mono...")
+        print("[UI] Normalizing audio...")
+        subprocess.run(
+            ["ffmpeg", "-y", "-i", audio_path,
+             "-ar", "16000", "-ac", "1",
+             "-af", "loudnorm=I=-23:TP=-1:LRA=7",
+             norm_wav],
+            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+
+    _set_status(2, "Transcription", f"Loading {whisper_model}...")
+    print(f"[UI] Loading transcriber: {whisper_model}")
+    transcriber = get_transcriber(whisper_model, device="cuda")
+    transcriber.load()
+
+    _set_status(3, "Transcription", f"Transcribing with {whisper_model}...")
+    print(f"[UI] Transcribing with {whisper_model}...")
+    t0 = time.time()
+    segments = transcriber.transcribe(norm_wav, language="en")
+    elapsed = round(time.time() - t0, 2)
+
+    transcriber.unload()
+
+    result = {
+        "audio_file":               audio_path.replace("\\", "/"),
+        "model":                    whisper_model,
+        "processed_at":             datetime.now().isoformat(),
+        "processing_time_seconds":  elapsed,
+        "total_segments":           len(segments),
+        "segments":                 segments,
+        "note": f"Transcribed with {whisper_model} (no diarization unless model provides it)",
+    }
+    result_path = os.path.join(out_dir, "result.json")
+    with open(result_path, "w", encoding="utf-8") as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+    print(f"[UI] result.json saved → {result_path} ({len(segments)} segs, {elapsed:.0f}s)")
+    return dir_name
+
+
+def _flush_result(path: str, audio_path: str, segments: list, elapsed: float):
+    """Write partial result.json so the UI can show progress mid-transcription."""
+    from datetime import datetime
+    tmp = {
+        "audio_file":              audio_path.replace("\\", "/"),
+        "processed_at":            datetime.now().isoformat(),
+        "processing_time_seconds": round(elapsed, 2),
+        "total_segments":          len(segments),
+        "segments":                segments,
+        "note": "Partial — transcription in progress",
+    }
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(tmp, f, indent=2, ensure_ascii=False)
+    except Exception:
+        pass
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 #  Main pipeline thread
 # ══════════════════════════════════════════════════════════════════════════════
 
-def _run_pipeline(upload_path: str, filename: str):
+def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v3"):
     """
     Stage 0a — FFmpeg enhancement  (full audio, used by AI pipeline)
     Stage 0b — noisereduce          (first 5 min)
@@ -252,96 +375,129 @@ def _run_pipeline(upload_path: str, filename: str):
         _status.update(running=True, done=False, error=None, result_id=None)
 
     try:
-        # ── 0a FFmpeg (full audio, no clip — used by pipeline) ───────────
-        _set_status(0, "Enhancing Audio", "[1/4] FFmpeg · highpass · afftdn · 3× volume...")
-        print("[UI] Stage 0a: FFmpeg...")
-        try:
-            _enhance_ffmpeg(upload_path, paths["ffmpeg"], max_seconds=None)
-            enhancement_paths["ffmpeg"] = paths["ffmpeg"]
-            print("[UI] FFmpeg done.")
-        except Exception as e:
-            print(f"[UI] FFmpeg failed: {e}")
-            paths["ffmpeg"] = upload_path
+        # If the file is already an enhanced output, skip re-enhancement to
+        # avoid double-processing (which truncates the audio to garbage).
+        already_enhanced = os.path.basename(upload_path).startswith("enhanced_")
+
+        if already_enhanced:
+            _set_status(0, "Enhancing Audio", "File already enhanced — skipping re-processing...")
+            print("[UI] Skipping enhancement: file already starts with 'enhanced_'.")
+            paths["ffmpeg"] = upload_path.replace("\\", "/")
             enhancement_paths["ffmpeg"] = upload_path.replace("\\", "/")
+        else:
+            # ── 0a FFmpeg (full audio, no clip — used by pipeline) ───────────
+            _set_status(0, "Enhancing Audio", "[1/4] FFmpeg · highpass · afftdn · 3× volume...")
+            print("[UI] Stage 0a: FFmpeg...")
+            try:
+                _enhance_ffmpeg(upload_path, paths["ffmpeg"], max_seconds=None)
+                enhancement_paths["ffmpeg"] = paths["ffmpeg"]
+                print("[UI] FFmpeg done.")
+            except Exception as e:
+                print(f"[UI] FFmpeg failed: {e}")
+                paths["ffmpeg"] = upload_path
+                enhancement_paths["ffmpeg"] = upload_path.replace("\\", "/")
 
-        # ── 0b noisereduce (5 min preview) ───────────────────────────────
-        _set_status(0, "Enhancing Audio", "[2/4] noisereduce · spectral gating (5-min)...")
-        print("[UI] Stage 0b: noisereduce...")
-        try:
-            _enhance_noisereduce(upload_path, paths["noisereduce"], max_seconds=300)
-            enhancement_paths["noisereduce"] = paths["noisereduce"]
-            print("[UI] noisereduce done.")
-        except ImportError:
-            print("[UI] noisereduce not installed.")
-        except Exception as e:
-            print(f"[UI] noisereduce failed: {e}")
+            # ── 0b noisereduce (5 min preview) ───────────────────────────────
+            _set_status(0, "Enhancing Audio", "[2/4] noisereduce · spectral gating (5-min)...")
+            print("[UI] Stage 0b: noisereduce...")
+            try:
+                _enhance_noisereduce(upload_path, paths["noisereduce"], max_seconds=300)
+                enhancement_paths["noisereduce"] = paths["noisereduce"]
+                print("[UI] noisereduce done.")
+            except ImportError:
+                print("[UI] noisereduce not installed.")
+            except Exception as e:
+                print(f"[UI] noisereduce failed: {e}")
 
-        # ── 0c DeepFilterNet (5 min preview) ─────────────────────────────
-        _set_status(0, "Enhancing Audio", "[3/4] DeepFilterNet3 · neural GPU model (5-min)...")
-        print("[UI] Stage 0c: DeepFilterNet...")
-        try:
-            _enhance_deepfilternet(upload_path, paths["deepfilter"], max_seconds=300)
-            enhancement_paths["deepfilter"] = paths["deepfilter"]
-            print("[UI] DeepFilterNet done.")
-        except ImportError:
-            print("[UI] deepfilternet not installed.")
-        except Exception as e:
-            print(f"[UI] DeepFilterNet failed: {e}")
+            # ── 0c angelina desk-recording cleanup (5 min preview) ───────────
+            _set_status(0, "Enhancing Audio", "[3/4] angelina · 10-stage desk-recording cleanup (5-min)...")
+            print("[UI] Stage 0c: angelina cleanup...")
+            try:
+                _enhance_angelina(upload_path, paths["deepfilter"], max_seconds=300)
+                enhancement_paths["deepfilter"] = paths["deepfilter"]
+                print("[UI] angelina done.")
+            except ImportError:
+                print("[UI] librosa not installed — skipping angelina.")
+            except Exception as e:
+                print(f"[UI] angelina failed: {e}")
 
-        # ── 0d SpeechBrain MetricGAN+ (5 min preview) ────────────────────
-        _set_status(0, "Enhancing Audio", "[4/4] SpeechBrain MetricGAN+ · PESQ-optimised (5-min)...")
-        print("[UI] Stage 0d: SpeechBrain MetricGAN+...")
-        try:
-            _enhance_metricgan(upload_path, paths["metricgan"], max_seconds=300)
-            enhancement_paths["metricgan"] = paths["metricgan"]
-            print("[UI] MetricGAN+ done.")
-        except ImportError:
-            print("[UI] speechbrain not installed.")
-        except Exception as e:
-            print(f"[UI] MetricGAN+ failed: {e}")
+            # ── 0d SpeechBrain MetricGAN+ (5 min preview) ────────────────────
+            _set_status(0, "Enhancing Audio", "[4/4] SpeechBrain MetricGAN+ · PESQ-optimised (5-min)...")
+            print("[UI] Stage 0d: SpeechBrain MetricGAN+...")
+            try:
+                _enhance_metricgan(upload_path, paths["metricgan"], max_seconds=300)
+                enhancement_paths["metricgan"] = paths["metricgan"]
+                print("[UI] MetricGAN+ done.")
+            except ImportError:
+                print("[UI] speechbrain not installed.")
+            except Exception as e:
+                print(f"[UI] MetricGAN+ failed: {e}")
 
-        # ── Stages 1-3: AI pipeline ───────────────────────────────────────
-        _set_status(1, "Speaker Diarization", "Loading pyannote · detecting who speaks when...")
-        print("[UI] Stage 1: AI pipeline...")
+        # ── Stages 1-3: AI pipeline (or transcription-only fallback) ────────
         pipeline_audio = paths["ffmpeg"]
 
-        cmd = [
-            "python", "run_e2e.py",
-            "--hf-token", HF_TOKEN,
-            "--device", "cuda",
-            "--skip-extraction", "--skip-enrollment",
-            "--test-audio", pipeline_audio,
-        ]
+        # run_e2e.py (pyannote diarization) only used when enrolled agent
+        # embeddings exist. Without enrollment, all models use inline path.
+        _WHISPER_MODELS = {
+            "whisper-large-v3-turbo", "whisper-large-v3",
+            "large-v3-turbo", "large-v3",
+            "distil-large-v3", "distil-large-v3.5",
+        }
+        embeddings_exist = os.path.isfile(
+            os.path.join("data", "embeddings", "agent_embeddings.pkl")
+        )
+        use_inline = (
+            (not HF_TOKEN)
+            or (whisper_model not in _WHISPER_MODELS)
+            or (not embeddings_exist)
+        )
 
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                text=True, encoding="utf-8", errors="replace")
-        for raw in proc.stdout:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                print(f"[Pipeline] {line}", flush=True)
-            except UnicodeEncodeError:
-                print(f"[Pipeline] {line.encode('ascii', errors='replace').decode('ascii')}", flush=True)
+        if use_inline:
+            label = whisper_model if whisper_model in _WHISPER_MODELS else whisper_model
+            _set_status(1, "Transcription", f"Transcribing with {label}...")
+            print(f"[UI] Inline transcription mode ({label}).")
+            result_id = _transcribe_inline(pipeline_audio, whisper_model)
+        else:
+            # Full pipeline via run_e2e.py subprocess (Whisper + pyannote diarization)
+            _set_status(1, "Speaker Diarization", "Loading pyannote · detecting who speaks when...")
+            print("[UI] Stage 1: AI pipeline...")
+            cmd = [
+                "python", "run_e2e.py",
+                "--hf-token", HF_TOKEN,
+                "--device", "cuda",
+                "--whisper-model", whisper_model,
+                "--skip-extraction", "--skip-enrollment",
+                "--test-audio", pipeline_audio,
+            ]
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                    text=True, encoding="utf-8", errors="replace")
+            for raw in proc.stdout:
+                line = raw.strip()
+                if not line:
+                    continue
+                try:
+                    print(f"[Pipeline] {line}", flush=True)
+                except UnicodeEncodeError:
+                    print(f"[Pipeline] {line.encode('ascii', errors='replace').decode('ascii')}", flush=True)
 
-            if "Stage 1" in line or "iarization" in line:
-                _set_status(1, "Speaker Diarization", "Detecting who speaks when...")
-            elif "Stage 2" in line or "Speaker Identification" in line or "embedding" in line.lower():
-                _set_status(2, "Speaker Identification", "Matching voices to enrolled agents...")
-            elif "Stage 3" in line or "Transcription" in line or "Transcribing" in line:
-                _set_status(3, "Transcription", "Converting speech to text with Whisper...")
-            elif "Pipeline complete" in line or "PROCESSING COMPLETE" in line:
-                _set_status(4, "Finalizing", "Saving results...")
+                if "Stage 1" in line or "iarization" in line:
+                    _set_status(1, "Speaker Diarization", "Detecting who speaks when...")
+                elif "Stage 2" in line or "Speaker Identification" in line or "embedding" in line.lower():
+                    _set_status(2, "Speaker Identification", "Matching voices to enrolled agents...")
+                elif "Stage 3" in line or "Transcription" in line or "Transcribing" in line:
+                    _set_status(3, "Transcription", "Converting speech to text with Whisper...")
+                elif "Pipeline complete" in line or "PROCESSING COMPLETE" in line:
+                    _set_status(4, "Finalizing", "Saving results...")
 
-        proc.wait()
-        if proc.returncode != 0:
-            with _status_lock:
-                _status.update(error="Pipeline failed. Check terminal.", running=False)
-            return
+            proc.wait()
+            if proc.returncode != 0:
+                with _status_lock:
+                    _status.update(error="Pipeline failed. Check terminal.", running=False)
+                return
+
+            result_id   = os.path.splitext(os.path.basename(paths["ffmpeg"]))[0]
 
         # ── Patch result.json ─────────────────────────────────────────────
-        enhanced_filename = os.path.basename(paths["ffmpeg"])
-        result_id   = os.path.splitext(enhanced_filename)[0]
         result_path = os.path.join("data", "processed", result_id, "result.json")
         if os.path.isfile(result_path):
             try:
@@ -465,8 +621,52 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             calls = []
             if os.path.exists(PROCESSED_DIR):
                 for d in sorted(os.listdir(PROCESSED_DIR), reverse=True):
-                    if os.path.isfile(os.path.join(PROCESSED_DIR, d, "result.json")):
-                        calls.append(d)
+                    rp = os.path.join(PROCESSED_DIR, d, "result.json")
+                    if not os.path.isfile(rp):
+                        continue
+                    try:
+                        with open(rp, encoding="utf-8") as f:
+                            rdata = json.load(f)
+                        audio_file = rdata.get("audio_file", "")
+                        # Derive original file path (strip enhanced_ prefix)
+                        orig_file = audio_file.replace("enhanced_", "").replace("\\", "/")
+                        # Get original audio metadata via ffprobe
+                        orig_meta = {}
+                        if orig_file and os.path.isfile(orig_file):
+                            try:
+                                import subprocess as _sp
+                                r = _sp.run(
+                                    ["ffprobe", "-v", "quiet", "-print_format", "json",
+                                     "-show_format", "-show_streams", orig_file],
+                                    capture_output=True, text=True, timeout=10
+                                )
+                                if r.returncode == 0:
+                                    fd = json.loads(r.stdout)
+                                    fmt = fd.get("format", {})
+                                    streams = fd.get("streams", [{}])
+                                    orig_meta = {
+                                        "duration_s": round(float(fmt.get("duration", 0))),
+                                        "bitrate_kbps": int(fmt.get("bit_rate", 0)) // 1000,
+                                        "size_mb": round(int(fmt.get("size", 0)) / 1024 / 1024, 1),
+                                        "sample_rate": streams[0].get("sample_rate", "?"),
+                                        "channels": streams[0].get("channels", 1),
+                                    }
+                            except Exception:
+                                pass
+                        calls.append({
+                            "id": d,
+                            "model": rdata.get("model", "unknown"),
+                            "segments": rdata.get("total_segments", 0),
+                            "processed_at": rdata.get("processed_at", ""),
+                            "processing_time_s": rdata.get("processing_time_seconds", 0),
+                            "audio_file": audio_file,
+                            "orig_file": orig_file,
+                            "orig_meta": orig_meta,
+                        })
+                    except Exception:
+                        calls.append({"id": d, "model": "unknown", "segments": 0,
+                                      "processed_at": "", "processing_time_s": 0,
+                                      "audio_file": "", "orig_file": "", "orig_meta": {}})
             self._json(calls)
             return
 
@@ -574,15 +774,20 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 return
             query    = parse_qs(parsed.query)
             filename = query.get("filename", ["upload.mp3"])[0]
+            model    = query.get("model",    ["whisper-large-v3-turbo"])[0]
             os.makedirs("data/raw_calls", exist_ok=True)
             upload_path = os.path.join("data", "raw_calls", filename)
             n = int(self.headers.get("Content-Length", 0))
             if n > 0:
                 with open(upload_path, "wb") as f:
                     f.write(self.rfile.read(n))
-            threading.Thread(target=_run_pipeline, args=(upload_path, filename),
+            # Clear any stale error from a previous run
+            with _status_lock:
+                _status.update(running=False, done=False, error=None, result_id=None,
+                               stage_num=0, stage="Idle", message="")
+            threading.Thread(target=_run_pipeline, args=(upload_path, filename, model),
                              daemon=True).start()
-            self._json({"status": "started", "filename": filename})
+            self._json({"status": "started", "filename": filename, "model": model})
             return
         self.send_response(404)
         self.end_headers()

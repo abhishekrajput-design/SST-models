@@ -1,0 +1,133 @@
+"""Qwen3-ASR-1.7B — 52-language + dialect support, 2026.
+
+Uses the official qwen-asr package (pip install qwen-asr).
+Chunks 30-min audio into 60s pieces to fit in 6 GB VRAM.
+Language arg maps ISO codes to full names expected by the API.
+"""
+from __future__ import annotations
+import os
+import time
+import subprocess
+import tempfile
+from typing import List, Dict, Any
+from .base import BaseTranscriber
+
+# Local cache path (downloaded by download_models.py)
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+LOCAL_MODEL_DIR = os.path.join(_THIS_DIR, "..", "..", "models", "hf", "Qwen__Qwen3-ASR-1.7B")
+HF_MODEL_ID = "Qwen/Qwen3-ASR-1.7B"
+
+CHUNK_S = 60  # process in 60s chunks to avoid OOM on 6 GB GPU
+
+# qwen-asr wants full language names
+ISO_TO_LANG = {
+    "en": "English", "zh": "Chinese", "fr": "French", "de": "German",
+    "es": "Spanish", "ja": "Japanese", "ko": "Korean", "pt": "Portuguese",
+    "ru": "Russian", "it": "Italian", "ar": "Arabic", "vi": "Vietnamese",
+    "nl": "Dutch", "pl": "Polish", "el": "Greek",
+}
+
+
+class Qwen3AsrTranscriber(BaseTranscriber):
+    name = "qwen3-asr-1.7b"
+
+    def __init__(self, device: str = "cuda", model_dir: str | None = None):
+        super().__init__(device=device, model_dir=model_dir)
+
+    def load(self) -> None:
+        if self.model is not None:
+            return
+        try:
+            from qwen_asr import Qwen3ASRModel
+        except ImportError:
+            raise RuntimeError("Install qwen-asr: pip install qwen-asr")
+
+        import torch
+        # Free GPU memory from previous models
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+        # Prefer local dir; fall back to HF download
+        model_path = LOCAL_MODEL_DIR if os.path.isdir(LOCAL_MODEL_DIR) else HF_MODEL_ID
+        device_map = "cuda:0" if (self.device == "cuda" and torch.cuda.is_available()) else "cpu"
+
+        self.model = Qwen3ASRModel.from_pretrained(
+            model_path,
+            dtype=torch.bfloat16,
+            device_map=device_map,
+            max_inference_batch_size=4,   # keeps peak VRAM manageable on 6 GB
+            max_new_tokens=512,
+        )
+
+    def _audio_duration(self, audio_path: str) -> float:
+        import json
+        r = subprocess.run(
+            ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", audio_path],
+            capture_output=True, text=True,
+        )
+        return float(json.loads(r.stdout)["format"]["duration"])
+
+    def _wav_chunk(self, audio_path: str, start_s: float, duration_s: float) -> str:
+        fd, tmp = tempfile.mkstemp(suffix=".wav")
+        os.close(fd)
+        subprocess.run(
+            ["ffmpeg", "-y", "-i", audio_path,
+             "-ss", str(start_s), "-t", str(duration_s),
+             "-ac", "1", "-ar", "16000", tmp],
+            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        return tmp
+
+    def _safe_delete(self, path: str) -> None:
+        try:
+            os.unlink(path)
+        except (PermissionError, OSError):
+            pass
+
+    def transcribe(self, audio_path: str, language: str = "en") -> List[Dict[str, Any]]:
+        self.load()
+        t0 = time.time()
+        lang_full = ISO_TO_LANG.get(language, "English")
+        total_dur = self._audio_duration(audio_path)
+        out: List[Dict[str, Any]] = []
+
+        start = 0.0
+        while start < total_dur:
+            dur = min(CHUNK_S, total_dur - start)
+            if dur < 0.5:
+                break
+
+            tmp = self._wav_chunk(audio_path, start, dur)
+            try:
+                results = self.model.transcribe(audio=tmp, language=lang_full)
+                text = results[0].text.strip() if results else ""
+            except Exception as e:
+                print(f"  [Qwen3-ASR] chunk {start:.0f}s failed: {e}")
+                text = ""
+            finally:
+                self._safe_delete(tmp)
+
+            if text:
+                out.append({
+                    "start": round(start, 2),
+                    "end":   round(start + dur, 2),
+                    "text":  text,
+                    "speaker": "SPEAKER_00",
+                    "identified_speaker": "SPEAKER_00",
+                    "confidence": 0.0,
+                })
+            start += dur
+
+        print(f"  [Qwen3-ASR] {len(out)} segments in {time.time()-t0:.1f}s")
+        return out
+
+    def unload(self) -> None:
+        import gc
+        self.model = None
+        gc.collect()
+        try:
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except ImportError:
+            pass

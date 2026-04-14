@@ -182,7 +182,7 @@
             z-index: 50;
             background: #080f1e;
             border-bottom: 1px solid rgba(255,255,255,0.07);
-            padding: 12px 28px 10px;
+            padding: 16px 32px 14px;
         }
         .compare-header {
             display: flex;
@@ -214,8 +214,8 @@
 
         .compare-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
         .audio-track {
             border-radius: 11px;
@@ -326,6 +326,69 @@
         .track-nr         audio { accent-color: #f59e0b; }
         .track-deepfilter audio { accent-color: #a855f7; }
 
+        /* Custom seek-bar player */
+        .cp-player {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0 4px;
+        }
+        .cp-btn {
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s;
+            flex-shrink: 0;
+        }
+        .cp-btn:hover { color: #fff; }
+        .cp-time, .cp-dur {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            font-variant-numeric: tabular-nums;
+            flex-shrink: 0;
+            min-width: 34px;
+        }
+        .cp-dur { text-align: right; }
+        .cp-seek {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.12);
+            outline: none;
+            cursor: pointer;
+            min-width: 0;
+        }
+        .cp-seek::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 0 4px rgba(59,130,246,0.5);
+            transition: transform 0.1s;
+        }
+        .cp-seek::-webkit-slider-thumb:hover { transform: scale(1.3); }
+        .track-original .cp-seek::-webkit-slider-thumb { background: #64748b; }
+        .cp-mute {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 2px;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .cp-mute:hover { color: #94a3b8; }
+
         /* Transcript-sync player gets a subtle glow */
         .track-ffmpeg { box-shadow: 0 0 0 1px rgba(59,130,246,0.15) inset; }
 
@@ -341,14 +404,14 @@
         }
 
         .chat-bubble {
-            max-width: 70%;
-            padding: 16px 20px;
-            border-radius: 20px;
+            max-width: 72%;
+            padding: 14px 18px;
+            border-radius: 18px;
             position: relative;
             animation: fadeIn 0.3s ease-out;
             line-height: 1.5;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-size: 0.93rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             transition: all 0.2s ease;
         }
 
@@ -359,29 +422,41 @@
         }
 
         .chat-agent {
-            background-color: var(--agent-bg);
-            color: var(--agent-text);
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            color: #fff;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
         }
 
         .chat-customer {
-            background-color: var(--customer-bg);
-            color: var(--customer-text);
+            background: linear-gradient(135deg, #334155, #475569);
+            color: #e2e8f0;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
         }
 
         .chat-meta {
-            font-size: 0.75rem;
-            margin-bottom: 8px;
-            opacity: 0.8;
+            font-size: 0.72rem;
+            margin-bottom: 6px;
+            opacity: 0.85;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-weight: 600;
-            letter-spacing: 0.02em;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
+
+        .speaker-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .speaker-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+        }
+        .chat-agent .speaker-dot { background: #93c5fd; }
+        .chat-customer .speaker-dot { background: #94a3b8; }
 
         .time-badge {
             background: rgba(0,0,0,0.2);
@@ -546,6 +621,20 @@
         </div>
         <div class="upload-section">
             <input type="file" id="audioUpload" accept="audio/*" style="display: none;">
+            <select id="modelSelect" style="width:100%; margin-bottom:10px; padding:8px 10px; background:var(--surface-hover); color:var(--text-primary); border:1px solid rgba(255,255,255,0.12); border-radius:8px; font-size:0.82rem; cursor:pointer;">
+                <optgroup label="☁️ Cloud API (fast, no GPU)">
+                <option value="deepgram-nova-3">Deepgram Nova-3 · best accuracy · diarization · ~5s</option>
+                <option value="deepgram-nova-2-phonecall">Deepgram Nova-2 Phone · optimised for desk/call audio · ~5s</option>
+                <option value="deepgram-nova-2-meeting">Deepgram Nova-2 Meeting · multi-speaker meetings · ~5s</option>
+                </optgroup>
+                <optgroup label="🖥️ Local GPU models">
+                <option value="whisper-large-v3-turbo">Whisper Large-v3-Turbo · 52s · 555 segs · best local</option>
+                <option value="parakeet-tdt-0.6b-v3">NVIDIA Parakeet TDT v3 · 94s · 300 segs · 3 GB VRAM</option>
+                <option value="qwen3-asr-1.7b">Qwen3-ASR-1.7B · 5 min · 52 langs · 4.7 GB VRAM</option>
+                <option value="vibevoice-asr">Microsoft VibeVoice-ASR · long-form + diarization (AWS only)</option>
+                <option value="cohere-transcribe-03-2026">Cohere Transcribe 03-2026 · quality issues on desk audio</option>
+                </optgroup>
+            </select>
             <button class="upload-btn" onclick="document.getElementById('audioUpload').click()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 <span id="uploadText">Upload New Audio</span>
@@ -577,8 +666,7 @@
 
         <div class="audio-compare" id="audioCompare">
             <div class="compare-header">
-                <span class="compare-title">Audio Enhancement Comparison · 5-min preview each</span>
-                <button class="gen-all-btn" id="btnGenAll" onclick="generateEnhancements()">⚡ Generate All Enhancements</button>
+                <span class="compare-title">Audio</span>
             </div>
             <div class="compare-grid">
 
@@ -589,52 +677,37 @@
                         <span class="track-title">Original</span>
                         <span class="track-badge badge-raw">Raw</span>
                     </div>
-                    <audio id="audioOriginal" controls preload="metadata"></audio>
+                    <audio id="audioOriginal" preload="metadata"></audio>
+                    <div class="cp-player" id="cpOrig">
+                        <button class="cp-btn" id="cpOrigBtn" title="Play/Pause">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                        <span class="cp-time" id="cpOrigTime">0:00</span>
+                        <input type="range" class="cp-seek" id="cpOrigSeek" value="0" min="0" max="100" step="0.01">
+                        <span class="cp-dur" id="cpOrigDur">--:--</span>
+                        <button class="cp-mute" id="cpOrigMute" title="Mute">🔊</button>
+                    </div>
                     <div class="track-note">Unprocessed upload</div>
                 </div>
 
-                <!-- 2. FFmpeg — synced to transcript -->
+                <!-- 2. Enhanced — synced to transcript -->
                 <div class="audio-track track-ffmpeg">
                     <div class="track-header">
                         <div class="track-dot dot-ffmpeg"></div>
-                        <span class="track-title">FFmpeg</span>
+                        <span class="track-title">Enhanced</span>
                         <span class="track-badge badge-ffmpeg">Synced</span>
                     </div>
-                    <audio id="audioPlayer" controls preload="metadata"></audio>
-                    <div class="track-note">highpass · afftdn · 3× vol · loudnorm</div>
-                </div>
-
-                <!-- 3. noisereduce -->
-                <div class="audio-track track-nr track-unavailable" id="trackNr">
-                    <div class="track-header">
-                        <div class="track-dot dot-nr"></div>
-                        <span class="track-title">noisereduce</span>
-                        <span class="track-badge badge-nr">Spectral</span>
+                    <audio id="audioPlayer" preload="metadata"></audio>
+                    <div class="cp-player" id="cpEnh">
+                        <button class="cp-btn" id="cpEnhBtn" title="Play/Pause">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                        <span class="cp-time" id="cpEnhTime">0:00</span>
+                        <input type="range" class="cp-seek" id="cpEnhSeek" value="0" min="0" max="100" step="0.01">
+                        <span class="cp-dur" id="cpEnhDur">--:--</span>
+                        <button class="cp-mute" id="cpEnhMute" title="Mute">🔊</button>
                     </div>
-                    <audio id="audioNr" controls preload="metadata"></audio>
-                    <div class="track-note" id="noteNr">Spectral gating · 3× vol · 5-min</div>
-                </div>
-
-                <!-- 4. DeepFilterNet3 -->
-                <div class="audio-track track-deepfilter track-unavailable" id="trackDf">
-                    <div class="track-header">
-                        <div class="track-dot dot-deepfilter"></div>
-                        <span class="track-title">DeepFilter</span>
-                        <span class="track-badge badge-df">Neural GPU</span>
-                    </div>
-                    <audio id="audioDf" controls preload="metadata"></audio>
-                    <div class="track-note" id="noteDf">DeepFilterNet3 · 5-min preview</div>
-                </div>
-
-                <!-- 5. SpeechBrain MetricGAN+ -->
-                <div class="audio-track track-metricgan track-unavailable" id="trackMg">
-                    <div class="track-header">
-                        <div class="track-dot dot-metricgan"></div>
-                        <span class="track-title">MetricGAN+</span>
-                        <span class="track-badge badge-mg">GAN</span>
-                    </div>
-                    <audio id="audioMg" controls preload="metadata"></audio>
-                    <div class="track-note" id="noteMg">SpeechBrain · PESQ 3.15 · 5-min</div>
+                    <div class="track-note">noise reduction · volume boost · loudnorm</div>
                 </div>
 
             </div>
@@ -688,16 +761,6 @@
             chatContainer:document.getElementById('chatContainer'),
             audioPlayer:  document.getElementById('audioPlayer'),
             audioOriginal:document.getElementById('audioOriginal'),
-            audioNr:      document.getElementById('audioNr'),
-            audioDf:      document.getElementById('audioDf'),
-            audioMg:      document.getElementById('audioMg'),
-            trackNr:      document.getElementById('trackNr'),
-            trackDf:      document.getElementById('trackDf'),
-            trackMg:      document.getElementById('trackMg'),
-            noteNr:       document.getElementById('noteNr'),
-            noteDf:       document.getElementById('noteDf'),
-            noteMg:       document.getElementById('noteMg'),
-            btnGenAll:    document.getElementById('btnGenAll'),
             statAgent:    document.getElementById('statAgent'),
             statSegs:     document.getElementById('statSegs'),
             statTime:     document.getElementById('statTime'),
@@ -708,27 +771,94 @@
         let currentCallId = null;
 
         // Fetch calls
+        function fmtDuration(s) {
+            if (!s) return '—';
+            const m = Math.floor(s / 60), sec = s % 60;
+            return m > 0 ? `${m}m ${sec}s` : `${sec}s`;
+        }
+
+        function modelBadgeColor(model) {
+            if (!model || model === 'unknown') return '#475569';
+            if (model.startsWith('deepgram')) return '#7c3aed';
+            if (model.startsWith('whisper')) return '#0369a1';
+            if (model.startsWith('parakeet')) return '#065f46';
+            if (model.startsWith('qwen')) return '#92400e';
+            if (model.startsWith('vibevoice') || model.startsWith('microsoft')) return '#1e40af';
+            return '#374151';
+        }
+
+        function shortModelName(model) {
+            if (!model || model === 'unknown') return 'unknown';
+            const map = {
+                'deepgram-nova-3': 'Deepgram Nova-3',
+                'deepgram-nova-2-phonecall': 'Nova-2 Phone',
+                'deepgram-nova-2-meeting': 'Nova-2 Meeting',
+                'whisper-large-v3-turbo': 'Whisper v3-Turbo',
+                'whisper-large-v3': 'Whisper v3',
+                'large-v3-turbo': 'Whisper v3-Turbo',
+                'parakeet-tdt-0.6b-v3': 'Parakeet v3',
+                'qwen3-asr-1.7b': 'Qwen3-ASR',
+                'vibevoice-asr': 'VibeVoice',
+                'cohere-transcribe-03-2026': 'Cohere Mar-26',
+            };
+            return map[model] || model;
+        }
+
         async function loadCalls() {
             try {
                 const res = await fetch('/api/calls');
                 const calls = await res.json();
-                
+
                 if (calls.length === 0) {
                     DOM.callList.innerHTML = `<div style="text-align:center; color:#94a3b8; padding: 20px;">No processed calls found.</div>`;
                     return;
                 }
 
-                DOM.callList.innerHTML = calls.map(c => `
-                    <div class="call-card" onclick="loadCallData('${c}', this)">
-                        <div class="call-title">📞 ${c}</div>
-                        <div style="font-size: 0.75rem; color: #94a3b8; display:flex; justify-content:space-between; align-items:center;">
-                            Click to view transcript
-                            <button onclick="deleteCall(event, '${c}')" style="background:transparent; border:none; color:var(--danger); cursor:pointer; padding: 2px;" title="Delete Call">
+                DOM.callList.innerHTML = calls.map((c, idx) => {
+                    // Support both old string format and new object format
+                    const id       = (typeof c === 'string') ? c : c.id;
+                    const num      = idx + 1;
+                    const model    = (typeof c === 'object') ? (c.model || 'unknown') : 'unknown';
+                    const segs     = (typeof c === 'object') ? (c.segments || 0) : 0;
+                    const meta     = (typeof c === 'object') ? (c.orig_meta || {}) : {};
+                    const procTime = (typeof c === 'object') ? (c.processing_time_s || 0) : 0;
+
+                    const badgeColor = modelBadgeColor(model);
+                    const modelLabel = shortModelName(model);
+
+                    const durStr    = meta.duration_s ? fmtDuration(meta.duration_s) : '—';
+                    const brStr     = meta.bitrate_kbps ? `${meta.bitrate_kbps} kbps` : '—';
+                    const sizeStr   = meta.size_mb ? `${meta.size_mb} MB` : '—';
+                    const chStr     = meta.channels === 1 ? 'Mono' : meta.channels === 2 ? 'Stereo' : '—';
+                    const srStr     = meta.sample_rate ? `${Math.round(meta.sample_rate/1000)}kHz` : '—';
+                    const procStr   = procTime ? `${Math.round(procTime)}s` : '—';
+
+                    return `
+                    <div class="call-card" onclick="loadCallData('${id}', this)">
+                        <div class="call-title" style="font-size:0.8rem; word-break:break-all; margin-bottom:6px; display:flex; align-items:flex-start; gap:6px;">
+                            <span style="flex-shrink:0; background:#334155; color:#94a3b8; font-size:0.65rem; font-weight:700; padding:2px 5px; border-radius:3px; margin-top:1px;">#${num}</span>
+                            <span>📞 ${id}</span>
+                        </div>
+
+                        <div style="margin-bottom:5px;">
+                            <span style="display:inline-block; background:${badgeColor}; color:#fff; font-size:0.68rem; font-weight:600; padding:2px 7px; border-radius:4px; letter-spacing:0.3px;">${modelLabel}</span>
+                            <span style="font-size:0.68rem; color:#94a3b8; margin-left:6px;">${segs} segs · ${procStr}</span>
+                        </div>
+
+                        <div style="font-size:0.7rem; color:#64748b; background:#0f172a; border-radius:4px; padding:5px 7px; margin-bottom:5px; line-height:1.6;">
+                            <span style="color:#94a3b8; font-weight:500;">Original audio</span><br>
+                            ⏱ ${durStr} &nbsp;·&nbsp; 📦 ${sizeStr} &nbsp;·&nbsp; ${brStr}<br>
+                            🎙 ${srStr} &nbsp;·&nbsp; ${chStr}
+                        </div>
+
+                        <div style="font-size:0.72rem; color:#94a3b8; display:flex; justify-content:space-between; align-items:center;">
+                            <span>Click to view transcript</span>
+                            <button onclick="deleteCall(event, '${id}')" style="background:transparent; border:none; color:var(--danger); cursor:pointer; padding: 2px;" title="Delete Call">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
                         </div>
-                    </div>
-                `).join('');
+                    </div>`;
+                }).join('');
             } catch (err) {
                 DOM.callList.innerHTML = `<div style="color:#ef4444; padding:20px;">Error loading data. Is the server running?</div>`;
             }
@@ -752,7 +882,7 @@
                     DOM.chatContainer.innerHTML = `<div class="placeholder">Call Deleted.</div>`;
                     DOM.headerStats.style.display = 'none';
                     DOM.audioCompare.style.display = 'none';
-                    [DOM.audioPlayer, DOM.audioOriginal, DOM.audioNr, DOM.audioDf, DOM.audioMg]
+                    [DOM.audioPlayer, DOM.audioOriginal]
                         .forEach(a => { if (a) { a.pause(); a.removeAttribute('src'); } });
                     loadCalls();
                 } else {
@@ -793,45 +923,13 @@
             const originalUrl = ffmpegUrl.replace(/\/enhanced_([^/]+)$/, (_, f) => '/' + f);
             const enh = data.enhancements || {};
 
-            // Helper: set one enhancement player
-            function setEnhPlayer(audio, track, note, url, readyNote) {
-                track.classList.add('track-unavailable');
-                audio.removeAttribute('src');
-                if (!url) return;
-                audio.src = url;
-                audio.load();
-                audio.oncanplay = () => {
-                    track.classList.remove('track-unavailable');
-                    note.textContent = readyNote;
-                };
-                audio.onerror = () => {
-                    track.classList.add('track-unavailable');
-                    note.textContent = 'Click ⚡ Generate to create';
-                };
-            }
-
             // 1 Original
             DOM.audioOriginal.src = originalUrl;
             DOM.audioOriginal.load();
 
-            // 2 FFmpeg (always present, synced to transcript)
+            // 2 Enhanced (synced to transcript)
             DOM.audioPlayer.src = ffmpegUrl;
             DOM.audioPlayer.load();
-
-            // 3 noisereduce
-            setEnhPlayer(DOM.audioNr, DOM.trackNr, DOM.noteNr,
-                enh.noisereduce ? toUrl(enh.noisereduce) : deriveUrl(ffmpegUrl, 'nr_'),
-                'Spectral gating · 3× vol · 5-min');
-
-            // 4 DeepFilterNet
-            setEnhPlayer(DOM.audioDf, DOM.trackDf, DOM.noteDf,
-                enh.deepfilter ? toUrl(enh.deepfilter) : deriveUrl(ffmpegUrl, 'df_'),
-                'DeepFilterNet3 · neural · 5-min');
-
-            // 5 MetricGAN+
-            setEnhPlayer(DOM.audioMg, DOM.trackMg, DOM.noteMg,
-                enh.metricgan ? toUrl(enh.metricgan) : deriveUrl(ffmpegUrl, 'mg_'),
-                'MetricGAN+ · PESQ 3.15 · 5-min');
 
             // Show comparison panel
             DOM.headerStats.style.display = 'flex';
@@ -845,23 +943,101 @@
             const agents = [...new Set(currentSegments.filter(s => s.identified_speaker?.startsWith('agent_')).map(s => s.identified_speaker.replace('agent_', '').toUpperCase()))];
             DOM.statAgent.innerText = agents.length > 0 ? agents.join(', ') : 'Unknown / Testing';
 
+            // ── Heuristic: most-speaking SPEAKER_ = agent ────────────────────
+            const spkTime = {};
+            currentSegments.forEach(s => {
+                const id = s.identified_speaker || s.speaker || 'Unknown';
+                spkTime[id] = (spkTime[id] || 0) + (s.end - s.start);
+            });
+            const agentSpkId = Object.entries(spkTime)
+                .filter(([k]) => !k.startsWith('agent_'))
+                .sort((a,b) => b[1]-a[1])[0]?.[0] || null;
+
             // Chat View
             DOM.chatContainer.innerHTML = currentSegments.map((seg, idx) => {
                 const spk = seg.identified_speaker || seg.speaker || 'Unknown';
-                const isAgent = spk.startsWith('agent_');
-                const displayName = isAgent ? spk.replace('agent_', '').toUpperCase() : 'CUSTOMER';
+                const isAgent = spk.startsWith('agent_') || spk === agentSpkId;
+                const displayName = isAgent ? 'AGENT' : 'CUSTOMER';
                 const cssClass = isAgent ? 'chat-agent' : 'chat-customer';
-                
+                if (!seg.text?.trim()) return '';
                 return `
                     <div class="chat-bubble ${cssClass}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
                         <div class="chat-meta">
-                            <span>${displayName}</span>
-                            <span class="time-badge" onclick="playFrom(${seg.start})">${fmt(seg.start)} - ${fmt(seg.end)}</span>
+                            <span class="speaker-label"><span class="speaker-dot"></span>${displayName}</span>
+                            <span class="time-badge" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
                         </div>
                         <div>${seg.text}</div>
                     </div>
                 `;
             }).join('');
+
+            // ── Custom players ────────────────────────────────────────────────
+            initCustomPlayer('audioOriginal', 'cpOrigBtn', 'cpOrigTime', 'cpOrigSeek', 'cpOrigDur', 'cpOrigMute');
+            initCustomPlayer('audioPlayer',   'cpEnhBtn',  'cpEnhTime',  'cpEnhSeek',  'cpEnhDur',  'cpEnhMute');
+        }
+
+        // ── Custom audio player ───────────────────────────────────────────────
+        const _cpState = {};
+
+        function cpFmt(s) {
+            s = Math.floor(s || 0);
+            const m = Math.floor(s/60), sec = s%60;
+            return `${m}:${sec.toString().padStart(2,'0')}`;
+        }
+
+        function initCustomPlayer(audioId, btnId, timeId, seekId, durId, muteId) {
+            const audio = document.getElementById(audioId);
+            const btn   = document.getElementById(btnId);
+            const tEl   = document.getElementById(timeId);
+            const seek  = document.getElementById(seekId);
+            const dur   = document.getElementById(durId);
+            const mute  = document.getElementById(muteId);
+            if (!audio || !btn) return;
+
+            // Clean up old listeners
+            if (_cpState[audioId]) {
+                const old = _cpState[audioId];
+                audio.removeEventListener('timeupdate', old.onTime);
+                audio.removeEventListener('loadedmetadata', old.onMeta);
+                audio.removeEventListener('ended', old.onEnd);
+            }
+
+            const onTime = () => {
+                if (!audio.duration) return;
+                tEl.textContent = cpFmt(audio.currentTime);
+                seek.value = (audio.currentTime / audio.duration) * 100;
+            };
+            const onMeta = () => {
+                dur.textContent = cpFmt(audio.duration);
+                seek.max = 100;
+            };
+            const onEnd = () => {
+                btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+            };
+
+            audio.addEventListener('timeupdate', onTime);
+            audio.addEventListener('loadedmetadata', onMeta);
+            audio.addEventListener('ended', onEnd);
+            _cpState[audioId] = { onTime, onMeta, onEnd };
+
+            btn.onclick = () => {
+                if (audio.paused) {
+                    audio.play();
+                    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                } else {
+                    audio.pause();
+                    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+                }
+            };
+
+            seek.oninput = () => {
+                if (audio.duration) audio.currentTime = (seek.value / 100) * audio.duration;
+            };
+
+            mute.onclick = () => {
+                audio.muted = !audio.muted;
+                mute.textContent = audio.muted ? '🔇' : '🔊';
+            };
         }
 
         function playFrom(seconds) {
@@ -975,7 +1151,8 @@
             showProgress();
 
             try {
-                const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
+                const model = document.getElementById('modelSelect').value;
+                const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}&model=${encodeURIComponent(model)}`, {
                     method: 'POST',
                     body: file,
                 });
@@ -999,79 +1176,28 @@
                 startPolling();
 
             } catch (err) {
+                // Network error (e.g. connection reset on large upload) — the
+                // server may have still received the file and started the pipeline.
+                // Poll /api/status once to check before showing an error.
+                try {
+                    const st = await fetch('/api/status');
+                    const stj = await st.json();
+                    if (stj.running || stj.done) {
+                        // Pipeline started — treat as success
+                        btnText.innerText = 'Upload New Audio';
+                        btn.disabled = false;
+                        e.target.value = '';
+                        if (!stj.done) startPolling();
+                        else loadCalls();
+                        return;
+                    }
+                } catch (_) {}
                 hideProgress();
                 alert('Upload error: ' + err.message);
                 btnText.innerText = 'Upload New Audio';
                 btn.disabled = false;
             }
         });
-
-        // ── Generate enhancements (async — polls until done) ─────────────
-        let _enhPollTimer = null;
-
-        function toUrlGlobal(rawPath) {
-            let p = rawPath.replace(/\\/g, '/');
-            if (p.includes('call_processor/')) p = p.split('call_processor/')[1];
-            return '/' + p.split('/').map(encodeURIComponent).join('/');
-        }
-
-        function _applyEnhPaths(paths) {
-            const map = {
-                noisereduce: [DOM.audioNr, DOM.trackNr, DOM.noteNr, 'Spectral gating · 3× vol · 5-min'],
-                deepfilter:  [DOM.audioDf, DOM.trackDf, DOM.noteDf, 'DeepFilterNet3 · neural · 5-min'],
-                metricgan:   [DOM.audioMg, DOM.trackMg, DOM.noteMg, 'MetricGAN+ · PESQ 3.15 · 5-min'],
-            };
-            for (const [key, [audio, track, note, txt]] of Object.entries(map)) {
-                if (paths[key] && paths[key] !== (audio.dataset.path || '')) {
-                    audio.dataset.path = paths[key];
-                    audio.src = toUrlGlobal(paths[key]);
-                    audio.load();
-                    audio.oncanplay = () => {
-                        track.classList.remove('track-unavailable');
-                        note.textContent = txt;
-                    };
-                }
-            }
-        }
-
-        async function generateEnhancements() {
-            if (!currentCallId) return;
-            DOM.btnGenAll.disabled = true;
-            DOM.btnGenAll.innerHTML = '<span class="gen-spinner"></span> Generating…';
-
-            // Start job
-            const startRes = await fetch(`/api/enhance/${encodeURIComponent(currentCallId)}`);
-            const startData = await startRes.json();
-
-            if (startData.status === 'done') {
-                _applyEnhPaths(startData.paths || {});
-                DOM.btnGenAll.disabled = false;
-                DOM.btnGenAll.textContent = '✓ Done';
-                return;
-            }
-
-            // Poll /api/enhance_status/<id> every 3 s
-            if (_enhPollTimer) clearInterval(_enhPollTimer);
-            _enhPollTimer = setInterval(async () => {
-                try {
-                    const r  = await fetch(`/api/enhance_status/${encodeURIComponent(currentCallId)}`);
-                    const st = await r.json();
-
-                    if (st.done) {
-                        clearInterval(_enhPollTimer);
-                        _applyEnhPaths(st.paths || {});
-                        DOM.btnGenAll.disabled = false;
-                        DOM.btnGenAll.textContent = '✓ Done';
-                    } else if (st.error) {
-                        clearInterval(_enhPollTimer);
-                        DOM.btnGenAll.disabled = false;
-                        DOM.btnGenAll.textContent = '⚡ Retry';
-                        console.error('Enhancement error:', st.error);
-                    }
-                    // still running → keep polling
-                } catch (_) {}
-            }, 3000);
-        }
 
         // Init
         loadCalls();

@@ -48,3 +48,27 @@ granite-4.0-1b-speech/
 # Processed call results
 call_processor/data/processed/
 .env
+
+# Screenshots / test artifacts
+*.png
+*.jpg
+*.jpeg
+
+# Playwright MCP artifacts
+.playwright-mcp/
+
+# SSH keys and credentials
+*.ppk
+*.pem
+*.key
+
+# Agent recording JSON (contains S3 URLs)
+angelina.json
+
+# Benchmark / model comparison data outputs
+call_processor/data/benchmark_results.json
+call_processor/data/model_comparison.json
+
+# Windows launcher scripts
+call_processor/launch_ui.vbs
+call_processor/start_ui.bat

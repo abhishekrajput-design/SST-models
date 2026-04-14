@@ -13,23 +13,32 @@ logger = logging.getLogger(__name__)
 
 
 class Transcriber:
-    """Transcribe audio segments using faster-whisper."""
+    """Transcribe audio segments using faster-whisper.
+
+    Supported model_size values (passed directly to faster-whisper):
+        Standard:  tiny, base, small, medium, large-v2, large-v3
+        Turbo:     large-v3-turbo
+        Distil:    distil-large-v3, distil-small.en
+    """
 
     def __init__(
         self,
-        model_size: str = "medium",
+        model_size: str = "large-v3",
         device: str = "auto",
-        compute_type: str = "int8",
+        compute_type: str = "float16",
         language: str = "en",
         download_root: Optional[str] = None,
+        initial_prompt: Optional[str] = None,
+        word_timestamps: bool = True,
     ):
         """
         Args:
-            model_size: Whisper model size ('medium', 'large-v3', 'base', etc.).
+            model_size: Whisper model size. See class docstring for options.
             device: 'auto', 'cuda', or 'cpu'.
-            compute_type: Quantization type - 'int8' recommended for 4GB VRAM,
-                          'float16' if more VRAM available.
+            compute_type: 'float16' for 6GB+ VRAM, 'int8' for 4GB, 'float32' for CPU.
             language: Language code for transcription.
+            initial_prompt: Domain context fed to the decoder to reduce hallucination.
+            word_timestamps: Return word-level timestamps.
         """
         self.model_size = model_size
         if device == "auto":
@@ -39,6 +48,8 @@ class Transcriber:
         self.compute_type = compute_type if self.device == "cuda" else "float32"
         self.language = language
         self.download_root = download_root
+        self.initial_prompt = initial_prompt
+        self.word_timestamps = word_timestamps
         self.model = None
 
     def load_model(self):
@@ -87,9 +98,13 @@ class Transcriber:
         segments_iter, info = self.model.transcribe(
             audio_path,
             language=self.language,
-            beam_size=5,
-            vad_filter=False,  # segments are already diarized; re-running VAD can drop valid speech
+            beam_size=1,          # greedy — diarized segments need speed, not beam search
+            vad_filter=False,     # segments are already diarized; re-running VAD can drop valid speech
             condition_on_previous_text=False,
+            # No initial_prompt — causes hallucination on short/noisy segments
+            word_timestamps=False,  # diarization already provides boundaries; word-level DTW is slow
+            temperature=0,
+            no_speech_threshold=0.6,
         )
 
         text_parts = []

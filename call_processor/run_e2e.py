@@ -146,7 +146,7 @@ def step_test_call(hf_token: str, device: str, test_audio: str,
         embeddings_path=embeddings_path,
         model_cache_dir="models",
         whisper_model=whisper_model,
-        whisper_compute_type="int8" if device == "cuda" else "float32",
+        whisper_compute_type="float16" if device == "cuda" else "float32",
         language=language,
         device=device,
         similarity_threshold=0.25,
@@ -185,9 +185,9 @@ def main():
     parser.add_argument("--embeddings", default="embeddings/agent_embeddings.pkl")
     parser.add_argument("--test-audio", default=None,
                         help="Audio file to test (if not provided, uses first agent recording)")
-    parser.add_argument("--whisper-model", default="base",
-                        choices=["large-v3", "large-v2", "medium", "small", "base", "tiny"],
-                        help="Whisper model (use 'base' for fast testing, 'large-v3' for production)")
+    parser.add_argument("--whisper-model", default="large-v3",
+                        choices=["large-v3", "large-v3-turbo", "distil-large-v3", "large-v2", "medium", "small", "base", "tiny"],
+                        help="Whisper model (large-v3 float16 recommended for 6GB VRAM)")
     parser.add_argument("--language", default="en")
     parser.add_argument("--skip-extraction", action="store_true",
                         help="Skip step 1 if clips already extracted")

@@ -22,7 +22,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 @dataclass
 class PipelineConfig:
-    """Defaults tuned for an RTX 3050 4GB system."""
+    """Defaults tuned for a 6GB+ VRAM GPU system."""
 
     raw_calls_dir: str = os.path.join(PROJECT_ROOT, "data", "raw_calls")
     agent_samples_dir: str = os.path.join(PROJECT_ROOT, "data", "agent_samples")
@@ -30,7 +30,7 @@ class PipelineConfig:
     embeddings_path: str = os.path.join(PROJECT_ROOT, "embeddings", "agent_embeddings.pkl")
     model_cache_dir: str = os.path.join(PROJECT_ROOT, "models")
 
-    device: str = "cpu"
+    device: str = "cuda"
     whisper_device: str = "auto"
 
     hf_token: str = ""
@@ -43,10 +43,12 @@ class PipelineConfig:
     similarity_threshold: float = 0.25
     unknown_label: str = "Customer"
 
-    whisper_model: str = "medium"
-    whisper_compute_type: str = "int8"
+    whisper_model: str = "large-v3"
+    whisper_compute_type: str = "float16"
     language: str = "en"
     beam_size: int = 5
+    initial_prompt: str = "CarPlanet car dealership. Agent speaking with customer."
+    word_timestamps: bool = True
 
     target_sample_rate: int = 16000
 

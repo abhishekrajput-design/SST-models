@@ -4,8 +4,9 @@
 # ===================================
 
 # Core ML frameworks
-torch>=2.0.0
-torchaudio>=2.0.0
+# Install with CUDA: pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
+torch>=2.8.0
+torchaudio>=2.8.0
 
 # Speaker diarization
 pyannote.audio>=3.1.0
@@ -19,6 +20,11 @@ faster-whisper>=1.0.0
 # Audio processing
 soundfile>=0.12.0
 numpy<2.0
+librosa>=0.10.0       # desk-recording cleanup pipeline (angelina)
+noisereduce>=3.0.0    # two-pass spectral gating (used by angelina)
 
 # Utilities
 huggingface_hub>=0.20.0
+requests>=2.31.0
+tqdm>=4.66.0
+tabulate>=0.9.0

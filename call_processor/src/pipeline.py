@@ -33,14 +33,15 @@ class CallProcessor:
         hf_token: str,
         embeddings_path: str = "embeddings/agent_embeddings.pkl",
         model_cache_dir: str = "models",
-        whisper_model: str = "medium",
-        whisper_compute_type: str = "int8",
+        whisper_model: str = "large-v3",
+        whisper_compute_type: str = "float16",
         whisper_device: str = "auto",
         language: str = "en",
-        device: str = "cpu",
+        device: str = "cuda",
         similarity_threshold: float = 0.25,
         min_segment_duration: float = 1.0,
         output_dir: str = "data/processed",
+        initial_prompt: Optional[str] = "CarPlanet car dealership. Agent speaking with customer.",
     ):
         self.hf_token = hf_token
         self.embeddings_path = embeddings_path
@@ -53,6 +54,7 @@ class CallProcessor:
         self.similarity_threshold = similarity_threshold
         self.min_segment_duration = min_segment_duration
         self.output_dir = output_dir
+        self.initial_prompt = initial_prompt
 
     def process(self, audio_path: str) -> Dict:
         """
@@ -179,6 +181,7 @@ class CallProcessor:
             compute_type=self.whisper_compute_type,
             language=self.language,
             download_root=os.path.join(self.model_cache_dir, "faster-whisper"),
+            initial_prompt=self.initial_prompt,
         )
 
         try:
