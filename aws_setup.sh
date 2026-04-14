@@ -32,7 +32,7 @@ if [ -z "$BASH_VERSION" ]; then exec bash "$0" "$@"; fi
 set -euo pipefail
 
 # ─── CONFIGURATION ───────────────────────────────────────────────────────────
-REPO_DIR="${REPO_DIR:-/home/ubuntu/SST-models}"
+REPO_DIR="${REPO_DIR:-$(cd "$(dirname "$0")" && pwd)}"
 VENV_DIR="/opt/callproc/venv"
 APP_DIR="$REPO_DIR/call_processor"
 LOG_DIR="/var/log/callproc"
