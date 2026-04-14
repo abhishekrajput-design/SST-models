@@ -670,6 +670,34 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self._json(calls)
             return
 
+        # /api/benchmark
+        if path == "/api/benchmark":
+            BENCHMARK = [
+                {"model": "deepgram-nova-3",          "label": "Deepgram Nova-3",            "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Best accuracy + diarization", "status": "ok"},
+                {"model": "whisper-large-v3-turbo",   "label": "Whisper Large-v3-Turbo",     "type": "Local GPU",  "speed_s": 52,   "segments": 555,  "notes": "Best local model",            "status": "ok"},
+                {"model": "parakeet-tdt-0.6b-v3",     "label": "NVIDIA Parakeet TDT v3",     "type": "Local GPU",  "speed_s": 94,   "segments": 300,  "notes": "Fast, English only",          "status": "ok"},
+                {"model": "cohere-transcribe-03-2026","label": "Cohere Transcribe 03-2026",   "type": "Cloud API",  "speed_s": 300,  "segments": None, "notes": "Quality issues on desk audio", "status": "ok"},
+                {"model": "qwen3-asr-1.7b",           "label": "Qwen3-ASR-1.7B",             "type": "Local GPU",  "speed_s": None, "segments": None, "notes": "Transformers incompatibility", "status": "disabled"},
+                {"model": "vibevoice-asr",            "label": "Microsoft VibeVoice-ASR",    "type": "Local GPU",  "speed_s": None, "segments": None, "notes": "Processor load error",         "status": "disabled"},
+            ]
+            # Merge in any live data from model_comparison.json
+            mc_path = os.path.join("data", "model_comparison.json")
+            if os.path.isfile(mc_path):
+                try:
+                    with open(mc_path) as f:
+                        mc = {r["model"]: r for r in json.load(f) if "model" in r}
+                    for row in BENCHMARK:
+                        live = mc.get(row["model"])
+                        if live:
+                            if live.get("transcribe_s"):
+                                row["speed_s"] = round(live["transcribe_s"])
+                            if live.get("segments"):
+                                row["segments"] = live["segments"]
+                except Exception:
+                    pass
+            self._json(BENCHMARK)
+            return
+
         # /api/call/<id>
         if path.startswith("/api/call/"):
             call_id     = unquote(path.split("/api/call/")[1])
