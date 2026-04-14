@@ -37,27 +37,37 @@ class Qwen3AsrTranscriber(BaseTranscriber):
     def load(self) -> None:
         if self.model is not None:
             return
-        try:
-            from qwen_asr import Qwen3ASRModel
-        except ImportError:
-            raise RuntimeError("Install qwen-asr: pip install qwen-asr")
-
         import torch
-        # Free GPU memory from previous models
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
-        # Prefer local dir; fall back to HF download
         model_path = LOCAL_MODEL_DIR if os.path.isdir(LOCAL_MODEL_DIR) else HF_MODEL_ID
-        device_map = "cuda:0" if (self.device == "cuda" and torch.cuda.is_available()) else "cpu"
+        device_map = "cuda:0" if self.device == "cuda" else "cpu"
 
-        self.model = Qwen3ASRModel.from_pretrained(
-            model_path,
-            dtype=torch.bfloat16,
-            device_map=device_map,
-            max_inference_batch_size=4,   # keeps peak VRAM manageable on 6 GB
-            max_new_tokens=512,
-        )
+        # Try qwen-asr package first; fall back to transformers Qwen2Audio
+        try:
+            from qwen_asr import Qwen3ASRModel
+            self.model = Qwen3ASRModel.from_pretrained(
+                model_path,
+                dtype=torch.bfloat16,
+                device_map=device_map,
+                max_inference_batch_size=4,
+                max_new_tokens=512,
+            )
+            self._backend = "qwen-asr"
+        except ImportError:
+            print("  [Qwen3-ASR] qwen-asr not installed — using transformers Qwen2Audio fallback")
+            from transformers import Qwen2AudioForConditionalGeneration, AutoProcessor
+            dtype = torch.bfloat16 if self.device == "cuda" else torch.float32
+            self._processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
+            self.model = Qwen2AudioForConditionalGeneration.from_pretrained(
+                model_path,
+                torch_dtype=dtype,
+                device_map=device_map,
+                trust_remote_code=True,
+            )
+            self.model.eval()
+            self._backend = "transformers"
 
     def _audio_duration(self, audio_path: str) -> float:
         import json
@@ -99,8 +109,19 @@ class Qwen3AsrTranscriber(BaseTranscriber):
 
             tmp = self._wav_chunk(audio_path, start, dur)
             try:
-                results = self.model.transcribe(audio=tmp, language=lang_full)
-                text = results[0].text.strip() if results else ""
+                if self._backend == "qwen-asr":
+                    results = self.model.transcribe(audio=tmp, language=lang_full)
+                    text = results[0].text.strip() if results else ""
+                else:
+                    import librosa, torch
+                    audio_arr, sr = librosa.load(tmp, sr=16000, mono=True)
+                    inputs = self._processor(
+                        audios=[audio_arr], sampling_rate=sr,
+                        return_tensors="pt", text=f"<|startoftranscript|><|{language}|><|transcribe|>"
+                    ).to(self.device)
+                    with torch.no_grad():
+                        ids = self.model.generate(**inputs, max_new_tokens=512)
+                    text = self._processor.batch_decode(ids, skip_special_tokens=True)[0].strip()
             except Exception as e:
                 print(f"  [Qwen3-ASR] chunk {start:.0f}s failed: {e}")
                 text = ""

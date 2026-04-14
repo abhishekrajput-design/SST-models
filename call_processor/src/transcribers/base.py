@@ -12,6 +12,15 @@ class BaseTranscriber(ABC):
     supports_word_timestamps: bool = False
 
     def __init__(self, device: str = "cuda", model_dir: str | None = None):
+        # Auto-fallback: if CUDA requested but not available, use CPU
+        if device == "cuda":
+            try:
+                import torch
+                if not torch.cuda.is_available():
+                    print(f"  [{self.__class__.__name__}] CUDA not available — falling back to CPU")
+                    device = "cpu"
+            except ImportError:
+                device = "cpu"
         self.device = device
         self.model_dir = model_dir
         self.model = None
