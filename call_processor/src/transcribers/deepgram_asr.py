@@ -68,24 +68,85 @@ class DeepgramTranscriber(BaseTranscriber):
             result = json.loads(resp.read().decode())
         elapsed = time.time() - t0
 
-        utterances = (result.get("results") or {}).get("utterances") or []
-        out: List[Dict[str, Any]] = []
-        for u in utterances:
-            text = u.get("transcript", "").strip()
-            if not text:
-                continue
-            spk_idx = u.get("speaker", 0)
-            spk_id  = f"SPEAKER_{spk_idx:02d}"
-            out.append({
-                "start":              round(float(u.get("start", 0)), 2),
-                "end":                round(float(u.get("end",   0)), 2),
-                "text":               text,
-                "speaker":            spk_id,
-                "identified_speaker": spk_id,
-                "confidence":         round(float(u.get("confidence", 0)), 3),
-            })
+        # Debug: log top-level response structure
+        res_keys = list((result.get("results") or {}).keys())
+        ch0 = ((result.get("results") or {}).get("channels") or [{}])[0]
+        alt0 = (ch0.get("alternatives") or [{}])[0]
+        word_count = len(alt0.get("words") or [])
+        utt_count  = len((result.get("results") or {}).get("utterances") or [])
+        print(f"  [Deepgram/{self.dg_model}] API response keys={res_keys} "
+              f"utterances={utt_count} words={word_count} "
+              f"transcript_len={len(alt0.get('transcript',''))}")
 
-        print(f"  [Deepgram/{self.dg_model}] {len(out)} utterances in {elapsed:.1f}s")
+        res      = result.get("results") or {}
+        utterances = res.get("utterances") or []
+        out: List[Dict[str, Any]] = []
+
+        if utterances:
+            # Preferred path: utterances with speaker labels
+            for u in utterances:
+                text = u.get("transcript", "").strip()
+                if not text:
+                    continue
+                spk_idx = u.get("speaker", 0)
+                spk_id  = f"SPEAKER_{spk_idx:02d}"
+                out.append({
+                    "start":              round(float(u.get("start", 0)), 2),
+                    "end":                round(float(u.get("end",   0)), 2),
+                    "text":               text,
+                    "speaker":            spk_id,
+                    "identified_speaker": spk_id,
+                    "confidence":         round(float(u.get("confidence", 0)), 3),
+                })
+        else:
+            # Fallback: use words from channels, group by consecutive speaker
+            channels = res.get("channels") or []
+            alt = (channels[0].get("alternatives") or [{}])[0] if channels else {}
+            words = alt.get("words") or []
+            if not words:
+                # Last resort: whole transcript as one segment
+                transcript = alt.get("transcript", "").strip()
+                if transcript:
+                    out.append({
+                        "start":              0.0,
+                        "end":                0.0,
+                        "text":               transcript,
+                        "speaker":            "SPEAKER_00",
+                        "identified_speaker": "SPEAKER_00",
+                        "confidence":         round(float(alt.get("confidence", 0)), 3),
+                    })
+            else:
+                # Group consecutive words by speaker into utterance-like chunks
+                chunks: List[Dict[str, Any]] = []
+                cur: Dict[str, Any] = {}
+                for w in words:
+                    spk = w.get("speaker", 0)
+                    if not cur or cur["speaker"] != spk:
+                        if cur:
+                            chunks.append(cur)
+                        cur = {"speaker": spk, "start": w.get("start", 0),
+                               "end": w.get("end", 0), "words": [w.get("punctuated_word", w.get("word", ""))]}
+                    else:
+                        cur["end"] = w.get("end", cur["end"])
+                        cur["words"].append(w.get("punctuated_word", w.get("word", "")))
+                if cur:
+                    chunks.append(cur)
+                for c in chunks:
+                    text = " ".join(c["words"]).strip()
+                    if not text:
+                        continue
+                    spk_id = f"SPEAKER_{c['speaker']:02d}"
+                    out.append({
+                        "start":              round(float(c["start"]), 2),
+                        "end":                round(float(c["end"]),   2),
+                        "text":               text,
+                        "speaker":            spk_id,
+                        "identified_speaker": spk_id,
+                        "confidence":         0.0,
+                    })
+
+        print(f"  [Deepgram/{self.dg_model}] {len(out)} segments in {elapsed:.1f}s "
+              f"(utterances={len(utterances)}, words={len((((res.get('channels') or [{}])[0]).get('alternatives') or [{}])[0].get('words') or [])})")
         return out
 
     def unload(self) -> None:

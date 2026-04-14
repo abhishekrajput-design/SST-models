@@ -68,6 +68,9 @@ def upload(filename, model, audio_path):
 def poll(timeout_s=TIMEOUT_S):
     t0 = time.time()
     last_stage = ""
+    seen_running = False
+    # Brief pause so server can transition from previous "done" state to "running"
+    time.sleep(3)
     while time.time() - t0 < timeout_s:
         s = api("/api/status")
         stage = s.get("stage", "")
@@ -75,13 +78,15 @@ def poll(timeout_s=TIMEOUT_S):
         if stage != last_stage:
             print(f"    {stage}: {msg}")
             last_stage = stage
-        if s.get("done"):
+        if s.get("running"):
+            seen_running = True
+        if s.get("done") and seen_running:
             return "PASS", s.get("result_id", "")
         if s.get("error"):
             return "FAIL", s["error"]
         if "_fetch_error" in s:
             return "FAIL", s["_fetch_error"]
-        if not s.get("running") and time.time() - t0 > 15:
+        if not s.get("running") and seen_running and time.time() - t0 > 15:
             return "FAIL", "stopped unexpectedly"
         time.sleep(5)
     return "FAIL", f"timeout after {timeout_s}s"
