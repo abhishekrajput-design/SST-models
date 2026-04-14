@@ -153,9 +153,14 @@ VENV_PY="$VENV_DIR/bin/python"
 VENV_PIP="$VENV_DIR/bin/pip"
 "$VENV_PIP" install --quiet --upgrade pip setuptools wheel
 
+# Install uv — much faster resolver, handles deep dependency graphs
+echo "  Installing uv (fast resolver)..."
+"$VENV_PIP" install --quiet uv
+VENV_UV="$VENV_DIR/bin/uv"
+
 # ─── [4] PYTORCH (CUDA) ──────────────────────────────────────────────────────
 step "[4/10] Installing PyTorch with CUDA"
-"$VENV_PIP" install --quiet \
+"$VENV_UV" pip install --quiet \
     torch torchaudio \
     --index-url "$TORCH_INDEX"
 "$VENV_PY" -c "import torch; print(f'  torch={torch.__version__}  cuda={torch.cuda.is_available()}  device_count={torch.cuda.device_count()}')"
@@ -165,16 +170,21 @@ step "[5/10] Installing project requirements"
 
 # Pre-install numba>=0.59 before librosa — older numba fails on Python 3.12
 echo "  Pre-installing numba (Python 3.12 compat)..."
-"$VENV_PIP" install --quiet "numba>=0.59.0"
+"$VENV_UV" pip install --quiet "numba>=0.59.0"
+
+# Pin lightning to avoid deep resolver issues from pyannote.audio
+echo "  Pre-pinning lightning to avoid resolution-too-deep..."
+"$VENV_UV" pip install --quiet "lightning>=2.0,<2.5" "pytorch-lightning>=2.0,<2.5"
 
 echo "  Installing requirements.txt..."
-"$VENV_PIP" install -r "$APP_DIR/requirements.txt"
+"$VENV_UV" pip install -r "$APP_DIR/requirements.txt" \
+    || "$VENV_PIP" install --use-deprecated=legacy-resolver -r "$APP_DIR/requirements.txt"
 
 # Additional packages not in requirements.txt but needed at runtime
-"$VENV_PIP" install --quiet \
-    python-dotenv \
-    deepgram-sdk>=3.0.0 \
-    ctranslate2>=4.0.0
+"$VENV_UV" pip install --quiet \
+    "python-dotenv" \
+    "deepgram-sdk>=3.0.0" \
+    "ctranslate2>=4.0.0"
 
 # ─── [6] NeMo TOOLKIT (Parakeet) ─────────────────────────────────────────────
 step "[6/10] Installing NVIDIA NeMo (Parakeet TDT)"
