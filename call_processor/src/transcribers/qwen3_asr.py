@@ -34,6 +34,19 @@ class Qwen3AsrTranscriber(BaseTranscriber):
     def __init__(self, device: str = "cuda", model_dir: str | None = None):
         super().__init__(device=device, model_dir=model_dir)
 
+    @staticmethod
+    def _patch_transformers_check_model_inputs() -> None:
+        """Monkey-patch transformers 5.6.0.dev0 bug where check_model_inputs()
+        is called without its required 'func' positional argument."""
+        try:
+            from transformers.generation import utils as _gen_utils
+            if hasattr(_gen_utils, "check_model_inputs"):
+                _gen_utils.check_model_inputs = (
+                    lambda func=None, **kw: func if func is not None else (lambda f: f)
+                )
+        except Exception:
+            pass
+
     def load(self) -> None:
         if self.model is not None:
             return
@@ -41,10 +54,12 @@ class Qwen3AsrTranscriber(BaseTranscriber):
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
+        self._patch_transformers_check_model_inputs()
+
         model_path = LOCAL_MODEL_DIR if os.path.isdir(LOCAL_MODEL_DIR) else HF_MODEL_ID
         device_map = "cuda:0" if self.device == "cuda" else "cpu"
 
-        # Try qwen-asr package first; fall back to transformers Qwen2Audio
+        # Try qwen-asr package first; fall back to transformers pipeline
         try:
             from qwen_asr import Qwen3ASRModel
             self.model = Qwen3ASRModel.from_pretrained(

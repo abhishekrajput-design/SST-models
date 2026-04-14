@@ -19,6 +19,15 @@ class VibeVoiceAsrTranscriber(BaseTranscriber):
         self.processor = None
         self.load_in_4bit = load_in_4bit
 
+    @staticmethod
+    def _find_local_snapshot(cache_dir: str, model_id: str) -> "str | None":
+        """Return the newest HF snapshot dir for a model, or None if not cached."""
+        import glob as _glob
+        cache_name = "models--" + model_id.replace("/", "--")
+        pattern = os.path.join(cache_dir, cache_name, "snapshots", "*")
+        snaps = sorted(_glob.glob(pattern))
+        return snaps[-1] if snaps else None
+
     def load(self) -> None:
         if self.model is not None:
             return
@@ -34,25 +43,38 @@ class VibeVoiceAsrTranscriber(BaseTranscriber):
             kwargs["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
         else:
             kwargs["torch_dtype"] = torch.bfloat16 if (self.device == "cuda" and torch.cuda.is_available()) else torch.float32
-        # Try AutoProcessor first; fall back to WhisperProcessor if custom class unrecognised
+
+        # Build list of sources to try: local snapshot first (avoids remote class lookup),
+        # then fall back to HF model ID.
+        local_snap = self._find_local_snapshot(cache_dir, MODEL_ID)
+        proc_sources = []
+        if local_snap:
+            print(f"  [VibeVoice] found local snapshot: {local_snap}")
+            proc_sources.append(local_snap)
+        proc_sources.append(MODEL_ID)
+
         processor_loaded = False
-        for proc_fn in [
-            lambda: AutoProcessor.from_pretrained(
-                MODEL_ID, cache_dir=cache_dir, trust_remote_code=True),
-            lambda: __import__('transformers').WhisperProcessor.from_pretrained(
-                MODEL_ID, cache_dir=cache_dir, trust_remote_code=True),
-            lambda: __import__('transformers').AutoFeatureExtractor.from_pretrained(
-                MODEL_ID, cache_dir=cache_dir, trust_remote_code=True),
-        ]:
-            try:
-                self.processor = proc_fn()
-                processor_loaded = True
+        for src in proc_sources:
+            for proc_cls_name in ("AutoProcessor", "WhisperProcessor", "AutoFeatureExtractor"):
+                try:
+                    proc_cls = getattr(__import__("transformers"), proc_cls_name)
+                    self.processor = proc_cls.from_pretrained(
+                        src, cache_dir=cache_dir, trust_remote_code=True,
+                        local_files_only=(src != MODEL_ID),
+                    )
+                    processor_loaded = True
+                    print(f"  [VibeVoice] processor loaded via {proc_cls_name} from {os.path.basename(src)}")
+                    break
+                except Exception as pe:
+                    print(f"  [VibeVoice] {proc_cls_name} from {os.path.basename(src)}: {pe}")
+            if processor_loaded:
                 break
-            except Exception as pe:
-                print(f"  [VibeVoice] processor attempt failed: {pe}")
+
         if not processor_loaded:
             raise RuntimeError("Could not load any processor for VibeVoice-ASR")
-        self.model = AutoModel.from_pretrained(MODEL_ID, **kwargs)
+
+        model_src = local_snap if local_snap else MODEL_ID
+        self.model = AutoModel.from_pretrained(model_src, **kwargs)
         if not self.load_in_4bit:
             self.model = self.model.to(self.device)
         self.model.eval()
