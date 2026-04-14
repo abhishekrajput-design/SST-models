@@ -16,14 +16,28 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="$REPO_DIR/call_processor"
-VENV_DIR="/opt/callproc/venv"
+CONDA_ENV="callproc"
+MINICONDA_DIR="/opt/miniconda3"
 LOG_FILE="/var/log/callproc/server.log"
 PORT=8080
-PYTHON="${VENV_DIR}/bin/python"
 
-# Fallback: if no venv installed, try the system python
-if [[ ! -x "$PYTHON" ]]; then
+# Resolve Python: prefer conda env, fall back to system python
+if [[ -x "$MINICONDA_DIR/envs/$CONDA_ENV/bin/python" ]]; then
+    PYTHON="$MINICONDA_DIR/envs/$CONDA_ENV/bin/python"
+elif command -v conda &>/dev/null; then
+    # conda is on PATH but installed elsewhere
+    CONDA_BASE=$(conda info --base 2>/dev/null || echo "")
+    if [[ -n "$CONDA_BASE" && -x "$CONDA_BASE/envs/$CONDA_ENV/bin/python" ]]; then
+        PYTHON="$CONDA_BASE/envs/$CONDA_ENV/bin/python"
+    else
+        PYTHON="$(command -v python3 || command -v python)"
+    fi
+else
     PYTHON="$(command -v python3 || command -v python)"
+fi
+
+# Fallback log location if /var/log/callproc not writable
+if [[ ! -w "$(dirname "$LOG_FILE")" ]] 2>/dev/null; then
     LOG_FILE="$REPO_DIR/server.log"
 fi
 
@@ -39,13 +53,11 @@ is_running() {
 
 stop_server() {
     echo "Stopping existing server on port $PORT..."
-    # systemd
     if systemctl is-active --quiet callproc 2>/dev/null; then
         sudo systemctl stop callproc
         echo "  Stopped callproc.service"
         return
     fi
-    # background process
     PIDS=$(lsof -ti tcp:$PORT 2>/dev/null || true)
     if [[ -n "$PIDS" ]]; then
         kill -9 $PIDS 2>/dev/null || true
@@ -56,6 +68,9 @@ stop_server() {
 }
 
 show_status() {
+    echo "── Python ──────────────────────────────────────────"
+    echo "  $PYTHON ($($PYTHON --version 2>&1))"
+    echo ""
     echo "── Service status ──────────────────────────────────"
     if systemctl is-active --quiet callproc 2>/dev/null; then
         systemctl status callproc --no-pager | head -20
@@ -91,7 +106,7 @@ smoke_test() {
     CALLS=$(curl -s "http://localhost:$PORT/api/calls" | python3 -c "import sys,json; d=json.load(sys.stdin); print(f'{len(d)} calls')" 2>/dev/null || echo "parse error")
     echo "  /api/calls:  $CALLS"
 
-    echo "  PASS ✓"
+    echo "  PASS"
 }
 
 # ─── Argument parsing ────────────────────────────────────────────────────────
@@ -122,6 +137,7 @@ esac
 
 # ─── Start server ────────────────────────────────────────────────────────────
 echo "Starting Call Processor server on port $PORT..."
+echo "  Python: $PYTHON"
 
 # Prefer systemd if service exists
 if systemctl is-enabled --quiet callproc 2>/dev/null; then
