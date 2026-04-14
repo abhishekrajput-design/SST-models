@@ -114,14 +114,38 @@ class Qwen3AsrTranscriber(BaseTranscriber):
                     text = results[0].text.strip() if results else ""
                 else:
                     import librosa, torch
-                    audio_arr, sr = librosa.load(tmp, sr=16000, mono=True)
+                    audio_arr, sr_loaded = librosa.load(tmp, sr=16000, mono=True)
+                    # Build chat-template prompt for Qwen2-Audio processor
+                    try:
+                        conv = [{"role": "user", "content": [
+                            {"type": "audio", "audio_url": "audio.wav"}
+                        ]}]
+                        prompt = self._processor.apply_chat_template(
+                            conv, add_generation_prompt=True, tokenize=False
+                        )
+                    except Exception:
+                        prompt = "Transcribe the speech."
                     inputs = self._processor(
-                        audios=[audio_arr], sampling_rate=sr,
-                        return_tensors="pt", text=f"<|startoftranscript|><|{language}|><|transcribe|>"
+                        text=[prompt], audios=[audio_arr],
+                        sampling_rate=sr_loaded, return_tensors="pt", padding=True
                     ).to(self.device)
                     with torch.no_grad():
-                        ids = self.model.generate(**inputs, max_new_tokens=512)
-                    text = self._processor.batch_decode(ids, skip_special_tokens=True)[0].strip()
+                        try:
+                            ids = self.model.generate(**inputs, max_new_tokens=512)
+                        except TypeError:
+                            # transformers dev: check_model_inputs decorator bug
+                            # Filter to known-safe keys only
+                            safe = {"input_ids", "attention_mask",
+                                    "audio_features", "feature_attention_mask",
+                                    "inputs_embeds"}
+                            ids = self.model.generate(
+                                **{k: v for k, v in inputs.items() if k in safe},
+                                max_new_tokens=512
+                            )
+                    input_len = inputs["input_ids"].shape[-1]
+                    text = self._processor.decode(
+                        ids[0][input_len:], skip_special_tokens=True
+                    ).strip()
             except Exception as e:
                 print(f"  [Qwen3-ASR] chunk {start:.0f}s failed: {e}")
                 text = ""
