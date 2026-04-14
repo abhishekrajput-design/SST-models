@@ -34,7 +34,24 @@ class VibeVoiceAsrTranscriber(BaseTranscriber):
             kwargs["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
         else:
             kwargs["torch_dtype"] = torch.bfloat16 if (self.device == "cuda" and torch.cuda.is_available()) else torch.float32
-        self.processor = AutoProcessor.from_pretrained(MODEL_ID, cache_dir=cache_dir, trust_remote_code=True)
+        # Try AutoProcessor first; fall back to WhisperProcessor if custom class unrecognised
+        processor_loaded = False
+        for proc_fn in [
+            lambda: AutoProcessor.from_pretrained(
+                MODEL_ID, cache_dir=cache_dir, trust_remote_code=True),
+            lambda: __import__('transformers').WhisperProcessor.from_pretrained(
+                MODEL_ID, cache_dir=cache_dir, trust_remote_code=True),
+            lambda: __import__('transformers').AutoFeatureExtractor.from_pretrained(
+                MODEL_ID, cache_dir=cache_dir, trust_remote_code=True),
+        ]:
+            try:
+                self.processor = proc_fn()
+                processor_loaded = True
+                break
+            except Exception as pe:
+                print(f"  [VibeVoice] processor attempt failed: {pe}")
+        if not processor_loaded:
+            raise RuntimeError("Could not load any processor for VibeVoice-ASR")
         self.model = AutoModel.from_pretrained(MODEL_ID, **kwargs)
         if not self.load_in_4bit:
             self.model = self.model.to(self.device)

@@ -56,17 +56,14 @@ class Qwen3AsrTranscriber(BaseTranscriber):
             )
             self._backend = "qwen-asr"
         except ImportError:
-            print("  [Qwen3-ASR] qwen-asr not installed — using transformers Qwen2Audio fallback")
-            from transformers import Qwen2AudioForConditionalGeneration, AutoProcessor
-            dtype = torch.bfloat16 if self.device == "cuda" else torch.float32
-            self._processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
-            self.model = Qwen2AudioForConditionalGeneration.from_pretrained(
-                model_path,
-                torch_dtype=dtype,
-                device_map=device_map,
+            print("  [Qwen3-ASR] qwen-asr not installed — using transformers pipeline fallback")
+            from transformers import pipeline as hf_pipeline
+            self.model = hf_pipeline(
+                "automatic-speech-recognition",
+                model=model_path,
+                device=0 if self.device == "cuda" else -1,
                 trust_remote_code=True,
             )
-            self.model.eval()
             self._backend = "transformers"
 
     def _audio_duration(self, audio_path: str) -> float:
@@ -113,39 +110,9 @@ class Qwen3AsrTranscriber(BaseTranscriber):
                     results = self.model.transcribe(audio=tmp, language=lang_full)
                     text = results[0].text.strip() if results else ""
                 else:
-                    import librosa, torch
-                    audio_arr, sr_loaded = librosa.load(tmp, sr=16000, mono=True)
-                    # Build chat-template prompt for Qwen2-Audio processor
-                    try:
-                        conv = [{"role": "user", "content": [
-                            {"type": "audio", "audio_url": "audio.wav"}
-                        ]}]
-                        prompt = self._processor.apply_chat_template(
-                            conv, add_generation_prompt=True, tokenize=False
-                        )
-                    except Exception:
-                        prompt = "Transcribe the speech."
-                    inputs = self._processor(
-                        text=[prompt], audios=[audio_arr],
-                        sampling_rate=sr_loaded, return_tensors="pt", padding=True
-                    ).to(self.device)
-                    with torch.no_grad():
-                        try:
-                            ids = self.model.generate(**inputs, max_new_tokens=512)
-                        except TypeError:
-                            # transformers dev: check_model_inputs decorator bug
-                            # Filter to known-safe keys only
-                            safe = {"input_ids", "attention_mask",
-                                    "audio_features", "feature_attention_mask",
-                                    "inputs_embeds"}
-                            ids = self.model.generate(
-                                **{k: v for k, v in inputs.items() if k in safe},
-                                max_new_tokens=512
-                            )
-                    input_len = inputs["input_ids"].shape[-1]
-                    text = self._processor.decode(
-                        ids[0][input_len:], skip_special_tokens=True
-                    ).strip()
+                    # transformers pipeline backend — handles all device/API details
+                    result = self.model(tmp)
+                    text = result.get("text", "").strip() if isinstance(result, dict) else str(result).strip()
             except Exception as e:
                 print(f"  [Qwen3-ASR] chunk {start:.0f}s failed: {e}")
                 text = ""
