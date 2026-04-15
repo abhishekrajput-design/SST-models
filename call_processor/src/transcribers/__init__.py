@@ -4,9 +4,20 @@ from .base import BaseTranscriber
 from .whisper_turbo import WhisperTurboTranscriber
 from .cohere       import CohereTranscriber
 from .parakeet_v3  import ParakeetV3Transcriber
-from .qwen3_asr    import Qwen3AsrTranscriber
-from .vibevoice_asr import VibeVoiceAsrTranscriber
 from .deepgram_asr import DeepgramTranscriber
+
+# Optional / experimental models — import failures must not break the registry
+try:
+    from .qwen3_asr import Qwen3AsrTranscriber
+except Exception as _e:
+    print(f"[transcribers] qwen3_asr unavailable: {_e}")
+    Qwen3AsrTranscriber = None  # type: ignore
+
+try:
+    from .vibevoice_asr import VibeVoiceAsrTranscriber
+except Exception as _e:
+    print(f"[transcribers] vibevoice_asr unavailable: {_e}")
+    VibeVoiceAsrTranscriber = None  # type: ignore
 
 # Aliases — the UI dropdown values map to these keys
 TRANSCRIBERS = {
@@ -20,8 +31,8 @@ TRANSCRIBERS = {
     # Non-Whisper local backends
     "cohere-transcribe-03-2026": CohereTranscriber,
     "parakeet-tdt-0.6b-v3":      ParakeetV3Transcriber,
-    "qwen3-asr-1.7b":            Qwen3AsrTranscriber,
-    "vibevoice-asr":             VibeVoiceAsrTranscriber,
+    **({"qwen3-asr-1.7b":   Qwen3AsrTranscriber}   if Qwen3AsrTranscriber   else {}),
+    **({"vibevoice-asr":    VibeVoiceAsrTranscriber} if VibeVoiceAsrTranscriber else {}),
     # Deepgram cloud API (no GPU needed)
     "deepgram-nova-3":           lambda **kw: DeepgramTranscriber(model="nova-3", **kw),
     "deepgram-nova-2-phonecall": lambda **kw: DeepgramTranscriber(model="nova-2-phonecall", **kw),

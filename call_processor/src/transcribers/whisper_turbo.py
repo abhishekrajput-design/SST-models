@@ -61,3 +61,24 @@ class WhisperTurboTranscriber(BaseTranscriber):
             })
         print(f"  [WhisperTurbo] {len(out)} segments in {time.time()-t0:.1f}s")
         return out
+
+    def unload(self) -> None:
+        import gc
+        # CTranslate2 has its own CUDA allocator — must explicitly delete
+        # the model object so CTranslate2's __del__ fires and frees its pool.
+        if self.model is not None:
+            try:
+                del self.model
+            except Exception:
+                pass
+        self.model = None
+        gc.collect()
+        gc.collect()   # two passes: first frees Python wrappers, second frees CT2 objects
+        try:
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.synchronize()
+                torch.cuda.empty_cache()
+                torch.cuda.ipc_collect()
+        except Exception:
+            pass

@@ -11,6 +11,11 @@ import socketserver
 from urllib.parse import urlparse, unquote, parse_qs
 from pathlib import Path
 
+# SpeechBrain 1.1.0 has a Windows bug: importutils.py checks for "/inspect.py"
+# (Unix path) but Windows uses "\\inspect.py".  We patch it once at startup
+# in site-packages (see call_processor/src/transcribers/__init__.py comments).
+# No runtime patch needed here — the file is fixed on this machine.
+
 # Load .env file
 env_path = Path(__file__).parent.parent / ".env"
 if env_path.exists():
@@ -318,6 +323,16 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     elapsed = round(time.time() - t0, 2)
 
     transcriber.unload()
+
+    # Force-free GPU/CPU memory so the next model starts with a clean slate
+    try:
+        import torch, gc as _gc
+        _gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.synchronize()
+    except Exception:
+        pass
 
     result = {
         "audio_file":               audio_path.replace("\\", "/"),

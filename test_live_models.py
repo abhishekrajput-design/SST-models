@@ -2,16 +2,18 @@
 test_live_models.py — Test all working ASR models against the live server.
 
 Usage:
-    python test_live_models.py                          # all models, default audio
+    python test_live_models.py                          # all models, default (high) audio
     python test_live_models.py --model whisper-large-v3-turbo
-    python test_live_models.py --all-audio              # all models x 3 audio files
-    python test_live_models.py --server http://13.42.127.218:8080
+    python test_live_models.py --all-audio              # all models x 3 quality tiers
+    python test_live_models.py --server http://localhost:8080
 """
 import sys, os, time, json, argparse
 import urllib.request, urllib.error
 
-SERVER   = "http://13.42.127.218:8080"
-RAW_DIR  = os.path.join(os.path.dirname(__file__), "call_processor", "data", "raw_calls")
+SERVER       = "http://localhost:8080"
+_ROOT        = os.path.dirname(__file__)
+_TESTING_DIR = os.path.join(_ROOT, "testing-audio")
+_RAW_DIR     = os.path.join(_ROOT, "call_processor", "data", "raw_calls")
 
 # 6 working models (Qwen3 + VibeVoice disabled — transformers incompatibility)
 MODELS = [
@@ -23,13 +25,22 @@ MODELS = [
     "cohere-transcribe-03-2026",
 ]
 
-# 3 representative audio files: short (~1.5 MB), medium (~8.6 MB), long (~11.3 MB)
+# 3 quality-tier audio files from testing-audio/ (fall back to raw_calls if missing)
+def _find(subdir, filename, fallback=None):
+    p = os.path.join(_TESTING_DIR, subdir, filename)
+    if os.path.isfile(p):
+        return p
+    return fallback or p
+
 AUDIO_FILES = {
-    "short":  os.path.join(RAW_DIR, "audio_04_12_2026_11_56_45_xcj42i.mp3"),
-    "medium": os.path.join(RAW_DIR, "audio_04_12_2026_10_38_45_ldwibu.mp3"),
-    "long":   os.path.join(RAW_DIR, "audio_04_12_2026_12_28_59_vrcta2.mp3"),
+    "high": _find("high", "audio_04_12_2026_11_56_45_xcj42i.mp3",
+                  os.path.join(_RAW_DIR, "audio_04_12_2026_11_56_45_xcj42i.mp3")),
+    "mid":  _find("mid",  "audio_04_12_2026_10_32_41_o3n0le.mp3",
+                  os.path.join(_RAW_DIR, "audio_04_12_2026_10_32_41_o3n0le.mp3")),
+    "low":  _find("low",  "audio_04_12_2026_10_38_45_ldwibu.mp3",
+                  os.path.join(_RAW_DIR, "audio_04_12_2026_10_38_45_ldwibu.mp3")),
 }
-DEFAULT_AUDIO = AUDIO_FILES["short"]
+DEFAULT_AUDIO = AUDIO_FILES["high"]
 
 TIMEOUT_S = 900   # 15 min per model on CPU
 

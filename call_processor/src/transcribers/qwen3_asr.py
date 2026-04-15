@@ -44,7 +44,13 @@ def _patch_all_transformers_modules() -> None:
     for name, mod in list(sys.modules.items()):
         if not name or "transformers" not in name or mod is None:
             continue
-        if hasattr(mod, "check_model_inputs"):
+        # hasattr() can raise ImportError (not AttributeError) when lazy-module
+        # stubs from SpeechBrain or HF are present — wrap it explicitly.
+        try:
+            has_it = hasattr(mod, "check_model_inputs")
+        except Exception:
+            continue
+        if has_it:
             try:
                 setattr(mod, "check_model_inputs", _noop_check_model_inputs)
             except Exception:

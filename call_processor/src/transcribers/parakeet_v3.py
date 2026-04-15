@@ -133,11 +133,23 @@ class ParakeetV3Transcriber(BaseTranscriber):
 
     def unload(self) -> None:
         import gc
+        try:
+            import torch
+            if self.model is not None and torch.cuda.is_available():
+                try:
+                    self.model = self.model.cpu()
+                except Exception:
+                    pass
+        except ImportError:
+            pass
+        del self.model
         self.model = None
         gc.collect()
         try:
             import torch
             if torch.cuda.is_available():
+                torch.cuda.synchronize()
                 torch.cuda.empty_cache()
-        except ImportError:
+                torch.cuda.ipc_collect()
+        except Exception:
             pass
