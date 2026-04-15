@@ -343,6 +343,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "segments":                 segments,
         "note": f"Transcribed with {whisper_model} (no diarization unless model provides it)",
     }
+    os.makedirs(out_dir, exist_ok=True)  # re-create if deleted during long transcription
     result_path = os.path.join(out_dir, "result.json")
     with open(result_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, ensure_ascii=False)

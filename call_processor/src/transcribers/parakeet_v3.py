@@ -53,22 +53,29 @@ class ParakeetV3Transcriber(BaseTranscriber):
         )
         os.makedirs(cache_dir, exist_ok=True)
         os.environ["NEMO_CACHE_DIR"] = cache_dir
-        # NeMo 2.0 made ASRModel abstract (requires setup_training_data /
-        # setup_validation_data).  Fall back through concrete subclasses so
-        # the loader works on both NeMo 1.x and 2.x installs.
-        load_exc = None
-        for cls_name in ("ASRModel", "EncDecRNNTBPEModel", "EncDecCTCModelBPE"):
-            try:
-                cls = getattr(nemo_asr.models, cls_name)
-                self.model = cls.from_pretrained(model_name=MODEL_ID)
-                break
-            except (TypeError, AttributeError) as e:
-                load_exc = e
-                continue
-        else:
-            raise RuntimeError(
-                f"Could not load Parakeet via any NeMo model class: {load_exc}"
-            )
+        # NeMo 2.0 made ASRModel abstract.  Also, NeMo calls CUDA internally
+        # during from_pretrained even before we call .cuda() — so on a system
+        # with an old CUDA driver we must hide CUDA from NeMo entirely.
+        import torch as _torch
+        _orig_is_avail = _torch.cuda.is_available
+        if not _use_cuda:
+            _torch.cuda.is_available = lambda: False
+        try:
+            load_exc = None
+            for cls_name in ("ASRModel", "EncDecRNNTBPEModel", "EncDecCTCModelBPE"):
+                try:
+                    cls = getattr(nemo_asr.models, cls_name)
+                    self.model = cls.from_pretrained(model_name=MODEL_ID)
+                    break
+                except (TypeError, AttributeError) as e:
+                    load_exc = e
+                    continue
+            else:
+                raise RuntimeError(
+                    f"Could not load Parakeet via any NeMo model class: {load_exc}"
+                )
+        finally:
+            _torch.cuda.is_available = _orig_is_avail
         if self._use_cuda:
             self.model = self.model.cuda()
         self.model.eval()
