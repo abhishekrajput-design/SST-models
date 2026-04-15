@@ -24,13 +24,22 @@ class ParakeetV3Transcriber(BaseTranscriber):
     def load(self) -> None:
         if self.model is not None:
             return
-        # Free any leftover GPU memory from previous models
+        # Verify CUDA is actually usable (driver may be too old for the
+        # compiled CUDA toolkit even when is_available() returns True).
+        _use_cuda = False
         try:
             import torch
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
+            if self.device == "cuda" and torch.cuda.is_available():
+                try:
+                    torch.cuda.current_device()
+                    torch.zeros(1).cuda()
+                    _use_cuda = True
+                    torch.cuda.empty_cache()
+                except Exception as _e:
+                    print(f"  [Parakeet] CUDA unavailable ({_e}), falling back to CPU")
         except ImportError:
             pass
+        self._use_cuda = _use_cuda
 
         try:
             import nemo.collections.asr as nemo_asr
@@ -60,7 +69,7 @@ class ParakeetV3Transcriber(BaseTranscriber):
             raise RuntimeError(
                 f"Could not load Parakeet via any NeMo model class: {load_exc}"
             )
-        if self.device == "cuda":
+        if self._use_cuda:
             self.model = self.model.cuda()
         self.model.eval()
 
