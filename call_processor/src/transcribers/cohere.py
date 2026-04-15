@@ -36,15 +36,23 @@ class CohereTranscriber(BaseTranscriber):
         )
         os.makedirs(cache_dir, exist_ok=True)
 
+        import torch
         self.processor = AutoProcessor.from_pretrained(
             MODEL_ID, cache_dir=cache_dir, trust_remote_code=True
         )
-        # AutoModelForSpeechSeq2Seq + trust_remote_code loads the local
-        # CohereAsrForConditionalGeneration which has a transcribe() method
+        # float16 halves VRAM (~3 GB vs ~6 GB float32) so the full model fits
+        # on a 6 GB GPU without CPU offloading.  device_map="cuda" forces all
+        # layers onto GPU; "auto" splits to CPU when VRAM is tight, making
+        # inference 50-100× slower.
+        use_cuda = self.device == "cuda" and torch.cuda.is_available()
+        # bfloat16: same memory as float16 (~3 GB) but float32 exponent range
+        # so no overflow on audio feature values (float16 max ~65504 is too low).
+        dtype = torch.bfloat16 if use_cuda else torch.float32
         self.model = AutoModelForSpeechSeq2Seq.from_pretrained(
             MODEL_ID,
             cache_dir=cache_dir,
-            device_map="auto",
+            device_map="cuda" if use_cuda else "cpu",
+            torch_dtype=dtype,
             trust_remote_code=True,
         )
         self.model.eval()

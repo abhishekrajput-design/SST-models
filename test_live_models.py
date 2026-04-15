@@ -42,7 +42,7 @@ AUDIO_FILES = {
 }
 DEFAULT_AUDIO = AUDIO_FILES["high"]
 
-TIMEOUT_S = 900   # 15 min per model on CPU
+TIMEOUT_S = 1800  # 30 min per model (Cohere on GPU can take 10-20 min for long audio)
 
 
 def api(path):

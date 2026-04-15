@@ -630,7 +630,7 @@
                 <optgroup label="🖥️ Local GPU models">
                 <option value="whisper-large-v3-turbo">Whisper Large-v3-Turbo · 52s · 555 segs · best local</option>
                 <option value="parakeet-tdt-0.6b-v3">NVIDIA Parakeet TDT v3 · 94s · 300 segs · 3 GB VRAM</option>
-                <option value="cohere-transcribe-03-2026">Cohere Transcribe 03-2026 · quality issues on desk audio</option>
+                <option value="cohere-transcribe-03-2026">Cohere Transcribe 03-2026 · best WER on leaderboard · ~5 min</option>
                 </optgroup>
             </select>
             <button class="upload-btn" onclick="document.getElementById('audioUpload').click()">
@@ -809,8 +809,7 @@
             if (model.startsWith('deepgram')) return '#7c3aed';
             if (model.startsWith('whisper')) return '#0369a1';
             if (model.startsWith('parakeet')) return '#065f46';
-            if (model.startsWith('qwen')) return '#92400e';
-            if (model.startsWith('vibevoice') || model.startsWith('microsoft')) return '#1e40af';
+            if (model.startsWith('cohere')) return '#0f766e';
             return '#374151';
         }
 
@@ -824,8 +823,6 @@
                 'whisper-large-v3': 'Whisper v3',
                 'large-v3-turbo': 'Whisper v3-Turbo',
                 'parakeet-tdt-0.6b-v3': 'Parakeet v3',
-                'qwen3-asr-1.7b': 'Qwen3-ASR',
-                'vibevoice-asr': 'VibeVoice',
                 'cohere-transcribe-03-2026': 'Cohere Mar-26',
             };
             return map[model] || model;

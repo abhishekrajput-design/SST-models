@@ -693,9 +693,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 {"model": "deepgram-nova-2-meeting",   "label": "Deepgram Nova-2 Meeting",  "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Multi-speaker meetings",        "status": "ok"},
                 {"model": "whisper-large-v3-turbo",    "label": "Whisper Large-v3-Turbo",   "type": "Local GPU",  "speed_s": 52,   "segments": 555,  "notes": "Best local model",             "status": "ok"},
                 {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local GPU",  "speed_s": 94,   "segments": 300,  "notes": "Fast, English only",           "status": "ok"},
-                {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Cloud API",  "speed_s": 300,  "segments": None, "notes": "Quality issues on desk audio",  "status": "ok"},
-                {"model": "qwen3-asr-1.7b",            "label": "Qwen3-ASR-1.7B",           "type": "Local GPU",  "speed_s": None, "segments": None, "notes": "Transformers incompatibility",  "status": "disabled"},
-                {"model": "vibevoice-asr",             "label": "Microsoft VibeVoice-ASR",  "type": "Local GPU",  "speed_s": None, "segments": None, "notes": "Processor load error",          "status": "disabled"},
+                {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 300,  "segments": None, "notes": "Best WER on leaderboard (5.42%)", "status": "ok"},
             ]
             # Merge in any live data from model_comparison.json
             mc_path = os.path.join("data", "model_comparison.json")
