@@ -44,7 +44,17 @@ class CohereTranscriber(BaseTranscriber):
         # on a 6 GB GPU without CPU offloading.  device_map="cuda" forces all
         # layers onto GPU; "auto" splits to CPU when VRAM is tight, making
         # inference 50-100× slower.
-        use_cuda = self.device == "cuda" and torch.cuda.is_available()
+        # Verify CUDA is actually usable (driver might be too old for the
+        # CUDA toolkit PyTorch was compiled with — torch.cuda.is_available()
+        # can return True even when the driver is incompatible).
+        use_cuda = False
+        if self.device == "cuda" and torch.cuda.is_available():
+            try:
+                torch.cuda.current_device()
+                torch.zeros(1).cuda()  # force a real CUDA call
+                use_cuda = True
+            except Exception as _e:
+                print(f"  [Cohere] CUDA unavailable ({_e}), falling back to CPU")
         # bfloat16: same memory as float16 (~3 GB) but float32 exponent range
         # so no overflow on audio feature values (float16 max ~65504 is too low).
         dtype = torch.bfloat16 if use_cuda else torch.float32
