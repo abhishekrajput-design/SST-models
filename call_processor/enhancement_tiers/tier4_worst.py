@@ -38,8 +38,8 @@ _NFE = 64
 def process(input_path: str, output_path: str, models, status_cb) -> dict:
     import torch
     from enhancement_router import (
-        load_16k_mono, save_wav, resample_np, _extract_np,
-        apply_metricgan,
+        load_16k_mono, save_wav, resample_np, _extract_np, _to_2d,
+        apply_metricgan, process_in_chunks,
     )
 
     status_cb("Tier 4: loading audio")
@@ -47,7 +47,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
 
     # ── Speech separation: mixed → 2 streams ─────────────────────────────────
     status_cb("Tier 4: MossFormer2_SS_16K — separating speakers")
-    out_ss = models.ss_16k(input_path=audio_16k, online_write=False)
+    out_ss = models.ss_16k(input_path=_to_2d(audio_16k), online_write=False)
     if isinstance(out_ss, (list, tuple)) and len(out_ss) >= 2:
         stream1 = _extract_np(out_ss[0])
         stream2 = _extract_np(out_ss[1])
@@ -68,10 +68,13 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     for idx, raw_stream in enumerate([stream1, stream2]):
         lbl = f"stream{idx + 1}"
 
-        # GAN denoise
-        status_cb(f"Tier 4: MossFormerGAN_SE_16K — denoising {lbl}")
-        denoised = models.se_16k(input_path=raw_stream, online_write=False)
-        denoised = _extract_np(denoised)
+        # GAN denoise (chunked — each stream can be up to 30 min)
+        status_cb(f"Tier 4: MossFormerGAN_SE_16K — denoising {lbl} (chunked)")
+        denoised = process_in_chunks(
+            audio_np=raw_stream,
+            sr=16000,
+            fn=lambda chunk: models.se_16k(input_path=chunk, online_write=False),
+        )
 
         # Resemble Enhance — generative reconstruction
         status_cb(f"Tier 4: Resemble Enhance — reconstructing {lbl}")
@@ -79,7 +82,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
 
         # Super-resolution
         status_cb(f"Tier 4: MossFormer2_SR_48K — upsampling {lbl}")
-        hifi_48k = models.sr_48k(input_path=denoised, online_write=False)
+        hifi_48k = models.sr_48k(input_path=_to_2d(denoised), online_write=False)
         hifi_48k = _extract_np(hifi_48k)
 
         # MetricGAN+ polish
@@ -170,6 +173,9 @@ def _score_np_quick(audio_np: np.ndarray, sr: int) -> float:
             t    = torch.from_numpy(data).unsqueeze(0)
             t    = F_ta.resample(t, sr, 16000)
             data = t.squeeze(0).numpy()
+
+        # Clip to 60s max — DNSMOS is not designed for long tensors
+        data   = data[: 16000 * 60]
         tensor = torch.from_numpy(data).unsqueeze(0)
         dnsmos = DeepNoiseSuppressionMeanOpinionScore(fs=16000, personalized=False)
         dnsmos.update(tensor)

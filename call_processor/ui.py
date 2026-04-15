@@ -30,7 +30,7 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
-PORT = 8080
+PORT = 8082
 PROCESSED_DIR = "data/processed"
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 

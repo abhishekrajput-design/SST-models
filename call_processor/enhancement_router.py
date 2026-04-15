@@ -139,19 +139,19 @@ def save_wav(data: np.ndarray, sr: int, path: str):
 
 def apply_se_16k(models: ClearVoiceModels, audio_np: np.ndarray) -> np.ndarray:
     """Run MossFormerGAN_SE_16K on 16kHz numpy array → returns 16kHz numpy array."""
-    out = models.se_16k(input_path=audio_np, online_write=False)
+    out = models.se_16k(input_path=_to_2d(audio_np), online_write=False)
     return _extract_np(out)
 
 
 def apply_se_48k(models: ClearVoiceModels, audio_np: np.ndarray) -> np.ndarray:
     """Run MossFormer2_SE_48K. Input 48kHz → output 48kHz."""
-    out = models.se_48k(input_path=audio_np, online_write=False)
+    out = models.se_48k(input_path=_to_2d(audio_np), online_write=False)
     return _extract_np(out)
 
 
 def apply_ss_16k(models: ClearVoiceModels, audio_np: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Run MossFormer2_SS_16K (speech separation). Returns (stream1, stream2) at 16kHz."""
-    out = models.ss_16k(input_path=audio_np, online_write=False)
+    out = models.ss_16k(input_path=_to_2d(audio_np), online_write=False)
     # Output may be list/tuple of 2 arrays, or shape (2, T)
     if isinstance(out, (list, tuple)) and len(out) >= 2:
         s1, s2 = _extract_np(out[0]), _extract_np(out[1])
@@ -168,7 +168,7 @@ def apply_ss_16k(models: ClearVoiceModels, audio_np: np.ndarray) -> tuple[np.nda
 
 def apply_sr_48k(models: ClearVoiceModels, audio_np: np.ndarray) -> np.ndarray:
     """Run MossFormer2_SR_48K (super-resolution). Input 16kHz → output 48kHz."""
-    out = models.sr_48k(input_path=audio_np, online_write=False)
+    out = models.sr_48k(input_path=_to_2d(audio_np), online_write=False)
     return _extract_np(out)
 
 
@@ -215,8 +215,119 @@ def apply_metricgan(audio_np: np.ndarray, sr: int, models_dir: str = "models/met
 
 
 # --------------------------------------------------------------------------- #
+#  Chunked processing helper
+# --------------------------------------------------------------------------- #
+
+def process_in_chunks(
+    audio_np: np.ndarray,
+    sr: int,
+    fn,
+    chunk_sec: float = 60.0,
+    overlap_sec: float = 2.0,
+) -> np.ndarray:
+    """
+    Split a long 1-D audio array into overlapping chunks, process each with
+    ``fn``, then stitch back together using linear crossfade (overlap-add).
+
+    Args:
+        audio_np:    1-D float32 numpy array at sample rate ``sr``.
+        sr:          Sample rate of ``audio_np``.
+        fn:          Callable that accepts a 2-D ``(1, T)`` chunk (float32
+                     numpy array) and returns a 1-D or 2-D numpy array of
+                     the same length.
+        chunk_sec:   Duration of each processing chunk in seconds.
+        overlap_sec: Half-overlap (crossfade region) at each boundary.
+
+    Returns:
+        1-D float32 numpy array with the same total length as ``audio_np``.
+
+    Notes:
+        * Short audio (< chunk_sec) is passed through in one shot — no
+          chunking or crossfade overhead.
+        * Only SE models should be chunked.  SR and SS models are fast and
+          stateful across frames; do not chunk them.
+    """
+    audio_np = np.asarray(audio_np, dtype=np.float32)
+    n_samples = len(audio_np)
+    chunk_len   = int(chunk_sec   * sr)
+    overlap_len = int(overlap_sec * sr)
+    step        = chunk_len - overlap_len  # non-overlapping stride
+
+    # Short audio — process as a single chunk
+    if n_samples <= chunk_len:
+        logger.debug("process_in_chunks: audio shorter than chunk_sec — single pass")
+        return _extract_np(fn(_to_2d(audio_np)))
+
+    # Build chunk start positions
+    starts = list(range(0, n_samples - overlap_len, step))
+
+    # Ensure the final chunk always reaches the end of the signal
+    if starts[-1] + chunk_len < n_samples:
+        starts.append(n_samples - chunk_len)
+
+    n_chunks = len(starts)
+    output   = np.zeros(n_samples, dtype=np.float32)
+    weight   = np.zeros(n_samples, dtype=np.float32)
+
+    for i, start in enumerate(starts):
+        end   = min(start + chunk_len, n_samples)
+        chunk = audio_np[start:end]
+
+        logger.debug(
+            f"process_in_chunks: chunk {i + 1}/{n_chunks} "
+            f"[{start / sr:.1f}s – {end / sr:.1f}s]"
+        )
+
+        processed = _extract_np(fn(_to_2d(chunk)))
+
+        # Guard: processed length might differ by ±1 sample due to model internals
+        proc_len = len(processed)
+        seg_len  = end - start
+        if proc_len != seg_len:
+            if proc_len > seg_len:
+                processed = processed[:seg_len]
+            else:
+                processed = np.pad(processed, (0, seg_len - proc_len))
+
+        # Build a window for overlap-add crossfade
+        #   - First chunk:  no fade-in at the leading edge
+        #   - Last chunk:   no fade-out at the trailing edge
+        #   - All chunks:   linear fade-in for the first overlap_len samples
+        #                   and linear fade-out for the last overlap_len samples
+        #                   (except at the very start/end of the file)
+        win = np.ones(seg_len, dtype=np.float32)
+
+        # Fade-in at the left boundary (skip for the very first chunk)
+        if i > 0 and overlap_len > 0:
+            fade_in_len = min(overlap_len, seg_len)
+            win[:fade_in_len] = np.linspace(0.0, 1.0, fade_in_len)
+
+        # Fade-out at the right boundary (skip for the very last chunk)
+        if i < n_chunks - 1 and overlap_len > 0:
+            fade_out_len = min(overlap_len, seg_len)
+            win[seg_len - fade_out_len:] = np.linspace(1.0, 0.0, fade_out_len)
+
+        output[start:end] += processed * win
+        weight[start:end] += win
+
+    # Normalise overlapping regions so they sum to 1 (avoid 2× amplitude in overlaps)
+    mask = weight > 1e-8
+    output[mask] /= weight[mask]
+
+    return output.astype(np.float32)
+
+
+# --------------------------------------------------------------------------- #
 #  Internal
 # --------------------------------------------------------------------------- #
+
+def _to_2d(audio_np: np.ndarray) -> np.ndarray:
+    """ClearVoice expects (batch, time) shape. Wrap 1-D array → (1, T)."""
+    arr = np.asarray(audio_np, dtype=np.float32)
+    if arr.ndim == 1:
+        arr = arr[np.newaxis, :]   # (T,) → (1, T)
+    return arr
+
 
 def _extract_np(out) -> np.ndarray:
     """Normalise ClearVoice output to a 1-D float32 numpy array."""

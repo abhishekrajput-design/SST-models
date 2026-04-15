@@ -38,6 +38,10 @@ TIER_COLORS = {1: "green",  2: "yellow",         3: "orange",     4: "red"}
 #  Public API
 # --------------------------------------------------------------------------- #
 
+SCORE_SAMPLE_SEC = 60   # Max seconds to feed into DNSMOS (enough for quality estimate)
+SCORE_SAMPLES    = 3    # How many evenly-spaced clips to average (ignores silence edges)
+
+
 def score_audio(audio_path: str) -> dict:
     """
     Score audio quality using DNSMOS.
@@ -68,12 +72,31 @@ def score_audio(audio_path: str) -> dict:
             t = torch.from_numpy(data).unsqueeze(0)  # [1, T]
             t = F_ta.resample(t, sr, 16000)
             data = t.squeeze(0).numpy()
+            sr = 16000
 
-        # ── Run DNSMOS (CPU / ONNX) ───────────────────────────────────────────
-        audio_tensor = torch.from_numpy(data).unsqueeze(0)  # [1, T]
+        # ── Sample up to SCORE_SAMPLE_SEC seconds (DNSMOS not designed for 30-min tensors) ──
+        target_sr     = 16000
+        clip_samples  = int(SCORE_SAMPLE_SEC * target_sr)
+        total_samples = len(data)
 
+        if total_samples <= clip_samples:
+            # Short file — use it all
+            clips = [data]
+        else:
+            # Take SCORE_SAMPLES evenly-spaced clips, skipping first/last 5%
+            clips = []
+            margin  = int(total_samples * 0.05)
+            usable  = total_samples - 2 * margin
+            per_clip = clip_samples // SCORE_SAMPLES
+            for i in range(SCORE_SAMPLES):
+                start = margin + int(i * usable / SCORE_SAMPLES)
+                clips.append(data[start: start + per_clip])
+
+        # ── Run DNSMOS on each clip, average the scores ───────────────────────
         dnsmos = DeepNoiseSuppressionMeanOpinionScore(fs=16000, personalized=False)
-        dnsmos.update(audio_tensor)
+        for clip in clips:
+            audio_tensor = torch.from_numpy(clip.astype(np.float32)).unsqueeze(0)
+            dnsmos.update(audio_tensor)
         raw = dnsmos.compute()
 
         # torchmetrics may return dict or tensor depending on version

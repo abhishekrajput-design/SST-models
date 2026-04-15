@@ -24,16 +24,22 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     Returns:
         dict with pipeline_used and separated_streams
     """
-    from enhancement_router import load_16k_mono, save_wav, resample_np, _extract_np
+    from enhancement_router import (
+        load_16k_mono, save_wav, resample_np, _extract_np, _to_2d,
+        process_in_chunks,
+    )
 
     status_cb("Tier 1: loading audio")
     audio_16k, _ = load_16k_mono(input_path)
 
     # Upsample to 48kHz for SE_48K model
-    status_cb("Tier 1: MossFormer2_SE_48K — light denoise + upsample")
+    status_cb("Tier 1: MossFormer2_SE_48K — light denoise + upsample (chunked)")
     audio_48k = resample_np(audio_16k, 16000, 48000)
-    enhanced_48k = models.se_48k(input_path=audio_48k, online_write=False)
-    enhanced_48k = _extract_np(enhanced_48k)
+    enhanced_48k = process_in_chunks(
+        audio_np=audio_48k,
+        sr=48000,
+        fn=lambda chunk: models.se_48k(input_path=chunk, online_write=False),
+    )
 
     status_cb("Tier 1: saving output")
     save_wav(enhanced_48k, 48000, output_path)

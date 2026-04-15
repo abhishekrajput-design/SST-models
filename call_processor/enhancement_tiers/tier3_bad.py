@@ -22,20 +22,30 @@ _SUFFICIENT_MOS = 2.5
 
 
 def process(input_path: str, output_path: str, models, status_cb) -> dict:
-    import io
-    from enhancement_router import (
-        load_16k_mono, save_wav, resample_np, _extract_np,
-        apply_metricgan,
-    )
+    import torch
     import tempfile, os
+    from enhancement_router import (
+        load_16k_mono, save_wav, resample_np, _extract_np, _to_2d,
+        apply_metricgan, process_in_chunks,
+    )
+
+    def _empty_cache():
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
     status_cb("Tier 3: loading audio")
     audio_16k, _ = load_16k_mono(input_path)
 
     # ── Pass 1: MossFormerGAN_SE_16K ─────────────────────────────────────────
-    status_cb("Tier 3: pass 1 — MossFormerGAN_SE_16K")
-    pass1_16k = models.se_16k(input_path=audio_16k, online_write=False)
-    pass1_16k = _extract_np(pass1_16k)
+    # 60s chunks at 16 kHz = 960 K samples — safe VRAM footprint
+    status_cb("Tier 3: pass 1 — MossFormerGAN_SE_16K (chunked)")
+    pass1_16k = process_in_chunks(
+        audio_np=audio_16k,
+        sr=16000,
+        fn=lambda chunk: models.se_16k(input_path=chunk, online_write=False),
+        chunk_sec=60.0,
+    )
+    _empty_cache()
 
     # ── Interim DNSMOS check ──────────────────────────────────────────────────
     status_cb("Tier 3: re-scoring after pass 1")
@@ -43,24 +53,33 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     logger.info(f"Tier 3 interim mos_ovr = {interim_mos:.3f} (threshold {_SUFFICIENT_MOS})")
 
     if interim_mos >= _SUFFICIENT_MOS:
-        status_cb("Tier 3: pass 1 sufficient — SR + MetricGAN+")
-        hifi_48k      = models.sr_48k(input_path=pass1_16k, online_write=False)
-        hifi_48k      = _extract_np(hifi_48k)
+        status_cb("Tier 3: pass 1 sufficient — SR (chunked) + MetricGAN+")
+        hifi_48k      = _sr_chunked(models, pass1_16k)
         hifi_16k_mg   = resample_np(hifi_48k, 48000, 16000)
         polished_16k  = apply_metricgan(hifi_16k_mg, sr=16000)
         polished_48k  = resample_np(polished_16k, 16000, 48000)
         pipeline_tag  = "tier3_bad_1pass"
     else:
         # ── Pass 2: MossFormer2_SE_48K (different architecture, second shot) ─
-        status_cb("Tier 3: pass 2 — MossFormer2_SE_48K")
+        # Use 20s chunks at 48 kHz = 960 K samples (same footprint as 60s@16kHz)
+        status_cb("Tier 3: pass 2 — MossFormer2_SE_48K (chunked 20s@48kHz)")
         pass1_48k     = resample_np(pass1_16k, 16000, 48000)
-        pass2_48k     = models.se_48k(input_path=pass1_48k, online_write=False)
-        pass2_48k     = _extract_np(pass2_48k)
+        del pass1_16k  # free RAM before allocating 48kHz buffer
+        _empty_cache()
+        pass2_48k     = process_in_chunks(
+            audio_np=pass1_48k,
+            sr=48000,
+            fn=lambda chunk: models.se_48k(input_path=chunk, online_write=False),
+            chunk_sec=20.0,   # 20s × 48kHz = 960K samples — same as 60s@16kHz
+        )
+        del pass1_48k
+        _empty_cache()
 
-        status_cb("Tier 3: SR + MetricGAN+ after pass 2")
+        status_cb("Tier 3: SR (chunked) + MetricGAN+ after pass 2")
         pass2_16k     = resample_np(pass2_48k, 48000, 16000)
-        hifi_48k      = models.sr_48k(input_path=pass2_16k, online_write=False)
-        hifi_48k      = _extract_np(hifi_48k)
+        del pass2_48k
+        hifi_48k      = _sr_chunked(models, pass2_16k)
+        del pass2_16k
         hifi_16k_mg   = resample_np(hifi_48k, 48000, 16000)
         polished_16k  = apply_metricgan(hifi_16k_mg, sr=16000)
         polished_48k  = resample_np(polished_16k, 16000, 48000)
@@ -78,11 +97,47 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
 
 
 # --------------------------------------------------------------------------- #
+#  Internal helpers
+# --------------------------------------------------------------------------- #
+
+def _sr_chunked(models, audio_16k: np.ndarray, chunk_sec: float = 60.0) -> np.ndarray:
+    """
+    Run MossFormer2_SR_48K in chunks to avoid CUDA OOM on long files.
+    Input: 16 kHz mono array.  Output: 48 kHz mono array (3× length).
+    """
+    import torch
+    from enhancement_router import _extract_np, _to_2d
+
+    sr_in  = 16000
+    sr_out = 48000
+    ratio  = sr_out // sr_in          # 3
+    chunk_in  = int(chunk_sec * sr_in)
+    n         = len(audio_16k)
+
+    if n <= chunk_in:
+        out = models.sr_48k(input_path=_to_2d(audio_16k), online_write=False)
+        return _extract_np(out)
+
+    out_chunks = []
+    start = 0
+    while start < n:
+        end   = min(start + chunk_in, n)
+        chunk = audio_16k[start:end]
+        sr_out_chunk = models.sr_48k(input_path=_to_2d(chunk), online_write=False)
+        out_chunks.append(_extract_np(sr_out_chunk))
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        start = end
+
+    return np.concatenate(out_chunks, axis=0)
+
+
+# --------------------------------------------------------------------------- #
 #  Internal helper: score a numpy array without writing a temp file
 # --------------------------------------------------------------------------- #
 
 def _score_np(audio_np: np.ndarray, sr: int) -> float:
-    """Quick DNSMOS mos_ovr score from a numpy array. Returns 0.0 on failure."""
+    """Quick DNSMOS mos_ovr from a numpy array. Clips to 60s to stay fast."""
     try:
         import torch
         import torchaudio.functional as F_ta
@@ -94,6 +149,8 @@ def _score_np(audio_np: np.ndarray, sr: int) -> float:
             t    = F_ta.resample(t, sr, 16000)
             data = t.squeeze(0).numpy()
 
+        # Clip to 60s max
+        data   = data[: 16000 * 60]
         tensor = torch.from_numpy(data).unsqueeze(0)
         dnsmos = DeepNoiseSuppressionMeanOpinionScore(fs=16000, personalized=False)
         dnsmos.update(tensor)
@@ -101,8 +158,7 @@ def _score_np(audio_np: np.ndarray, sr: int) -> float:
 
         if isinstance(raw, dict):
             return float(raw.get("mos_ovr", raw.get("ovr", 0)))
-        else:
-            s = raw.flatten()
-            return float(s[3]) if len(s) >= 4 else float(s[0])
+        s = raw.flatten()
+        return float(s[3]) if len(s) >= 4 else float(s[0])
     except Exception:
         return 0.0
