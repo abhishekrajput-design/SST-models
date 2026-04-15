@@ -76,6 +76,7 @@ _status = {
     "post_mos":          None,   # DNSMOS mos_ovr after enhancement
     "needs_review":      False,  # human review flag
     "review_reasons":    [],
+    "log_entries":       [],     # timestamped log lines shown in UI log panel
 }
 _status_lock = threading.Lock()
 
@@ -85,16 +86,27 @@ _enhance_lock = threading.Lock()
 
 
 def _set_status(stage_num: int, stage: str, message: str):
+    import time as _time
     with _status_lock:
         _status["stage_num"] = stage_num
         _status["stage"]     = stage
         _status["message"]   = message
+        _log_append(f"[{_time.strftime('%H:%M:%S')}]  {stage}: {message}")
 
 
 def _set_enhancement_stage(stage_name: str):
     """Update just the enhancement_stage field (called from enhancement_router callback)."""
+    import time as _time
     with _status_lock:
         _status["enhancement_stage"] = stage_name
+        _log_append(f"[{_time.strftime('%H:%M:%S')}]  {stage_name}")
+
+
+def _log_append(entry: str):
+    """Append a line to log_entries (caller must hold _status_lock). Caps at 300 lines."""
+    _status["log_entries"].append(entry)
+    if len(_status["log_entries"]) > 300:
+        _status["log_entries"] = _status["log_entries"][-300:]
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -402,7 +414,7 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             running=True, done=False, error=None, result_id=None,
             quality_tier=None, quality_tier_name=None, quality_tier_color=None,
             enhancement_stage=None, pre_mos=None, post_mos=None,
-            needs_review=False, review_reasons=[],
+            needs_review=False, review_reasons=[], log_entries=[],
         )
 
     # Accumulate human review flags across all stages

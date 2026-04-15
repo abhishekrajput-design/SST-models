@@ -591,6 +591,28 @@
             text-align: center;
             min-height: 18px;
         }
+        .progress-log {
+            margin-top: 12px;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 8px 10px;
+            max-height: 160px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.72rem;
+            color: #94a3b8;
+            scroll-behavior: smooth;
+        }
+        .progress-log-entry {
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .progress-log-entry.latest {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
         /* ── end progress modal ──────────────────────────────────────────── */
 
         /* Generic scrollbar */
@@ -786,6 +808,7 @@
                 <div class="progress-fill" id="progressFill" style="width:0%"></div>
             </div>
             <div class="progress-msg" id="progressMsg">Preparing…</div>
+            <div class="progress-log" id="progressLog"></div>
         </div>
     </div>
 
@@ -1277,6 +1300,18 @@
             if (s.enhancement_stage) {
                 const sub = document.getElementById('enhancementStageSub');
                 if (sub) sub.textContent = s.enhancement_stage;
+            }
+            // Live log panel
+            if (Array.isArray(s.log_entries) && s.log_entries.length) {
+                const logEl = document.getElementById('progressLog');
+                if (logEl) {
+                    const atBottom = logEl.scrollHeight - logEl.scrollTop <= logEl.clientHeight + 40;
+                    logEl.innerHTML = s.log_entries.map((line, i) => {
+                        const isLatest = i === s.log_entries.length - 1;
+                        return `<div class="progress-log-entry${isLatest ? ' latest' : ''}">${line}</div>`;
+                    }).join('');
+                    if (atBottom) logEl.scrollTop = logEl.scrollHeight;
+                }
             }
         }
 
