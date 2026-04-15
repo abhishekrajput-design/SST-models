@@ -1,0 +1,142 @@
+"""Microsoft VibeVoice-ASR (9B) — long-form (60 min) + native speaker diarization."""
+from __future__ import annotations
+import os
+import time
+from typing import List, Dict, Any
+from .base import BaseTranscriber
+
+MODEL_ID = "microsoft/VibeVoice-ASR"
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+# download_models.py saves to a flat Org__Model directory
+LOCAL_MODEL_DIR = os.path.join(_THIS_DIR, "..", "..", "models", "hf", "microsoft__VibeVoice-ASR")
+
+
+class VibeVoiceAsrTranscriber(BaseTranscriber):
+    name = "vibevoice-asr"
+    supports_diarization = True
+    supports_word_timestamps = True
+
+    def __init__(self, device: str = "cuda", model_dir: str | None = None,
+                 load_in_4bit: bool = False):
+        super().__init__(device=device, model_dir=model_dir)
+        self.processor = None
+        self.load_in_4bit = load_in_4bit
+
+    @staticmethod
+    def _find_local_snapshot(cache_dir: str, model_id: str) -> "str | None":
+        """Return the newest HF snapshot dir for a model, or None if not cached."""
+        import glob as _glob
+        cache_name = "models--" + model_id.replace("/", "--")
+        pattern = os.path.join(cache_dir, cache_name, "snapshots", "*")
+        snaps = sorted(_glob.glob(pattern))
+        return snaps[-1] if snaps else None
+
+    def load(self) -> None:
+        if self.model is not None:
+            return
+        import torch
+        from transformers import AutoProcessor, AutoModel
+        cache_dir = self.model_dir or os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "..", "..", "models", "hf"
+        )
+        os.makedirs(cache_dir, exist_ok=True)
+        kwargs = {"cache_dir": cache_dir, "trust_remote_code": True}
+        if self.load_in_4bit:
+            from transformers import BitsAndBytesConfig
+            kwargs["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
+        else:
+            kwargs["torch_dtype"] = torch.bfloat16 if (self.device == "cuda" and torch.cuda.is_available()) else torch.float32
+
+        # Build list of sources to try.
+        # Priority: flat local dir (download_models.py format) → HF snapshot → remote ID
+        proc_sources = []
+        if os.path.isdir(LOCAL_MODEL_DIR):
+            print(f"  [VibeVoice] using local model dir: {LOCAL_MODEL_DIR}")
+            proc_sources.append(LOCAL_MODEL_DIR)
+        local_snap = self._find_local_snapshot(cache_dir, MODEL_ID)
+        if local_snap and local_snap not in proc_sources:
+            proc_sources.append(local_snap)
+        proc_sources.append(MODEL_ID)
+
+        processor_loaded = False
+        errors: list = []
+        for src in proc_sources:
+            is_local = src != MODEL_ID
+            for proc_cls_name in ("AutoProcessor", "WhisperProcessor", "AutoFeatureExtractor"):
+                try:
+                    proc_cls = getattr(__import__("transformers"), proc_cls_name)
+                    self.processor = proc_cls.from_pretrained(
+                        src, cache_dir=cache_dir, trust_remote_code=True,
+                        local_files_only=is_local,
+                    )
+                    processor_loaded = True
+                    print(f"  [VibeVoice] processor loaded via {proc_cls_name} from {os.path.basename(src)}")
+                    break
+                except Exception as pe:
+                    msg = f"{proc_cls_name}({'local' if is_local else 'remote'}): {pe}"
+                    errors.append(msg)
+                    print(f"  [VibeVoice] attempt failed — {msg}")
+            if processor_loaded:
+                break
+
+        if not processor_loaded:
+            summary = " | ".join(str(e)[:80] for e in errors)
+            raise RuntimeError(f"VibeVoice-ASR processor load failed: {summary}")
+
+        model_src = proc_sources[0] if proc_sources else MODEL_ID
+        if model_src == MODEL_ID:
+            model_src = LOCAL_MODEL_DIR if os.path.isdir(LOCAL_MODEL_DIR) else MODEL_ID
+        self.model = AutoModel.from_pretrained(model_src, **kwargs)
+        if not self.load_in_4bit:
+            self.model = self.model.to(self.device)
+        self.model.eval()
+
+    def transcribe(self, audio_path: str, language: str = "en") -> List[Dict[str, Any]]:
+        self.load()
+        import torch
+        import librosa
+        audio, sr = librosa.load(audio_path, sr=16000, mono=True)
+        t0 = time.time()
+        inputs = self.processor(audio=audio, sampling_rate=sr, return_tensors="pt")
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        with torch.no_grad():
+            outputs = self.model.generate(**inputs, max_new_tokens=4096)
+        # VibeVoice returns "Who/When/What" structured output — parse if present
+        raw_text = self.processor.batch_decode(outputs, skip_special_tokens=True)[0]
+        out = self._parse_vibevoice_output(raw_text)
+        print(f"  [VibeVoice] {len(out)} segments in {time.time()-t0:.1f}s")
+        return out
+
+    @staticmethod
+    def _parse_vibevoice_output(raw: str) -> List[Dict[str, Any]]:
+        """VibeVoice format: '[SPEAKER_X] [00:01.5-00:04.2] text...' on each line."""
+        import re
+        lines = [ln.strip() for ln in raw.split("\n") if ln.strip()]
+        pat = re.compile(
+            r"\[?(SPEAKER[_\s]*\d+|[A-Z]+)\]?\s*\[?(\d+:?\d*\.?\d*)\s*[-–]\s*(\d+:?\d*\.?\d*)\]?\s*(.*)"
+        )
+        out: List[Dict[str, Any]] = []
+        for ln in lines:
+            m = pat.match(ln)
+            if not m:
+                # Fallback: append as single segment with no speaker
+                if ln:
+                    out.append({"start": 0.0, "end": 0.0, "text": ln,
+                                "speaker": "SPEAKER_00", "identified_speaker": "SPEAKER_00",
+                                "confidence": 0.0})
+                continue
+            spk, st, en, text = m.groups()
+            def t2s(t):
+                if ":" in t:
+                    a, b = t.split(":")
+                    return float(a) * 60 + float(b)
+                return float(t)
+            out.append({
+                "start": round(t2s(st), 2),
+                "end":   round(t2s(en), 2),
+                "text":  text.strip(),
+                "speaker": spk.replace(" ", "_"),
+                "identified_speaker": spk.replace(" ", "_"),
+                "confidence": 0.0,
+            })
+        return out

@@ -1,0 +1,46 @@
+# =============================================================================
+#  requirements_aws.txt — Full AWS GPU stack
+#  Includes everything in requirements.txt PLUS all model backends.
+#
+#  Install order (done by aws_setup.sh):
+#    1. pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
+#    2. pip install -r requirements.txt
+#    3. pip install -r requirements_aws.txt
+# =============================================================================
+
+# ── Cloud API ─────────────────────────────────────────────────────────────────
+deepgram-sdk>=3.0.0           # Deepgram Nova-3 / Nova-2 (no GPU needed)
+python-dotenv>=1.0.0          # .env loader
+
+# ── Whisper / CTranslate2 ────────────────────────────────────────────────────
+faster-whisper>=1.0.0         # already in requirements.txt (listed for clarity)
+ctranslate2>=4.0.0            # CTranslate2 GPU kernels (often needs upgrade)
+
+# ── HuggingFace transformers stack (Cohere, Qwen3, VibeVoice) ───────────────
+transformers>=4.45.0
+accelerate>=0.30.0
+sentencepiece>=0.1.99         # Cohere tokenizer
+tokenizers>=0.15.0
+datasets>=2.18.0
+optimum>=1.20.0               # optional: quantised inference
+
+# ── NVIDIA NeMo — Parakeet TDT ───────────────────────────────────────────────
+nemo_toolkit[asr]>=2.4.0
+Cython
+packaging
+hydra-core>=1.3.0
+omegaconf>=2.3.0
+lhotse>=1.24.0                # NeMo data pipeline
+
+# ── Neural audio enhancement ─────────────────────────────────────────────────
+# DeepFilterNet3 (GPU denoiser)
+deepfilterlib
+deepfilternet3
+
+# SpeechBrain MetricGAN+ (already pulled by pyannote, but pinning for clarity)
+speechbrain>=1.0.0
+
+# ── Audio utilities ───────────────────────────────────────────────────────────
+soundfile>=0.12.0
+audioread>=3.0.0
+resampy>=0.4.2
