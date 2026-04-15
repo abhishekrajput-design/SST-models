@@ -754,23 +754,32 @@
             <div class="progress-title">
                 <div class="progress-spinner"></div>
                 Processing Call…
+                <span id="qualityTierBadge" style="display:none;margin-left:10px;padding:2px 9px;border-radius:99px;font-size:0.68rem;font-weight:700;letter-spacing:0.05em;"></span>
+            </div>
+            <!-- Quality MOS row (hidden until scored) -->
+            <div id="qualityMosRow" style="display:none;margin:-4px 0 12px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.07);font-size:0.78rem;color:var(--text-muted);">
+                <span id="qualityMosLabel" style="font-weight:600;"></span>
+                <span id="qualityMosScores" style="margin-left:10px;font-variant-numeric:tabular-nums;"></span>
             </div>
             <div class="progress-steps">
                 <div class="progress-step" id="pstep-0">
-                    <span class="step-icon">🔊</span>
-                    <div><div class="step-label">Audio Enhancement</div><div class="step-sub">Noise reduction · volume boost</div></div>
+                    <span class="step-icon">&#128266;</span>
+                    <div>
+                        <div class="step-label">Quality Scoring + Enhancement</div>
+                        <div class="step-sub" id="enhancementStageSub">DNSMOS · ClearVoice tier pipeline</div>
+                    </div>
                 </div>
                 <div class="progress-step" id="pstep-1">
-                    <span class="step-icon">🎙️</span>
-                    <div><div class="step-label">Speaker Diarization</div><div class="step-sub">Who spoke when (pyannote)</div></div>
+                    <span class="step-icon">&#127897;&#65039;</span>
+                    <div><div class="step-label">Speaker Diarization</div><div class="step-sub">Who spoke when (pyannote · adaptive thresholds)</div></div>
                 </div>
                 <div class="progress-step" id="pstep-2">
-                    <span class="step-icon">🪪</span>
-                    <div><div class="step-label">Speaker Identification</div><div class="step-sub">Matching voices to agents</div></div>
+                    <span class="step-icon">&#128282;</span>
+                    <div><div class="step-label">Speaker Identification</div><div class="step-sub">Matching voices to enrolled agents</div></div>
                 </div>
                 <div class="progress-step" id="pstep-3">
-                    <span class="step-icon">📝</span>
-                    <div><div class="step-label">Transcription</div><div class="step-sub">Speech to text (Whisper)</div></div>
+                    <span class="step-icon">&#128221;</span>
+                    <div><div class="step-label">Transcription</div><div class="step-sub">ASR model(s) · multi-model consensus for bad audio</div></div>
                 </div>
             </div>
             <div class="progress-track">
@@ -1049,8 +1058,46 @@
                 .filter(([k]) => !k.startsWith('agent_'))
                 .sort((a,b) => b[1]-a[1])[0]?.[0] || null;
 
+            // ── Quality info banner ───────────────────────────────────────────
+            const q = data.quality || {};
+            const asr = data.asr || {};
+            let topBanner = '';
+
+            // Human review warning
+            if (data.needs_human_review) {
+                const reasons = (data.review_reasons || []).map(r => `<li>${r}</li>`).join('');
+                topBanner += `
+                    <div style="margin-bottom:14px;padding:12px 16px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);border-radius:10px;">
+                        <div style="font-weight:700;color:#fca5a5;margin-bottom:6px;">&#9888;&#65039; Human Review Recommended</div>
+                        <ul style="margin:0;padding-left:18px;color:#fca5a5;font-size:0.8rem;opacity:0.85;">${reasons}</ul>
+                    </div>`;
+            }
+
+            // Quality tier + MOS row
+            if (q.tier) {
+                const TIER_COLORS_CSS = { good: '#6ee7b7', medium: '#fcd34d', bad: '#fdba74', worst: '#fca5a5' };
+                const TIER_BG_CSS    = { good: 'rgba(16,185,129,0.12)', medium: 'rgba(245,158,11,0.12)',
+                                          bad: 'rgba(249,115,22,0.12)',  worst: 'rgba(239,68,68,0.12)' };
+                const tierName = q.tier_name || 'medium';
+                const tierColor = TIER_COLORS_CSS[tierName] || '#fcd34d';
+                const tierBg    = TIER_BG_CSS[tierName]    || 'rgba(245,158,11,0.12)';
+                const gain      = q.enhancement_gain != null ? (q.enhancement_gain >= 0 ? '+' : '') + q.enhancement_gain.toFixed(2) : null;
+                const mosStr    = q.pre_enhancement_mos != null
+                    ? `Pre: ${q.pre_enhancement_mos.toFixed(2)}` + (q.post_enhancement_mos != null ? `  Post: ${q.post_enhancement_mos.toFixed(2)}` : '')
+                    : '';
+                const gainStr   = gain ? `  Gain: ${gain}` : '';
+                const modelStr  = asr.model_used ? `  ASR: ${asr.model_used}  (${asr.models_compared || 1} model${(asr.models_compared || 1) > 1 ? 's compared' : ''})` : '';
+                topBanner += `
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;font-size:0.78rem;color:var(--text-muted);flex-wrap:wrap;">
+                        <span style="padding:2px 9px;border-radius:99px;font-size:0.7rem;font-weight:700;letter-spacing:0.05em;background:${tierBg};color:${tierColor};border:1px solid ${tierColor}40;">Tier ${q.tier} — ${tierName.toUpperCase()}</span>
+                        <span style="font-variant-numeric:tabular-nums;">${mosStr}${gainStr}</span>
+                        <span style="opacity:0.7;">${q.pipeline_used || ''}</span>
+                        <span style="opacity:0.7;">${modelStr}</span>
+                    </div>`;
+            }
+
             // Chat View
-            DOM.chatContainer.innerHTML = currentSegments.map((seg, idx) => {
+            DOM.chatContainer.innerHTML = topBanner + currentSegments.map((seg, idx) => {
                 const spk = seg.identified_speaker || seg.speaker || 'Unknown';
                 const isAgent = spk.startsWith('agent_') || spk === agentSpkId;
                 const displayName = isAgent ? 'AGENT' : 'CUSTOMER';
@@ -1166,8 +1213,19 @@
         const STAGE_PCTS = [8, 30, 58, 80, 100];
         let _pollTimer = null;
 
+        // Tier color → CSS
+        const TIER_STYLES = {
+            green:  { bg: 'rgba(16,185,129,0.18)', color: '#6ee7b7', border: 'rgba(16,185,129,0.35)' },
+            yellow: { bg: 'rgba(245,158,11,0.18)',  color: '#fcd34d', border: 'rgba(245,158,11,0.35)' },
+            orange: { bg: 'rgba(249,115,22,0.18)',  color: '#fdba74', border: 'rgba(249,115,22,0.35)' },
+            red:    { bg: 'rgba(239,68,68,0.18)',   color: '#fca5a5', border: 'rgba(239,68,68,0.35)'  },
+        };
+
         function showProgress() {
             document.getElementById('progressModal').style.display = 'flex';
+            // Reset quality UI
+            document.getElementById('qualityTierBadge').style.display = 'none';
+            document.getElementById('qualityMosRow').style.display = 'none';
             setProgressStage(0, 'Uploading file…');
         }
 
@@ -1176,15 +1234,12 @@
         }
 
         function setProgressStage(stageNum, message) {
-            // Reset all steps
             for (let i = 0; i < 4; i++) {
                 const el = document.getElementById(`pstep-${i}`);
                 el.classList.remove('active', 'done', 'error');
-                const icon = el.querySelector('.step-icon');
-                icon.textContent = ['🔊','🎙️','🪪','📝'][i];
                 if (i < stageNum) {
                     el.classList.add('done');
-                    icon.textContent = '✅';
+                    el.querySelector('.step-icon').textContent = '\u2705';
                 } else if (i === stageNum && stageNum < 4) {
                     el.classList.add('active');
                 }
@@ -1194,13 +1249,44 @@
             document.getElementById('progressMsg').textContent = message || '';
         }
 
+        function updateQualityUI(s) {
+            // Tier badge
+            if (s.quality_tier) {
+                const badge  = document.getElementById('qualityTierBadge');
+                const color  = s.quality_tier_color || 'yellow';
+                const style  = TIER_STYLES[color] || TIER_STYLES.yellow;
+                const labels = { good: 'GOOD', medium: 'MEDIUM', bad: 'BAD', worst: 'WORST' };
+                badge.textContent = `Tier ${s.quality_tier} — ${labels[s.quality_tier_name] || s.quality_tier_name.toUpperCase()}`;
+                badge.style.cssText = `display:inline-block;margin-left:10px;padding:2px 9px;border-radius:99px;font-size:0.68rem;font-weight:700;letter-spacing:0.05em;background:${style.bg};color:${style.color};border:1px solid ${style.border};`;
+            }
+            // MOS row
+            if (s.pre_mos !== null && s.pre_mos !== undefined) {
+                const row = document.getElementById('qualityMosRow');
+                const label = document.getElementById('qualityMosLabel');
+                const scores = document.getElementById('qualityMosScores');
+                row.style.display = 'block';
+                label.textContent = s.quality_tier_name ? s.quality_tier_name.toUpperCase() : 'QUALITY';
+                let scoreText = `Pre-MOS: ${(s.pre_mos || 0).toFixed(2)}`;
+                if (s.post_mos !== null && s.post_mos !== undefined) {
+                    const gain = ((s.post_mos || 0) - (s.pre_mos || 0));
+                    scoreText += `  Post-MOS: ${(s.post_mos).toFixed(2)}  (${gain >= 0 ? '+' : ''}${gain.toFixed(2)})`;
+                }
+                scores.textContent = scoreText;
+            }
+            // Enhancement stage sub-line
+            if (s.enhancement_stage) {
+                const sub = document.getElementById('enhancementStageSub');
+                if (sub) sub.textContent = s.enhancement_stage;
+            }
+        }
+
         function markProgressError(msg) {
             for (let i = 0; i < 4; i++) {
                 const el = document.getElementById(`pstep-${i}`);
                 if (el.classList.contains('active')) {
                     el.classList.remove('active');
                     el.classList.add('error');
-                    el.querySelector('.step-icon').textContent = '❌';
+                    el.querySelector('.step-icon').textContent = '\u274C';
                 }
             }
             document.getElementById('progressMsg').textContent = msg || 'Something went wrong.';
@@ -1294,10 +1380,15 @@
                     }
 
                     setProgressStage(s.stage_num, s.message);
+                    updateQualityUI(s);
 
                     if (s.done) {
                         clearInterval(_pollTimer);
-                        document.getElementById('progressMsg').textContent = '✅ Done! Loading results…';
+                        const reviewWarn = s.needs_review
+                            ? `  &#9888;&#65039; Human Review Flagged`
+                            : '';
+                        document.getElementById('progressMsg').textContent =
+                            '\u2705 Done! Loading results\u2026' + reviewWarn;
                         setTimeout(() => {
                             hideProgress();
                             loadCalls();

@@ -56,7 +56,7 @@ class CallProcessor:
         self.output_dir = output_dir
         self.initial_prompt = initial_prompt
 
-    def process(self, audio_path: str) -> Dict:
+    def process(self, audio_path: str, quality_tier: int = 2) -> Dict:
         """
         Run the full pipeline on a call recording.
 
@@ -76,7 +76,9 @@ class CallProcessor:
 
         # ── Stage 1: Diarization ──────────────────────────────────
         logger.info("\n[Stage 1/3] Speaker Diarization")
-        segments, segment_paths = self._stage_diarization(audio_path, segments_dir)
+        segments, segment_paths = self._stage_diarization(
+            audio_path, segments_dir, quality_tier=quality_tier
+        )
 
         if not segments:
             logger.warning("No speech segments found!")
@@ -118,7 +120,7 @@ class CallProcessor:
 
         return result
 
-    def _stage_diarization(self, audio_path: str, segments_dir: str):
+    def _stage_diarization(self, audio_path: str, segments_dir: str, quality_tier: int = 2):
         """Stage 1: Run diarization and extract segment WAVs."""
         from src.diarization import Diarizer
 
@@ -130,7 +132,7 @@ class CallProcessor:
         )
 
         try:
-            segments = diarizer.diarize(audio_path)
+            segments = diarizer.diarize(audio_path, quality_tier=quality_tier)
             segment_paths = diarizer.save_segments(audio_path, segments, segments_dir)
         finally:
             diarizer.unload_model()

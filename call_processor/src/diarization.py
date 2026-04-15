@@ -133,26 +133,58 @@ class Diarizer:
         waveform = torch.from_numpy(waveform_np.T).float()
         return waveform, sample_rate
 
-    def diarize(self, audio_path: str) -> List[Dict]:
+    # ---------------------------------------------------------------------- #
+    #  Adaptive pyannote parameters per quality tier
+    # ---------------------------------------------------------------------- #
+    _TIER_PARAMS = {
+        # Tier 1 & 2 — good / medium audio: pyannote defaults
+        1: {},
+        2: {},
+        # Tier 3 — bad audio: lower segmentation threshold to catch quieter speech
+        3: {
+            "segmentation":     {"threshold": 0.35},
+            "clustering":       {"threshold": 0.65},
+            "segmentation_step": 0.1,
+        },
+        # Tier 4 — worst audio: very low threshold + noise-fragment guard
+        4: {
+            "segmentation":     {"threshold": 0.30},
+            "clustering":       {"threshold": 0.60},
+            "min_cluster_size": 15,
+        },
+    }
+
+    def diarize(self, audio_path: str, quality_tier: int = 2) -> List[Dict]:
         """
         Run diarization on an audio file.
 
         Args:
-            audio_path: Path to audio file.
+            audio_path:   Path to audio file.
+            quality_tier: 1–4 from quality_scorer. Controls pyannote thresholds.
 
         Returns:
             List of segments: [{"start": float, "end": float, "speaker": str}, ...]
         """
         self.load_model()
 
-        logger.info(f"Diarizing: {audio_path}")
+        # Apply per-tier instantiate() parameters (empty dict = leave defaults)
+        tier_params = self._TIER_PARAMS.get(quality_tier, {})
+        if tier_params:
+            logger.info(f"Applying Tier {quality_tier} diarization parameters: {tier_params}")
+            try:
+                self.pipeline.instantiate(tier_params)
+            except Exception as exc:
+                logger.warning(f"Could not apply tier params: {exc}")
+
+        logger.info(f"Diarizing: {audio_path}  (tier={quality_tier})")
         waveform, sample_rate = self._load_waveform(audio_path)
-        diarization = self.pipeline(
-            {
-                "waveform": waveform,
-                "sample_rate": sample_rate,
-            }
-        )
+
+        # Tier 4: force exactly 2 speakers (desk calls = agent + customer)
+        pipeline_kwargs: dict = {"waveform": waveform, "sample_rate": sample_rate}
+        if quality_tier == 4:
+            pipeline_kwargs.update(min_speakers=2, max_speakers=2)
+
+        diarization = self.pipeline(pipeline_kwargs)
         if hasattr(diarization, "speaker_diarization"):
             diarization = diarization.speaker_diarization
 

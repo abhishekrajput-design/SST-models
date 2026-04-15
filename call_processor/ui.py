@@ -60,13 +60,22 @@ AUDIO_FILTER = (
 
 # ── Pipeline status (shared) ──────────────────────────────────────────────────
 _status = {
-    "running": False,
-    "stage_num": 0,
-    "stage": "Idle",
-    "message": "",
-    "done": False,
-    "error": None,
-    "result_id": None,
+    "running":           False,
+    "stage_num":         0,
+    "stage":             "Idle",
+    "message":           "",
+    "done":              False,
+    "error":             None,
+    "result_id":         None,
+    # ── Quality / tier fields (new) ─────────────────────────────────────────
+    "quality_tier":      None,   # int 1–4
+    "quality_tier_name": None,   # "good"/"medium"/"bad"/"worst"
+    "quality_tier_color": None,  # CSS color
+    "enhancement_stage": None,   # current enhancement stage description
+    "pre_mos":           None,   # DNSMOS mos_ovr before enhancement
+    "post_mos":          None,   # DNSMOS mos_ovr after enhancement
+    "needs_review":      False,  # human review flag
+    "review_reasons":    [],
 }
 _status_lock = threading.Lock()
 
@@ -80,6 +89,12 @@ def _set_status(stage_num: int, stage: str, message: str):
         _status["stage_num"] = stage_num
         _status["stage"]     = stage
         _status["message"]   = message
+
+
+def _set_enhancement_stage(stage_name: str):
+    """Update just the enhancement_stage field (called from enhancement_router callback)."""
+    with _status_lock:
+        _status["enhancement_stage"] = stage_name
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -364,85 +379,177 @@ def _flush_result(path: str, audio_path: str, segments: list, elapsed: float):
 
 def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v3"):
     """
-    Stage 0a — FFmpeg enhancement  (full audio, used by AI pipeline)
-    Stage 0b — noisereduce          (first 5 min)
-    Stage 0c — DeepFilterNet3       (first 5 min)
-    Stage 0d — SpeechBrain MetricGAN+ (first 5 min)
-    Stages 1-3 — diarize → speaker ID → transcribe
-    Patch result.json with all enhancement paths.
+    Enhanced pipeline with 4-tier quality gating.
+
+    Stage 0  — DNSMOS quality scoring (classify tier 1–4)
+    Stage 0a — FFmpeg enhancement (full audio, comparison panel)
+    Stage 0b — noisereduce (5 min, comparison panel)
+    Stage 0c — Angelina 10-stage cleanup (5 min, comparison panel)
+    Stage 0d — SpeechBrain MetricGAN+ (5 min, comparison panel)
+    Stage 0e — Tier-specific ClearVoice pipeline → primary pipeline_audio
+    Stage 0f — Post-enhancement DNSMOS re-score
+    Stages 1-3 — Adaptive diarize → speaker ID → transcribe (multi-model for tier 3-4)
     """
+    import sys as _sys
+    _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
     paths = _derive_paths(upload_path)
     os.makedirs("data/raw_calls", exist_ok=True)
-
     enhancement_paths: dict = {}
 
     with _status_lock:
-        _status.update(running=True, done=False, error=None, result_id=None)
+        _status.update(
+            running=True, done=False, error=None, result_id=None,
+            quality_tier=None, quality_tier_name=None, quality_tier_color=None,
+            enhancement_stage=None, pre_mos=None, post_mos=None,
+            needs_review=False, review_reasons=[],
+        )
+
+    # Accumulate human review flags across all stages
+    review_reasons: list = []
 
     try:
-        # If the file is already an enhanced output, skip re-enhancement to
-        # avoid double-processing (which truncates the audio to garbage).
         already_enhanced = os.path.basename(upload_path).startswith("enhanced_")
 
+        # ══════════════════════════════════════════════════════════════════════
+        #  Stage 0: DNSMOS quality scoring
+        # ══════════════════════════════════════════════════════════════════════
+        quality_info = {"tier": 2, "tier_name": "medium", "tier_color": "yellow",
+                        "mos_ovr": 0.0}
+        pre_mos = 0.0
+
+        if not already_enhanced:
+            _set_status(0, "Quality Scoring", "Scoring audio quality (DNSMOS)…")
+            print("[UI] Stage 0: DNSMOS quality score…")
+            try:
+                from quality_scorer import score_audio
+                quality_info = score_audio(upload_path)
+                pre_mos = quality_info.get("mos_ovr", 0.0)
+                tier = quality_info.get("tier", 2)
+                with _status_lock:
+                    _status["quality_tier"]       = tier
+                    _status["quality_tier_name"]  = quality_info.get("tier_name", "medium")
+                    _status["quality_tier_color"] = quality_info.get("tier_color", "yellow")
+                    _status["pre_mos"]            = round(pre_mos, 3)
+                print(f"[UI] Quality: {quality_info.get('tier_label','?')}  "
+                      f"mos_ovr={pre_mos:.2f}")
+            except Exception as exc:
+                print(f"[UI] DNSMOS failed: {exc} — defaulting to Tier 2.")
+                quality_info = {"tier": 2, "tier_name": "medium",
+                                "tier_color": "yellow", "mos_ovr": 0.0}
+
+        quality_tier = quality_info.get("tier", 2)
+
+        # ══════════════════════════════════════════════════════════════════════
+        #  Stages 0a-0d: Comparison panel variants (unchanged from original)
+        # ══════════════════════════════════════════════════════════════════════
         if already_enhanced:
-            _set_status(0, "Enhancing Audio", "File already enhanced — skipping re-processing...")
-            print("[UI] Skipping enhancement: file already starts with 'enhanced_'.")
-            paths["ffmpeg"] = upload_path.replace("\\", "/")
+            _set_status(0, "Enhancing Audio", "File already enhanced — skipping.")
+            paths["ffmpeg"]           = upload_path.replace("\\", "/")
             enhancement_paths["ffmpeg"] = upload_path.replace("\\", "/")
         else:
-            # ── 0a FFmpeg (full audio, no clip — used by pipeline) ───────────
-            _set_status(0, "Enhancing Audio", "[1/4] FFmpeg · highpass · afftdn · 3× volume...")
-            print("[UI] Stage 0a: FFmpeg...")
+            # 0a FFmpeg (full audio)
+            _set_status(0, "Enhancing Audio", "[1/5] FFmpeg · highpass · afftdn · 3× volume…")
+            print("[UI] Stage 0a: FFmpeg…")
             try:
                 _enhance_ffmpeg(upload_path, paths["ffmpeg"], max_seconds=None)
                 enhancement_paths["ffmpeg"] = paths["ffmpeg"]
                 print("[UI] FFmpeg done.")
-            except Exception as e:
-                print(f"[UI] FFmpeg failed: {e}")
+            except Exception as exc:
+                print(f"[UI] FFmpeg failed: {exc}")
                 paths["ffmpeg"] = upload_path
                 enhancement_paths["ffmpeg"] = upload_path.replace("\\", "/")
 
-            # ── 0b noisereduce (5 min preview) ───────────────────────────────
-            _set_status(0, "Enhancing Audio", "[2/4] noisereduce · spectral gating (5-min)...")
-            print("[UI] Stage 0b: noisereduce...")
+            # 0b noisereduce (5 min preview)
+            _set_status(0, "Enhancing Audio", "[2/5] noisereduce · spectral gating (5-min)…")
             try:
                 _enhance_noisereduce(upload_path, paths["noisereduce"], max_seconds=300)
                 enhancement_paths["noisereduce"] = paths["noisereduce"]
                 print("[UI] noisereduce done.")
             except ImportError:
                 print("[UI] noisereduce not installed.")
-            except Exception as e:
-                print(f"[UI] noisereduce failed: {e}")
+            except Exception as exc:
+                print(f"[UI] noisereduce failed: {exc}")
 
-            # ── 0c angelina desk-recording cleanup (5 min preview) ───────────
-            _set_status(0, "Enhancing Audio", "[3/4] angelina · 10-stage desk-recording cleanup (5-min)...")
-            print("[UI] Stage 0c: angelina cleanup...")
+            # 0c angelina 10-stage cleanup (5 min preview)
+            _set_status(0, "Enhancing Audio", "[3/5] angelina · 10-stage desk-recording cleanup (5-min)…")
             try:
                 _enhance_angelina(upload_path, paths["deepfilter"], max_seconds=300)
                 enhancement_paths["deepfilter"] = paths["deepfilter"]
                 print("[UI] angelina done.")
             except ImportError:
                 print("[UI] librosa not installed — skipping angelina.")
-            except Exception as e:
-                print(f"[UI] angelina failed: {e}")
+            except Exception as exc:
+                print(f"[UI] angelina failed: {exc}")
 
-            # ── 0d SpeechBrain MetricGAN+ (5 min preview) ────────────────────
-            _set_status(0, "Enhancing Audio", "[4/4] SpeechBrain MetricGAN+ · PESQ-optimised (5-min)...")
-            print("[UI] Stage 0d: SpeechBrain MetricGAN+...")
+            # 0d SpeechBrain MetricGAN+ (5 min preview)
+            _set_status(0, "Enhancing Audio", "[4/5] SpeechBrain MetricGAN+ · PESQ-optimised (5-min)…")
             try:
                 _enhance_metricgan(upload_path, paths["metricgan"], max_seconds=300)
                 enhancement_paths["metricgan"] = paths["metricgan"]
                 print("[UI] MetricGAN+ done.")
             except ImportError:
                 print("[UI] speechbrain not installed.")
-            except Exception as e:
-                print(f"[UI] MetricGAN+ failed: {e}")
+            except Exception as exc:
+                print(f"[UI] MetricGAN+ failed: {exc}")
 
-        # ── Stages 1-3: AI pipeline (or transcription-only fallback) ────────
-        pipeline_audio = paths["ffmpeg"]
+            # ── 0e ClearVoice tier-specific pipeline → primary pipeline_audio ─
+            tier_wav = os.path.join(
+                "data", "raw_calls",
+                f"cv_tier{quality_tier}_{os.path.basename(upload_path).replace('.mp3','.wav').replace('.m4a','.wav')}"
+            )
+            _set_status(0, "Enhancing Audio",
+                        f"[5/5] ClearVoice Tier {quality_tier} ({quality_info.get('tier_name','?')}) pipeline…")
+            print(f"[UI] Stage 0e: ClearVoice Tier {quality_tier}…")
+            try:
+                from enhancement_router import route as _cv_route
+                cv_result = _cv_route(
+                    input_path=paths["ffmpeg"],
+                    output_path=tier_wav,
+                    quality=quality_info,
+                    status_cb=_set_enhancement_stage,
+                )
+                enhancement_paths["clearvoice"] = tier_wav.replace("\\", "/")
+                separated_streams = cv_result.get("separated_streams", [])
+                if cv_result.get("needs_human_review"):
+                    review_reasons.append(cv_result.get("review_reason", "Tier 4 post-MOS < 2.0"))
+                print(f"[UI] ClearVoice done: {cv_result.get('pipeline_used','?')}")
 
-        # run_e2e.py (pyannote diarization) only used when enrolled agent
-        # embeddings exist. Without enrollment, all models use inline path.
+                # ── 0f Post-enhancement DNSMOS re-score ──────────────────────
+                _set_status(0, "Enhancing Audio", "Re-scoring post-enhancement quality…")
+                try:
+                    from quality_scorer import score_audio, compute_enhancement_gain
+                    post_quality = score_audio(tier_wav)
+                    post_mos     = post_quality.get("mos_ovr", 0.0)
+                    gain         = compute_enhancement_gain(quality_info, post_quality)
+                    with _status_lock:
+                        _status["post_mos"] = round(post_mos, 3)
+                    print(f"[UI] Post-enhancement mos_ovr={post_mos:.2f}  gain={gain:+.2f}")
+                    if post_mos < 2.0:
+                        review_reasons.append(
+                            f"Post-enhancement mos_ovr={post_mos:.2f} still < 2.0"
+                        )
+                except Exception as exc:
+                    print(f"[UI] Post-score failed: {exc}")
+
+                # Use tier-enhanced audio as primary pipeline input
+                pipeline_audio = tier_wav
+            except ImportError:
+                print("[UI] clearvoice not installed — using FFmpeg output for pipeline.")
+                pipeline_audio = paths["ffmpeg"]
+                separated_streams = []
+            except Exception as exc:
+                print(f"[UI] ClearVoice tier pipeline failed: {exc} — falling back to FFmpeg.")
+                pipeline_audio = paths["ffmpeg"]
+                separated_streams = []
+
+        if already_enhanced:
+            pipeline_audio = paths["ffmpeg"]
+            separated_streams = []
+
+        # ══════════════════════════════════════════════════════════════════════
+        #  Stages 1-3: AI pipeline
+        # ══════════════════════════════════════════════════════════════════════
         _WHISPER_MODELS = {
             "whisper-large-v3-turbo", "whisper-large-v3",
             "large-v3-turbo", "large-v3",
@@ -451,21 +558,79 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
         embeddings_exist = os.path.isfile(
             os.path.join("data", "embeddings", "agent_embeddings.pkl")
         )
+        # Tier 3-4 with separated streams: use multi-model ASR on separated audio
+        use_multi_asr = quality_tier >= 3 and bool(separated_streams)
         use_inline = (
             (not HF_TOKEN)
             or (whisper_model not in _WHISPER_MODELS)
             or (not embeddings_exist)
+            or quality_tier >= 3  # always use inline for bad/worst (multi-model)
         )
 
-        if use_inline:
-            label = whisper_model if whisper_model in _WHISPER_MODELS else whisper_model
-            _set_status(1, "Transcription", f"Transcribing with {label}...")
-            print(f"[UI] Inline transcription mode ({label}).")
-            result_id = _transcribe_inline(pipeline_audio, whisper_model)
+        if use_multi_asr:
+            # ── Multi-model consensus on separated streams (tier 4) ──────────
+            _set_status(1, "Transcription",
+                        f"Multi-model ASR (Deepgram + Whisper + Cohere) on {len(separated_streams)} stream(s)…")
+            print(f"[UI] Multi-model ASR on {len(separated_streams)} separated stream(s).")
+            try:
+                from multi_model_asr import transcribe_consensus
+                all_segs = []
+                for stream_path in separated_streams:
+                    consensus = transcribe_consensus(stream_path, device="cuda")
+                    all_segs.extend(consensus["segments"])
+                    if consensus.get("needs_human_review"):
+                        review_reasons.extend(consensus.get("review_reasons", []))
+                # Sort all segments by start time
+                all_segs.sort(key=lambda s: s.get("start", 0))
+                # Store consensus metadata so we can patch result.json
+                _consensus_meta = {
+                    "model_used":       consensus.get("model_used"),
+                    "avg_confidence":   consensus.get("avg_confidence"),
+                    "models_compared":  consensus.get("models_compared"),
+                }
+                # Write a quick result.json for inline path
+                import time as _time
+                from datetime import datetime
+                base_name = os.path.splitext(os.path.basename(pipeline_audio))[0]
+                dir_name  = f"{base_name}__multi-asr"
+                out_dir   = os.path.join("data", "processed", dir_name)
+                os.makedirs(out_dir, exist_ok=True)
+                result_obj = {
+                    "audio_file":              pipeline_audio.replace("\\", "/"),
+                    "model":                   _consensus_meta["model_used"],
+                    "processed_at":            datetime.now().isoformat(),
+                    "processing_time_seconds": 0.0,
+                    "total_segments":          len(all_segs),
+                    "segments":                all_segs,
+                    "asr":                     _consensus_meta,
+                }
+                with open(os.path.join(out_dir, "result.json"), "w", encoding="utf-8") as _f:
+                    json.dump(result_obj, _f, indent=2, ensure_ascii=False)
+                result_id = dir_name
+            except Exception as exc:
+                print(f"[UI] Multi-model ASR failed: {exc} — falling back to inline.")
+                result_id = _transcribe_inline(pipeline_audio, whisper_model)
+
+        elif use_inline:
+            # ── Tier 3: single-model inline (Deepgram or Whisper) ────────────
+            if quality_tier >= 3 and os.environ.get("DEEPGRAM_API_KEY"):
+                # Prefer Deepgram for bad audio (cloud + robust)
+                _set_status(1, "Transcription",
+                            "Tier 3: Deepgram Nova-3 (best noise robustness)…")
+                print("[UI] Tier 3 inline: Deepgram nova-3.")
+                dg_model = "deepgram-nova-3"
+                result_id = _transcribe_inline(pipeline_audio, dg_model)
+            else:
+                label = whisper_model
+                _set_status(1, "Transcription", f"Transcribing with {label}…")
+                print(f"[UI] Inline transcription ({label}).")
+                result_id = _transcribe_inline(pipeline_audio, whisper_model)
+
         else:
-            # Full pipeline via run_e2e.py subprocess (Whisper + pyannote diarization)
-            _set_status(1, "Speaker Diarization", "Loading pyannote · detecting who speaks when...")
-            print("[UI] Stage 1: AI pipeline...")
+            # ── Full pipeline via run_e2e.py (pyannote + Whisper) ────────────
+            _set_status(1, "Speaker Diarization",
+                        "Loading pyannote · adaptive thresholds for audio quality…")
+            print("[UI] Stage 1: Full AI pipeline…")
             cmd = [
                 "python", "run_e2e.py",
                 "--hf-token", HF_TOKEN,
@@ -483,47 +648,91 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                 try:
                     print(f"[Pipeline] {line}", flush=True)
                 except UnicodeEncodeError:
-                    print(f"[Pipeline] {line.encode('ascii', errors='replace').decode('ascii')}", flush=True)
-
+                    print(f"[Pipeline] {line.encode('ascii', errors='replace').decode('ascii')}",
+                          flush=True)
                 if "Stage 1" in line or "iarization" in line:
-                    _set_status(1, "Speaker Diarization", "Detecting who speaks when...")
-                elif "Stage 2" in line or "Speaker Identification" in line or "embedding" in line.lower():
-                    _set_status(2, "Speaker Identification", "Matching voices to enrolled agents...")
-                elif "Stage 3" in line or "Transcription" in line or "Transcribing" in line:
-                    _set_status(3, "Transcription", "Converting speech to text with Whisper...")
-                elif "Pipeline complete" in line or "PROCESSING COMPLETE" in line:
-                    _set_status(4, "Finalizing", "Saving results...")
-
+                    _set_status(1, "Speaker Diarization", "Detecting who speaks when…")
+                elif "Stage 2" in line or "Speaker Identification" in line:
+                    _set_status(2, "Speaker Identification", "Matching voices to enrolled agents…")
+                elif "Stage 3" in line or "Transcription" in line:
+                    _set_status(3, "Transcription", "Converting speech to text…")
+                elif "Pipeline complete" in line:
+                    _set_status(4, "Finalizing", "Saving results…")
             proc.wait()
             if proc.returncode != 0:
                 with _status_lock:
                     _status.update(error="Pipeline failed. Check terminal.", running=False)
                 return
+            result_id = os.path.splitext(os.path.basename(paths["ffmpeg"]))[0]
 
-            result_id   = os.path.splitext(os.path.basename(paths["ffmpeg"]))[0]
-
-        # ── Patch result.json ─────────────────────────────────────────────
+        # ══════════════════════════════════════════════════════════════════════
+        #  Human review flagging — check speaker count
+        # ══════════════════════════════════════════════════════════════════════
         result_path = os.path.join("data", "processed", result_id, "result.json")
         if os.path.isfile(result_path):
             try:
-                with open(result_path, "r", encoding="utf-8") as f:
-                    rdata = json.load(f)
-                rdata["enhancements"] = enhancement_paths
-                with open(result_path, "w", encoding="utf-8") as f:
-                    json.dump(rdata, f, indent=2, ensure_ascii=False)
-            except Exception as e:
-                print(f"[UI] result.json patch failed: {e}")
+                with open(result_path, "r", encoding="utf-8") as _f:
+                    rdata = json.load(_f)
+
+                # Check speaker diversity
+                speakers = {s.get("speaker") for s in rdata.get("segments", [])}
+                if len(speakers) > 4:
+                    review_reasons.append(
+                        f"Detected {len(speakers)} speaker labels (> 4 expected for desk call)"
+                    )
+
+                # Check speech coverage
+                segs = rdata.get("segments", [])
+                if segs:
+                    speech_dur  = sum(s.get("end", 0) - s.get("start", 0) for s in segs)
+                    total_dur   = max((s.get("end", 0) for s in segs), default=1)
+                    speech_ratio = speech_dur / max(total_dur, 1)
+                    if speech_ratio < 0.30:
+                        review_reasons.append(
+                            f"Speech covers only {speech_ratio:.0%} of audio (< 30%)"
+                        )
+
+                # Patch quality + review metadata into result.json
+                needs_review = bool(review_reasons)
+                with _status_lock:
+                    _status["needs_review"]   = needs_review
+                    _status["review_reasons"] = review_reasons
+
+                rdata["enhancements"]    = enhancement_paths
+                rdata["quality"] = {
+                    "tier":              quality_info.get("tier", 2),
+                    "tier_name":         quality_info.get("tier_name", "medium"),
+                    "pre_enhancement_mos":  round(quality_info.get("mos_ovr", 0), 3),
+                    "post_enhancement_mos": _status.get("post_mos") or 0.0,
+                    "enhancement_gain":  round(
+                        (_status.get("post_mos") or 0.0) - quality_info.get("mos_ovr", 0), 3
+                    ),
+                    "pipeline_used": enhancement_paths.get("clearvoice", "ffmpeg"),
+                }
+                rdata["needs_human_review"] = needs_review
+                rdata["review_reasons"]     = review_reasons
+
+                with open(result_path, "w", encoding="utf-8") as _f:
+                    json.dump(rdata, _f, indent=2, ensure_ascii=False)
+            except Exception as exc:
+                print(f"[UI] result.json patch failed: {exc}")
 
         with _status_lock:
-            _status.update(done=True, running=False, stage_num=4,
-                           stage="Complete", message="Done! Results saved.",
-                           result_id=result_id)
+            _status.update(
+                done=True, running=False, stage_num=5,
+                stage="Complete", message="Done! Results saved.",
+                result_id=result_id,
+                needs_review=bool(review_reasons),
+                review_reasons=review_reasons,
+            )
         print(f"[UI] Pipeline complete. Result: {result_id}")
 
-    except Exception as e:
-        print(f"[UI] Pipeline error: {e}")
+    except Exception as exc:
+        print(f"[UI] Pipeline error: {exc}")
+        import traceback
+        traceback.print_exc()
         with _status_lock:
-            _status.update(error=str(e), running=False)
+            _status.update(error=str(exc), running=False)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
