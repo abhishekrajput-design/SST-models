@@ -1,6 +1,10 @@
 """
 Quick focused test on the low-quality audio file only.
 Skips DNSMOS scoring (slow) - directly runs ClearVoice Tier 3 pipeline.
+
+Usage:
+    python test_low_only.py                          # uses DEFAULT_LOW_FILE
+    python test_low_only.py /path/to/audio.mp3       # explicit path
 """
 from __future__ import annotations
 import os, sys, time, logging, json
@@ -10,11 +14,12 @@ logger = logging.getLogger(__name__)
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-LOW_FILE  = r"C:\Users\abhis\Desktop\SST-models\testing-audio\low\audio_04_12_2026_10_38_45_ldwibu.mp3"
-OUT_DIR   = os.path.join(HERE, "data", "test_results")
+DEFAULT_LOW_FILE = r"C:\Users\abhis\Desktop\SST-models\testing-audio\low\audio_04_12_2026_10_38_45_ldwibu.mp3"
+OUT_DIR = os.path.join(HERE, "data", "test_results")
 os.makedirs(OUT_DIR, exist_ok=True)
 
 def main():
+    LOW_FILE = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_LOW_FILE
     if not os.path.isfile(LOW_FILE):
         logger.error(f"File not found: {LOW_FILE}")
         sys.exit(1)
