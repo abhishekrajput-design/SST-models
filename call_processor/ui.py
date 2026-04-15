@@ -109,6 +109,13 @@ def _log_append(entry: str):
         _status["log_entries"] = _status["log_entries"][-300:]
 
 
+def _log(msg: str):
+    """Public helper — appends a timestamped line to log_entries (acquires lock)."""
+    import time as _time
+    with _status_lock:
+        _log_append(f"[{_time.strftime('%H:%M:%S')}]  {msg}")
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  Audio Enhancement Pipelines
 #  All clip to max_seconds (default 300 = 5 min) so they finish fast.
@@ -348,6 +355,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     t0 = time.time()
     segments = transcriber.transcribe(norm_wav, language="en")
     elapsed = round(time.time() - t0, 2)
+    _log(f"Transcription done: {len(segments)} segments in {elapsed:.1f}s  (model: {whisper_model})")
 
     transcriber.unload()
 
@@ -443,9 +451,16 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                     _status["quality_tier_name"]  = quality_info.get("tier_name", "medium")
                     _status["quality_tier_color"] = quality_info.get("tier_color", "yellow")
                     _status["pre_mos"]            = round(pre_mos, 3)
+                _log(
+                    f"DNSMOS:  p808={quality_info.get('p808_mos',0):.2f}  "
+                    f"sig={quality_info.get('mos_sig',0):.2f}  "
+                    f"bak={quality_info.get('mos_bak',0):.2f}  "
+                    f"ovr={pre_mos:.2f}  →  {quality_info.get('tier_label','?')}"
+                )
                 print(f"[UI] Quality: {quality_info.get('tier_label','?')}  "
                       f"mos_ovr={pre_mos:.2f}")
             except Exception as exc:
+                _log(f"DNSMOS failed: {exc} — defaulting to Tier 2")
                 print(f"[UI] DNSMOS failed: {exc} — defaulting to Tier 2.")
                 quality_info = {"tier": 2, "tier_name": "medium",
                                 "tier_color": "yellow", "mos_ovr": 0.0}
@@ -512,6 +527,7 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             )
             _set_status(0, "Enhancing Audio",
                         f"[5/5] ClearVoice Tier {quality_tier} ({quality_info.get('tier_name','?')}) pipeline…")
+            _log(f"ClearVoice: loading models for Tier {quality_tier} ({quality_info.get('tier_name','?')})…")
             print(f"[UI] Stage 0e: ClearVoice Tier {quality_tier}…")
             try:
                 from enhancement_router import route as _cv_route
@@ -523,9 +539,11 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                 )
                 enhancement_paths["clearvoice"] = tier_wav.replace("\\", "/")
                 separated_streams = cv_result.get("separated_streams", [])
+                pipeline_used = cv_result.get("pipeline_used", "?")
                 if cv_result.get("needs_human_review"):
                     review_reasons.append(cv_result.get("review_reason", "Tier 4 post-MOS < 2.0"))
-                print(f"[UI] ClearVoice done: {cv_result.get('pipeline_used','?')}")
+                _log(f"ClearVoice done: pipeline={pipeline_used}")
+                print(f"[UI] ClearVoice done: {pipeline_used}")
 
                 # ── 0f Post-enhancement DNSMOS re-score ──────────────────────
                 _set_status(0, "Enhancing Audio", "Re-scoring post-enhancement quality…")
@@ -536,12 +554,18 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                     gain         = compute_enhancement_gain(quality_info, post_quality)
                     with _status_lock:
                         _status["post_mos"] = round(post_mos, 3)
+                    _log(
+                        f"Post-enhancement DNSMOS:  ovr={post_mos:.2f}  "
+                        f"gain={gain:+.2f}  →  {post_quality.get('tier_label','?')}"
+                        + ("  ⚠ needs review" if post_mos < 2.0 else "  ✓")
+                    )
                     print(f"[UI] Post-enhancement mos_ovr={post_mos:.2f}  gain={gain:+.2f}")
                     if post_mos < 2.0:
                         review_reasons.append(
                             f"Post-enhancement mos_ovr={post_mos:.2f} still < 2.0"
                         )
                 except Exception as exc:
+                    _log(f"Post-score failed: {exc}")
                     print(f"[UI] Post-score failed: {exc}")
 
                 # Use tier-enhanced audio as primary pipeline input
@@ -729,6 +753,10 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             except Exception as exc:
                 print(f"[UI] result.json patch failed: {exc}")
 
+        _log(
+            f"Pipeline complete — result: {result_id}"
+            + (f"  ⚠ {len(review_reasons)} review flag(s)" if review_reasons else "  ✓")
+        )
         with _status_lock:
             _status.update(
                 done=True, running=False, stage_num=5,
@@ -740,8 +768,16 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
         print(f"[UI] Pipeline complete. Result: {result_id}")
 
     except Exception as exc:
-        print(f"[UI] Pipeline error: {exc}")
         import traceback
+        tb = traceback.format_exc()
+        _log(f"ERROR: {exc}")
+        # Log the first relevant traceback line so it's visible in the UI
+        for line in tb.splitlines():
+            line = line.strip()
+            if line.startswith("File ") or (line and not line.startswith("Traceback")):
+                _log(f"  {line}")
+                break
+        print(f"[UI] Pipeline error: {exc}")
         traceback.print_exc()
         with _status_lock:
             _status.update(error=str(exc), running=False)

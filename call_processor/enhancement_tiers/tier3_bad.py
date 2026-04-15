@@ -51,6 +51,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     status_cb("Tier 3: re-scoring after pass 1")
     interim_mos = _score_np(pass1_16k, 16000)
     logger.info(f"Tier 3 interim mos_ovr = {interim_mos:.3f} (threshold {_SUFFICIENT_MOS})")
+    status_cb(f"Tier 3: interim MOS = {interim_mos:.3f}  (need ≥ {_SUFFICIENT_MOS} for 1-pass)")
 
     if interim_mos >= _SUFFICIENT_MOS:
         status_cb("Tier 3: pass 1 sufficient — SR (chunked) + MetricGAN+")
@@ -104,29 +105,36 @@ def _sr_chunked(models, audio_16k: np.ndarray, chunk_sec: float = 60.0) -> np.nd
     """
     Run MossFormer2_SR_48K in chunks to avoid CUDA OOM on long files.
     Input: 16 kHz mono array.  Output: 48 kHz mono array (3× length).
+    Falls back to torchaudio resample if SR model OOMs (low-VRAM machines).
     """
     import torch
-    from enhancement_router import _extract_np, _to_2d
+    from enhancement_router import _extract_np, _to_2d, resample_np
 
-    sr_in  = 16000
-    sr_out = 48000
-    ratio  = sr_out // sr_in          # 3
-    chunk_in  = int(chunk_sec * sr_in)
-    n         = len(audio_16k)
+    chunk_in = int(chunk_sec * 16000)
+    n        = len(audio_16k)
+
+    def _run_chunk(chunk):
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        try:
+            out = models.sr_48k(input_path=_to_2d(chunk), online_write=False)
+            return _extract_np(out)
+        except RuntimeError as e:
+            if "out of memory" in str(e).lower():
+                logger.warning("SR_48K CUDA OOM — falling back to torchaudio resample for this chunk.")
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+                return resample_np(chunk, 16000, 48000)
+            raise
 
     if n <= chunk_in:
-        out = models.sr_48k(input_path=_to_2d(audio_16k), online_write=False)
-        return _extract_np(out)
+        return _run_chunk(audio_16k)
 
     out_chunks = []
     start = 0
     while start < n:
-        end   = min(start + chunk_in, n)
-        chunk = audio_16k[start:end]
-        sr_out_chunk = models.sr_48k(input_path=_to_2d(chunk), online_write=False)
-        out_chunks.append(_extract_np(sr_out_chunk))
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
+        end = min(start + chunk_in, n)
+        out_chunks.append(_run_chunk(audio_16k[start:end]))
         start = end
 
     return np.concatenate(out_chunks, axis=0)

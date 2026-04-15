@@ -111,6 +111,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     status_cb("Tier 4: re-scoring post-enhancement quality")
     post_mos = _score_np_quick(mixed, 48000)
     needs_human_review = post_mos < 2.0
+    status_cb(f"Tier 4: post-MOS = {post_mos:.3f}  {'⚠ needs human review' if needs_human_review else '✓ OK'}")
     if needs_human_review:
         logger.warning(
             f"Tier 4: post-enhancement mos_ovr={post_mos:.3f} still < 2.0 → "
