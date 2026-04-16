@@ -141,6 +141,37 @@ class CanaryQwenTranscriber(BaseTranscriber):
         info = json.loads(r.stdout)
         return float(info["format"]["duration"])
 
+    @staticmethod
+    def _is_mostly_silent(wav_path: str, top_db: int = 35, min_speech_ratio: float = 0.06) -> bool:
+        """Return True if the WAV has less than min_speech_ratio of non-silent frames."""
+        try:
+            import librosa
+            audio, sr = librosa.load(wav_path, sr=None, mono=True)
+            if len(audio) == 0:
+                return True
+            intervals = librosa.effects.split(audio, top_db=top_db)
+            speech = sum(e - s for s, e in intervals)
+            return (speech / len(audio)) < min_speech_ratio
+        except Exception:
+            return False  # if librosa fails, let the model try
+
+    @staticmethod
+    def _is_repetitive(text: str) -> bool:
+        """Return True if the text looks like a hallucination loop."""
+        words = text.split()
+        if len(words) < 8:
+            return False
+        # Fast check: loops have very few unique words relative to total
+        if len(set(words)) / len(words) < 0.40:
+            return True
+        # Deeper check: any 3-5 word phrase repeating more than twice
+        from collections import Counter
+        for n in (5, 4, 3):
+            phrases = [" ".join(words[i:i+n]) for i in range(len(words) - n + 1)]
+            if Counter(phrases).most_common(1)[0][1] > 2:
+                return True
+        return False
+
     def _transcribe_chunk(self, tmp_path: str) -> str:
         """Run inference on a single WAV chunk, return transcript string."""
         import torch
@@ -158,7 +189,14 @@ class CanaryQwenTranscriber(BaseTranscriber):
                         }
                     ]
                 ]
-                answer_ids = self.model.generate(prompt, max_new_tokens=512)
+                # repetition_penalty + no_repeat_ngram_size together stop hallucination
+                # loops: penalty discourages repetition, ngram block hard-prevents it.
+                answer_ids = self.model.generate(
+                    prompt,
+                    max_new_tokens=256,
+                    repetition_penalty=1.5,
+                    no_repeat_ngram_size=5,
+                )
                 # answer_ids shape: (1, seq_len) — includes both prompt and answer tokens.
                 # Decode and strip any leading/trailing whitespace.
                 tokenizer = self.model.tokenizer
@@ -197,11 +235,21 @@ class CanaryQwenTranscriber(BaseTranscriber):
 
             tmp = self._wav_chunk(audio_path, start, dur)
             try:
+                # Skip chunks with almost no speech — avoids hallucination loops
+                if self._is_mostly_silent(tmp):
+                    start += dur
+                    continue
                 text = self._transcribe_chunk(tmp)
             finally:
                 self._safe_delete(tmp)
                 if self._use_cuda:
                     torch.cuda.empty_cache()
+
+            # Drop repetitive output — model hallucinating on noisy audio
+            if text and self._is_repetitive(text):
+                print(f"  [Canary] chunk @{start:.0f}s dropped (repetitive hallucination)")
+                start += dur
+                continue
 
             if text:
                 out.append({

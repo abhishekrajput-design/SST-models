@@ -23,6 +23,7 @@ MODELS = [
     "deepgram-nova-2-meeting",
     "parakeet-tdt-0.6b-v3",
     "cohere-transcribe-03-2026",
+    "canary-qwen-2.5b",
 ]
 
 # 3 quality-tier audio files from testing-audio/ (fall back to raw_calls if missing)
