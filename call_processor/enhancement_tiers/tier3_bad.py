@@ -139,20 +139,25 @@ def _sr_chunked(
         status_cb(f"Tier 3: SR_48K — ~{n_chunks} chunks")
 
     def _run_chunk(chunk):
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
+        try:
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass
         try:
             out = models.sr_48k(input_path=_to_2d(chunk), online_write=False)
             return _extract_np(out)
-        except RuntimeError as e:
+        except Exception as e:
             msg = str(e).lower()
             if ("out of memory" in msg or "torchscript" in msg
-                    or "cuda" in msg or "allocate" in msg):
+                    or "cuda" in msg or "allocate" in msg or "accelerator" in msg):
                 logger.warning(
-                    "SR_48K CUDA OOM — falling back to torchaudio resample."
+                    "SR_48K OOM — falling back to torchaudio resample."
                 )
-                if torch.cuda.is_available():
+                try:
                     torch.cuda.empty_cache()
+                except Exception:
+                    pass
                 return resample_np(chunk, 16000, 48000)
             raise
 
