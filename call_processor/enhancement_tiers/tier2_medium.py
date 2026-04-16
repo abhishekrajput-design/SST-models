@@ -25,6 +25,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     audio_16k, _ = load_16k_mono(input_path)
 
     # ── Stage 1: aggressive GAN denoising (16kHz) ────────────────────────────
+    models.ensure_only("se_16k")
     n_chunks_t2 = max(1, int(len(audio_16k) / 16000 / 60.0))
     status_cb(f"Tier 2: MossFormerGAN_SE_16K — aggressive denoising (~{n_chunks_t2} chunks)")
     denoised_16k = process_in_chunks(
@@ -38,6 +39,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
 
     # ── Stage 2: super-resolution 16kHz → 48kHz (chunked) ───────────────────
     import torch
+    models.ensure_only("sr_48k")
     status_cb("Tier 2: MossFormer2_SR_48K — bandwidth recovery (chunked)")
     chunk_in = int(60.0 * 16000)   # 60s @ 16kHz = 960K samples
 
@@ -69,6 +71,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
         hifi_48k = np.concatenate(sr_chunks, axis=0)
 
     # ── Stage 3: MetricGAN+ PESQ polish (needs 16kHz) ────────────────────────
+    models.ensure_only()                            # free VRAM for MetricGAN+
     status_cb("Tier 2: MetricGAN+ — PESQ polish")
     hifi_16k_for_mg = resample_np(hifi_48k, 48000, 16000)
     polished_16k    = apply_metricgan(hifi_16k_for_mg, sr=16000)

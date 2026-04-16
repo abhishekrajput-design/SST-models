@@ -37,6 +37,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     audio_16k, _ = load_16k_mono(input_path)
 
     # ── Pass 1: MossFormerGAN_SE_16K ─────────────────────────────────────────
+    models.ensure_only("se_16k")                    # free VRAM for SE_16K
     n_chunks_p1 = max(1, int(len(audio_16k) / 16000 / 60.0))
     status_cb(f"Tier 3: pass 1 — MossFormerGAN_SE_16K (~{n_chunks_p1} chunks)")
     pass1_16k = process_in_chunks(
@@ -51,24 +52,30 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     _empty_cache()
 
     # ── Interim DNSMOS check ──────────────────────────────────────────────────
+    models.ensure_only()                            # unload all for DNSMOS
     status_cb("Tier 3: re-scoring after pass 1")
     interim_mos = _score_np(pass1_16k, 16000)
     logger.info(f"Tier 3 interim mos_ovr = {interim_mos:.3f} (threshold {_SUFFICIENT_MOS})")
     status_cb(f"Tier 3: interim MOS = {interim_mos:.3f}  (need ≥ {_SUFFICIENT_MOS} for 1-pass)")
 
     if interim_mos >= _SUFFICIENT_MOS:
+        # ── 1-pass path: SR + MetricGAN+ ──────────────────────────────────
+        models.ensure_only("sr_48k")                # only SR in VRAM
         status_cb("Tier 3: pass 1 sufficient — SR (chunked) + MetricGAN+")
         hifi_48k      = _sr_chunked(models, pass1_16k, status_cb=status_cb)
+        models.ensure_only()                        # free VRAM for MetricGAN+
         hifi_16k_mg   = resample_np(hifi_48k, 48000, 16000)
+        status_cb("Tier 3: MetricGAN+ polishing")
         polished_16k  = apply_metricgan(hifi_16k_mg, sr=16000)
         polished_48k  = resample_np(polished_16k, 16000, 48000)
         pipeline_tag  = "tier3_bad_1pass"
     else:
-        # ── Pass 2: MossFormer2_SE_48K (different architecture, second shot) ─
+        # ── Pass 2: MossFormer2_SE_48K ────────────────────────────────────
+        models.ensure_only("se_48k")                # swap to SE_48K
         n_chunks_p2 = max(1, int(len(pass1_16k) / 16000 / 20.0))
         status_cb(f"Tier 3: pass 2 — MossFormer2_SE_48K (~{n_chunks_p2} chunks @ 20s)")
         pass1_48k     = resample_np(pass1_16k, 16000, 48000)
-        del pass1_16k  # free RAM before allocating 48kHz buffer
+        del pass1_16k
         _empty_cache()
         pass2_48k     = process_in_chunks(
             audio_np=pass1_48k,
@@ -82,12 +89,15 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
         del pass1_48k
         _empty_cache()
 
+        # ── SR + MetricGAN+ after pass 2 ─────────────────────────────────
+        models.ensure_only("sr_48k")                # swap to SR
         pass2_16k     = resample_np(pass2_48k, 48000, 16000)
         del pass2_48k
         hifi_48k      = _sr_chunked(models, pass2_16k, status_cb=status_cb)
         del pass2_16k
+        models.ensure_only()                        # free VRAM for MetricGAN+
         hifi_16k_mg   = resample_np(hifi_48k, 48000, 16000)
-        status_cb("Tier 3: MetricGAN+ polishing (chunked 30s)")
+        status_cb("Tier 3: MetricGAN+ polishing")
         polished_16k  = apply_metricgan(hifi_16k_mg, sr=16000)
         polished_48k  = resample_np(polished_16k, 16000, 48000)
         pipeline_tag  = "tier3_bad_2pass"

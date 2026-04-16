@@ -46,6 +46,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     audio_16k, _ = load_16k_mono(input_path)
 
     # ── Speech separation: mixed → 2 streams ─────────────────────────────────
+    models.ensure_only("ss_16k")
     status_cb("Tier 4: MossFormer2_SS_16K — separating speakers")
     out_ss = models.ss_16k(input_path=_to_2d(audio_16k), online_write=False)
     if isinstance(out_ss, (list, tuple)) and len(out_ss) >= 2:
@@ -69,6 +70,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
         lbl = f"stream{idx + 1}"
 
         # GAN denoise (chunked — each stream can be up to 30 min)
+        models.ensure_only("se_16k")
         status_cb(f"Tier 4: MossFormerGAN_SE_16K — denoising {lbl} (chunked)")
         denoised = process_in_chunks(
             audio_np=raw_stream,
@@ -82,6 +84,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
 
         # Super-resolution (chunked — 60s @ 16kHz per chunk)
         import torch
+        models.ensure_only("sr_48k")
         status_cb(f"Tier 4: MossFormer2_SR_48K — upsampling {lbl} (chunked)")
         chunk_in = int(60.0 * 16000)
         n_d = len(denoised)

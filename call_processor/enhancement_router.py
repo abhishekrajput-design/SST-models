@@ -33,23 +33,98 @@ _models: Optional["ClearVoiceModels"] = None
 
 class ClearVoiceModels:
     """
-    Holds all four ClearVoice models in memory simultaneously.
-    Instantiate once via ClearVoiceModels.get(); all subsequent calls
-    return the cached instance.
+    Lazy-loading ClearVoice model manager.
+
+    Models are loaded into VRAM **on first access** (not at startup) and can
+    be unloaded between pipeline stages so that only the model currently
+    needed occupies GPU memory.  This prevents OOM when all 4 models would
+    exceed available VRAM.
+
+    Usage::
+
+        models = ClearVoiceModels.get()
+        models.ensure_only("se_16k")     # load SE_16K, unload everything else
+        result = models.se_16k(input_path=chunk, online_write=False)
+        models.ensure_only("sr_48k")     # swap to SR model
+        result = models.sr_48k(input_path=chunk, online_write=False)
     """
 
+    _ALL = ("se_16k", "se_48k", "ss_16k", "sr_48k")
+
     def __init__(self):
-        from clearvoice import ClearVoice
-        logger.info("Loading ClearVoice models into memory…")
-        self.se_16k = ClearVoice(task="speech_enhancement",     model_names=["MossFormerGAN_SE_16K"])
-        logger.info("  ✓ MossFormerGAN_SE_16K")
-        self.se_48k = ClearVoice(task="speech_enhancement",     model_names=["MossFormer2_SE_48K"])
-        logger.info("  ✓ MossFormer2_SE_48K")
-        self.ss_16k = ClearVoice(task="speech_separation",      model_names=["MossFormer2_SS_16K"])
-        logger.info("  ✓ MossFormer2_SS_16K")
-        self.sr_48k = ClearVoice(task="speech_super_resolution", model_names=["MossFormer2_SR_48K"])
-        logger.info("  ✓ MossFormer2_SR_48K")
-        logger.info("ClearVoice models ready.")
+        from clearvoice import ClearVoice          # fail-fast if missing
+        self._ClearVoice = ClearVoice
+        self._se_16k = None
+        self._se_48k = None
+        self._ss_16k = None
+        self._sr_48k = None
+        logger.info("ClearVoice available — models will load on demand.")
+
+    # ── lazy-loading properties ───────────────────────────────────────────────
+
+    @property
+    def se_16k(self):
+        if self._se_16k is None:
+            logger.info("  Loading MossFormerGAN_SE_16K …")
+            self._se_16k = self._ClearVoice(
+                task="speech_enhancement",
+                model_names=["MossFormerGAN_SE_16K"],
+            )
+            logger.info("  ✓ MossFormerGAN_SE_16K ready")
+        return self._se_16k
+
+    @property
+    def se_48k(self):
+        if self._se_48k is None:
+            logger.info("  Loading MossFormer2_SE_48K …")
+            self._se_48k = self._ClearVoice(
+                task="speech_enhancement",
+                model_names=["MossFormer2_SE_48K"],
+            )
+            logger.info("  ✓ MossFormer2_SE_48K ready")
+        return self._se_48k
+
+    @property
+    def ss_16k(self):
+        if self._ss_16k is None:
+            logger.info("  Loading MossFormer2_SS_16K …")
+            self._ss_16k = self._ClearVoice(
+                task="speech_separation",
+                model_names=["MossFormer2_SS_16K"],
+            )
+            logger.info("  ✓ MossFormer2_SS_16K ready")
+        return self._ss_16k
+
+    @property
+    def sr_48k(self):
+        if self._sr_48k is None:
+            logger.info("  Loading MossFormer2_SR_48K …")
+            self._sr_48k = self._ClearVoice(
+                task="speech_super_resolution",
+                model_names=["MossFormer2_SR_48K"],
+            )
+            logger.info("  ✓ MossFormer2_SR_48K ready")
+        return self._sr_48k
+
+    # ── VRAM management ───────────────────────────────────────────────────────
+
+    def unload(self, *names: str):
+        """Unload specific models to free VRAM."""
+        import torch
+        for name in names:
+            attr = f"_{name}"
+            if getattr(self, attr, None) is not None:
+                logger.info(f"  Unloading {name} to free VRAM")
+                setattr(self, attr, None)
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+    def ensure_only(self, *keep: str):
+        """Unload every model except those listed in *keep*."""
+        to_drop = [m for m in self._ALL if m not in keep]
+        if to_drop:
+            self.unload(*to_drop)
 
     @classmethod
     def get(cls) -> "ClearVoiceModels":

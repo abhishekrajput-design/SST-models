@@ -33,6 +33,7 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     audio_16k, _ = load_16k_mono(input_path)
 
     # Upsample to 48kHz for SE_48K model
+    models.ensure_only("se_48k")
     n_chunks_t1 = max(1, int(len(audio_16k) / 16000 / 60.0))
     status_cb(f"Tier 1: MossFormer2_SE_48K — light denoise + upsample (~{n_chunks_t1} chunks)")
     audio_48k = resample_np(audio_16k, 16000, 48000)
