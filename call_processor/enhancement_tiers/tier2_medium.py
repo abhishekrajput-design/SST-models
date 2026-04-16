@@ -18,11 +18,15 @@ logger = logging.getLogger(__name__)
 def process(input_path: str, output_path: str, models, status_cb) -> dict:
     from enhancement_router import (
         load_16k_mono, save_wav, resample_np, _extract_np, _to_2d,
-        apply_metricgan, process_in_chunks,
+        apply_metricgan, process_in_chunks, remove_silence,
     )
 
     status_cb("Tier 2: loading audio")
     audio_16k, _ = load_16k_mono(input_path)
+    audio_16k, orig_dur = remove_silence(audio_16k, 16000)
+    trim_dur = len(audio_16k) / 16000
+    if trim_dur < orig_dur - 1:
+        status_cb(f"Tier 2: silence removed — {orig_dur:.0f}s → {trim_dur:.0f}s  ({trim_dur/max(orig_dur,1):.0%} retained)")
 
     # ── Stage 1: aggressive GAN denoising (16kHz) ────────────────────────────
     status_cb("Tier 2: MossFormerGAN_SE_16K — aggressive denoising (chunked)")

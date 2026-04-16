@@ -26,11 +26,15 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     """
     from enhancement_router import (
         load_16k_mono, save_wav, resample_np, _extract_np, _to_2d,
-        process_in_chunks,
+        process_in_chunks, remove_silence,
     )
 
     status_cb("Tier 1: loading audio")
     audio_16k, _ = load_16k_mono(input_path)
+    audio_16k, orig_dur = remove_silence(audio_16k, 16000)
+    trim_dur = len(audio_16k) / 16000
+    if trim_dur < orig_dur - 1:
+        status_cb(f"Tier 1: silence removed — {orig_dur:.0f}s → {trim_dur:.0f}s  ({trim_dur/max(orig_dur,1):.0%} retained)")
 
     # Upsample to 48kHz for SE_48K model
     status_cb("Tier 1: MossFormer2_SE_48K — light denoise + upsample (chunked)")

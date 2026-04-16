@@ -130,6 +130,93 @@ def load_16k_mono(path: str) -> tuple[np.ndarray, int]:
     return data, 16000
 
 
+def remove_silence(
+    audio_np: np.ndarray,
+    sr: int,
+    top_db: float = 40.0,
+    min_silence_ms: float = 800.0,
+    keep_padding_ms: float = 200.0,
+) -> tuple[np.ndarray, float]:
+    """
+    Remove silence regions longer than min_silence_ms from audio.
+
+    Args:
+        audio_np:        1-D float32 numpy array.
+        sr:              Sample rate of audio_np.
+        top_db:          Frames quieter than (peak_rms_db - top_db) are silent.
+        min_silence_ms:  Only remove silence runs longer than this (ms).
+        keep_padding_ms: Keep this many ms of audio on each side of speech
+                         regions so onsets/offsets aren't cut off.
+
+    Returns:
+        (trimmed_audio, original_duration_s)
+        If trimming would leave < 1 s of audio the original is returned.
+    """
+    n = len(audio_np)
+    orig_dur = n / sr
+
+    hop       = max(1, int(0.0125 * sr))   # 12.5 ms per frame
+    frame_len = max(1, int(0.025  * sr))   # 25 ms analysis window
+
+    n_frames = max(1, (n - frame_len) // hop + 1)
+
+    # ── RMS in dB per frame (vectorised) ──────────────────────────────────────
+    # Build a 2-D view: shape (n_frames, frame_len) via strided indexing
+    indices = (np.arange(n_frames)[:, None] * hop +
+               np.arange(frame_len)[None, :])
+    indices = np.clip(indices, 0, n - 1)          # clamp last partial frame
+    frames  = audio_np[indices]                    # (n_frames, frame_len)
+    rms     = np.sqrt(np.mean(frames ** 2, axis=1))
+    rms_db  = (20.0 * np.log10(np.maximum(rms, 1e-10))).astype(np.float32)
+
+    peak = float(rms_db.max())
+    if peak < -70.0:
+        return audio_np, orig_dur               # near-silent — nothing to trim
+
+    # ── Voice-activity mask ────────────────────────────────────────────────────
+    threshold = peak - top_db
+    voiced    = (rms_db > threshold).astype(np.float32)
+
+    if voiced.sum() == 0:
+        return audio_np, orig_dur
+
+    # ── Expand voiced regions by keep_padding_ms (dilation via convolution) ───
+    pad_f  = max(1, int(round(keep_padding_ms / 1000.0 * sr / hop)))
+    kernel = np.ones(2 * pad_f + 1, dtype=np.float32)
+    voiced = (np.convolve(voiced, kernel, mode="same") > 0)
+
+    # ── Fill silence gaps shorter than min_silence_ms ─────────────────────────
+    sil_f = max(1, int(round(min_silence_ms / 1000.0 * sr / hop)))
+    i = 0
+    while i < n_frames:
+        if not voiced[i]:
+            j = i + 1
+            while j < n_frames and not voiced[j]:
+                j += 1
+            if (j - i) < sil_f:           # short gap → keep it
+                voiced[i:j] = True
+            i = j
+        else:
+            i += 1
+
+    # ── Upsample frame mask → per-sample mask ─────────────────────────────────
+    sample_mask = np.repeat(voiced, hop)
+    if len(sample_mask) < n:
+        # Last partial frame: keep (don't cut the tail)
+        sample_mask = np.concatenate(
+            [sample_mask, np.ones(n - len(sample_mask), dtype=bool)]
+        )
+    sample_mask = sample_mask[:n]
+
+    trimmed = audio_np[sample_mask]
+
+    # Safety: never return less than 1 second of audio
+    if len(trimmed) < sr:
+        return audio_np, orig_dur
+
+    return trimmed, orig_dur
+
+
 def save_wav(data: np.ndarray, sr: int, path: str):
     """Save numpy array as WAV. Clips to [-1, 1] to prevent clipping artifacts."""
     data = np.clip(data, -1.0, 1.0).astype(np.float32)
