@@ -120,8 +120,15 @@ def _sr_chunked(models, audio_16k: np.ndarray, chunk_sec: float = 60.0) -> np.nd
             out = models.sr_48k(input_path=_to_2d(chunk), online_write=False)
             return _extract_np(out)
         except RuntimeError as e:
-            if "out of memory" in str(e).lower():
-                logger.warning("SR_48K CUDA OOM — falling back to torchaudio resample for this chunk.")
+            # TorchScript wraps CUDA OOM as "The following operation failed in the
+            # TorchScript interpreter." so we check for both forms.
+            msg = str(e).lower()
+            if ("out of memory" in msg or "torchscript" in msg
+                    or "cuda" in msg or "allocate" in msg):
+                logger.warning(
+                    f"SR_48K CUDA OOM (TorchScript) — "
+                    "falling back to torchaudio resample for this chunk."
+                )
                 if torch.cuda.is_available():
                     torch.cuda.empty_cache()
                 return resample_np(chunk, 16000, 48000)
