@@ -30,8 +30,11 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     )
 
     def _empty_cache():
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
+        try:
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass
 
     status_cb("Tier 3: loading audio")
     audio_16k, _ = load_16k_mono(input_path)

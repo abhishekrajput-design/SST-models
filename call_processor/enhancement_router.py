@@ -117,8 +117,11 @@ class ClearVoiceModels:
                 logger.info(f"  Unloading {name} to free VRAM")
                 setattr(self, attr, None)
         gc.collect()
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
+        try:
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass  # empty_cache can raise after OOM — safe to ignore
 
     def ensure_only(self, *keep: str):
         """Unload every model except those listed in *keep*."""
