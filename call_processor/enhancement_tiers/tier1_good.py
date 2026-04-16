@@ -33,12 +33,16 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     audio_16k, _ = load_16k_mono(input_path)
 
     # Upsample to 48kHz for SE_48K model
-    status_cb("Tier 1: MossFormer2_SE_48K — light denoise + upsample (chunked)")
+    n_chunks_t1 = max(1, int(len(audio_16k) / 16000 / 60.0))
+    status_cb(f"Tier 1: MossFormer2_SE_48K — light denoise + upsample (~{n_chunks_t1} chunks)")
     audio_48k = resample_np(audio_16k, 16000, 48000)
     enhanced_48k = process_in_chunks(
         audio_np=audio_48k,
         sr=48000,
         fn=lambda chunk: models.se_48k(input_path=chunk, online_write=False),
+        progress_cb=lambda i, n, s, e: status_cb(
+            f"Tier 1: SE_48K — chunk {i}/{n}  ({s:.0f}s–{e:.0f}s)"
+        ),
     )
 
     status_cb("Tier 1: saving output")

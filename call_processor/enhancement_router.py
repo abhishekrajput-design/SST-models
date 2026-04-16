@@ -528,6 +528,7 @@ def process_in_chunks(
     fn,
     chunk_sec: float = 60.0,
     overlap_sec: float = 2.0,
+    progress_cb=None,
 ) -> np.ndarray:
     """
     Split a long 1-D audio array into overlapping chunks, process each with
@@ -581,6 +582,8 @@ def process_in_chunks(
             f"process_in_chunks: chunk {i + 1}/{n_chunks} "
             f"[{start / sr:.1f}s – {end / sr:.1f}s]"
         )
+        if progress_cb:
+            progress_cb(i + 1, n_chunks, start / sr, end / sr)
 
         processed = _extract_np(fn(_to_2d(chunk)))
 

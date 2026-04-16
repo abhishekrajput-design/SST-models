@@ -25,11 +25,15 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
     audio_16k, _ = load_16k_mono(input_path)
 
     # ── Stage 1: aggressive GAN denoising (16kHz) ────────────────────────────
-    status_cb("Tier 2: MossFormerGAN_SE_16K — aggressive denoising (chunked)")
+    n_chunks_t2 = max(1, int(len(audio_16k) / 16000 / 60.0))
+    status_cb(f"Tier 2: MossFormerGAN_SE_16K — aggressive denoising (~{n_chunks_t2} chunks)")
     denoised_16k = process_in_chunks(
         audio_np=audio_16k,
         sr=16000,
         fn=lambda chunk: models.se_16k(input_path=chunk, online_write=False),
+        progress_cb=lambda i, n, s, e: status_cb(
+            f"Tier 2: GAN denoising — chunk {i}/{n}  ({s:.0f}s–{e:.0f}s)"
+        ),
     )
 
     # ── Stage 2: super-resolution 16kHz → 48kHz (chunked) ───────────────────
