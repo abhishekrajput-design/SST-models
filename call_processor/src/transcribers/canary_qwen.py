@@ -60,6 +60,7 @@ class CanaryQwenTranscriber(BaseTranscriber):
                 )
                 os.makedirs(cache_dir, exist_ok=True)
                 os.environ["NEMO_CACHE_DIR"] = cache_dir
+                # from_pretrained has no dtype param; we cast after load (see below).
                 self.model = SALM.from_pretrained(MODEL_ID)
                 self._api = "salm"
             except (ImportError, AttributeError, TypeError) as e:
@@ -95,9 +96,21 @@ class CanaryQwenTranscriber(BaseTranscriber):
             _torch.cuda.is_available = _orig_is_avail
 
         if _use_cuda:
-            self.model = self.model.cuda()
+            # Cast to bfloat16 before moving to GPU: float32 = ~10 GB, bfloat16 = ~5 GB.
+            # bfloat16 has float32 exponent range so no overflow on audio values.
+            # Convert on CPU first, then move to GPU in one shot.
+            try:
+                self.model = self.model.to(_torch.bfloat16)
+            except Exception as _e:
+                print(f"  [Canary] bfloat16 cast failed ({_e}), keeping float32")
+            try:
+                self.model = self.model.cuda()
+            except RuntimeError as _e:
+                print(f"  [Canary] CUDA OOM or error ({_e}), falling back to CPU")
+                self.model = self.model.float()  # restore float32 for CPU
+                self._use_cuda = False
         self.model.eval()
-        print(f"  [Canary] Loaded via {self._api} API, cuda={_use_cuda}")
+        print(f"  [Canary] Loaded via {self._api} API, cuda={self._use_cuda}")
 
     # ------------------------------------------------------------------ #
 
@@ -133,18 +146,39 @@ class CanaryQwenTranscriber(BaseTranscriber):
         import torch
         with torch.no_grad():
             if self._api == "salm":
-                results = self.model.transcribe([tmp_path])
-            else:  # multitask / ASRModel
+                # High-level SALM API: chat-style prompt with embedded audio path.
+                # model.audio_locator_tag is the <|audio|> placeholder token string.
+                locator = self.model.audio_locator_tag
+                prompt = [
+                    [
+                        {
+                            "role": "user",
+                            "content": f"Transcribe the following: {locator}",
+                            "audio": [tmp_path],
+                        }
+                    ]
+                ]
+                answer_ids = self.model.generate(prompt, max_new_tokens=512)
+                # answer_ids shape: (1, seq_len) — includes both prompt and answer tokens.
+                # Decode and strip any leading/trailing whitespace.
+                tokenizer = self.model.tokenizer
+                if hasattr(tokenizer, "ids_to_text"):
+                    # NeMo tokenizer
+                    text = tokenizer.ids_to_text(answer_ids[0].tolist())
+                else:
+                    # HuggingFace tokenizer
+                    text = tokenizer.decode(answer_ids[0], skip_special_tokens=True)
+                return text.strip()
+            else:
+                # Older EncDecMultiTaskModel (Canary-1B style)
                 results = self.model.transcribe([tmp_path], batch_size=1)
-
-        if isinstance(results, list) and results:
-            hyp = results[0]
-        else:
-            hyp = results
-
-        if hasattr(hyp, "text"):
-            return hyp.text.strip()
-        return str(hyp).strip()
+                if isinstance(results, list) and results:
+                    hyp = results[0]
+                else:
+                    hyp = results
+                if hasattr(hyp, "text"):
+                    return hyp.text.strip()
+                return str(hyp).strip()
 
     # ------------------------------------------------------------------ #
 
