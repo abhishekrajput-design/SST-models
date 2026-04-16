@@ -19,6 +19,12 @@ except Exception as _e:
     print(f"[transcribers] vibevoice_asr unavailable: {_e}")
     VibeVoiceAsrTranscriber = None  # type: ignore
 
+try:
+    from .canary_qwen import CanaryQwenTranscriber
+except Exception as _e:
+    print(f"[transcribers] canary_qwen unavailable: {_e}")
+    CanaryQwenTranscriber = None  # type: ignore
+
 # Aliases — the UI dropdown values map to these keys
 TRANSCRIBERS = {
     # Whisper family — all routed through faster-whisper wrapper
@@ -31,6 +37,7 @@ TRANSCRIBERS = {
     # Non-Whisper local backends
     "cohere-transcribe-03-2026": CohereTranscriber,
     "parakeet-tdt-0.6b-v3":      ParakeetV3Transcriber,
+    **({"canary-qwen-2.5b":  CanaryQwenTranscriber}  if CanaryQwenTranscriber  else {}),
     **({"qwen3-asr-1.7b":   Qwen3AsrTranscriber}   if Qwen3AsrTranscriber   else {}),
     **({"vibevoice-asr":    VibeVoiceAsrTranscriber} if VibeVoiceAsrTranscriber else {}),
     # Deepgram cloud API (no GPU needed)
@@ -63,6 +70,7 @@ __all__ = [
     "WhisperTurboTranscriber",
     "CohereTranscriber",
     "ParakeetV3Transcriber",
+    "CanaryQwenTranscriber",
     "Qwen3AsrTranscriber",
     "VibeVoiceAsrTranscriber",
     "DeepgramTranscriber",

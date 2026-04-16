@@ -693,8 +693,9 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 {"model": "deepgram-nova-2-phonecall", "label": "Deepgram Nova-2 Phone",    "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Optimised for desk/call audio", "status": "ok"},
                 {"model": "deepgram-nova-2-meeting",   "label": "Deepgram Nova-2 Meeting",  "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Multi-speaker meetings",        "status": "ok"},
                 {"model": "whisper-large-v3-turbo",    "label": "Whisper Large-v3-Turbo",   "type": "Local GPU",  "speed_s": 52,   "segments": 555,  "notes": "Best local model",             "status": "ok"},
-                {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local GPU",  "speed_s": 94,   "segments": 300,  "notes": "Fast, English only",           "status": "ok"},
-                {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 300,  "segments": None, "notes": "Best WER on leaderboard (5.42%)", "status": "ok"},
+                {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local GPU",  "speed_s": 94,   "segments": 300,  "notes": "Fast, English only",              "status": "ok"},
+                {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 300,  "segments": None, "notes": "Best WER on leaderboard (5.42%)",  "status": "ok"},
+                {"model": "canary-qwen-2.5b",          "label": "NVIDIA Canary-Qwen 2.5B",  "type": "Local GPU",  "speed_s": None, "segments": None, "notes": "Multilingual, NeMo SALM ~5 GB",    "status": "ok"},
             ]
             # Merge in any live data from model_comparison.json
             mc_path = os.path.join("data", "model_comparison.json")

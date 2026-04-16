@@ -631,6 +631,7 @@
                 <option value="whisper-large-v3-turbo">Whisper Large-v3-Turbo · 52s · 555 segs · best local</option>
                 <option value="parakeet-tdt-0.6b-v3">NVIDIA Parakeet TDT v3 · 94s · 300 segs · 3 GB VRAM</option>
                 <option value="cohere-transcribe-03-2026">Cohere Transcribe 03-2026 · best WER on leaderboard · ~5 min</option>
+                <option value="canary-qwen-2.5b">NVIDIA Canary-Qwen 2.5B · multilingual · ~5 GB VRAM</option>
                 </optgroup>
             </select>
             <button class="upload-btn" onclick="document.getElementById('audioUpload').click()">
@@ -810,6 +811,7 @@
             if (model.startsWith('whisper')) return '#0369a1';
             if (model.startsWith('parakeet')) return '#065f46';
             if (model.startsWith('cohere')) return '#0f766e';
+            if (model.startsWith('canary')) return '#92400e';
             return '#374151';
         }
 
@@ -824,6 +826,7 @@
                 'large-v3-turbo': 'Whisper v3-Turbo',
                 'parakeet-tdt-0.6b-v3': 'Parakeet v3',
                 'cohere-transcribe-03-2026': 'Cohere Mar-26',
+                'canary-qwen-2.5b': 'Canary-Qwen',
             };
             return map[model] || model;
         }
