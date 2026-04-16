@@ -717,15 +717,30 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                         f"Detected {len(speakers)} speaker labels (> 4 expected for desk call)"
                     )
 
-                # Check speech coverage
+                # Check speech coverage using actual audio file duration
                 segs = rdata.get("segments", [])
                 if segs:
-                    speech_dur  = sum(s.get("end", 0) - s.get("start", 0) for s in segs)
-                    total_dur   = max((s.get("end", 0) for s in segs), default=1)
+                    speech_dur = sum(s.get("end", 0) - s.get("start", 0) for s in segs)
+                    # Use real audio duration from ffprobe (falls back to max segment end)
+                    total_dur  = max((s.get("end", 0) for s in segs), default=1)
+                    try:
+                        _probe = subprocess.run(
+                            ["ffprobe", "-v", "quiet", "-print_format", "json",
+                             "-show_format", pipeline_audio],
+                            capture_output=True, text=True, timeout=10,
+                        )
+                        if _probe.returncode == 0:
+                            _fmt_dur = float(
+                                json.loads(_probe.stdout).get("format", {}).get("duration", 0)
+                            )
+                            if _fmt_dur > 0:
+                                total_dur = _fmt_dur
+                    except Exception:
+                        pass
                     speech_ratio = speech_dur / max(total_dur, 1)
-                    if speech_ratio < 0.30:
+                    if speech_ratio < 0.15:
                         review_reasons.append(
-                            f"Speech covers only {speech_ratio:.0%} of audio (< 30%)"
+                            f"Speech covers only {speech_ratio:.0%} of audio (< 15%)"
                         )
 
                 # Patch quality + review metadata into result.json
@@ -1045,7 +1060,10 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Content-Length", str(length))
             self.send_header("Accept-Ranges", "bytes")
             self.end_headers()
-            self.wfile.write(data)
+            try:
+                self.wfile.write(data)
+            except (BrokenPipeError, ConnectionResetError):
+                pass  # browser seeked/paused and closed the connection
         else:
             with open(fs_path, "rb") as f:
                 data = f.read()
@@ -1054,7 +1072,10 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Content-Length", str(size))
             self.send_header("Accept-Ranges", "bytes")
             self.end_headers()
-            self.wfile.write(data)
+            try:
+                self.wfile.write(data)
+            except (BrokenPipeError, ConnectionResetError):
+                pass  # browser seeked/paused and closed the connection
 
     def do_POST(self):
         parsed = urlparse(self.path)
