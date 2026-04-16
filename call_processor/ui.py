@@ -337,7 +337,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
         "model":                    whisper_model,
-        "processed_at":             datetime.now().isoformat(),
+        "processed_at":             datetime.utcnow().isoformat() + "Z",
         "processing_time_seconds":  elapsed,
         "total_segments":           len(segments),
         "segments":                 segments,
@@ -356,7 +356,7 @@ def _flush_result(path: str, audio_path: str, segments: list, elapsed: float):
     from datetime import datetime
     tmp = {
         "audio_file":              audio_path.replace("\\", "/"),
-        "processed_at":            datetime.now().isoformat(),
+        "processed_at":            datetime.utcnow().isoformat() + "Z",
         "processing_time_seconds": round(elapsed, 2),
         "total_segments":          len(segments),
         "segments":                segments,

@@ -156,21 +156,30 @@ class CanaryQwenTranscriber(BaseTranscriber):
             return False  # if librosa fails, let the model try
 
     @staticmethod
-    def _is_repetitive(text: str) -> bool:
-        """Return True if the text looks like a hallucination loop."""
+    def _clean_repetition(text: str) -> str:
+        """Truncate text at the first detected loop; return '' if nearly all looping.
+
+        Better than dropping the whole chunk — keeps the real content before
+        the hallucination starts (e.g. 'All I need you to do is pick up the
+        phone' before 'and then call the police' loops 80 times).
+        """
         words = text.split()
         if len(words) < 8:
-            return False
-        # Fast check: loops have very few unique words relative to total
-        if len(set(words)) / len(words) < 0.40:
-            return True
-        # Deeper check: any 3-5 word phrase repeating more than twice
-        from collections import Counter
-        for n in (5, 4, 3):
-            phrases = [" ".join(words[i:i+n]) for i in range(len(words) - n + 1)]
-            if Counter(phrases).most_common(1)[0][1] > 2:
-                return True
-        return False
+            return text
+        # Walk from 4-gram down to 2-gram; find first repeated phrase
+        for n in (5, 4, 3, 2):
+            seen: dict = {}
+            for i in range(len(words) - n + 1):
+                phrase = " ".join(words[i:i+n])
+                if phrase in seen:
+                    # Truncate just before this repetition
+                    head = " ".join(words[:i]).strip()
+                    return head if len(head.split()) >= 4 else ""
+                seen[phrase] = i
+        # No loops found — check unique-word ratio as a final catch-all
+        if len(set(words)) / len(words) < 0.35:
+            return ""
+        return text
 
     def _transcribe_chunk(self, tmp_path: str) -> str:
         """Run inference on a single WAV chunk, return transcript string."""
@@ -245,11 +254,13 @@ class CanaryQwenTranscriber(BaseTranscriber):
                 if self._use_cuda:
                     torch.cuda.empty_cache()
 
-            # Drop repetitive output — model hallucinating on noisy audio
-            if text and self._is_repetitive(text):
-                print(f"  [Canary] chunk @{start:.0f}s dropped (repetitive hallucination)")
-                start += dur
-                continue
+            # Truncate at first loop, or drop if almost entirely hallucinated
+            if text:
+                cleaned = self._clean_repetition(text)
+                if cleaned != text:
+                    action = "truncated" if cleaned else "dropped"
+                    print(f"  [Canary] chunk @{start:.0f}s {action} (hallucination loop detected)")
+                text = cleaned
 
             if text:
                 out.append({
