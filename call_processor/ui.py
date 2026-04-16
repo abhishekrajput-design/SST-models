@@ -712,9 +712,9 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
 
                 # Check speaker diversity
                 speakers = {s.get("speaker") for s in rdata.get("segments", [])}
-                if len(speakers) > 4:
+                if len(speakers) > 8:
                     review_reasons.append(
-                        f"Detected {len(speakers)} speaker labels (> 4 expected for desk call)"
+                        f"Detected {len(speakers)} speaker labels (> 8 expected for desk call)"
                     )
 
                 # Check speech coverage using actual audio file duration
