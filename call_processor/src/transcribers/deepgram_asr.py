@@ -46,6 +46,7 @@ class DeepgramTranscriber(BaseTranscriber):
             "utterances":   "true",
             "smart_format": "true",
             "punctuate":    "true",
+            "endpointing":  "400",
         })
         url = f"{API_URL}?{params}"
 

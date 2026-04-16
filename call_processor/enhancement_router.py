@@ -104,12 +104,165 @@ def route(
         models = ClearVoiceModels.get()
     except ImportError:
         logger.warning("clearvoice not installed — skipping ClearVoice enhancement.")
-        # Copy input → output as-is so caller always has a valid output path
         import shutil
         shutil.copy2(input_path, output_path)
         return {"pipeline_used": "passthrough_no_clearvoice", "separated_streams": []}
 
-    return process(input_path, output_path, models, _status)
+    # ── VAD-based speech extraction (Silero VAD) ──────────────────────────────
+    _status("Detecting speech regions (Silero VAD)…")
+    audio_16k, _ = load_16k_mono(input_path)
+    regions = get_speech_regions(audio_16k, 16000)
+
+    speech_dur = sum(e - s for s, e in regions) / 16000
+    total_dur  = len(audio_16k) / 16000
+    ratio      = speech_dur / max(total_dur, 1)
+    _status(f"Speech: {speech_dur:.0f}s / {total_dur:.0f}s ({ratio:.0%})")
+
+    use_vad = ratio < 0.80  # only bother if >20% is silence
+
+    if not use_vad:
+        return process(input_path, output_path, models, _status)
+
+    # Save speech-only to temp file for tier processing
+    speech_audio = concatenate_regions(audio_16k, regions)
+    _status(
+        f"Processing {speech_dur:.0f}s of speech "
+        f"(skipping {total_dur - speech_dur:.0f}s silence)"
+    )
+
+    tmp_input = input_path + ".vad_speech.wav"
+    save_wav(speech_audio, 16000, tmp_input)
+
+    try:
+        result = process(tmp_input, output_path, models, _status)
+
+        # Load enhanced speech (48 kHz) written by the tier pipeline
+        enhanced_48k, _ = sf.read(output_path, dtype="float32")
+        if enhanced_48k.ndim > 1:
+            enhanced_48k = enhanced_48k.mean(axis=1)
+
+        # Reconstruct full-length output preserving original timeline
+        _status("Reconstructing full-length enhanced audio")
+        full_output = reconstruct_enhanced(audio_16k, regions, enhanced_48k)
+        save_wav(full_output, 48000, output_path)
+
+        # Tier 4 also writes separated streams — reconstruct those too
+        for sp in result.get("separated_streams", []):
+            if os.path.isfile(sp):
+                sp_data, _ = sf.read(sp, dtype="float32")
+                if sp_data.ndim > 1:
+                    sp_data = sp_data.mean(axis=1)
+                sp_full = reconstruct_enhanced(audio_16k, regions, sp_data)
+                save_wav(sp_full, 48000, sp)
+
+        return result
+    finally:
+        try:
+            if os.path.isfile(tmp_input):
+                os.unlink(tmp_input)
+        except OSError:
+            pass
+
+
+# --------------------------------------------------------------------------- #
+#  Silero VAD — speech region detection
+# --------------------------------------------------------------------------- #
+
+_vad_model = None
+_vad_get_ts = None
+
+
+def _load_vad():
+    """Load Silero VAD once and cache globally."""
+    global _vad_model, _vad_get_ts
+    if _vad_model is None:
+        import torch
+        _vad_model, utils = torch.hub.load(
+            "snakers4/silero-vad", "silero_vad", trust_repo=True,
+        )
+        _vad_get_ts = utils[0]  # get_speech_timestamps
+    return _vad_model, _vad_get_ts
+
+
+def get_speech_regions(
+    audio_np: np.ndarray,
+    sr: int,
+    min_speech_ms: int = 250,
+    min_silence_ms: int = 500,
+    speech_pad_ms: int = 200,
+    threshold: float = 0.5,
+) -> list[tuple[int, int]]:
+    """
+    Detect speech regions using Silero VAD.
+
+    Returns a list of ``(start_sample, end_sample)`` tuples.
+    Falls back to returning the full audio as one region if VAD fails.
+    """
+    try:
+        import torch
+        model, get_ts = _load_vad()
+
+        wav = torch.from_numpy(audio_np.astype(np.float32))
+
+        timestamps = get_ts(
+            wav,
+            model,
+            sampling_rate=sr,
+            min_speech_duration_ms=min_speech_ms,
+            min_silence_duration_ms=min_silence_ms,
+            speech_pad_ms=speech_pad_ms,
+            threshold=threshold,
+        )
+
+        if not timestamps:
+            logger.warning("Silero VAD: no speech detected — using full audio")
+            return [(0, len(audio_np))]
+
+        regions = [
+            (max(0, ts["start"]), min(len(audio_np), ts["end"]))
+            for ts in timestamps
+        ]
+        return regions
+
+    except Exception as exc:
+        logger.warning(f"Silero VAD unavailable ({exc}) — using full audio")
+        return [(0, len(audio_np))]
+
+
+def concatenate_regions(
+    audio_np: np.ndarray, regions: list[tuple[int, int]],
+) -> np.ndarray:
+    """Extract and concatenate speech regions into a single array."""
+    return np.concatenate([audio_np[s:e] for s, e in regions])
+
+
+def reconstruct_enhanced(
+    original_16k: np.ndarray,
+    regions_16k: list[tuple[int, int]],
+    enhanced_48k: np.ndarray,
+) -> np.ndarray:
+    """
+    Place enhanced speech (48 kHz) back into the original timeline.
+
+    Non-speech regions keep the original audio upsampled to 48 kHz so
+    timestamps are preserved for downstream transcription / A-B playback.
+    """
+    SR_RATIO = 3  # 48000 / 16000
+
+    # Upsample original to 48 kHz as the background canvas
+    output = resample_np(original_16k, 16000, 48000)
+
+    offset = 0
+    for start_16k, end_16k in regions_16k:
+        seg_48k = (end_16k - start_16k) * SR_RATIO
+        s48     = start_16k * SR_RATIO
+        e48     = min(s48 + seg_48k, len(output))
+        avail   = min(e48 - s48, len(enhanced_48k) - offset)
+        if avail > 0:
+            output[s48 : s48 + avail] = enhanced_48k[offset : offset + avail]
+        offset += seg_48k
+
+    return output
 
 
 # --------------------------------------------------------------------------- #

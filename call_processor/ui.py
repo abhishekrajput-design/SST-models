@@ -710,11 +710,21 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                 with open(result_path, "r", encoding="utf-8") as _f:
                     rdata = json.load(_f)
 
-                # Check speaker diversity
-                speakers = {s.get("speaker") for s in rdata.get("segments", [])}
-                if len(speakers) > 8:
+                # Check speaker diversity — only count speakers with ≥ 3
+                # segments so ambient background voices at a desk don't
+                # trigger false positives.
+                _seg_list = rdata.get("segments", [])
+                _spk_counts: dict = {}
+                for _seg in _seg_list:
+                    _spk = _seg.get("speaker")
+                    _spk_counts[_spk] = _spk_counts.get(_spk, 0) + 1
+                significant_speakers = [
+                    sp for sp, cnt in _spk_counts.items() if cnt >= 3
+                ]
+                if len(significant_speakers) > 6:
                     review_reasons.append(
-                        f"Detected {len(speakers)} speaker labels (> 8 expected for desk call)"
+                        f"Detected {len(significant_speakers)} significant speakers "
+                        f"(> 6 with ≥ 3 segments each)"
                     )
 
                 # Check speech coverage using actual audio file duration
@@ -738,9 +748,9 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                     except Exception:
                         pass
                     speech_ratio = speech_dur / max(total_dur, 1)
-                    if speech_ratio < 0.15:
+                    if speech_ratio < 0.10:
                         review_reasons.append(
-                            f"Speech covers only {speech_ratio:.0%} of audio (< 15%)"
+                            f"Speech covers only {speech_ratio:.0%} of audio (< 10%)"
                         )
 
                 # Patch quality + review metadata into result.json
