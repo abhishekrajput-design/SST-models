@@ -648,19 +648,11 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                 result_id = _transcribe_inline(pipeline_audio, whisper_model)
 
         elif use_inline:
-            # ── Tier 3: single-model inline (Deepgram or Whisper) ────────────
-            if quality_tier >= 3 and os.environ.get("DEEPGRAM_API_KEY"):
-                # Prefer Deepgram for bad audio (cloud + robust)
-                _set_status(1, "Transcription",
-                            "Tier 3: Deepgram Nova-3 (best noise robustness)…")
-                print("[UI] Tier 3 inline: Deepgram nova-3.")
-                dg_model = "deepgram-nova-3"
-                result_id = _transcribe_inline(pipeline_audio, dg_model)
-            else:
-                label = whisper_model
-                _set_status(1, "Transcription", f"Transcribing with {label}…")
-                print(f"[UI] Inline transcription ({label}).")
-                result_id = _transcribe_inline(pipeline_audio, whisper_model)
+            # ── Tier 3+: use whatever model the user selected ─────────────
+            label = whisper_model
+            _set_status(1, "Transcription", f"Transcribing with {label}…")
+            print(f"[UI] Inline transcription ({label}).")
+            result_id = _transcribe_inline(pipeline_audio, whisper_model)
 
         else:
             # ── Full pipeline via run_e2e.py (pyannote + Whisper) ────────────
