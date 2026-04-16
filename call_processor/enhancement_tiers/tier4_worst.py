@@ -84,10 +84,37 @@ def process(input_path: str, output_path: str, models, status_cb) -> dict:
         status_cb(f"Tier 4: Resemble Enhance — reconstructing {lbl}")
         denoised = _resemble_enhance_np(denoised, sr=16000)
 
-        # Super-resolution
-        status_cb(f"Tier 4: MossFormer2_SR_48K — upsampling {lbl}")
-        hifi_48k = models.sr_48k(input_path=_to_2d(denoised), online_write=False)
-        hifi_48k = _extract_np(hifi_48k)
+        # Super-resolution (chunked — 60s @ 16kHz per chunk)
+        import torch
+        status_cb(f"Tier 4: MossFormer2_SR_48K — upsampling {lbl} (chunked)")
+        chunk_in = int(60.0 * 16000)
+        n_d = len(denoised)
+
+        def _run_sr(chunk):
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            try:
+                out = models.sr_48k(input_path=_to_2d(chunk), online_write=False)
+                return _extract_np(out)
+            except RuntimeError as e:
+                msg = str(e).lower()
+                if "out of memory" in msg or "torchscript" in msg or "cuda" in msg or "allocate" in msg:
+                    logger.warning(f"SR_48K OOM ({lbl}) — falling back to torchaudio resample.")
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
+                    return resample_np(chunk, 16000, 48000)
+                raise
+
+        if n_d <= chunk_in:
+            hifi_48k = _run_sr(denoised)
+        else:
+            sr_chunks = []
+            s = 0
+            while s < n_d:
+                e = min(s + chunk_in, n_d)
+                sr_chunks.append(_run_sr(denoised[s:e]))
+                s = e
+            hifi_48k = np.concatenate(sr_chunks, axis=0)
 
         # MetricGAN+ polish
         status_cb(f"Tier 4: MetricGAN+ — polishing {lbl}")

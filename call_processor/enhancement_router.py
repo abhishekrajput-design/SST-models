@@ -270,8 +270,20 @@ def resample_np(data: np.ndarray, src_sr: int, dst_sr: int) -> np.ndarray:
     return t.squeeze(0).numpy()
 
 
-def apply_metricgan(audio_np: np.ndarray, sr: int, models_dir: str = "models/metricgan") -> np.ndarray:
-    """Run SpeechBrain MetricGAN+ on 16kHz mono numpy array → 16kHz output."""
+def apply_metricgan(
+    audio_np: np.ndarray,
+    sr: int,
+    models_dir: str = "models/metricgan",
+    chunk_sec: float = 30.0,
+) -> np.ndarray:
+    """
+    Run SpeechBrain MetricGAN+ on 16kHz mono numpy array → 16kHz output.
+
+    Automatically chunks long audio (> chunk_sec) to avoid the BLSTM in
+    MetricGAN+ hanging or OOMing on multi-minute inputs.  The model is loaded
+    once and reused across chunks; boundaries are smoothed with a 2-second
+    linear crossfade (overlap-add).
+    """
     try:
         import torch
         from speechbrain.inference.enhancement import SpectralMaskEnhancement
@@ -279,23 +291,75 @@ def apply_metricgan(audio_np: np.ndarray, sr: int, models_dir: str = "models/met
 
         # Resample to 16kHz if needed (MetricGAN+ expects 16kHz)
         audio_16k = resample_np(audio_np, sr, 16000) if sr != 16000 else audio_np
+        n         = len(audio_16k)
+        chunk_len = int(chunk_sec * 16000)
 
+        # Load the model once
         enhancer = SpectralMaskEnhancement.from_hparams(
             source="speechbrain/metricgan-plus-voicebank",
             savedir=models_dir,
             local_strategy=LocalStrategy.COPY,
         )
-        noisy   = torch.from_numpy(audio_16k.astype(np.float32)).unsqueeze(0)
-        lengths = torch.tensor([1.0])
-        with torch.no_grad():
-            enhanced = enhancer.enhance_batch(noisy, lengths)
 
-        out = enhanced.squeeze(0).cpu().numpy()
+        def _run_chunk(chunk_1d: np.ndarray) -> np.ndarray:
+            noisy   = torch.from_numpy(chunk_1d.astype(np.float32)).unsqueeze(0)
+            lengths = torch.tensor([1.0])
+            with torch.no_grad():
+                enhanced = enhancer.enhance_batch(noisy, lengths)
+            return enhanced.squeeze(0).cpu().numpy()
+
+        if n <= chunk_len:
+            out = _run_chunk(audio_16k)
+        else:
+            # ── Overlap-add chunked processing ─────────────────────────────────
+            overlap = int(2.0 * 16000)   # 2-second crossfade at each boundary
+            step    = chunk_len - overlap
+
+            starts = list(range(0, n - overlap, step))
+            if starts and starts[-1] + chunk_len < n:
+                starts.append(n - chunk_len)
+
+            n_chunks = len(starts)
+            output   = np.zeros(n, dtype=np.float32)
+            weight   = np.zeros(n, dtype=np.float32)
+
+            for i, start in enumerate(starts):
+                end     = min(start + chunk_len, n)
+                seg_len = end - start
+                chunk   = audio_16k[start:end]
+
+                logger.debug(
+                    f"MetricGAN+ chunk {i + 1}/{n_chunks} "
+                    f"[{start / 16000:.1f}s – {end / 16000:.1f}s]"
+                )
+                processed = _run_chunk(chunk)
+                if len(processed) > seg_len:
+                    processed = processed[:seg_len]
+                elif len(processed) < seg_len:
+                    processed = np.pad(processed, (0, seg_len - len(processed)))
+
+                # Linear crossfade window
+                win = np.ones(seg_len, dtype=np.float32)
+                if i > 0 and overlap > 0:
+                    fade = min(overlap, seg_len)
+                    win[:fade] = np.linspace(0.0, 1.0, fade)
+                if i < n_chunks - 1 and overlap > 0:
+                    fade = min(overlap, seg_len)
+                    win[seg_len - fade:] = np.linspace(1.0, 0.0, fade)
+
+                output[start:end] += processed * win
+                weight[start:end] += win
+
+            mask = weight > 1e-8
+            output[mask] /= weight[mask]
+            out = output
+
         del enhancer
         gc.collect()
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
         return out
+
     except Exception as exc:
         logger.warning(f"MetricGAN+ failed: {exc} — returning input unchanged.")
         return audio_np
