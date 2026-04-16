@@ -72,3 +72,5 @@ call_processor/data/model_comparison.json
 # Windows launcher scripts
 call_processor/launch_ui.vbs
 call_processor/start_ui.bat
+call_processor/checkpoints/
+call_processor/data/test_results/
