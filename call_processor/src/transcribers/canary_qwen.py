@@ -52,49 +52,35 @@ class CanaryQwenTranscriber(BaseTranscriber):
             load_exc = None
             self.model = None
 
-            # Attempt 1: NeMo 2.5+ speechlm2 SALM
+            # Canary-Qwen 2.5B requires NeMo 2.5+ speechlm2 SALM.
+            # EncDecMultiTaskModel fallback is intentionally removed — it uses
+            # a .nemo bundle format incompatible with this model's HF files.
             try:
                 from nemo.collections.speechlm2.models import SALM
                 cache_dir = self.model_dir or os.path.join(
                     os.path.dirname(os.path.abspath(__file__)), "..", "..", "models", "nemo"
                 )
                 os.makedirs(cache_dir, exist_ok=True)
-                # SALM uses HuggingFace hub internally — set HF_HOME so the
-                # downloaded files land in our models/ dir and are found on reload.
+                # SALM uses HuggingFace hub — point all cache env vars to our dir.
                 os.environ["NEMO_CACHE_DIR"] = cache_dir
                 os.environ["HF_HOME"] = cache_dir
                 os.environ["HUGGINGFACE_HUB_CACHE"] = os.path.join(cache_dir, "hub")
-                # from_pretrained has no dtype param; we cast after load (see below).
                 self.model = SALM.from_pretrained(MODEL_ID)
                 self._api = "salm"
-            except (ImportError, AttributeError, TypeError) as e:
+            except ImportError:
+                raise RuntimeError(
+                    "Canary-Qwen 2.5B requires NeMo ≥2.5 with speechlm2.\n"
+                    "Upgrade with:\n"
+                    "  pip install 'nemo_toolkit[asr]>=2.5' --upgrade"
+                )
+            except Exception as e:
                 load_exc = e
-
-            # Attempt 2: older NeMo EncDecMultiTaskModel (Canary-1B style)
-            if self.model is None:
-                try:
-                    import nemo.collections.asr as nemo_asr
-                    cache_dir = self.model_dir or os.path.join(
-                        os.path.dirname(os.path.abspath(__file__)), "..", "..", "models", "nemo"
-                    )
-                    os.makedirs(cache_dir, exist_ok=True)
-                    os.environ["NEMO_CACHE_DIR"] = cache_dir
-                    for cls_name in ("EncDecMultiTaskModel", "ASRModel"):
-                        try:
-                            cls = getattr(nemo_asr.models, cls_name)
-                            self.model = cls.from_pretrained(model_name=MODEL_ID)
-                            self._api = "multitask"
-                            break
-                        except (TypeError, AttributeError) as e:
-                            load_exc = e
-                            continue
-                except ImportError as e:
-                    load_exc = e
 
             if self.model is None:
                 raise RuntimeError(
-                    f"Could not load Canary-Qwen via any NeMo API: {load_exc}\n"
-                    "Ensure NeMo ≥2.5 is installed: pip install 'nemo_toolkit[asr]'"
+                    f"Could not load Canary-Qwen: {load_exc}\n"
+                    "Ensure NeMo ≥2.5 with speechlm2:\n"
+                    "  pip install 'nemo_toolkit[asr]>=2.5' --upgrade"
                 )
         finally:
             _torch.cuda.is_available = _orig_is_avail
