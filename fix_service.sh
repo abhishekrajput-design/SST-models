@@ -2,12 +2,14 @@
 # fix_service.sh — Update callproc.service to use sst-models conda env
 set -e
 
-# Find sst-models Python
+# Find callproc Python (preferred — correct NCCL/PyTorch versions)
+# sst-models has PyTorch/NCCL mismatch on this server
 PYTHON=""
 for p in \
-    "/home/ubuntu/anaconda3/envs/sst-models/bin/python" \
+    "/opt/miniconda3/envs/callproc/bin/python" \
+    "/home/ubuntu/anaconda3/envs/callproc/bin/python" \
     "/opt/miniconda3/envs/sst-models/bin/python" \
-    "$(conda info --base 2>/dev/null)/envs/sst-models/bin/python"; do
+    "/home/ubuntu/anaconda3/envs/sst-models/bin/python"; do
     if [ -x "$p" ]; then
         PYTHON="$p"
         break

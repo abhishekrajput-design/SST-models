@@ -16,7 +16,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="$REPO_DIR/call_processor"
-CONDA_ENV="sst-models"
+CONDA_ENV="callproc"
 MINICONDA_DIR="/opt/miniconda3"
 LOG_FILE="/var/log/callproc/server.log"
 PORT=8080
