@@ -59,7 +59,11 @@ class CanaryQwenTranscriber(BaseTranscriber):
                     os.path.dirname(os.path.abspath(__file__)), "..", "..", "models", "nemo"
                 )
                 os.makedirs(cache_dir, exist_ok=True)
+                # SALM uses HuggingFace hub internally — set HF_HOME so the
+                # downloaded files land in our models/ dir and are found on reload.
                 os.environ["NEMO_CACHE_DIR"] = cache_dir
+                os.environ["HF_HOME"] = cache_dir
+                os.environ["HUGGINGFACE_HUB_CACHE"] = os.path.join(cache_dir, "hub")
                 # from_pretrained has no dtype param; we cast after load (see below).
                 self.model = SALM.from_pretrained(MODEL_ID)
                 self._api = "salm"
