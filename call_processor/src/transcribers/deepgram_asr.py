@@ -35,51 +35,56 @@ class DeepgramTranscriber(BaseTranscriber):
             )
         self.model = True  # sentinel so load() is skipped on repeat calls
 
+    def _call_api(self, audio_bytes: bytes, mime: str, extra_params: dict) -> dict:
+        import urllib.request, urllib.parse, json
+        params = urllib.parse.urlencode(extra_params)
+        req = urllib.request.Request(
+            f"{API_URL}?{params}", data=audio_bytes,
+            headers={"Authorization": f"Token {self.api_key}", "Content-Type": mime},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=300) as resp:
+            return json.loads(resp.read().decode())
+
     def transcribe(self, audio_path: str, language: str = "en") -> List[Dict[str, Any]]:
         self.load()
-        import urllib.request, urllib.parse, json
-
-        params = urllib.parse.urlencode({
-            "model":        self.dg_model,
-            "language":     language,
-            "diarize":      "true",
-            "utterances":   "true",
-            "smart_format": "true",
-            "punctuate":    "true",
-        })
-        url = f"{API_URL}?{params}"
 
         with open(audio_path, "rb") as f:
             audio_bytes = f.read()
-
-        # Determine Content-Type from extension
         ext = os.path.splitext(audio_path)[1].lower().lstrip(".")
         mime = {"mp3": "audio/mpeg", "wav": "audio/wav", "m4a": "audio/mp4",
                 "ogg": "audio/ogg", "flac": "audio/flac"}.get(ext, "audio/mpeg")
 
-        req = urllib.request.Request(
-            url, data=audio_bytes,
-            headers={"Authorization": f"Token {self.api_key}", "Content-Type": mime},
-            method="POST",
-        )
+        base_params = {"model": self.dg_model, "language": language,
+                       "smart_format": "true", "punctuate": "true"}
 
         t0 = time.time()
-        with urllib.request.urlopen(req, timeout=300) as resp:
-            result = json.loads(resp.read().decode())
-        elapsed = time.time() - t0
+        # First attempt: full diarization + utterances
+        result = self._call_api(audio_bytes, mime, {
+            **base_params, "diarize": "true", "utterances": "true"
+        })
+        res = result.get("results") or {}
+        utterances = res.get("utterances") or []
+        alt0 = ((res.get("channels") or [{}])[0].get("alternatives") or [{}])[0]
+        words = alt0.get("words") or []
 
-        # Debug: log top-level response structure
-        res_keys = list((result.get("results") or {}).keys())
-        ch0 = ((result.get("results") or {}).get("channels") or [{}])[0]
-        alt0 = (ch0.get("alternatives") or [{}])[0]
-        word_count = len(alt0.get("words") or [])
-        utt_count  = len((result.get("results") or {}).get("utterances") or [])
-        print(f"  [Deepgram/{self.dg_model}] API response keys={res_keys} "
-              f"utterances={utt_count} words={word_count} "
+        # Fallback: some nova-2 variants return empty with diarize=true on
+        # heavily processed audio. Retry without diarization.
+        if not utterances and not words:
+            print(f"  [Deepgram/{self.dg_model}] 0 utterances/words — retrying without diarize")
+            result = self._call_api(audio_bytes, mime, base_params)
+            res = result.get("results") or {}
+            utterances = res.get("utterances") or []
+            alt0 = ((res.get("channels") or [{}])[0].get("alternatives") or [{}])[0]
+            words = alt0.get("words") or []
+
+        # Log response shape
+        utt_count  = len(utterances)
+        word_count = len(words)
+        print(f"  [Deepgram/{self.dg_model}] utterances={utt_count} words={word_count} "
               f"transcript_len={len(alt0.get('transcript',''))}")
 
-        res      = result.get("results") or {}
-        utterances = res.get("utterances") or []
+        elapsed = time.time() - t0
         out: List[Dict[str, Any]] = []
 
         if utterances:

@@ -25,6 +25,12 @@ except Exception as _e:
     print(f"[transcribers] canary_qwen unavailable: {_e}")
     CanaryQwenTranscriber = None  # type: ignore
 
+try:
+    from .groq_whisper import GroqWhisperTranscriber
+except Exception as _e:
+    print(f"[transcribers] groq_whisper unavailable: {_e}")
+    GroqWhisperTranscriber = None  # type: ignore
+
 # Aliases — the UI dropdown values map to these keys
 TRANSCRIBERS = {
     # Whisper family — all routed through faster-whisper wrapper
@@ -44,6 +50,10 @@ TRANSCRIBERS = {
     "deepgram-nova-3":           lambda **kw: DeepgramTranscriber(model="nova-3", **kw),
     "deepgram-nova-2-phonecall": lambda **kw: DeepgramTranscriber(model="nova-2-phonecall", **kw),
     "deepgram-nova-2-meeting":   lambda **kw: DeepgramTranscriber(model="nova-2-meeting", **kw),
+    # Groq cloud Whisper (ultra-fast, no GPU needed)
+    **({"groq-whisper-large-v3-turbo": lambda **kw: GroqWhisperTranscriber(model="whisper-large-v3-turbo", **kw),
+        "groq-whisper-large-v3":       lambda **kw: GroqWhisperTranscriber(model="whisper-large-v3", **kw),
+       } if GroqWhisperTranscriber else {}),
 }
 
 DEFAULT = "whisper-large-v3-turbo"
@@ -71,6 +81,7 @@ __all__ = [
     "CohereTranscriber",
     "ParakeetV3Transcriber",
     "CanaryQwenTranscriber",
+    "GroqWhisperTranscriber",
     "Qwen3AsrTranscriber",
     "VibeVoiceAsrTranscriber",
     "DeepgramTranscriber",

@@ -689,13 +689,15 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         # /api/benchmark
         if path == "/api/benchmark":
             BENCHMARK = [
-                {"model": "deepgram-nova-3",           "label": "Deepgram Nova-3",          "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Best accuracy + diarization",  "status": "ok"},
-                {"model": "deepgram-nova-2-phonecall", "label": "Deepgram Nova-2 Phone",    "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Optimised for desk/call audio", "status": "ok"},
-                {"model": "deepgram-nova-2-meeting",   "label": "Deepgram Nova-2 Meeting",  "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Multi-speaker meetings",        "status": "ok"},
-                {"model": "whisper-large-v3-turbo",    "label": "Whisper Large-v3-Turbo",   "type": "Local GPU",  "speed_s": 52,   "segments": 555,  "notes": "Best local model",             "status": "ok"},
-                {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local GPU",  "speed_s": 94,   "segments": 300,  "notes": "Fast, English only",              "status": "ok"},
-                {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 300,  "segments": None, "notes": "Best WER on leaderboard (5.42%)",  "status": "ok"},
-                {"model": "canary-qwen-2.5b",          "label": "NVIDIA Canary-Qwen 2.5B",  "type": "Local GPU",  "speed_s": None, "segments": None, "notes": "Multilingual, NeMo SALM ~5 GB",    "status": "ok"},
+                # rank = relative quality score 1-10 for sorting/display
+                {"model": "deepgram-nova-3",              "label": "Deepgram Nova-3",             "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Best accuracy + diarization",       "rank": 1,  "wer": "~7%",   "status": "ok"},
+                {"model": "groq-whisper-large-v3-turbo",  "label": "Groq Whisper v3-Turbo",       "type": "Cloud API",  "speed_s": 8,    "segments": None, "notes": "Ultra-fast cloud Whisper, ~5-10s",   "rank": 2,  "wer": "~8.4%", "status": "ok"},
+                {"model": "whisper-large-v3-turbo",       "label": "Whisper Large-v3-Turbo",      "type": "Local GPU",  "speed_s": 52,   "segments": 555,  "notes": "Best local model, word timestamps",  "rank": 3,  "wer": "~8.4%", "status": "ok"},
+                {"model": "parakeet-tdt-0.6b-v3",         "label": "NVIDIA Parakeet TDT v3",      "type": "Local GPU",  "speed_s": 94,   "segments": 300,  "notes": "Fastest local, English only",       "rank": 4,  "wer": "~5.5%", "status": "ok"},
+                {"model": "cohere-transcribe-03-2026",    "label": "Cohere Transcribe 03-2026",   "type": "Local GPU",  "speed_s": 300,  "segments": None, "notes": "Best WER on leaderboard",           "rank": 5,  "wer": "5.42%", "status": "ok"},
+                {"model": "canary-qwen-2.5b",             "label": "NVIDIA Canary-Qwen 2.5B",     "type": "Local GPU",  "speed_s": 1500, "segments": None, "notes": "Multilingual, NeMo SALM",           "rank": 6,  "wer": "~6%",   "status": "ok"},
+                {"model": "deepgram-nova-2-phonecall",    "label": "Deepgram Nova-2 Phone",       "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Optimised for phone call audio",    "rank": 7,  "wer": "~9%",   "status": "ok"},
+                {"model": "deepgram-nova-2-meeting",      "label": "Deepgram Nova-2 Meeting",     "type": "Cloud API",  "speed_s": 5,    "segments": None, "notes": "Multi-speaker meetings",            "rank": 8,  "wer": "~9%",   "status": "ok"},
             ]
             # Merge in any live data from model_comparison.json
             mc_path = os.path.join("data", "model_comparison.json")
