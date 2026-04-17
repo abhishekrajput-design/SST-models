@@ -56,7 +56,7 @@ class GroqWhisperTranscriber(BaseTranscriber):
 
     def _transcribe_chunk(self, chunk_path: str, offset_s: float,
                           language: str) -> List[Dict[str, Any]]:
-        import urllib.request, json
+        import urllib.request, urllib.error, json
 
         with open(chunk_path, "rb") as f:
             audio_bytes = f.read()
@@ -92,8 +92,12 @@ class GroqWhisperTranscriber(BaseTranscriber):
             method="POST",
         )
 
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            result = json.loads(resp.read().decode())
+        try:
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                result = json.loads(resp.read().decode())
+        except urllib.error.HTTPError as e:
+            body = e.read().decode(errors="replace")
+            raise RuntimeError(f"Groq API {e.code}: {body[:300]}")
 
         out = []
         for seg in result.get("segments") or []:
