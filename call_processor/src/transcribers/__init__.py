@@ -31,15 +31,22 @@ except Exception as _e:
     print(f"[transcribers] groq_whisper unavailable: {_e}")
     GroqWhisperTranscriber = None  # type: ignore
 
+try:
+    from .assemblyai_asr import AssemblyAITranscriber
+except Exception as _e:
+    print(f"[transcribers] assemblyai_asr unavailable: {_e}")
+    AssemblyAITranscriber = None  # type: ignore
+
 # Aliases — the UI dropdown values map to these keys
 TRANSCRIBERS = {
     # Whisper family — all routed through faster-whisper wrapper
-    "whisper-large-v3-turbo": WhisperTurboTranscriber,
-    "whisper-large-v3":       WhisperTurboTranscriber,
-    "large-v3-turbo":         WhisperTurboTranscriber,
-    "large-v3":               WhisperTurboTranscriber,
-    "distil-large-v3":        WhisperTurboTranscriber,
-    "distil-large-v3.5":      WhisperTurboTranscriber,
+    "whisper-large-v3-turbo":     WhisperTurboTranscriber,
+    "whisper-large-v3":           WhisperTurboTranscriber,
+    "large-v3-turbo":             WhisperTurboTranscriber,
+    "large-v3":                   WhisperTurboTranscriber,
+    "distil-large-v3":            WhisperTurboTranscriber,
+    "distil-large-v3.5":          WhisperTurboTranscriber,
+    "distil-whisper-large-v3.5":  WhisperTurboTranscriber,  # friendly alias
     # Non-Whisper local backends
     "cohere-transcribe-03-2026": CohereTranscriber,
     "parakeet-tdt-0.6b-v3":      ParakeetV3Transcriber,
@@ -54,6 +61,8 @@ TRANSCRIBERS = {
     **({"groq-whisper-large-v3-turbo": lambda **kw: GroqWhisperTranscriber(model="whisper-large-v3-turbo", **kw),
         "groq-whisper-large-v3":       lambda **kw: GroqWhisperTranscriber(model="whisper-large-v3", **kw),
        } if GroqWhisperTranscriber else {}),
+    # AssemblyAI Universal-2 (cloud, best for call-center audio)
+    **({"assemblyai-universal-2": AssemblyAITranscriber} if AssemblyAITranscriber else {}),
 }
 
 DEFAULT = "whisper-large-v3-turbo"
@@ -67,7 +76,9 @@ def get_transcriber(name: str, device: str = "cuda", model_dir: str | None = Non
     if factory is None:
         raise ValueError(f"Unknown transcriber '{name}'. Options: {list(TRANSCRIBERS)}")
     if factory is WhisperTurboTranscriber:
-        return factory(device=device, model_dir=model_dir, model_size=name, **kwargs)
+        # Normalize friendly aliases before passing to model_size
+        _size = "distil-large-v3.5" if name == "distil-whisper-large-v3.5" else name
+        return factory(device=device, model_dir=model_dir, model_size=_size, **kwargs)
     # Lambda factories (e.g. Deepgram variants) and plain classes both work here
     return factory(device=device, model_dir=model_dir, **kwargs)
 
@@ -82,6 +93,7 @@ __all__ = [
     "ParakeetV3Transcriber",
     "CanaryQwenTranscriber",
     "GroqWhisperTranscriber",
+    "AssemblyAITranscriber",
     "Qwen3AsrTranscriber",
     "VibeVoiceAsrTranscriber",
     "DeepgramTranscriber",

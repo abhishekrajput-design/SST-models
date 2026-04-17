@@ -19,6 +19,7 @@ _RAW_DIR     = os.path.join(_ROOT, "call_processor", "data", "raw_calls")
 MODELS = [
     "whisper-large-v3-turbo",
     "deepgram-nova-3",
+    "groq-whisper-large-v3-turbo",
     "deepgram-nova-2-phonecall",
     "deepgram-nova-2-meeting",
     "parakeet-tdt-0.6b-v3",
