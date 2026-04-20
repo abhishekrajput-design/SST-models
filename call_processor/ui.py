@@ -336,14 +336,22 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             segments = diarize_segments_ecapa(segments, norm_wav, num_speakers=2)
             diarization_applied = True
 
-            # ─── Merge consecutive same-speaker segments (gap < 1.0s) ───
-            # Whisper produces tiny chunks; ground truth is one phrase per
-            # speaker turn. Conservative gap to avoid merging real turn changes.
+            # ─── Merge consecutive same-speaker segments (gap < 0.4s) ───
+            # Tighter gap preserves natural speaker turn boundaries. When a
+            # speaker pauses >0.4s, it usually means a real turn boundary even
+            # if diarization puts it on the same speaker. This stops short
+            # interjections ("Yeah", "Sorry?") from being absorbed into long
+            # monologues of the opposite speaker when diarization mis-labels.
+            MERGE_GAP = 0.4
+            # Also cap merged duration so single turns don't become multi-
+            # minute blocks (ground truth turns are rarely >30s long).
+            MAX_TURN_DUR = 30.0
             merged = []
             for seg in segments:
                 if merged and merged[-1]["speaker"] == seg["speaker"]:
                     gap = float(seg["start"]) - float(merged[-1]["end"])
-                    if gap < 1.0:
+                    prev_dur = float(merged[-1]["end"]) - float(merged[-1]["start"])
+                    if gap < MERGE_GAP and prev_dur < MAX_TURN_DUR:
                         merged[-1]["end"] = seg["end"]
                         merged[-1]["text"] = (merged[-1]["text"] + " " + seg["text"]).strip()
                         pc = merged[-1].get("confidence") or 0

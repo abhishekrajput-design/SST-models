@@ -21,7 +21,9 @@ import torch
 logger = logging.getLogger(__name__)
 
 TARGET_SR = 16000
-MIN_SEG_SAMPLES = int(TARGET_SR * 0.3)   # need ≥ 300 ms for a reliable embedding
+MIN_SEG_SAMPLES = int(TARGET_SR * 0.5)   # need ≥ 500 ms for a reliable embedding
+# Shorter segments get their speaker from nearest-neighbor rather than
+# contributing a noisy embedding to the K-Means centroid.
 
 
 def _load_model(model_dir: str = "./models/spkrec-ecapa"):
