@@ -334,10 +334,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             diar = Diarizer(hf_token=HF_TOKEN, device="cuda")
             turns = diar.diarize(norm_wav)
             if turns:
-                # Assign each transcript segment the speaker with max time overlap
+                # Assign each transcript segment the speaker with max time overlap.
+                # If no overlap found, mark as UNKNOWN.
                 for seg in segments:
                     s_start, s_end = float(seg["start"]), float(seg["end"])
-                    best_spk, best_overlap = "SPEAKER_00", 0.0
+                    best_spk, best_overlap = "UNKNOWN", 0.0
                     for t in turns:
                         overlap = max(0.0, min(s_end, t["end"]) - max(s_start, t["start"]))
                         if overlap > best_overlap:
@@ -360,6 +361,25 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         except Exception as e:
             print(f"[UI] Diarization failed: {e}")
 
+    # Build transcription_json in the requested format:
+    #   [{start: "HH:MM:SS.mmm", end: "...", speaker: "SPEAKER_XX"|"UNKNOWN",
+    #     phrase: "...", avg_score: float|null}, ...]
+    def _fmt_ts(s: float) -> str:
+        h = int(s // 3600); m = int((s % 3600) // 60)
+        sec = s - (h*3600 + m*60)
+        return f"{h:02d}:{m:02d}:{sec:06.3f}"
+
+    transcription_json = []
+    for seg in segments:
+        conf = seg.get("confidence", 0.0)
+        transcription_json.append({
+            "start":     _fmt_ts(float(seg["start"])),
+            "end":       _fmt_ts(float(seg["end"])),
+            "speaker":   seg.get("speaker", "UNKNOWN"),
+            "phrase":    seg.get("text", "").strip(),
+            "avg_score": round(float(conf), 3) if conf else None,
+        })
+
     note_suffix = " + pyannote diarization" if diarization_applied else " (no diarization)"
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
@@ -367,7 +387,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "processed_at":             datetime.utcnow().isoformat() + "Z",
         "processing_time_seconds":  elapsed,
         "total_segments":           len(segments),
-        "segments":                 segments,
+        "segments":                 segments,               # legacy UI format
+        "transcription_json":       transcription_json,     # new requested format
         "diarization":              "pyannote" if diarization_applied else "none",
         "note": f"Transcribed with {whisper_model}{note_suffix}",
     }
