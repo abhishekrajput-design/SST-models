@@ -34,28 +34,14 @@ PORT = 8080
 PROCESSED_DIR = "data/processed"
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 
-# FFmpeg filter: aggressive desk-recording voice enhancement chain
-# 1. highpass 100 Hz   → remove AC rumble / desk thumps
-# 2. lowpass 7.5 kHz   → remove hiss (voice sits <6 kHz anyway)
-# 3. afftdn  nr=25     → aggressive spectral noise reduction (−25 dB floor)
-# 4. EQ −4 dB @ 300 Hz → tame muddiness
-# 5. EQ +5 dB @ 3 kHz  → voice presence / intelligibility
-# 6. EQ +4 dB @ 5 kHz  → consonant clarity ("s", "t", "sh")
-# 7. compand           → heavy compression = consistent perceived loudness
-# 8. volume 6x         → loud boost (≈ +15 dB)
-# 9. loudnorm −14 LUFS → broadcast-loud target (most streaming platforms)
-# 10. alimiter         → final peak limiter so nothing clips
+# FFmpeg filter: LIGHT pre-processing only.
+# DeepFilterNet3 does the heavy lifting (neural denoising) — aggressive FFmpeg
+# denoising here (afftdn + 6x volume + compand) was causing Whisper to
+# hallucinate loops like "You know what I mean?" on over-processed audio.
+# Keep it minimal: gentle highpass + loudness normalisation.
 AUDIO_FILTER = (
-    "highpass=f=100,"
-    "lowpass=f=7500,"
-    "afftdn=nr=25:nf=-25:nt=w,"
-    "equalizer=f=300:t=q:w=2:g=-4,"
-    "equalizer=f=3000:t=q:w=1.5:g=5,"
-    "equalizer=f=5000:t=q:w=1.5:g=4,"
-    "compand=attacks=0:points=-80/-80|-40/-20|-20/-10|-5/-5|0/-3:soft-knee=6,"
-    "volume=6.0,"
-    "loudnorm=I=-14:TP=-1.5:LRA=5,"
-    "alimiter=level_in=1:level_out=0.97:limit=0.97"
+    "highpass=f=80,"
+    "loudnorm=I=-20:TP=-1:LRA=7"
 )
 
 # ── Pipeline status (shared) ──────────────────────────────────────────────────
@@ -334,6 +320,47 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception:
         pass
 
+    # ── Diarization (pyannote) for models without built-in speaker labels ──
+    # Deepgram and AssemblyAI already return speaker labels — skip them.
+    # All other models (Whisper, Parakeet, Cohere, Distil-Whisper) return
+    # SPEAKER_00 for everything; pyannote assigns real speaker labels.
+    diarization_applied = False
+    _has_own_diar = whisper_model.startswith("deepgram-") or whisper_model.startswith("assemblyai-")
+    if not _has_own_diar and HF_TOKEN and segments:
+        _set_status(3, "Diarization", "Running pyannote speaker diarization...")
+        print(f"[UI] Diarizing with pyannote ({len(segments)} segments)...")
+        try:
+            from src.diarization import Diarizer
+            diar = Diarizer(hf_token=HF_TOKEN, device="cuda")
+            turns = diar.diarize(norm_wav)
+            if turns:
+                # Assign each transcript segment the speaker with max time overlap
+                for seg in segments:
+                    s_start, s_end = float(seg["start"]), float(seg["end"])
+                    best_spk, best_overlap = "SPEAKER_00", 0.0
+                    for t in turns:
+                        overlap = max(0.0, min(s_end, t["end"]) - max(s_start, t["start"]))
+                        if overlap > best_overlap:
+                            best_overlap = overlap
+                            best_spk = t["speaker"]
+                    seg["speaker"] = best_spk
+                    seg["identified_speaker"] = best_spk
+                diarization_applied = True
+                unique = len(set(s["speaker"] for s in segments))
+                print(f"[UI] Diarization done: {unique} speakers across {len(segments)} segs")
+            # Free pyannote memory
+            try:
+                import torch, gc as _gc
+                del diar
+                _gc.collect()
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+            except Exception:
+                pass
+        except Exception as e:
+            print(f"[UI] Diarization failed: {e}")
+
+    note_suffix = " + pyannote diarization" if diarization_applied else " (no diarization)"
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
         "model":                    whisper_model,
@@ -341,7 +368,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "processing_time_seconds":  elapsed,
         "total_segments":           len(segments),
         "segments":                 segments,
-        "note": f"Transcribed with {whisper_model} (no diarization unless model provides it)",
+        "diarization":              "pyannote" if diarization_applied else "none",
+        "note": f"Transcribed with {whisper_model}{note_suffix}",
     }
     os.makedirs(out_dir, exist_ok=True)  # re-create if deleted during long transcription
     result_path = os.path.join(out_dir, "result.json")
@@ -400,10 +428,11 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             print("[UI] Skipping enhancement: file already starts with 'enhanced_'.")
             paths["ffmpeg"] = upload_path.replace("\\", "/")
             enhancement_paths["ffmpeg"] = upload_path.replace("\\", "/")
+            pipeline_audio = paths["ffmpeg"]
         else:
-            # ── 0a FFmpeg (full audio, no clip — used by pipeline) ───────────
-            _set_status(0, "Enhancing Audio", "[1/4] FFmpeg · highpass · afftdn · 3× volume...")
-            print("[UI] Stage 0a: FFmpeg...")
+            # ── 0a FFmpeg — LIGHT format normalisation (highpass + loudnorm) ─
+            _set_status(0, "Enhancing Audio", "[1/2] FFmpeg · format normalisation...")
+            print("[UI] Stage 0a: FFmpeg (light)...")
             try:
                 _enhance_ffmpeg(upload_path, paths["ffmpeg"], max_seconds=None)
                 enhancement_paths["ffmpeg"] = paths["ffmpeg"]
@@ -413,44 +442,21 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                 paths["ffmpeg"] = upload_path
                 enhancement_paths["ffmpeg"] = upload_path.replace("\\", "/")
 
-            # ── 0b noisereduce (5 min preview) ───────────────────────────────
-            _set_status(0, "Enhancing Audio", "[2/4] noisereduce · spectral gating (5-min)...")
-            print("[UI] Stage 0b: noisereduce...")
+            # ── 0b DeepFilterNet3 — neural denoising (full audio) ────────────
+            # Replaces noisereduce + angelina + MetricGAN+ chain which was
+            # over-processing the audio and causing Whisper hallucinations.
+            _set_status(0, "Enhancing Audio", "[2/2] DeepFilterNet3 · neural denoising...")
+            print("[UI] Stage 0b: DeepFilterNet3...")
+            pipeline_audio = paths["ffmpeg"]   # fallback
             try:
-                _enhance_noisereduce(upload_path, paths["noisereduce"], max_seconds=300)
-                enhancement_paths["noisereduce"] = paths["noisereduce"]
-                print("[UI] noisereduce done.")
-            except ImportError:
-                print("[UI] noisereduce not installed.")
-            except Exception as e:
-                print(f"[UI] noisereduce failed: {e}")
-
-            # ── 0c angelina desk-recording cleanup (5 min preview) ───────────
-            _set_status(0, "Enhancing Audio", "[3/4] angelina · 10-stage desk-recording cleanup (5-min)...")
-            print("[UI] Stage 0c: angelina cleanup...")
-            try:
-                _enhance_angelina(upload_path, paths["deepfilter"], max_seconds=300)
+                _enhance_deepfilternet(paths["ffmpeg"], paths["deepfilter"], max_seconds=None)
                 enhancement_paths["deepfilter"] = paths["deepfilter"]
-                print("[UI] angelina done.")
+                pipeline_audio = paths["deepfilter"]
+                print("[UI] DeepFilterNet3 done.")
             except ImportError:
-                print("[UI] librosa not installed — skipping angelina.")
+                print("[UI] deepfilternet not installed — using FFmpeg output.")
             except Exception as e:
-                print(f"[UI] angelina failed: {e}")
-
-            # ── 0d SpeechBrain MetricGAN+ (5 min preview) ────────────────────
-            _set_status(0, "Enhancing Audio", "[4/4] SpeechBrain MetricGAN+ · PESQ-optimised (5-min)...")
-            print("[UI] Stage 0d: SpeechBrain MetricGAN+...")
-            try:
-                _enhance_metricgan(upload_path, paths["metricgan"], max_seconds=300)
-                enhancement_paths["metricgan"] = paths["metricgan"]
-                print("[UI] MetricGAN+ done.")
-            except ImportError:
-                print("[UI] speechbrain not installed.")
-            except Exception as e:
-                print(f"[UI] MetricGAN+ failed: {e}")
-
-        # ── Stages 1-3: AI pipeline (or transcription-only fallback) ────────
-        pipeline_audio = paths["ffmpeg"]
+                print(f"[UI] DeepFilterNet3 failed: {e} — using FFmpeg output.")
 
         # run_e2e.py (pyannote diarization) only used when enrolled agent
         # embeddings exist. Without enrollment, all models use inline path.
