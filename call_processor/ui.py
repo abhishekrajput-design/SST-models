@@ -326,80 +326,51 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     # SPEAKER_00 for everything; pyannote assigns real speaker labels.
     diarization_applied = False
     _has_own_diar = whisper_model.startswith("deepgram-") or whisper_model.startswith("assemblyai-")
-    if not _has_own_diar and HF_TOKEN and segments:
-        _set_status(3, "Diarization", "Running pyannote speaker diarization...")
-        print(f"[UI] Diarizing with pyannote ({len(segments)} segments)...")
+    if not _has_own_diar and segments:
+        _set_status(3, "Diarization", "Running ECAPA speaker diarization (per-segment)...")
+        print(f"[UI] Diarizing with ECAPA ({len(segments)} segments)...")
         try:
-            from src.diarization import Diarizer
-            diar = Diarizer(hf_token=HF_TOKEN, device="cuda")
-            # Call-center audio is typically 2 speakers (agent + customer).
-            # Force num_speakers=2 so pyannote doesn't over-cluster.
-            turns = diar.diarize(norm_wav, num_speakers=2)
-            if turns:
-                # Assign each transcript segment the speaker with max time overlap.
-                for seg in segments:
-                    s_start, s_end = float(seg["start"]), float(seg["end"])
-                    best_spk, best_overlap = None, 0.0
-                    for t in turns:
-                        overlap = max(0.0, min(s_end, t["end"]) - max(s_start, t["start"]))
-                        if overlap > best_overlap:
-                            best_overlap = overlap
-                            best_spk = t["speaker"]
-                    # If no overlap, find nearest turn by time distance
-                    if best_spk is None:
-                        best_dist = float("inf")
-                        for t in turns:
-                            dist = min(abs(s_start - t["end"]), abs(s_end - t["start"]))
-                            if dist < best_dist:
-                                best_dist = dist
-                                best_spk = t["speaker"]
-                    seg["speaker"] = best_spk or "SPEAKER_00"
-                    seg["identified_speaker"] = seg["speaker"]
-                diarization_applied = True
+            from src.diar_ecapa import diarize_segments_ecapa
+            # Per-segment ECAPA embedding + K-Means(k=2) — more accurate than
+            # pyannote on short call-center utterances (Hello/Okay/Yeah)
+            segments = diarize_segments_ecapa(segments, norm_wav, num_speakers=2)
+            diarization_applied = True
 
-                # ─── Post-processing: merge consecutive same-speaker segments ───
-                # Whisper produces many tiny chunks; ground truth is one phrase
-                # per speaker turn. Merge adjacent segments of the same speaker
-                # when the gap is < 2.0s.
-                merged = []
-                for seg in segments:
-                    if merged and merged[-1]["speaker"] == seg["speaker"]:
-                        gap = float(seg["start"]) - float(merged[-1]["end"])
-                        if gap < 2.0:
-                            merged[-1]["end"] = seg["end"]
-                            merged[-1]["text"] = (merged[-1]["text"] + " " + seg["text"]).strip()
-                            pc = merged[-1].get("confidence") or 0
-                            cc = seg.get("confidence") or 0
-                            if pc and cc:
-                                merged[-1]["confidence"] = round((pc + cc) / 2, 3)
-                            continue
-                    merged.append(dict(seg))
-                print(f"[UI] Merged {len(segments)} -> {len(merged)} segments")
-                segments = merged
+            # ─── Merge consecutive same-speaker segments (gap < 1.0s) ───
+            # Whisper produces tiny chunks; ground truth is one phrase per
+            # speaker turn. Conservative gap to avoid merging real turn changes.
+            merged = []
+            for seg in segments:
+                if merged and merged[-1]["speaker"] == seg["speaker"]:
+                    gap = float(seg["start"]) - float(merged[-1]["end"])
+                    if gap < 1.0:
+                        merged[-1]["end"] = seg["end"]
+                        merged[-1]["text"] = (merged[-1]["text"] + " " + seg["text"]).strip()
+                        pc = merged[-1].get("confidence") or 0
+                        cc = seg.get("confidence") or 0
+                        if pc and cc:
+                            merged[-1]["confidence"] = round((pc + cc) / 2, 3)
+                        continue
+                merged.append(dict(seg))
+            print(f"[UI] Merged {len(segments)} -> {len(merged)} segments")
+            segments = merged
 
-                # ─── Rename SPEAKER_XX → Speaker A/B by first appearance ───
-                letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                order = {}
-                for seg in segments:
-                    spk = seg["speaker"]
-                    if spk not in order:
-                        order[spk] = f"Speaker {letters[len(order)]}"
-                for seg in segments:
-                    seg["speaker"] = order[seg["speaker"]]
-                    seg["identified_speaker"] = seg["speaker"]
-                unique = len(set(s["speaker"] for s in segments))
-                print(f"[UI] Diarization done: {unique} speakers across {len(segments)} segs")
-            # Free pyannote memory
-            try:
-                import torch, gc as _gc
-                del diar
-                _gc.collect()
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-            except Exception:
-                pass
+            # ─── Rename SPEAKER_XX → Speaker A/B by first appearance ───
+            letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            order = {}
+            for seg in segments:
+                spk = seg["speaker"]
+                if spk not in order:
+                    order[spk] = f"Speaker {letters[len(order)]}"
+            for seg in segments:
+                seg["speaker"] = order[seg["speaker"]]
+                seg["identified_speaker"] = seg["speaker"]
+            unique = len(set(s["speaker"] for s in segments))
+            print(f"[UI] Diarization done: {unique} speakers across {len(segments)} segs")
         except Exception as e:
-            print(f"[UI] Diarization failed: {e}")
+            import traceback
+            print(f"[UI] ECAPA diarization failed: {e}")
+            traceback.print_exc()
 
     # Build transcription_json in the requested format:
     #   [{start: "HH:MM:SS.mmm", end: "...", speaker: "SPEAKER_XX"|"UNKNOWN",
