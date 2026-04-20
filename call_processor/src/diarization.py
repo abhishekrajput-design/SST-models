@@ -133,25 +133,32 @@ class Diarizer:
         waveform = torch.from_numpy(waveform_np.T).float()
         return waveform, sample_rate
 
-    def diarize(self, audio_path: str) -> List[Dict]:
+    def diarize(self, audio_path: str, num_speakers: Optional[int] = None,
+                min_speakers: Optional[int] = None, max_speakers: Optional[int] = None) -> List[Dict]:
         """
         Run diarization on an audio file.
 
         Args:
             audio_path: Path to audio file.
+            num_speakers: If known (e.g. 2 for typical call), force exact count.
+            min_speakers / max_speakers: bounds if not exact.
 
         Returns:
             List of segments: [{"start": float, "end": float, "speaker": str}, ...]
         """
         self.load_model()
 
-        logger.info(f"Diarizing: {audio_path}")
+        logger.info(f"Diarizing: {audio_path}  num_speakers={num_speakers}")
         waveform, sample_rate = self._load_waveform(audio_path)
+        kwargs = {}
+        if num_speakers is not None:
+            kwargs["num_speakers"] = num_speakers
+        else:
+            if min_speakers is not None: kwargs["min_speakers"] = min_speakers
+            if max_speakers is not None: kwargs["max_speakers"] = max_speakers
         diarization = self.pipeline(
-            {
-                "waveform": waveform,
-                "sample_rate": sample_rate,
-            }
+            {"waveform": waveform, "sample_rate": sample_rate},
+            **kwargs,
         )
         if hasattr(diarization, "speaker_diarization"):
             diarization = diarization.speaker_diarization

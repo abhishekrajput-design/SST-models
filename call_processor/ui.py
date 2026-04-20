@@ -332,21 +332,61 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         try:
             from src.diarization import Diarizer
             diar = Diarizer(hf_token=HF_TOKEN, device="cuda")
-            turns = diar.diarize(norm_wav)
+            # Call-center audio is typically 2 speakers (agent + customer).
+            # Force num_speakers=2 so pyannote doesn't over-cluster.
+            turns = diar.diarize(norm_wav, num_speakers=2)
             if turns:
                 # Assign each transcript segment the speaker with max time overlap.
-                # If no overlap found, mark as UNKNOWN.
                 for seg in segments:
                     s_start, s_end = float(seg["start"]), float(seg["end"])
-                    best_spk, best_overlap = "UNKNOWN", 0.0
+                    best_spk, best_overlap = None, 0.0
                     for t in turns:
                         overlap = max(0.0, min(s_end, t["end"]) - max(s_start, t["start"]))
                         if overlap > best_overlap:
                             best_overlap = overlap
                             best_spk = t["speaker"]
-                    seg["speaker"] = best_spk
-                    seg["identified_speaker"] = best_spk
+                    # If no overlap, find nearest turn by time distance
+                    if best_spk is None:
+                        best_dist = float("inf")
+                        for t in turns:
+                            dist = min(abs(s_start - t["end"]), abs(s_end - t["start"]))
+                            if dist < best_dist:
+                                best_dist = dist
+                                best_spk = t["speaker"]
+                    seg["speaker"] = best_spk or "SPEAKER_00"
+                    seg["identified_speaker"] = seg["speaker"]
                 diarization_applied = True
+
+                # ─── Post-processing: merge consecutive same-speaker segments ───
+                # Whisper produces many tiny chunks; ground truth is one phrase
+                # per speaker turn. Merge adjacent segments of the same speaker
+                # when the gap is < 2.0s.
+                merged = []
+                for seg in segments:
+                    if merged and merged[-1]["speaker"] == seg["speaker"]:
+                        gap = float(seg["start"]) - float(merged[-1]["end"])
+                        if gap < 2.0:
+                            merged[-1]["end"] = seg["end"]
+                            merged[-1]["text"] = (merged[-1]["text"] + " " + seg["text"]).strip()
+                            pc = merged[-1].get("confidence") or 0
+                            cc = seg.get("confidence") or 0
+                            if pc and cc:
+                                merged[-1]["confidence"] = round((pc + cc) / 2, 3)
+                            continue
+                    merged.append(dict(seg))
+                print(f"[UI] Merged {len(segments)} -> {len(merged)} segments")
+                segments = merged
+
+                # ─── Rename SPEAKER_XX → Speaker A/B by first appearance ───
+                letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                order = {}
+                for seg in segments:
+                    spk = seg["speaker"]
+                    if spk not in order:
+                        order[spk] = f"Speaker {letters[len(order)]}"
+                for seg in segments:
+                    seg["speaker"] = order[seg["speaker"]]
+                    seg["identified_speaker"] = seg["speaker"]
                 unique = len(set(s["speaker"] for s in segments))
                 print(f"[UI] Diarization done: {unique} speakers across {len(segments)} segs")
             # Free pyannote memory
