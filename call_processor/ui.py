@@ -523,14 +523,12 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             "large-v3-turbo", "large-v3",
             "distil-large-v3", "distil-large-v3.5",
         }
-        embeddings_exist = os.path.isfile(
-            os.path.join("data", "embeddings", "agent_embeddings.pkl")
-        )
-        use_inline = (
-            (not HF_TOKEN)
-            or (whisper_model not in _WHISPER_MODELS)
-            or (not embeddings_exist)
-        )
+        # Always use the inline path — it has our improved pipeline:
+        #   light FFmpeg + DeepFilterNet3 + ECAPA/pyannote hybrid diarization.
+        # The run_e2e.py subprocess path used the old over-processing chain
+        # and enrolled-agent matching which produces CUSTOMER/AGENT labels
+        # that chopped utterances incorrectly ("Hello," + "August.").
+        use_inline = True
 
         if use_inline:
             label = whisper_model if whisper_model in _WHISPER_MODELS else whisper_model

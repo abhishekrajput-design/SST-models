@@ -79,45 +79,52 @@ def diarize_segments_ecapa(
 
     from sklearn.cluster import KMeans
 
-    # Step 1: if pyannote turns are provided, split Whisper segments that
-    # span multiple pyannote turns (likely contain multiple speakers).
+    # Step 1: only split a Whisper segment if it clearly contains multiple
+    # speaker turns with meaningful duration (not a split mid-word).
+    # Minimum split threshold: both sides must be ≥ 1.0s of audio AND the
+    # word count in each side must be ≥ 2 (so "Hello, August." stays whole).
+    MIN_SPLIT_DUR = 1.0
+    MIN_SPLIT_WORDS = 2
     if pyannote_turns:
         split_segments = []
         for seg in segments:
             s_start = float(seg["start"])
             s_end   = float(seg["end"])
-            # Find all pyannote turn boundaries within this segment
+            words = seg.get("text", "").split()
+            # Only consider splitting if segment is long enough and has enough
+            # words that we could meaningfully divide it
+            if (s_end - s_start) < 2 * MIN_SPLIT_DUR or len(words) < 2 * MIN_SPLIT_WORDS:
+                split_segments.append(seg)
+                continue
+            # Find pyannote boundaries that land at least MIN_SPLIT_DUR from
+            # both ends of this Whisper segment.
             splits = sorted({
                 t["start"] for t in pyannote_turns
-                if s_start < t["start"] < s_end
-            } | {
-                t["end"] for t in pyannote_turns
-                if s_start < t["end"] < s_end
+                if s_start + MIN_SPLIT_DUR < t["start"] < s_end - MIN_SPLIT_DUR
             })
             if not splits:
                 split_segments.append(seg)
                 continue
-            # Split segment text proportionally by time
-            words = seg.get("text", "").split()
-            if not words:
-                split_segments.append(seg)
-                continue
             dur = max(s_end - s_start, 0.01)
             cuts = [s_start] + splits + [s_end]
+            sub_segs = []
+            ok = True
             for i in range(len(cuts) - 1):
                 sub_start, sub_end = cuts[i], cuts[i+1]
-                # Take words proportional to time span
                 w_start = int(len(words) * (sub_start - s_start) / dur)
                 w_end   = int(len(words) * (sub_end   - s_start) / dur)
                 sub_text = " ".join(words[w_start:w_end]).strip()
-                if not sub_text:
-                    continue
-                split_segments.append({
+                if len(sub_text.split()) < MIN_SPLIT_WORDS:
+                    # Not enough words per side — abort split, keep original
+                    ok = False
+                    break
+                sub_segs.append({
                     **seg,
                     "start": round(sub_start, 2),
                     "end":   round(sub_end, 2),
                     "text":  sub_text,
                 })
+            split_segments.extend(sub_segs if ok else [seg])
         if len(split_segments) != len(segments):
             logger.info(f"Split {len(segments)} -> {len(split_segments)} by pyannote turns")
         segments = split_segments
