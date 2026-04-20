@@ -331,9 +331,27 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         print(f"[UI] Diarizing with ECAPA ({len(segments)} segments)...")
         try:
             from src.diar_ecapa import diarize_segments_ecapa
-            # Per-segment ECAPA embedding + K-Means(k=2) — more accurate than
-            # pyannote on short call-center utterances (Hello/Okay/Yeah)
-            segments = diarize_segments_ecapa(segments, norm_wav, num_speakers=2)
+            # Hybrid: pyannote for turn boundaries (accurate in time) + ECAPA
+            # K-Means for speaker labels (robust to short utterances).
+            pyannote_turns = None
+            if HF_TOKEN:
+                try:
+                    from src.diarization import Diarizer
+                    diar = Diarizer(hf_token=HF_TOKEN, device="cuda")
+                    pyannote_turns = diar.diarize(norm_wav, num_speakers=2)
+                    print(f"[UI] pyannote: {len(pyannote_turns)} turn boundaries")
+                    del diar
+                    import torch, gc as _gc
+                    _gc.collect()
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
+                except Exception as e:
+                    print(f"[UI] pyannote unavailable ({e}), using ECAPA only")
+            segments = diarize_segments_ecapa(
+                segments, norm_wav,
+                num_speakers=2,
+                pyannote_turns=pyannote_turns,
+            )
             diarization_applied = True
 
             # ─── Merge consecutive same-speaker segments (gap < 0.4s) ───

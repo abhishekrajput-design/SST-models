@@ -56,29 +56,76 @@ def diarize_segments_ecapa(
     segments: List[Dict],
     norm_wav_path: str,
     num_speakers: int = 2,
+    pyannote_turns: Optional[List[Dict]] = None,
 ) -> List[Dict]:
     """
     Assign speaker labels to segments using ECAPA embeddings + K-Means.
+
+    If `pyannote_turns` is provided, Whisper segments are first SPLIT at
+    pyannote turn boundaries (which are accurate in time) before labeling.
+    This prevents multi-speaker blocks from being merged into one turn.
 
     Args:
         segments: list of dicts with 'start' and 'end' in seconds (Whisper output)
         norm_wav_path: path to the 16 kHz mono WAV used for transcription
         num_speakers: expected number of speakers (default 2 for call-center)
+        pyannote_turns: optional list of {start, end, speaker} from pyannote
 
     Returns:
-        Same segments with 'speaker' and 'identified_speaker' set to
-        'SPEAKER_00', 'SPEAKER_01', etc.
+        Same segments with 'speaker' and 'identified_speaker' set.
     """
     if not segments:
         return segments
 
     from sklearn.cluster import KMeans
 
+    # Step 1: if pyannote turns are provided, split Whisper segments that
+    # span multiple pyannote turns (likely contain multiple speakers).
+    if pyannote_turns:
+        split_segments = []
+        for seg in segments:
+            s_start = float(seg["start"])
+            s_end   = float(seg["end"])
+            # Find all pyannote turn boundaries within this segment
+            splits = sorted({
+                t["start"] for t in pyannote_turns
+                if s_start < t["start"] < s_end
+            } | {
+                t["end"] for t in pyannote_turns
+                if s_start < t["end"] < s_end
+            })
+            if not splits:
+                split_segments.append(seg)
+                continue
+            # Split segment text proportionally by time
+            words = seg.get("text", "").split()
+            if not words:
+                split_segments.append(seg)
+                continue
+            dur = max(s_end - s_start, 0.01)
+            cuts = [s_start] + splits + [s_end]
+            for i in range(len(cuts) - 1):
+                sub_start, sub_end = cuts[i], cuts[i+1]
+                # Take words proportional to time span
+                w_start = int(len(words) * (sub_start - s_start) / dur)
+                w_end   = int(len(words) * (sub_end   - s_start) / dur)
+                sub_text = " ".join(words[w_start:w_end]).strip()
+                if not sub_text:
+                    continue
+                split_segments.append({
+                    **seg,
+                    "start": round(sub_start, 2),
+                    "end":   round(sub_end, 2),
+                    "text":  sub_text,
+                })
+        if len(split_segments) != len(segments):
+            logger.info(f"Split {len(segments)} -> {len(split_segments)} by pyannote turns")
+        segments = split_segments
+
     audio, sr = sf.read(norm_wav_path, dtype="float32")
     if audio.ndim > 1:
         audio = audio[:, 0]
     if sr != TARGET_SR:
-        # norm_wav should already be 16 kHz, but be safe
         import torchaudio.functional as F_ta
         audio = F_ta.resample(torch.from_numpy(audio), sr, TARGET_SR).numpy()
         sr = TARGET_SR
