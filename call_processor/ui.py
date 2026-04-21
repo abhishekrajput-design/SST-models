@@ -34,6 +34,13 @@ PORT = 8080
 PROCESSED_DIR = "data/processed"
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 
+# Ensure FFmpeg is always on PATH when subprocesses are spawned from threads
+# (the .bat sets PATH but thread-spawned subprocesses may not inherit it).
+_FFMPEG_BIN = r"C:\Users\abhis\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin"
+_ENV = os.environ.copy()
+if _FFMPEG_BIN not in _ENV.get("PATH", ""):
+    _ENV["PATH"] = _FFMPEG_BIN + os.pathsep + _ENV.get("PATH", "")
+
 # FFmpeg filter: LIGHT pre-processing only.
 # DeepFilterNet3 does the heavy lifting (neural denoising) — aggressive FFmpeg
 # denoising here (afftdn + 6x volume + compand) was causing Whisper to
@@ -74,6 +81,15 @@ def _set_status(stage_num: int, stage: str, message: str):
 #  All produce 44.1 kHz / 128 kbps / mono MP3 for browser playback.
 # ══════════════════════════════════════════════════════════════════════════════
 
+def _run_ffmpeg(cmd: list, timeout: int = 180):
+    """Run an FFmpeg command with timeout + explicit env so it never hangs silently."""
+    result = subprocess.run(
+        cmd, env=_ENV, capture_output=True, timeout=timeout
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"FFmpeg failed: {result.stderr.decode(errors='replace')[-500:]}")
+
+
 def _to_wav(input_path: str, max_seconds: int = None) -> str:
     """Convert any audio → 16 kHz mono WAV (optionally clipped)."""
     wav = input_path + f"_tmp{os.getpid()}.wav"
@@ -81,16 +97,16 @@ def _to_wav(input_path: str, max_seconds: int = None) -> str:
     if max_seconds:
         cmd += ["-t", str(max_seconds)]
     cmd += ["-ac", "1", "-ar", "16000", wav]
-    subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    _run_ffmpeg(cmd)
     return wav
 
 
 def _wav_to_mp3(wav_path: str, out_mp3: str):
     """44.1 kHz / 128 kbps / mono MP3 — browser-compatible."""
-    subprocess.run([
+    _run_ffmpeg([
         "ffmpeg", "-y", "-i", wav_path,
         "-ac", "1", "-ar", "44100", "-b:a", "128k", out_mp3,
-    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    ])
 
 
 # ── Pipeline 1: FFmpeg (highpass + afftdn + volume + loudnorm) ───────────────
@@ -100,7 +116,7 @@ def _enhance_ffmpeg(input_path: str, output_path: str, max_seconds: int = 300):
     if max_seconds:
         cmd += ["-t", str(max_seconds)]
     cmd += ["-af", AUDIO_FILTER, "-ac", "1", "-ar", "44100", "-b:a", "128k", output_path]
-    subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    _run_ffmpeg(cmd)
 
 
 # ── Pipeline 2: noisereduce — spectral gating (CPU, scipy-based) ─────────────
@@ -289,12 +305,12 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     if not os.path.exists(norm_wav):
         _set_status(1, "Transcription", "Normalizing audio to 16 kHz mono...")
         print("[UI] Normalizing audio...")
-        subprocess.run(
+        _run_ffmpeg(
             ["ffmpeg", "-y", "-i", audio_path,
              "-ar", "16000", "-ac", "1",
              "-af", "loudnorm=I=-23:TP=-1:LRA=7",
              norm_wav],
-            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            timeout=180,
         )
 
     _set_status(2, "Transcription", f"Loading {whisper_model}...")
@@ -320,83 +336,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception:
         pass
 
-    # ── Diarization (pyannote) for models without built-in speaker labels ──
-    # Deepgram and AssemblyAI already return speaker labels — skip them.
-    # All other models (Whisper, Parakeet, Cohere, Distil-Whisper) return
-    # SPEAKER_00 for everything; pyannote assigns real speaker labels.
+    # ── No diarization — show direct transcript with single Speaker label ──
     diarization_applied = False
-    _has_own_diar = whisper_model.startswith("deepgram-") or whisper_model.startswith("assemblyai-")
-    if not _has_own_diar and segments:
-        _set_status(3, "Diarization", "Running ECAPA speaker diarization (per-segment)...")
-        print(f"[UI] Diarizing with ECAPA ({len(segments)} segments)...")
-        try:
-            from src.diar_ecapa import diarize_segments_ecapa
-            # Hybrid: pyannote for turn boundaries (accurate in time) + ECAPA
-            # K-Means for speaker labels (robust to short utterances).
-            pyannote_turns = None
-            if HF_TOKEN:
-                try:
-                    from src.diarization import Diarizer
-                    diar = Diarizer(hf_token=HF_TOKEN, device="cuda")
-                    pyannote_turns = diar.diarize(norm_wav, num_speakers=2)
-                    print(f"[UI] pyannote: {len(pyannote_turns)} turn boundaries")
-                    del diar
-                    import torch, gc as _gc
-                    _gc.collect()
-                    if torch.cuda.is_available():
-                        torch.cuda.empty_cache()
-                except Exception as e:
-                    print(f"[UI] pyannote unavailable ({e}), using ECAPA only")
-            segments = diarize_segments_ecapa(
-                segments, norm_wav,
-                num_speakers=2,
-                pyannote_turns=pyannote_turns,
-            )
-            diarization_applied = True
-
-            # ─── Merge consecutive same-speaker segments (gap < 0.4s) ───
-            # Tighter gap preserves natural speaker turn boundaries. When a
-            # speaker pauses >0.4s, it usually means a real turn boundary even
-            # if diarization puts it on the same speaker. This stops short
-            # interjections ("Yeah", "Sorry?") from being absorbed into long
-            # monologues of the opposite speaker when diarization mis-labels.
-            MERGE_GAP = 0.4
-            # Also cap merged duration so single turns don't become multi-
-            # minute blocks (ground truth turns are rarely >30s long).
-            MAX_TURN_DUR = 30.0
-            merged = []
-            for seg in segments:
-                if merged and merged[-1]["speaker"] == seg["speaker"]:
-                    gap = float(seg["start"]) - float(merged[-1]["end"])
-                    prev_dur = float(merged[-1]["end"]) - float(merged[-1]["start"])
-                    if gap < MERGE_GAP and prev_dur < MAX_TURN_DUR:
-                        merged[-1]["end"] = seg["end"]
-                        merged[-1]["text"] = (merged[-1]["text"] + " " + seg["text"]).strip()
-                        pc = merged[-1].get("confidence") or 0
-                        cc = seg.get("confidence") or 0
-                        if pc and cc:
-                            merged[-1]["confidence"] = round((pc + cc) / 2, 3)
-                        continue
-                merged.append(dict(seg))
-            print(f"[UI] Merged {len(segments)} -> {len(merged)} segments")
-            segments = merged
-
-            # ─── Rename SPEAKER_XX → Speaker A/B by first appearance ───
-            letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            order = {}
-            for seg in segments:
-                spk = seg["speaker"]
-                if spk not in order:
-                    order[spk] = f"Speaker {letters[len(order)]}"
-            for seg in segments:
-                seg["speaker"] = order[seg["speaker"]]
-                seg["identified_speaker"] = seg["speaker"]
-            unique = len(set(s["speaker"] for s in segments))
-            print(f"[UI] Diarization done: {unique} speakers across {len(segments)} segs")
-        except Exception as e:
-            import traceback
-            print(f"[UI] ECAPA diarization failed: {e}")
-            traceback.print_exc()
+    for seg in segments:
+        seg.setdefault("speaker", "Speaker")
+        seg["identified_speaker"] = seg["speaker"]
 
     # Build transcription_json in the requested format:
     #   [{start: "HH:MM:SS.mmm", end: "...", speaker: "SPEAKER_XX"|"UNKNOWN",
@@ -417,7 +361,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "avg_score": round(float(conf), 3) if conf else None,
         })
 
-    note_suffix = " + pyannote diarization" if diarization_applied else " (no diarization)"
+    note_suffix = ""
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
         "model":                    whisper_model,
@@ -426,7 +370,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "total_segments":           len(segments),
         "segments":                 segments,               # legacy UI format
         "transcription_json":       transcription_json,     # new requested format
-        "diarization":              "pyannote" if diarization_applied else "none",
+        "diarization":              "none",
         "note": f"Transcribed with {whisper_model}{note_suffix}",
     }
     os.makedirs(out_dir, exist_ok=True)  # re-create if deleted during long transcription
