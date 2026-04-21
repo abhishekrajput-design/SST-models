@@ -17,9 +17,14 @@ echo "==> Killing existing server on port 8080..."
 sudo fuser -k 8080/tcp 2>/dev/null || true
 sleep 2
 
-echo "==> Starting server..."
+echo "==> Truncating old log to clear stale buffered traces..."
+: > "$LOG"
+
+echo "==> Starting server (unbuffered stdout so [UI] prints flush in real time)..."
 cd "$APP_DIR"
-nohup "$PYTHON" ui.py >> "$LOG" 2>&1 &
+# -u forces stdout/stderr unbuffered so we can tail -f the log mid-pipeline
+# PYTHONUNBUFFERED=1 also covers any subprocess Python calls
+PYTHONUNBUFFERED=1 nohup "$PYTHON" -u ui.py >> "$LOG" 2>&1 &
 PID=$!
 echo "    PID=$PID  Log=$LOG"
 
