@@ -34,21 +34,21 @@ PORT = 8080
 PROCESSED_DIR = "data/processed"
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 
-# Ensure FFmpeg is always on PATH when subprocesses are spawned from threads
-# (the .bat sets PATH but thread-spawned subprocesses may not inherit it).
+# FFmpeg PATH on Windows (WinGet install). On Linux the system ffmpeg is used.
 _FFMPEG_BIN = r"C:\Users\abhis\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin"
 _ENV = os.environ.copy()
-if _FFMPEG_BIN not in _ENV.get("PATH", ""):
-    _ENV["PATH"] = _FFMPEG_BIN + os.pathsep + _ENV.get("PATH", "")
+if sys.platform == "win32" and os.path.isdir(_FFMPEG_BIN):
+    if _FFMPEG_BIN not in _ENV.get("PATH", ""):
+        _ENV["PATH"] = _FFMPEG_BIN + os.pathsep + _ENV.get("PATH", "")
 
-# FFmpeg filter: LIGHT pre-processing only.
-# DeepFilterNet3 does the heavy lifting (neural denoising) — aggressive FFmpeg
-# denoising here (afftdn + 6x volume + compand) was causing Whisper to
-# hallucinate loops like "You know what I mean?" on over-processed audio.
-# Keep it minimal: gentle highpass + loudness normalisation.
+# FFmpeg filter: highpass + silence removal + loudness normalisation.
+# silenceremove strips dead air >2s at -45dBFS so the enhanced audio is tight.
+# loudnorm I=-16 is broadcast-loud — clearly louder than raw recording.
 AUDIO_FILTER = (
     "highpass=f=80,"
-    "loudnorm=I=-20:TP=-1:LRA=7"
+    "silenceremove=start_periods=1:start_duration=0.3:start_threshold=-45dB"
+    ":stop_periods=-1:stop_duration=2.0:stop_threshold=-45dB,"
+    "loudnorm=I=-16:TP=-1:LRA=11"
 )
 
 # ── Pipeline status (shared) ──────────────────────────────────────────────────
