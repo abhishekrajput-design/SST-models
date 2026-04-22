@@ -41,14 +41,15 @@ if sys.platform == "win32" and os.path.isdir(_FFMPEG_BIN):
     if _FFMPEG_BIN not in _ENV.get("PATH", ""):
         _ENV["PATH"] = _FFMPEG_BIN + os.pathsep + _ENV.get("PATH", "")
 
-# FFmpeg filter: highpass + silence removal + loudness normalisation.
-# silenceremove strips dead air >2s at -45dBFS so the enhanced audio is tight.
-# loudnorm I=-16 is broadcast-loud — clearly louder than raw recording.
+# FFmpeg filter: loudnorm first so silenceremove sees calibrated levels,
+# then highpass + silenceremove to strip dead air at known dBFS.
+# Threshold -60dB / 3s duration: permissive enough to keep quiet speech on
+# low-bitrate (32kbps) recordings without cutting real content.
 AUDIO_FILTER = (
+    "loudnorm=I=-16:TP=-1:LRA=11,"
     "highpass=f=80,"
-    "silenceremove=start_periods=1:start_duration=0.3:start_threshold=-45dB"
-    ":stop_periods=-1:stop_duration=2.0:stop_threshold=-45dB,"
-    "loudnorm=I=-16:TP=-1:LRA=11"
+    "silenceremove=start_periods=1:start_duration=0.5:start_threshold=-60dB"
+    ":stop_periods=-1:stop_duration=3.0:stop_threshold=-60dB"
 )
 
 # ── Pipeline status (shared) ──────────────────────────────────────────────────

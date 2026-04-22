@@ -42,6 +42,41 @@ class BaseTranscriber(ABC):
           - confidence (float, optional)
         """
 
+    @staticmethod
+    def filter_hallucinations(segments: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Remove hallucinated/empty segments:
+        - Pure punctuation ('.' '..' '...' '?' etc.) — silence artefacts
+        - Repetition loops ('down down down down...')
+        """
+        import re
+        from collections import Counter
+        clean = []
+        for seg in segments:
+            text = seg.get("text", "").strip()
+            # Drop pure-punctuation segments (silence artefacts from Whisper)
+            if not re.sub(r'[^\w]', '', text):
+                continue
+            words = text.lower().split()
+            if len(words) < 6:
+                clean.append(seg)
+                continue
+            top_word, top_count = Counter(words).most_common(1)[0]
+            if top_count / len(words) > 0.45:
+                continue  # one word dominates >45% — hallucination
+            # Check for 4+ identical consecutive words
+            run, skip = 1, False
+            for i in range(1, len(words)):
+                if words[i] == words[i-1]:
+                    run += 1
+                    if run >= 4:
+                        skip = True
+                        break
+                else:
+                    run = 1
+            if not skip:
+                clean.append(seg)
+        return clean
+
     def unload(self) -> None:
         """Free GPU memory — move to CPU first, then delete and flush allocator."""
         import gc

@@ -46,20 +46,30 @@ class WhisperTurboTranscriber(BaseTranscriber):
             vad_parameters={"min_silence_duration_ms": 500},
             condition_on_previous_text=False,
             word_timestamps=False,
-            temperature=0,
+            # Fallback temperatures: if segment fails quality checks at temp=0,
+            # retry at 0.2, 0.4 ... until one passes. Prevents stuck-loop hallucinations.
+            temperature=[0, 0.2, 0.4, 0.6, 0.8, 1.0],
             no_speech_threshold=0.6,
+            # Lower compression_ratio_threshold aggressively filters repetitive segments
+            # (default 2.4 lets "down down down..." through; 1.8 cuts it)
+            compression_ratio_threshold=1.8,
+            log_prob_threshold=-1.0,
         )
         out = []
         for s in segs_iter:
+            text = s.text.strip()
             out.append({
                 "start": round(s.start, 2),
                 "end":   round(s.end, 2),
-                "text":  s.text.strip(),
+                "text":  text,
                 "speaker": "SPEAKER_00",
                 "identified_speaker": "SPEAKER_00",
                 "confidence": round(getattr(s, "avg_logprob", 0.0), 3),
             })
-        print(f"  [WhisperTurbo] {len(out)} segments in {time.time()-t0:.1f}s")
+        before = len(out)
+        out = self.filter_hallucinations(out)
+        skipped = before - len(out)
+        print(f"  [WhisperTurbo] {len(out)} segments in {time.time()-t0:.1f}s  (skipped {skipped} hallucinations)")
         return out
 
     def unload(self) -> None:

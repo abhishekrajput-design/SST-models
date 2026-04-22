@@ -159,7 +159,10 @@ class ParakeetV3Transcriber(BaseTranscriber):
 
             start += dur
 
-        print(f"  [Parakeet] {len(out)} segments in {time.time()-t0:.1f}s")
+        before = len(out)
+        out = self.filter_hallucinations(out)
+        skipped = before - len(out)
+        print(f"  [Parakeet] {len(out)} segments in {time.time()-t0:.1f}s  (skipped {skipped} hallucinations)")
         return out
 
     def unload(self) -> None:
