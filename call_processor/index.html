@@ -230,6 +230,7 @@
         .track-original   { border-color: rgba(100,116,139,0.25); }
         .track-ffmpeg     { border-color: rgba(59,130,246,0.3); box-shadow: inset 0 0 0 1px rgba(59,130,246,0.08); }
         .track-nr         { border-color: rgba(245,158,11,0.25);  }
+        .track-trimmed    { border-color: rgba(34,197,94,0.3); box-shadow: inset 0 0 0 1px rgba(34,197,94,0.08); }
         .track-deepfilter { border-color: rgba(168,85,247,0.25);  }
         .track-metricgan  { border-color: rgba(236,72,153,0.25);  }
 
@@ -243,6 +244,7 @@
         .dot-original   { background: #64748b; }
         .dot-ffmpeg     { background: #3b82f6; }
         .dot-nr         { background: #f59e0b; }
+        .dot-trimmed    { background: #22c55e; }
         .dot-deepfilter { background: #a855f7; }
         .dot-metricgan  { background: #ec4899; }
 
@@ -258,6 +260,7 @@
         }
         .track-original   .track-title { color: #94a3b8; }
         .track-ffmpeg     .track-title { color: #60a5fa; }
+        .track-trimmed    .track-title { color: #4ade80; }
         .track-nr         .track-title { color: #fbbf24; }
         .track-deepfilter .track-title { color: #c084fc; }
         .track-metricgan  .track-title { color: #f472b6; }
@@ -274,6 +277,7 @@
         .badge-raw       { background: rgba(100,116,139,0.15); color: #94a3b8; border: 1px solid rgba(100,116,139,0.25); }
         .badge-ffmpeg    { background: rgba(59,130,246,0.12);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
         .badge-nr        { background: rgba(245,158,11,0.12);  color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+        .badge-trimmed   { background: rgba(34,197,94,0.12);   color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
         .badge-df        { background: rgba(168,85,247,0.12);  color: #c084fc; border: 1px solid rgba(168,85,247,0.25); }
         .badge-mg        { background: rgba(236,72,153,0.12);  color: #f472b6; border: 1px solid rgba(236,72,153,0.25); }
 
@@ -323,6 +327,7 @@
         }
         .track-original   audio { accent-color: #64748b; }
         .track-ffmpeg     audio { accent-color: #3b82f6; }
+        .track-trimmed    audio { accent-color: #22c55e; }
         .track-nr         audio { accent-color: #f59e0b; }
         .track-deepfilter audio { accent-color: #a855f7; }
 
@@ -711,7 +716,27 @@
                         <span class="cp-dur" id="cpEnhDur">--:--</span>
                         <button class="cp-mute" id="cpEnhMute" title="Mute">🔊</button>
                     </div>
-                    <div class="track-note">noise reduction · volume boost · loudnorm</div>
+                    <div class="track-note">noise reduction · volume boost · loudnorm · transcript sync</div>
+                </div>
+
+                <!-- 3. Trimmed — speech-only, hidden until trimmed file exists -->
+                <div class="audio-track track-trimmed" id="trackTrimmed" style="display:none; grid-column: 1 / -1;">
+                    <div class="track-header">
+                        <div class="track-dot dot-trimmed"></div>
+                        <span class="track-title">Trimmed</span>
+                        <span class="track-badge badge-trimmed">Speech-only</span>
+                    </div>
+                    <audio id="audioTrimmed" preload="metadata"></audio>
+                    <div class="cp-player" id="cpTrim">
+                        <button class="cp-btn" id="cpTrimBtn" title="Play/Pause">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                        <span class="cp-time" id="cpTrimTime">0:00</span>
+                        <input type="range" class="cp-seek" id="cpTrimSeek" value="0" min="0" max="100" step="0.01">
+                        <span class="cp-dur" id="cpTrimDur">--:--</span>
+                        <button class="cp-mute" id="cpTrimMute" title="Mute">🔊</button>
+                    </div>
+                    <div class="track-note">silence removed · speech regions only · shorter playback</div>
                 </div>
 
             </div>
@@ -790,6 +815,8 @@
             chatContainer:document.getElementById('chatContainer'),
             audioPlayer:  document.getElementById('audioPlayer'),
             audioOriginal:document.getElementById('audioOriginal'),
+            audioTrimmed: document.getElementById('audioTrimmed'),
+            trackTrimmed: document.getElementById('trackTrimmed'),
             statAgent:    document.getElementById('statAgent'),
             statSegs:     document.getElementById('statSegs'),
             statTime:     document.getElementById('statTime'),
@@ -963,7 +990,7 @@
                         DOM.chatContainer.innerHTML = `<div class="placeholder">Call deleted.</div>`;
                         DOM.headerStats.style.display = 'none';
                         DOM.audioCompare.style.display = 'none';
-                        [DOM.audioPlayer, DOM.audioOriginal]
+                        [DOM.audioPlayer, DOM.audioOriginal, DOM.audioTrimmed]
                             .forEach(a => { if (a) { a.pause(); a.removeAttribute('src'); } });
                         loadCalls();
                     } else {
@@ -1008,6 +1035,7 @@
             
             currentSegments = data.segments || [];
             currentCallId   = callId;
+            _activeSegIdx   = -1;
 
             // ── Audio URL helpers ─────────────────────────────────────────────
             function toUrl(rawPath) {
@@ -1032,9 +1060,18 @@
             DOM.audioOriginal.src = originalUrl;
             DOM.audioOriginal.load();
 
-            // 2 Enhanced — use trimmed (silence removed) if available, else full enhanced
-            DOM.audioPlayer.src = trimmedUrl || ffmpegUrl;
+            // 2 Enhanced — always use full enhanced audio so timestamps match transcript segments
+            DOM.audioPlayer.src = ffmpegUrl;
             DOM.audioPlayer.load();
+
+            // 3 Trimmed — speech-only player (shown only when trimming succeeded)
+            if (trimmedUrl) {
+                DOM.audioTrimmed.src = trimmedUrl;
+                DOM.audioTrimmed.load();
+                DOM.trackTrimmed.style.display = '';
+            } else {
+                DOM.trackTrimmed.style.display = 'none';
+            }
 
             // Show comparison panel
             DOM.headerStats.style.display = 'flex';
@@ -1079,6 +1116,7 @@
             // ── Custom players ────────────────────────────────────────────────
             initCustomPlayer('audioOriginal', 'cpOrigBtn', 'cpOrigTime', 'cpOrigSeek', 'cpOrigDur', 'cpOrigMute');
             initCustomPlayer('audioPlayer',   'cpEnhBtn',  'cpEnhTime',  'cpEnhSeek',  'cpEnhDur',  'cpEnhMute');
+            initCustomPlayer('audioTrimmed',  'cpTrimBtn', 'cpTrimTime', 'cpTrimSeek', 'cpTrimDur', 'cpTrimMute');
         }
 
         // ── Custom audio player ───────────────────────────────────────────────
@@ -1150,25 +1188,37 @@
             DOM.audioPlayer.play();
         }
 
-        // Sync Audio with Chat Bubble
+        // Binary-search helper — O(log n) segment lookup by playback time
+        let _activeSegIdx = -1;
+
+        function _findActiveSeg(t) {
+            const segs = currentSegments;
+            if (!segs.length) return -1;
+            let lo = 0, hi = segs.length - 1, best = -1;
+            while (lo <= hi) {
+                const mid = (lo + hi) >> 1;
+                if (segs[mid].start <= t) { best = mid; lo = mid + 1; }
+                else hi = mid - 1;
+            }
+            return (best >= 0 && t <= segs[best].end) ? best : -1;
+        }
+
+        // Sync transcript highlight to Enhanced (synced) audio player
         DOM.audioPlayer.addEventListener('timeupdate', () => {
-            const t = DOM.audioPlayer.currentTime;
-            
-            // Find active segment
-            currentSegments.forEach((seg, idx) => {
-                const el = document.getElementById(`seg-${idx}`);
-                if (!el) return;
-                
-                if (t >= seg.start && t <= seg.end) {
-                    if (!el.classList.contains('active')) {
-                        el.classList.add('active');
-                        // Auto-scroll visually
-                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                } else {
-                    el.classList.remove('active');
+            const newIdx = _findActiveSeg(DOM.audioPlayer.currentTime);
+            if (newIdx === _activeSegIdx) return;
+            if (_activeSegIdx >= 0) {
+                const old = document.getElementById(`seg-${_activeSegIdx}`);
+                if (old) old.classList.remove('active');
+            }
+            _activeSegIdx = newIdx;
+            if (newIdx >= 0) {
+                const el = document.getElementById(`seg-${newIdx}`);
+                if (el) {
+                    el.classList.add('active');
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-            });
+            }
         });
 
         // ── Progress Modal ────────────────────────────────────────────────

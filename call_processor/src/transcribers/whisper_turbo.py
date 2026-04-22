@@ -42,17 +42,11 @@ class WhisperTurboTranscriber(BaseTranscriber):
             audio_path,
             language=language,
             beam_size=5,
-            vad_filter=True,
-            vad_parameters={
-                # Lower threshold (0.3 vs default 0.5) catches speech buried in
-                # background noise — critical for floor recordings / call centers.
-                "threshold": 0.3,
-                # 1 s padding on each side of detected speech so word edges
-                # aren't clipped when VAD fires slightly late.
-                "speech_pad_ms": 1000,
-                # Allow up to 2 s of silence before splitting into a new segment.
-                "min_silence_duration_ms": 2000,
-            },
+            # VAD pre-filter disabled — Silero VAD at threshold=0.3 still drops
+            # speech buried in HVAC/music noise on car dealership floors. Whisper
+            # processes all audio directly and uses no_speech_threshold to skip
+            # near-silent chunks, which is more accurate than binary VAD gating.
+            vad_filter=False,
             condition_on_previous_text=False,
             word_timestamps=False,
             # Fallback temperatures: if segment fails quality checks at temp=0,
