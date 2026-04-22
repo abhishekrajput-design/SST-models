@@ -68,6 +68,12 @@ _status_lock = threading.Lock()
 _enhance_status: dict = {}          # call_id -> {"running", "done", "error", "paths"}
 _enhance_lock = threading.Lock()
 
+# ── Agent enrollment status ───────────────────────────────────────────────────
+_enroll_status: dict = {"running": False, "done": False, "error": None, "message": ""}
+_enroll_lock   = threading.Lock()
+# Directory of known-agent recordings used for voice enrollment
+AGENT_RECORDINGS_DIR = r"C:\Users\abhis\Desktop\SST-models\Agents-recoding\sd_agent_customer_audio"
+
 
 def _set_status(stage_num: int, stage: str, message: str):
     with _status_lock:
@@ -417,11 +423,59 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception:
         pass
 
-    # ── No diarization — show direct transcript with single Speaker label ──
+    # ── Speaker Diarization: ECAPA-TDNN + K-Means ────────────────────────────
+    _set_status(3, "Transcription", "Identifying speakers (Agent vs Customer)...")
     diarization_applied = False
-    for seg in segments:
-        seg.setdefault("speaker", "Speaker")
-        seg["identified_speaker"] = seg["speaker"]
+    speaker_stats: dict = {}
+    try:
+        from src.diar_ecapa import diarize_segments_ecapa
+        print("[UI] Running ECAPA speaker diarization...", flush=True)
+        segments = diarize_segments_ecapa(segments, norm_wav, num_speakers=2)
+
+        # Tally speaking time per raw cluster label
+        spk_time: dict = {}
+        for seg in segments:
+            spk = seg.get("speaker", "SPEAKER_00")
+            spk_time[spk] = spk_time.get(spk, 0.0) + (
+                float(seg["end"]) - float(seg["start"])
+            )
+
+        if len(spk_time) >= 2:
+            from src.speaker_role import identify_agent_speaker
+            agent_spk = identify_agent_speaker(segments, norm_wav, spk_time)
+        else:
+            agent_spk = next(iter(spk_time), "SPEAKER_00")
+
+        # Label each segment AGENT or CUSTOMER
+        agent_time = customer_time = 0.0
+        agent_turns = customer_turns = 0
+        for seg in segments:
+            dur = float(seg["end"]) - float(seg["start"])
+            if seg.get("speaker") == agent_spk:
+                seg["identified_speaker"] = "AGENT"
+                agent_time  += dur
+                agent_turns += 1
+            else:
+                seg["identified_speaker"] = "CUSTOMER"
+                customer_time  += dur
+                customer_turns += 1
+
+        speaker_stats = {
+            "AGENT":    {"time_s": round(agent_time, 1),    "turns": agent_turns},
+            "CUSTOMER": {"time_s": round(customer_time, 1), "turns": customer_turns},
+        }
+        diarization_applied = True
+        print(
+            f"[UI] Diarization done: agent={agent_spk}  "
+            f"agent={agent_time:.0f}s/{agent_turns}t  "
+            f"customer={customer_time:.0f}s/{customer_turns}t",
+            flush=True,
+        )
+    except Exception as _diar_err:
+        print(f"[UI] Diarization skipped ({repr(_diar_err)}) — single-speaker mode", flush=True)
+        for seg in segments:
+            seg.setdefault("speaker", "SPEAKER_00")
+            seg.setdefault("identified_speaker", "SPEAKER_00")
 
     # Build transcription_json in the requested format:
     #   [{start: "HH:MM:SS.mmm", end: "...", speaker: "SPEAKER_XX"|"UNKNOWN",
@@ -454,7 +508,6 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     if not trim_ok:
         print("[UI] Trim skipped — using original enhanced audio.", flush=True)
 
-    note_suffix = ""
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
         "trimmed_audio_file":       trimmed_audio_file,
@@ -462,10 +515,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "processed_at":             datetime.utcnow().isoformat() + "Z",
         "processing_time_seconds":  elapsed,
         "total_segments":           len(segments),
-        "segments":                 segments,               # legacy UI format
-        "transcription_json":       transcription_json,     # new requested format
-        "diarization":              "none",
-        "note": f"Transcribed with {whisper_model}{note_suffix}",
+        "segments":                 segments,
+        "transcription_json":       transcription_json,
+        "diarization":              "ecapa-kmeans" if diarization_applied else "none",
+        "speaker_stats":            speaker_stats,
+        "note": f"Transcribed with {whisper_model}",
     }
     os.makedirs(out_dir, exist_ok=True)  # re-create if deleted during long transcription
     result_path = os.path.join(out_dir, "result.json")
@@ -700,6 +754,31 @@ def _enhance_existing_worker(call_id: str, result_path: str):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+#  Agent Enrollment  (background thread)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _enroll_worker(recordings_dir: str):
+    """Process all agent recordings and save an ECAPA voiceprint."""
+    import sys as _sys
+    _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    with _enroll_lock:
+        _enroll_status.update(running=True, done=False, error=None, message="Starting...")
+    try:
+        from src.speaker_role import enroll_agent
+        def _progress(i: int, total: int, fname: str):
+            with _enroll_lock:
+                _enroll_status["message"] = f"Processing {i+1}/{total}: {fname}"
+        msg = enroll_agent(recordings_dir, progress_cb=_progress)
+        with _enroll_lock:
+            _enroll_status.update(running=False, done=True, message=msg)
+        print(f"[Enroll] Done: {msg}", flush=True)
+    except Exception as e:
+        with _enroll_lock:
+            _enroll_status.update(running=False, done=False, error=str(e), message=str(e))
+        print(f"[Enroll] Error: {e}", flush=True)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 #  HTTP Request Handler
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -860,6 +939,31 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             with _enhance_lock:
                 st = dict(_enhance_status.get(call_id, {}))
             self._json(st if st else {"status": "not_started"})
+            return
+
+        # /api/enrollment-status
+        if path == "/api/enrollment-status":
+            with _enroll_lock:
+                st = dict(_enroll_status)
+            st["enrolled"] = os.path.exists(os.path.join("data", "enrolled_agent.npy"))
+            st["recordings_dir"] = AGENT_RECORDINGS_DIR
+            self._json(st)
+            return
+
+        # /api/enroll-agent  — start enrollment in background
+        if path == "/api/enroll-agent":
+            with _enroll_lock:
+                if _enroll_status.get("running"):
+                    self._json({"status": "already_running",
+                                "message": _enroll_status.get("message", "")})
+                    return
+            if not os.path.isdir(AGENT_RECORDINGS_DIR):
+                self._json({"status": "error",
+                            "message": f"Directory not found: {AGENT_RECORDINGS_DIR}"}, 400)
+                return
+            threading.Thread(target=_enroll_worker, args=(AGENT_RECORDINGS_DIR,),
+                             daemon=True).start()
+            self._json({"status": "started"})
             return
 
         # Audio files (Range support for seeking)

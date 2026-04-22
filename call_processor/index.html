@@ -474,6 +474,79 @@
             background: rgba(0,0,0,0.4);
         }
 
+        /* Speaker stats bar */
+        .speaker-stats-bar {
+            display: none;
+            flex-shrink: 0;
+            padding: 10px 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            flex-direction: column;
+            gap: 6px;
+        }
+        .spk-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.75rem;
+        }
+        .spk-bar-label {
+            width: 80px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .spk-bar-label.agent  { color: #60a5fa; }
+        .spk-bar-label.cust   { color: #94a3b8; }
+        .spk-bar-track {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .spk-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+        .spk-bar-fill.agent { background: #3b82f6; }
+        .spk-bar-fill.cust  { background: #64748b; }
+        .spk-bar-info { color: var(--text-muted); min-width: 120px; }
+        .spk-diar-badge {
+            font-size: 0.67rem;
+            padding: 2px 7px;
+            border-radius: 10px;
+            background: rgba(34,197,94,0.12);
+            color: #4ade80;
+            border: 1px solid rgba(34,197,94,0.25);
+            margin-left: auto;
+        }
+
+        /* Enroll button */
+        .enroll-btn {
+            width: 100%;
+            padding: 8px 14px;
+            background: rgba(34,197,94,0.1);
+            color: #4ade80;
+            border: 1px solid rgba(34,197,94,0.3);
+            border-radius: 8px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+            text-align: center;
+        }
+        .enroll-btn:hover  { background: rgba(34,197,94,0.2); }
+        .enroll-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .enroll-status {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-align: center;
+            min-height: 14px;
+            word-break: break-all;
+        }
+
         .placeholder {
             flex: 1;
             display: flex;
@@ -644,6 +717,10 @@
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 <span id="uploadText">Upload New Audio</span>
             </button>
+            <button class="enroll-btn" id="enrollBtn" onclick="startEnrollment()">
+                🎤 Enroll Agent Voice
+            </button>
+            <div class="enroll-status" id="enrollStatus">Checking...</div>
         </div>
     </aside>
 
@@ -739,6 +816,23 @@
                     <div class="track-note">silence removed · speech regions only · shorter playback</div>
                 </div>
 
+            </div>
+        </div>
+
+        <!-- Speaker stats bar — shown after transcription with diarization -->
+        <div class="speaker-stats-bar" id="speakerStatsBar">
+            <div class="spk-bar-row">
+                <span class="spk-bar-label agent">Agent</span>
+                <div class="spk-bar-track"><div class="spk-bar-fill agent" id="spkBarAgent" style="width:50%"></div></div>
+                <span class="spk-bar-info" id="statAgentTime">--</span>
+                <span class="spk-bar-info" id="statAgentTurns">--</span>
+                <span class="spk-diar-badge" id="statDiarMethod">--</span>
+            </div>
+            <div class="spk-bar-row">
+                <span class="spk-bar-label cust">Customer</span>
+                <div class="spk-bar-track"><div class="spk-bar-fill cust" id="spkBarCust" style="width:50%"></div></div>
+                <span class="spk-bar-info" id="statCustTime">--</span>
+                <span class="spk-bar-info" id="statCustTurns">--</span>
             </div>
         </div>
 
@@ -992,6 +1086,7 @@
                         DOM.audioCompare.style.display = 'none';
                         [DOM.audioPlayer, DOM.audioOriginal, DOM.audioTrimmed]
                             .forEach(a => { if (a) { a.pause(); a.removeAttribute('src'); } });
+                        document.getElementById('speakerStatsBar').style.display = 'none';
                         loadCalls();
                     } else {
                         const err = await res.json().catch(() => ({}));
@@ -1085,27 +1180,62 @@
             const agents = [...new Set(currentSegments.filter(s => s.identified_speaker?.startsWith('agent_')).map(s => s.identified_speaker.replace('agent_', '').toUpperCase()))];
             DOM.statAgent.innerText = agents.length > 0 ? agents.join(', ') : 'Unknown / Testing';
 
-            // ── Heuristic: most-speaking SPEAKER_ = agent ────────────────────
+            // ── Speaker resolution ────────────────────────────────────────────
+            // Primary: identified_speaker = 'AGENT' / 'CUSTOMER' (set by ECAPA diarization)
+            // Fallback: most-speaking SPEAKER_XX = agent (for old results without diarization)
             const spkTime = {};
             currentSegments.forEach(s => {
                 const id = s.identified_speaker || s.speaker || 'Unknown';
                 spkTime[id] = (spkTime[id] || 0) + (s.end - s.start);
             });
             const agentSpkId = Object.entries(spkTime)
-                .filter(([k]) => !k.startsWith('agent_'))
+                .filter(([k]) => k.startsWith('SPEAKER_'))
                 .sort((a,b) => b[1]-a[1])[0]?.[0] || null;
 
-            // Chat View
-            DOM.chatContainer.innerHTML = currentSegments.map((seg, idx) => {
+            function resolveRole(seg) {
                 const spk = seg.identified_speaker || seg.speaker || 'Unknown';
-                const isAgent = spk.startsWith('agent_') || spk === agentSpkId;
-                const displayName = isAgent ? 'AGENT' : 'CUSTOMER';
-                const cssClass = isAgent ? 'chat-agent' : 'chat-customer';
+                if (spk === 'AGENT' || spk.startsWith('agent_')) return 'AGENT';
+                if (spk === 'CUSTOMER') return 'CUSTOMER';
+                if (agentSpkId && spk === agentSpkId) return 'AGENT';
+                return 'CUSTOMER';
+            }
+
+            // ── Speaker stats bar ─────────────────────────────────────────────
+            const ss = data.speaker_stats || {};
+            const agentT  = ss.AGENT    ? ss.AGENT.time_s    : currentSegments.filter(s => resolveRole(s)==='AGENT').reduce((a,s)=>a+(s.end-s.start),0);
+            const custT   = ss.CUSTOMER ? ss.CUSTOMER.time_s : currentSegments.filter(s => resolveRole(s)==='CUSTOMER').reduce((a,s)=>a+(s.end-s.start),0);
+            const agentTu = ss.AGENT    ? ss.AGENT.turns    : currentSegments.filter(s => resolveRole(s)==='AGENT').length;
+            const custTu  = ss.CUSTOMER ? ss.CUSTOMER.turns : currentSegments.filter(s => resolveRole(s)==='CUSTOMER').length;
+            const totalT  = agentT + custT || 1;
+            const agentPct = Math.round(agentT / totalT * 100);
+            const custPct  = 100 - agentPct;
+            const diarLabel = data.diarization === 'ecapa-kmeans' ? 'ECAPA diarization' : 'heuristic';
+
+            document.getElementById('speakerStatsBar').style.display = 'flex';
+            document.getElementById('statDiarMethod').textContent = diarLabel;
+            document.getElementById('statAgentTime').textContent  = `${Math.round(agentT)}s (${agentPct}%)`;
+            document.getElementById('statAgentTurns').textContent = agentTu + ' turns';
+            document.getElementById('statCustTime').textContent   = `${Math.round(custT)}s (${custPct}%)`;
+            document.getElementById('statCustTurns').textContent  = custTu + ' turns';
+            document.getElementById('spkBarAgent').style.width    = agentPct + '%';
+            document.getElementById('spkBarCust').style.width     = custPct  + '%';
+
+            // ── Agent label in header ─────────────────────────────────────────
+            const agents = [...new Set(currentSegments
+                .filter(s => s.identified_speaker?.startsWith('agent_'))
+                .map(s => s.identified_speaker.replace('agent_','').toUpperCase()))];
+            DOM.statAgent.innerText = agents.length > 0 ? agents.join(', ') : (data.diarization === 'ecapa-kmeans' ? 'Identified ✓' : 'Unknown / Testing');
+
+            // ── Chat View ─────────────────────────────────────────────────────
+            DOM.chatContainer.innerHTML = currentSegments.map((seg, idx) => {
+                const role      = resolveRole(seg);
+                const isAgent   = role === 'AGENT';
+                const cssClass  = isAgent ? 'chat-agent' : 'chat-customer';
                 if (!seg.text?.trim()) return '';
                 return `
                     <div class="chat-bubble ${cssClass}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
                         <div class="chat-meta">
-                            <span class="speaker-label"><span class="speaker-dot"></span>${displayName}</span>
+                            <span class="speaker-label"><span class="speaker-dot"></span>${role}</span>
                             <span class="time-badge" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
                         </div>
                         <div>${seg.text}</div>
@@ -1427,8 +1557,64 @@
             }
         });
 
+        // ── Agent Enrollment ──────────────────────────────────────────────
+        let _enrollPoll = null;
+
+        async function checkEnrollmentStatus() {
+            try {
+                const res = await fetch('/api/enrollment-status');
+                const st  = await res.json();
+                const btn = document.getElementById('enrollBtn');
+                const lbl = document.getElementById('enrollStatus');
+
+                if (st.running) {
+                    btn.disabled = true;
+                    btn.textContent = '⏳ Enrolling...';
+                    lbl.textContent = st.message || 'Processing recordings...';
+                    if (!_enrollPoll) {
+                        _enrollPoll = setInterval(checkEnrollmentStatus, 2000);
+                    }
+                } else {
+                    if (_enrollPoll) { clearInterval(_enrollPoll); _enrollPoll = null; }
+                    btn.disabled = false;
+                    if (st.enrolled) {
+                        btn.textContent = '✅ Agent Enrolled';
+                        btn.style.background = 'rgba(34,197,94,0.2)';
+                        lbl.textContent = st.done ? st.message : 'Voiceprint active — future calls use cosine similarity';
+                    } else {
+                        btn.textContent = '🎤 Enroll Agent Voice';
+                        btn.style.background = '';
+                        lbl.textContent = st.error ? `Error: ${st.error}` : 'Not enrolled — heuristic (speaking time) used';
+                    }
+                }
+            } catch (_) {}
+        }
+
+        async function startEnrollment() {
+            const btn = document.getElementById('enrollBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Starting...';
+            try {
+                const res = await fetch('/api/enroll-agent');
+                const st  = await res.json();
+                if (st.status === 'error') {
+                    document.getElementById('enrollStatus').textContent = st.message;
+                    btn.disabled = false;
+                    btn.textContent = '🎤 Enroll Agent Voice';
+                } else {
+                    if (_enrollPoll) clearInterval(_enrollPoll);
+                    _enrollPoll = setInterval(checkEnrollmentStatus, 2000);
+                    checkEnrollmentStatus();
+                }
+            } catch (e) {
+                document.getElementById('enrollStatus').textContent = 'Request failed';
+                btn.disabled = false;
+            }
+        }
+
         // Init
         loadCalls();
+        checkEnrollmentStatus();
     </script>
 </body>
 </html>
