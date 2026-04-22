@@ -836,7 +836,7 @@
                 <span class="spk-bar-info" id="statCustTurns">--</span>
             </div>
             <!-- First-words preview so you can read and verify the assignment -->
-            <div id="spkFirstWords" style="display:none; margin-top:6px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div id="spkFirstWords" style="display:none; margin-top:6px; grid-template-columns:1fr 1fr; gap:8px;">
                 <div style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:8px; padding:8px 12px; font-size:0.75rem;">
                     <div style="color:#60a5fa; font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em;">🎙 Agent — first words</div>
                     <div id="firstWordsAgent" style="color:#cbd5e1; font-style:italic;">&mdash;</div>
@@ -930,7 +930,16 @@
         };
 
         let currentSegments = [];
-        let currentCallId = null;
+        let currentCallId   = null;
+        let agentSpkId      = null;   // most-speaking SPEAKER_XX (fallback for old results)
+
+        function resolveRole(seg) {
+            const spk = seg.identified_speaker || seg.speaker || 'Unknown';
+            if (spk === 'AGENT' || spk.startsWith('agent_')) return 'AGENT';
+            if (spk === 'CUSTOMER') return 'CUSTOMER';
+            if (agentSpkId && spk === agentSpkId) return 'AGENT';
+            return 'CUSTOMER';
+        }
 
         // Fetch calls
         function fmtDuration(s) {
@@ -1188,29 +1197,17 @@
             DOM.statFile.innerText = data.audio_file.split(/[\/\\]/).pop();
             DOM.statSegs.innerText = currentSegments.length;
             DOM.statTime.innerText = new Date(data.processed_at).toLocaleString();
-            
-            const agents = [...new Set(currentSegments.filter(s => s.identified_speaker?.startsWith('agent_')).map(s => s.identified_speaker.replace('agent_', '').toUpperCase()))];
-            DOM.statAgent.innerText = agents.length > 0 ? agents.join(', ') : 'Unknown / Testing';
 
             // ── Speaker resolution ────────────────────────────────────────────
-            // Primary: identified_speaker = 'AGENT' / 'CUSTOMER' (set by ECAPA diarization)
-            // Fallback: most-speaking SPEAKER_XX = agent (for old results without diarization)
+            // Compute agentSpkId for old results that have SPEAKER_XX labels
             const spkTime = {};
             currentSegments.forEach(s => {
                 const id = s.identified_speaker || s.speaker || 'Unknown';
                 spkTime[id] = (spkTime[id] || 0) + (s.end - s.start);
             });
-            const agentSpkId = Object.entries(spkTime)
+            agentSpkId = Object.entries(spkTime)
                 .filter(([k]) => k.startsWith('SPEAKER_'))
                 .sort((a,b) => b[1]-a[1])[0]?.[0] || null;
-
-            function resolveRole(seg) {
-                const spk = seg.identified_speaker || seg.speaker || 'Unknown';
-                if (spk === 'AGENT' || spk.startsWith('agent_')) return 'AGENT';
-                if (spk === 'CUSTOMER') return 'CUSTOMER';
-                if (agentSpkId && spk === agentSpkId) return 'AGENT';
-                return 'CUSTOMER';
-            }
 
             // ── Speaker stats bar ─────────────────────────────────────────────
             const ss = data.speaker_stats || {};
@@ -1244,10 +1241,9 @@
             }
 
             // ── Agent label in header ─────────────────────────────────────────
-            const agents = [...new Set(currentSegments
-                .filter(s => s.identified_speaker?.startsWith('agent_'))
-                .map(s => s.identified_speaker.replace('agent_','').toUpperCase()))];
-            DOM.statAgent.innerText = agents.length > 0 ? agents.join(', ') : (data.diarization === 'ecapa-kmeans' ? 'Identified ✓' : 'Unknown / Testing');
+            DOM.statAgent.innerText = data.diarization === 'ecapa-kmeans'
+                ? 'Identified ✓'
+                : 'Unknown / Testing';
 
             // ── Chat View ─────────────────────────────────────────────────────
             DOM.chatContainer.innerHTML = currentSegments.map((seg, idx) => {
