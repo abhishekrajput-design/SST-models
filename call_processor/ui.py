@@ -278,6 +278,86 @@ def _derive_paths(original_path: str) -> dict:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+#  Audio trimming — remove gaps where no speech was detected
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _trim_to_speech(audio_path: str, segments: list, out_path: str,
+                    pad_s: float = 0.3, merge_gap_s: float = 1.5) -> bool:
+    """
+    Cut the audio to only the regions covered by transcription segments.
+    Segments closer than merge_gap_s are merged into one block.
+    Each block gets pad_s seconds of context on each side.
+    Returns True on success, False on failure (caller keeps original audio).
+    """
+    import tempfile
+    if not segments:
+        print("[UI] Trim: no segments — skipped.", flush=True)
+        return False
+
+    # 1. Build merged speech blocks
+    blocks = []
+    cur_start = max(0.0, segments[0]["start"] - pad_s)
+    cur_end   = segments[0]["end"] + pad_s
+    for seg in segments[1:]:
+        seg_start = max(0.0, seg["start"] - pad_s)
+        seg_end   = seg["end"] + pad_s
+        if seg_start - cur_end <= merge_gap_s:
+            cur_end = max(cur_end, seg_end)
+        else:
+            blocks.append((cur_start, cur_end))
+            cur_start = seg_start
+            cur_end   = seg_end
+    blocks.append((cur_start, cur_end))
+
+    if not blocks:
+        print("[UI] Trim: no blocks built — skipped.", flush=True)
+        return False
+
+    total_speech = sum(e - s for s, e in blocks)
+    print(f"[UI] Trimming audio: {len(blocks)} speech blocks, {total_speech:.1f}s kept", flush=True)
+
+    # 2. Write the filter as a complex filtergraph script to avoid Windows
+    #    command-line length limits with long aselect expressions.
+    expr = "+".join(f"between(t,{s:.3f},{e:.3f})" for s, e in blocks)
+    filter_script = None
+    try:
+        fd, filter_script = tempfile.mkstemp(suffix=".txt", prefix="trim_filter_")
+        with os.fdopen(fd, "w", encoding="ascii") as f:
+            # complex filtergraph: label input → aselect → output
+            f.write(f"[0:a]aselect='{expr}',asetpts=N/SR/TB[aout]\n")
+
+        result = subprocess.run(
+            ["ffmpeg", "-y", "-i", audio_path,
+             "-filter_complex_script", filter_script,
+             "-map", "[aout]",
+             "-ar", "22050", "-ac", "1", "-b:a", "64k",
+             out_path],
+            env=_ENV, capture_output=True, timeout=180,
+        )
+        if result.returncode != 0:
+            err = result.stderr.decode("utf-8", errors="replace")[-500:]
+            print(f"[UI] Trim ffmpeg failed (rc={result.returncode}): {err}", flush=True)
+            return False
+
+        ok = os.path.exists(out_path) and os.path.getsize(out_path) > 1000
+        if ok:
+            sz = os.path.getsize(out_path)
+            print(f"[UI] Trim done: {out_path} ({sz:,} bytes)", flush=True)
+        else:
+            print(f"[UI] Trim: output missing or empty at {out_path}", flush=True)
+        return ok
+    except Exception as e:
+        print(f"[UI] Trim exception: {repr(e)}", flush=True)
+        return False
+    finally:
+        if filter_script and os.path.exists(filter_script):
+            try:
+                os.unlink(filter_script)
+            except OSError:
+                pass
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 #  Whisper-only transcription (fallback when HF_TOKEN not set)
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -362,9 +442,18 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "avg_score": round(float(conf), 3) if conf else None,
         })
 
+    # ── Trim audio to speech-only regions ────────────────────────────────────
+    _set_status(3, "Transcription", "Trimming audio to speech regions...")
+    trimmed_path = os.path.join(out_dir, "trimmed_audio.mp3")
+    trim_ok = _trim_to_speech(audio_path, segments, trimmed_path)
+    trimmed_audio_file = trimmed_path.replace("\\", "/") if trim_ok else None
+    if not trim_ok:
+        print("[UI] Trim skipped — using original enhanced audio.", flush=True)
+
     note_suffix = ""
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
+        "trimmed_audio_file":       trimmed_audio_file,
         "model":                    whisper_model,
         "processed_at":             datetime.utcnow().isoformat() + "Z",
         "processing_time_seconds":  elapsed,

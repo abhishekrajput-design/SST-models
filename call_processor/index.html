@@ -1024,14 +1024,16 @@
 
             const ffmpegUrl   = toUrl(data.audio_file);
             const originalUrl = ffmpegUrl.replace(/\/enhanced_([^/]+)$/, (_, f) => '/' + f);
+            // Prefer trimmed audio (speech-only, no silent gaps) when available
+            const trimmedUrl  = data.trimmed_audio_file ? toUrl(data.trimmed_audio_file) : null;
             const enh = data.enhancements || {};
 
             // 1 Original
             DOM.audioOriginal.src = originalUrl;
             DOM.audioOriginal.load();
 
-            // 2 Enhanced (synced to transcript)
-            DOM.audioPlayer.src = ffmpegUrl;
+            // 2 Enhanced — use trimmed (silence removed) if available, else full enhanced
+            DOM.audioPlayer.src = trimmedUrl || ffmpegUrl;
             DOM.audioPlayer.load();
 
             // Show comparison panel
