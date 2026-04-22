@@ -43,7 +43,16 @@ class WhisperTurboTranscriber(BaseTranscriber):
             language=language,
             beam_size=5,
             vad_filter=True,
-            vad_parameters={"min_silence_duration_ms": 500},
+            vad_parameters={
+                # Lower threshold (0.3 vs default 0.5) catches speech buried in
+                # background noise — critical for floor recordings / call centers.
+                "threshold": 0.3,
+                # 1 s padding on each side of detected speech so word edges
+                # aren't clipped when VAD fires slightly late.
+                "speech_pad_ms": 1000,
+                # Allow up to 2 s of silence before splitting into a new segment.
+                "min_silence_duration_ms": 2000,
+            },
             condition_on_previous_text=False,
             word_timestamps=False,
             # Fallback temperatures: if segment fails quality checks at temp=0,

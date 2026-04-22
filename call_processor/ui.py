@@ -445,7 +445,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     # ── Trim audio to speech-only regions ────────────────────────────────────
     _set_status(3, "Transcription", "Trimming audio to speech regions...")
     trimmed_path = os.path.join(out_dir, "trimmed_audio.mp3")
-    trim_ok = _trim_to_speech(audio_path, segments, trimmed_path)
+    # pad_s=1.0: keep 1 s around each block so word edges aren't clipped
+    # merge_gap_s=5.0: join blocks separated by ≤5 s — avoids many tiny cuts
+    #   in noisy recordings where VAD fires in short bursts
+    trim_ok = _trim_to_speech(audio_path, segments, trimmed_path,
+                               pad_s=1.0, merge_gap_s=5.0)
     trimmed_audio_file = trimmed_path.replace("\\", "/") if trim_ok else None
     if not trim_ok:
         print("[UI] Trim skipped — using original enhanced audio.", flush=True)
