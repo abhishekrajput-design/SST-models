@@ -230,7 +230,6 @@
         .track-original   { border-color: rgba(100,116,139,0.25); }
         .track-ffmpeg     { border-color: rgba(59,130,246,0.3); box-shadow: inset 0 0 0 1px rgba(59,130,246,0.08); }
         .track-nr         { border-color: rgba(245,158,11,0.25);  }
-        .track-trimmed    { border-color: rgba(34,197,94,0.3); box-shadow: inset 0 0 0 1px rgba(34,197,94,0.08); }
         .track-deepfilter { border-color: rgba(168,85,247,0.25);  }
         .track-metricgan  { border-color: rgba(236,72,153,0.25);  }
 
@@ -244,7 +243,6 @@
         .dot-original   { background: #64748b; }
         .dot-ffmpeg     { background: #3b82f6; }
         .dot-nr         { background: #f59e0b; }
-        .dot-trimmed    { background: #22c55e; }
         .dot-deepfilter { background: #a855f7; }
         .dot-metricgan  { background: #ec4899; }
 
@@ -260,7 +258,6 @@
         }
         .track-original   .track-title { color: #94a3b8; }
         .track-ffmpeg     .track-title { color: #60a5fa; }
-        .track-trimmed    .track-title { color: #4ade80; }
         .track-nr         .track-title { color: #fbbf24; }
         .track-deepfilter .track-title { color: #c084fc; }
         .track-metricgan  .track-title { color: #f472b6; }
@@ -277,7 +274,6 @@
         .badge-raw       { background: rgba(100,116,139,0.15); color: #94a3b8; border: 1px solid rgba(100,116,139,0.25); }
         .badge-ffmpeg    { background: rgba(59,130,246,0.12);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
         .badge-nr        { background: rgba(245,158,11,0.12);  color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
-        .badge-trimmed   { background: rgba(34,197,94,0.12);   color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
         .badge-df        { background: rgba(168,85,247,0.12);  color: #c084fc; border: 1px solid rgba(168,85,247,0.25); }
         .badge-mg        { background: rgba(236,72,153,0.12);  color: #f472b6; border: 1px solid rgba(236,72,153,0.25); }
 
@@ -327,7 +323,6 @@
         }
         .track-original   audio { accent-color: #64748b; }
         .track-ffmpeg     audio { accent-color: #3b82f6; }
-        .track-trimmed    audio { accent-color: #22c55e; }
         .track-nr         audio { accent-color: #f59e0b; }
         .track-deepfilter audio { accent-color: #a855f7; }
 
@@ -522,30 +517,6 @@
             margin-left: auto;
         }
 
-        /* Enroll button */
-        .enroll-btn {
-            width: 100%;
-            padding: 8px 14px;
-            background: rgba(34,197,94,0.1);
-            color: #4ade80;
-            border: 1px solid rgba(34,197,94,0.3);
-            border-radius: 8px;
-            font-size: 0.78rem;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: background 0.2s;
-            text-align: center;
-        }
-        .enroll-btn:hover  { background: rgba(34,197,94,0.2); }
-        .enroll-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-        .enroll-status {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-            text-align: center;
-            min-height: 14px;
-            word-break: break-all;
-        }
 
         .placeholder {
             flex: 1;
@@ -717,10 +688,6 @@
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 <span id="uploadText">Upload New Audio</span>
             </button>
-            <button class="enroll-btn" id="enrollBtn" onclick="startEnrollment()">
-                🎤 Enroll Agent Voice
-            </button>
-            <div class="enroll-status" id="enrollStatus">Checking...</div>
         </div>
     </aside>
 
@@ -796,25 +763,6 @@
                     <div class="track-note">noise reduction · volume boost · loudnorm · transcript sync</div>
                 </div>
 
-                <!-- 3. Trimmed — speech-only, hidden until trimmed file exists -->
-                <div class="audio-track track-trimmed" id="trackTrimmed" style="display:none; grid-column: 1 / -1;">
-                    <div class="track-header">
-                        <div class="track-dot dot-trimmed"></div>
-                        <span class="track-title">Trimmed</span>
-                        <span class="track-badge badge-trimmed">Speech-only</span>
-                    </div>
-                    <audio id="audioTrimmed" preload="metadata"></audio>
-                    <div class="cp-player" id="cpTrim">
-                        <button class="cp-btn" id="cpTrimBtn" title="Play/Pause">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                        </button>
-                        <span class="cp-time" id="cpTrimTime">0:00</span>
-                        <input type="range" class="cp-seek" id="cpTrimSeek" value="0" min="0" max="100" step="0.01">
-                        <span class="cp-dur" id="cpTrimDur">--:--</span>
-                        <button class="cp-mute" id="cpTrimMute" title="Mute">🔊</button>
-                    </div>
-                    <div class="track-note">silence removed · speech regions only · shorter playback</div>
-                </div>
 
             </div>
         </div>
@@ -921,8 +869,6 @@
             chatContainer:document.getElementById('chatContainer'),
             audioPlayer:  document.getElementById('audioPlayer'),
             audioOriginal:document.getElementById('audioOriginal'),
-            audioTrimmed: document.getElementById('audioTrimmed'),
-            trackTrimmed: document.getElementById('trackTrimmed'),
             statAgent:    document.getElementById('statAgent'),
             statSegs:     document.getElementById('statSegs'),
             statTime:     document.getElementById('statTime'),
@@ -1105,7 +1051,7 @@
                         DOM.chatContainer.innerHTML = `<div class="placeholder">Call deleted.</div>`;
                         DOM.headerStats.style.display = 'none';
                         DOM.audioCompare.style.display = 'none';
-                        [DOM.audioPlayer, DOM.audioOriginal, DOM.audioTrimmed]
+                        [DOM.audioPlayer, DOM.audioOriginal]
                             .forEach(a => { if (a) { a.pause(); a.removeAttribute('src'); } });
                         document.getElementById('speakerStatsBar').style.display = 'none';
                         loadCalls();
@@ -1168,8 +1114,6 @@
 
             const ffmpegUrl   = toUrl(data.audio_file);
             const originalUrl = ffmpegUrl.replace(/\/enhanced_([^/]+)$/, (_, f) => '/' + f);
-            // Prefer trimmed audio (speech-only, no silent gaps) when available
-            const trimmedUrl  = data.trimmed_audio_file ? toUrl(data.trimmed_audio_file) : null;
             const enh = data.enhancements || {};
 
             // 1 Original
@@ -1179,15 +1123,6 @@
             // 2 Enhanced — always use full enhanced audio so timestamps match transcript segments
             DOM.audioPlayer.src = ffmpegUrl;
             DOM.audioPlayer.load();
-
-            // 3 Trimmed — speech-only player (shown only when trimming succeeded)
-            if (trimmedUrl) {
-                DOM.audioTrimmed.src = trimmedUrl;
-                DOM.audioTrimmed.load();
-                DOM.trackTrimmed.style.display = '';
-            } else {
-                DOM.trackTrimmed.style.display = 'none';
-            }
 
             // Show comparison panel
             DOM.headerStats.style.display = 'flex';
@@ -1211,10 +1146,10 @@
 
             // ── Speaker stats bar ─────────────────────────────────────────────
             const ss = data.speaker_stats || {};
-            const agentT  = ss.AGENT    ? ss.AGENT.time_s    : currentSegments.filter(s => resolveRole(s)==='AGENT').reduce((a,s)=>a+(s.end-s.start),0);
-            const custT   = ss.CUSTOMER ? ss.CUSTOMER.time_s : currentSegments.filter(s => resolveRole(s)==='CUSTOMER').reduce((a,s)=>a+(s.end-s.start),0);
-            const agentTu = ss.AGENT    ? ss.AGENT.turns    : currentSegments.filter(s => resolveRole(s)==='AGENT').length;
-            const custTu  = ss.CUSTOMER ? ss.CUSTOMER.turns : currentSegments.filter(s => resolveRole(s)==='CUSTOMER').length;
+            const agentT  = (ss.AGENT    && ss.AGENT.time_s    != null) ? ss.AGENT.time_s    : currentSegments.filter(s => resolveRole(s)==='AGENT').reduce((a,s)=>a+(s.end-s.start),0);
+            const custT   = (ss.CUSTOMER && ss.CUSTOMER.time_s != null) ? ss.CUSTOMER.time_s : currentSegments.filter(s => resolveRole(s)==='CUSTOMER').reduce((a,s)=>a+(s.end-s.start),0);
+            const agentTu = (ss.AGENT    && ss.AGENT.turns     != null) ? ss.AGENT.turns     : currentSegments.filter(s => resolveRole(s)==='AGENT').length;
+            const custTu  = (ss.CUSTOMER && ss.CUSTOMER.turns  != null) ? ss.CUSTOMER.turns  : currentSegments.filter(s => resolveRole(s)==='CUSTOMER').length;
             const totalT  = agentT + custT || 1;
             const agentPct = Math.round(agentT / totalT * 100);
             const custPct  = 100 - agentPct;
@@ -1241,9 +1176,11 @@
             }
 
             // ── Agent label in header ─────────────────────────────────────────
-            DOM.statAgent.innerText = data.diarization === 'ecapa-kmeans'
-                ? 'Identified ✓'
-                : 'Unknown / Testing';
+            const _diar = data.diarization || 'none';
+            DOM.statAgent.innerText = _diar === 'ecapa-kmeans' ? 'ECAPA ✓'
+                                    : _diar === 'pyannote'     ? 'Pyannote'
+                                    : currentSegments.some(s => resolveRole(s) === 'AGENT') ? 'Heuristic'
+                                    : '—';
 
             // ── Chat View ─────────────────────────────────────────────────────
             DOM.chatContainer.innerHTML = currentSegments.map((seg, idx) => {
@@ -1265,7 +1202,6 @@
             // ── Custom players ────────────────────────────────────────────────
             initCustomPlayer('audioOriginal', 'cpOrigBtn', 'cpOrigTime', 'cpOrigSeek', 'cpOrigDur', 'cpOrigMute');
             initCustomPlayer('audioPlayer',   'cpEnhBtn',  'cpEnhTime',  'cpEnhSeek',  'cpEnhDur',  'cpEnhMute');
-            initCustomPlayer('audioTrimmed',  'cpTrimBtn', 'cpTrimTime', 'cpTrimSeek', 'cpTrimDur', 'cpTrimMute');
         }
 
         // ── Custom audio player ───────────────────────────────────────────────
@@ -1632,64 +1568,8 @@
             btn.disabled = false;
         }
 
-        // ── Agent Enrollment ──────────────────────────────────────────────
-        let _enrollPoll = null;
-
-        async function checkEnrollmentStatus() {
-            try {
-                const res = await fetch('/api/enrollment-status');
-                const st  = await res.json();
-                const btn = document.getElementById('enrollBtn');
-                const lbl = document.getElementById('enrollStatus');
-
-                if (st.running) {
-                    btn.disabled = true;
-                    btn.textContent = '⏳ Enrolling...';
-                    lbl.textContent = st.message || 'Processing recordings...';
-                    if (!_enrollPoll) {
-                        _enrollPoll = setInterval(checkEnrollmentStatus, 2000);
-                    }
-                } else {
-                    if (_enrollPoll) { clearInterval(_enrollPoll); _enrollPoll = null; }
-                    btn.disabled = false;
-                    if (st.enrolled) {
-                        btn.textContent = '✅ Agent Enrolled';
-                        btn.style.background = 'rgba(34,197,94,0.2)';
-                        lbl.textContent = st.done ? st.message : 'Voiceprint active — future calls use cosine similarity';
-                    } else {
-                        btn.textContent = '🎤 Enroll Agent Voice';
-                        btn.style.background = '';
-                        lbl.textContent = st.error ? `Error: ${st.error}` : 'Not enrolled — heuristic (speaking time) used';
-                    }
-                }
-            } catch (_) {}
-        }
-
-        async function startEnrollment() {
-            const btn = document.getElementById('enrollBtn');
-            btn.disabled = true;
-            btn.textContent = '⏳ Starting...';
-            try {
-                const res = await fetch('/api/enroll-agent');
-                const st  = await res.json();
-                if (st.status === 'error') {
-                    document.getElementById('enrollStatus').textContent = st.message;
-                    btn.disabled = false;
-                    btn.textContent = '🎤 Enroll Agent Voice';
-                } else {
-                    if (_enrollPoll) clearInterval(_enrollPoll);
-                    _enrollPoll = setInterval(checkEnrollmentStatus, 2000);
-                    checkEnrollmentStatus();
-                }
-            } catch (e) {
-                document.getElementById('enrollStatus').textContent = 'Request failed';
-                btn.disabled = false;
-            }
-        }
-
         // Init
         loadCalls();
-        checkEnrollmentStatus();
     </script>
 </body>
 </html>

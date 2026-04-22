@@ -1094,6 +1094,14 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
 
+# ── Auto-enrollment at startup ────────────────────────────────────────────────
+_enrolled_path = os.path.join("data", "enrolled_agent.npy")
+if os.path.isdir(AGENT_RECORDINGS_DIR) and not os.path.exists(_enrolled_path):
+    print("[Startup] Agent voiceprint not found — auto-enrolling from recordings...", flush=True)
+    threading.Thread(target=_enroll_worker, args=(AGENT_RECORDINGS_DIR,), daemon=True).start()
+elif os.path.exists(_enrolled_path):
+    print("[Startup] Agent voiceprint loaded — cosine similarity active.", flush=True)
+
 # ── Server startup ────────────────────────────────────────────────────────────
 socketserver.ThreadingTCPServer.allow_reuse_address = True
 
