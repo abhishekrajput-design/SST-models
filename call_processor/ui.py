@@ -460,9 +460,19 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 customer_time  += dur
                 customer_turns += 1
 
+        # First words spoken by each role — helps human verification
+        first_agent_words    = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "AGENT"),    "")
+        first_customer_words = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "CUSTOMER"), "")
+
         speaker_stats = {
-            "AGENT":    {"time_s": round(agent_time, 1),    "turns": agent_turns},
-            "CUSTOMER": {"time_s": round(customer_time, 1), "turns": customer_turns},
+            "AGENT": {
+                "time_s": round(agent_time, 1), "turns": agent_turns,
+                "first_words": first_agent_words[:120],
+            },
+            "CUSTOMER": {
+                "time_s": round(customer_time, 1), "turns": customer_turns,
+                "first_words": first_customer_words[:120],
+            },
         }
         diarization_applied = True
         print(
@@ -1017,6 +1027,31 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_POST(self):
         parsed = urlparse(self.path)
+
+        # POST /api/call/<id>/swap-roles — flip AGENT ↔ CUSTOMER in result.json
+        if parsed.path.startswith("/api/call/") and parsed.path.endswith("/swap-roles"):
+            call_id     = unquote(parsed.path[len("/api/call/"):-len("/swap-roles")])
+            result_path = os.path.join(PROCESSED_DIR, call_id, "result.json")
+            if not os.path.isfile(result_path):
+                self._json({"status": "error", "message": "Not found"}, 404)
+                return
+            with open(result_path, "r", encoding="utf-8") as f:
+                rdata = json.load(f)
+            _SWAP = {"AGENT": "CUSTOMER", "CUSTOMER": "AGENT"}
+            for seg in rdata.get("segments", []):
+                seg["identified_speaker"] = _SWAP.get(
+                    seg.get("identified_speaker", ""), seg.get("identified_speaker", ""))
+            ss = rdata.get("speaker_stats", {})
+            rdata["speaker_stats"] = {
+                "AGENT":    ss.get("CUSTOMER", {}),
+                "CUSTOMER": ss.get("AGENT", {}),
+            }
+            rdata["roles_swapped"] = not rdata.get("roles_swapped", False)
+            with open(result_path, "w", encoding="utf-8") as f:
+                json.dump(rdata, f, indent=2, ensure_ascii=False)
+            self._json({"status": "ok", "swapped": rdata["roles_swapped"]})
+            return
+
         if parsed.path == "/api/upload":
             with _status_lock:
                 busy = _status["running"]

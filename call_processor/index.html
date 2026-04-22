@@ -827,12 +827,24 @@
                 <span class="spk-bar-info" id="statAgentTime">--</span>
                 <span class="spk-bar-info" id="statAgentTurns">--</span>
                 <span class="spk-diar-badge" id="statDiarMethod">--</span>
+                <button id="swapRolesBtn" onclick="swapRoles()" title="Swap Agent ↔ Customer if labels are wrong" style="flex-shrink:0; padding:3px 10px; font-size:0.72rem; background:rgba(251,191,36,0.12); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); border-radius:6px; cursor:pointer; margin-left:6px;">🔄 Swap Roles</button>
             </div>
             <div class="spk-bar-row">
                 <span class="spk-bar-label cust">Customer</span>
                 <div class="spk-bar-track"><div class="spk-bar-fill cust" id="spkBarCust" style="width:50%"></div></div>
                 <span class="spk-bar-info" id="statCustTime">--</span>
                 <span class="spk-bar-info" id="statCustTurns">--</span>
+            </div>
+            <!-- First-words preview so you can read and verify the assignment -->
+            <div id="spkFirstWords" style="display:none; margin-top:6px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:8px; padding:8px 12px; font-size:0.75rem;">
+                    <div style="color:#60a5fa; font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em;">🎙 Agent — first words</div>
+                    <div id="firstWordsAgent" style="color:#cbd5e1; font-style:italic;">&mdash;</div>
+                </div>
+                <div style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.2); border-radius:8px; padding:8px 12px; font-size:0.75rem;">
+                    <div style="color:#94a3b8; font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em;">🧑 Customer — first words</div>
+                    <div id="firstWordsCustomer" style="color:#cbd5e1; font-style:italic;">&mdash;</div>
+                </div>
             </div>
         </div>
 
@@ -1220,6 +1232,17 @@
             document.getElementById('spkBarAgent').style.width    = agentPct + '%';
             document.getElementById('spkBarCust').style.width     = custPct  + '%';
 
+            // First-words preview — show only when diarization was applied
+            const aFW = ss.AGENT?.first_words || '';
+            const cFW = ss.CUSTOMER?.first_words || '';
+            if (aFW || cFW) {
+                document.getElementById('spkFirstWords').style.display = 'grid';
+                document.getElementById('firstWordsAgent').textContent    = aFW ? `"${aFW}"` : '—';
+                document.getElementById('firstWordsCustomer').textContent = cFW ? `"${cFW}"` : '—';
+            } else {
+                document.getElementById('spkFirstWords').style.display = 'none';
+            }
+
             // ── Agent label in header ─────────────────────────────────────────
             const agents = [...new Set(currentSegments
                 .filter(s => s.identified_speaker?.startsWith('agent_'))
@@ -1556,6 +1579,62 @@
                 btn.disabled = false;
             }
         });
+
+        // ── Swap Agent ↔ Customer ─────────────────────────────────────────
+        async function swapRoles() {
+            if (!currentCallId) return;
+            const btn = document.getElementById('swapRolesBtn');
+            btn.disabled = true;
+
+            // Flip in memory
+            const SWAP = { 'AGENT': 'CUSTOMER', 'CUSTOMER': 'AGENT' };
+            currentSegments.forEach(seg => {
+                const cur = seg.identified_speaker;
+                if (SWAP[cur]) seg.identified_speaker = SWAP[cur];
+            });
+
+            // Swap first-words previews
+            const aEl = document.getElementById('firstWordsAgent');
+            const cEl = document.getElementById('firstWordsCustomer');
+            const tmp = aEl.textContent;
+            aEl.textContent = cEl.textContent;
+            cEl.textContent = tmp;
+
+            // Swap stats bar times
+            const atEl = document.getElementById('statAgentTime');
+            const ctEl = document.getElementById('statCustTime');
+            const at = atEl.textContent; atEl.textContent = ctEl.textContent; ctEl.textContent = at;
+            const auEl = document.getElementById('statAgentTurns');
+            const cuEl = document.getElementById('statCustTurns');
+            const au = auEl.textContent; auEl.textContent = cuEl.textContent; cuEl.textContent = au;
+            const agW = document.getElementById('spkBarAgent').style.width;
+            document.getElementById('spkBarAgent').style.width = document.getElementById('spkBarCust').style.width;
+            document.getElementById('spkBarCust').style.width = agW;
+
+            // Re-render chat bubbles with swapped roles
+            _activeSegIdx = -1;
+            DOM.chatContainer.innerHTML = currentSegments.map((seg, idx) => {
+                const role    = resolveRole(seg);
+                const isAg    = role === 'AGENT';
+                if (!seg.text?.trim()) return '';
+                return `<div class="chat-bubble ${isAg ? 'chat-agent' : 'chat-customer'}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
+                    <div class="chat-meta">
+                        <span class="speaker-label"><span class="speaker-dot"></span>${role}</span>
+                        <span class="time-badge" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
+                    </div>
+                    <div>${seg.text}</div>
+                </div>`;
+            }).join('');
+
+            // Persist to disk
+            try {
+                const res = await fetch(`/api/call/${encodeURIComponent(currentCallId)}/swap-roles`,
+                                        { method: 'POST' });
+                const st  = await res.json();
+                btn.textContent = st.swapped ? '↩ Undo Swap' : '🔄 Swap Roles';
+            } catch (_) {}
+            btn.disabled = false;
+        }
 
         // ── Agent Enrollment ──────────────────────────────────────────────
         let _enrollPoll = null;

@@ -107,6 +107,59 @@ def _to_16k_wav(fpath: str) -> np.ndarray:
             pass
 
 
+# ── Keyword-based role detection ─────────────────────────────────────────────
+# Phrases strongly associated with the agent role in a car-dealership call
+_AGENT_KEYWORDS = [
+    "thank you for calling", "how can i help", "how may i help",
+    "welcome to", "what brings you in", "let me pull up",
+    "i can get you", "let me show you", "what are you looking for",
+    "what's your budget", "what is your budget",
+    "i'd like to help", "i will help", "can i help you",
+    "my name is", "this is", "i'm calling from",
+    "we have", "we can offer", "let me check",
+]
+_CUSTOMER_KEYWORDS = [
+    "i'm looking for", "i am looking for", "i need",
+    "i want", "my budget is", "i saw online", "i found online",
+    "i called because", "interested in", "how much is", "what's the price",
+    "i was told", "i'd like to buy", "i'd like to get",
+]
+
+
+def detect_agent_by_keywords(segments: List[Dict]) -> Optional[str]:
+    """
+    Score each SPEAKER_XX against agent/customer keyword lists.
+    Returns the speaker most likely to be the agent, or None if inconclusive.
+    A score ≥ 2 means at least one strong agent phrase was matched.
+    """
+    scores: Dict[str, int] = {}
+    for seg in segments:
+        spk  = seg.get("speaker", "")
+        text = seg.get("text", "").lower()
+        if not spk:
+            continue
+        for kw in _AGENT_KEYWORDS:
+            if kw in text:
+                scores[spk] = scores.get(spk, 0) + 2
+        for kw in _CUSTOMER_KEYWORDS:
+            if kw in text:
+                scores[spk] = scores.get(spk, 0) - 1
+
+    if not scores:
+        return None
+
+    best     = max(scores, key=lambda k: scores[k])
+    best_val = scores[best]
+    others   = [v for k, v in scores.items() if k != best]
+    margin   = best_val - (others[0] if others else 0)
+
+    if best_val >= 2 and margin >= 1:
+        print(f"  [SpeakerID] Keyword match: agent={best} (score={best_val})", flush=True)
+        return best
+
+    return None   # not confident enough
+
+
 # ── Agent identification (called per transcription) ───────────────────────────
 
 def identify_agent_speaker(
@@ -117,22 +170,31 @@ def identify_agent_speaker(
     """
     Return which SPEAKER_XX is the agent.
 
-    Uses enrolled voiceprint if available, otherwise falls back to
-    most-speaking-time heuristic (agent guides the conversation).
+    Priority order:
+      1. Enrolled voiceprint cosine similarity  (most accurate)
+      2. Keyword detection — agent phrases in transcript
+      3. Most total speaking time               (heuristic fallback)
     """
     if not spk_time:
         return "SPEAKER_00"
 
+    # 1 — Enrolled voiceprint
     if os.path.exists(ENROLLED_PATH):
         try:
             result = _match_enrolled(segments, norm_wav, spk_time)
             if result:
                 return result
         except Exception as e:
-            logger.warning(f"Enrollment match failed ({e}) — using heuristic")
+            logger.warning(f"Enrollment match failed ({e}) — trying keywords")
 
+    # 2 — Keyword detection
+    kw = detect_agent_by_keywords(segments)
+    if kw:
+        return kw
+
+    # 3 — Heuristic: most speaking time
     agent = max(spk_time, key=lambda k: spk_time[k])
-    print(f"  [SpeakerID] Heuristic: agent={agent} (speaking time={spk_time})", flush=True)
+    print(f"  [SpeakerID] Heuristic: agent={agent} times={spk_time}", flush=True)
     return agent
 
 
