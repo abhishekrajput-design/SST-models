@@ -52,11 +52,9 @@ class WhisperTurboTranscriber(BaseTranscriber):
             # Fallback temperatures: if segment fails quality checks at temp=0,
             # retry at 0.2, 0.4 ... until one passes. Prevents stuck-loop hallucinations.
             temperature=[0, 0.2, 0.4, 0.6, 0.8, 1.0],
-            no_speech_threshold=0.6,
-            # Lower compression_ratio_threshold aggressively filters repetitive segments
-            # (default 2.4 lets "down down down..." through; 1.8 cuts it)
+            no_speech_threshold=0.8,        # raised: keeps borderline quiet speech
             compression_ratio_threshold=1.8,
-            log_prob_threshold=-1.0,
+            log_prob_threshold=-1.5,         # lowered: accept less-confident segments
         )
         out = []
         for s in segs_iter:

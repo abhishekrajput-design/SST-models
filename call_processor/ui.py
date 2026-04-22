@@ -41,15 +41,15 @@ if sys.platform == "win32" and os.path.isdir(_FFMPEG_BIN):
     if _FFMPEG_BIN not in _ENV.get("PATH", ""):
         _ENV["PATH"] = _FFMPEG_BIN + os.pathsep + _ENV.get("PATH", "")
 
-# FFmpeg filter: loudnorm first so silenceremove sees calibrated levels,
-# then highpass + silenceremove to strip dead air at known dBFS.
-# Threshold -60dB / 3s duration: permissive enough to keep quiet speech on
-# low-bitrate (32kbps) recordings without cutting real content.
+# FFmpeg filter chain for call-center audio with background noise.
+# silenceremove intentionally removed — it cuts quiet/distant voices near the
+# noise floor. dynaudnorm boosts quiet segments locally so Whisper/Parakeet
+# can hear them without over-amplifying loud peaks.
 AUDIO_FILTER = (
-    "loudnorm=I=-16:TP=-1:LRA=11,"
-    "highpass=f=80,"
-    "silenceremove=start_periods=1:start_duration=0.5:start_threshold=-60dB"
-    ":stop_periods=-1:stop_duration=3.0:stop_threshold=-60dB"
+    "highpass=f=80,"                          # strip low-freq HVAC/rumble
+    "afftdn=nf=-25:nt=w,"                     # FFmpeg spectral denoiser pass
+    "loudnorm=I=-14:TP=-1:LRA=8,"             # global loudness target
+    "dynaudnorm=p=0.9:m=100:s=5:g=15"         # boost quiet passages locally
 )
 
 # ── Pipeline status (shared) ──────────────────────────────────────────────────
@@ -395,7 +395,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         _run_ffmpeg(
             ["ffmpeg", "-y", "-i", audio_path,
              "-ar", "16000", "-ac", "1",
-             "-af", "loudnorm=I=-23:TP=-1:LRA=7",
+             "-af", "loudnorm=I=-16:TP=-1:LRA=7,dynaudnorm=p=0.9:m=100:s=5",
              norm_wav],
             timeout=180,
         )
