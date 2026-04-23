@@ -51,10 +51,10 @@ _ENV = _ffmpeg_env()
 
 # ── ECAPA helpers ─────────────────────────────────────────────────────────────
 
-def _load_ecapa():
+def _load_ecapa(force_cpu: bool = False):
     import torch
     from speechbrain.inference.speaker import SpeakerRecognition
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cpu" if force_cpu else ("cuda" if torch.cuda.is_available() else "cpu")
     model = SpeakerRecognition.from_hparams(
         source="speechbrain/spkrec-ecapa-voxceleb",
         savedir=ECAPA_SAVE_DIR,
@@ -279,7 +279,9 @@ def enroll_agent(
     if not files:
         return f"No audio files found in {recordings_dir}"
 
-    model, device  = _load_ecapa()
+    # Run enrollment on CPU — one-time background task, so GPU speed not critical.
+    # This prevents VRAM contention when a transcription request arrives mid-enrollment.
+    model, device  = _load_ecapa(force_cpu=True)
     agent_embs: List[np.ndarray] = []
     n_ok = 0
 
@@ -372,7 +374,7 @@ def enroll_agent_clean(
     if not files:
         return f"No audio files found in {recordings_dir}"
 
-    model, device  = _load_ecapa()
+    model, device  = _load_ecapa(force_cpu=True)
     agent_embs: List[np.ndarray] = []
     n_ok = 0
 
