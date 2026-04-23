@@ -344,3 +344,83 @@ def enroll_agent(
     )
     print(f"  [Enroll] {msg}", flush=True)
     return msg
+
+
+def enroll_agent_clean(
+    recordings_dir: str,
+    progress_cb: Optional[Callable] = None,
+) -> str:
+    """
+    Build an agent voiceprint from CLEAN single-speaker recordings.
+
+    Unlike enroll_agent(), no KMeans clustering is needed — every window in
+    every file belongs to the same speaker (the agent).  Use this when you
+    have a folder of recordings that contain ONLY the agent's voice (no customer).
+
+    Steps per file:
+      1. Load as 16kHz mono
+      2. Slide 2s windows (1s stride), extract ECAPA embeddings
+      3. Average all windows → per-file embedding
+    Final: average all files → L2-normalise → save to ENROLLED_PATH.
+    """
+    exts  = {".mp3", ".wav", ".flac", ".m4a", ".ogg"}
+    files = sorted([
+        os.path.join(recordings_dir, f)
+        for f in os.listdir(recordings_dir)
+        if os.path.splitext(f.lower())[1] in exts
+    ])
+    if not files:
+        return f"No audio files found in {recordings_dir}"
+
+    model, device  = _load_ecapa()
+    agent_embs: List[np.ndarray] = []
+    n_ok = 0
+
+    try:
+        for i, fpath in enumerate(files):
+            fname = os.path.basename(fpath)
+            if progress_cb:
+                progress_cb(i, len(files), fname)
+            print(f"  [EnrollClean] {i+1}/{len(files)}: {fname}", flush=True)
+
+            try:
+                audio = _to_16k_wav(fpath)
+            except Exception as e:
+                print(f"  [EnrollClean] Load failed ({e}) — skipping", flush=True)
+                continue
+
+            window, stride = TARGET_SR * 2, TARGET_SR
+            embs: List[np.ndarray] = []
+            for start in range(0, len(audio) - window, stride):
+                emb = _embed(model, audio[start:start + window], device)
+                if emb is not None:
+                    embs.append(emb)
+
+            if len(embs) < 2:
+                print(f"  [EnrollClean] Only {len(embs)} windows — skipping", flush=True)
+                continue
+
+            avg = np.mean(np.stack(embs), axis=0)
+            n   = np.linalg.norm(avg)
+            agent_embs.append(avg / n if n > 0 else avg)
+            n_ok += 1
+            print(f"  [EnrollClean] {fname}: {len(embs)} windows", flush=True)
+    finally:
+        _free(model)
+
+    if not agent_embs:
+        return "Enrollment failed — no valid embeddings extracted."
+
+    final = np.mean(np.stack(agent_embs), axis=0)
+    n     = np.linalg.norm(final)
+    final = final / n if n > 0 else final
+
+    os.makedirs("data", exist_ok=True)
+    np.save(ENROLLED_PATH, final)
+
+    msg = (
+        f"Agent (clean) enrolled from {n_ok}/{len(files)} recordings. "
+        f"Voiceprint saved to {ENROLLED_PATH}."
+    )
+    print(f"  [EnrollClean] {msg}", flush=True)
+    return msg

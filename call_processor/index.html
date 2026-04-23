@@ -125,6 +125,62 @@
             transform: none;
         }
 
+        /* Enrollment Section */
+        .enroll-section {
+            padding: 14px 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            background: rgba(0,0,0,0.08);
+        }
+        .enroll-section-title {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .enroll-status-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+        }
+        .enroll-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: #4b5563;
+        }
+        .enroll-dot.enrolled { background: #22c55e; }
+        .enroll-dot.running  { background: #f59e0b; animation: pulse 1s infinite; }
+        .enroll-name { color: var(--text-primary); font-weight: 600; }
+        .enroll-sub  { color: var(--text-muted); font-size: 0.75rem; }
+        .enroll-btn-sm {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(99,102,241,0.15);
+            color: #a5b4fc;
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .enroll-btn-sm:hover { background: rgba(99,102,241,0.28); }
+        .enroll-btn-sm:disabled { opacity: 0.4; cursor: not-allowed; }
+        .enroll-progress {
+            margin-top: 6px;
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            min-height: 1.2em;
+        }
+
         /* Main Content */
         main {
             flex: 1;
@@ -688,6 +744,24 @@
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                 <span id="uploadText">Upload New Audio</span>
             </button>
+        </div>
+
+        <!-- Agent Voice Enrollment -->
+        <div class="enroll-section">
+            <div class="enroll-section-title">Agent Voice ID</div>
+            <div class="enroll-status-row">
+                <div class="enroll-dot" id="enrollDot"></div>
+                <div>
+                    <div class="enroll-name" id="enrollName">Not enrolled</div>
+                    <div class="enroll-sub" id="enrollSub">Upload clean voice to identify agent</div>
+                </div>
+            </div>
+            <input type="file" id="cleanVoiceUpload" accept="audio/*" multiple style="display:none;">
+            <button class="enroll-btn-sm" id="enrollBtn" onclick="document.getElementById('cleanVoiceUpload').click()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+                Upload Agent Voice
+            </button>
+            <div class="enroll-progress" id="enrollProgress"></div>
         </div>
     </aside>
 
@@ -1571,8 +1645,79 @@
             btn.disabled = false;
         }
 
+        // ── Agent Voice Enrollment ────────────────────────────────────────────
+        async function checkEnrollmentStatus() {
+            try {
+                const res  = await fetch('/api/enrollment-status');
+                const data = await res.json();
+                const dot  = document.getElementById('enrollDot');
+                const name = document.getElementById('enrollName');
+                const sub  = document.getElementById('enrollSub');
+                const btn  = document.getElementById('enrollBtn');
+                const prog = document.getElementById('enrollProgress');
+
+                if (data.running) {
+                    dot.className = 'enroll-dot running';
+                    name.textContent = 'Enrolling…';
+                    sub.textContent  = data.message || '';
+                    btn.disabled = true;
+                    setTimeout(checkEnrollmentStatus, 2000);
+                } else if (data.enrolled) {
+                    dot.className = 'enroll-dot enrolled';
+                    name.textContent = data.agent_name || 'Voice enrolled';
+                    sub.textContent  = 'Agent ID active — will match in next upload';
+                    btn.textContent  = 'Re-enroll Voice';
+                    btn.disabled = false;
+                } else {
+                    dot.className = 'enroll-dot';
+                    name.textContent = 'Not enrolled';
+                    sub.textContent  = data.error || 'Upload clean voice samples to identify agent';
+                    btn.disabled = false;
+                }
+            } catch (_) {}
+        }
+
+        document.getElementById('cleanVoiceUpload').addEventListener('change', async function() {
+            const files = this.files;
+            if (!files || files.length === 0) return;
+
+            const btn  = document.getElementById('enrollBtn');
+            const prog = document.getElementById('enrollProgress');
+            const dot  = document.getElementById('enrollDot');
+            const name = document.getElementById('enrollName');
+
+            btn.disabled = true;
+            dot.className = 'enroll-dot running';
+            name.textContent = 'Uploading…';
+            prog.textContent = `Uploading ${files.length} file(s)…`;
+
+            const fd = new FormData();
+            const agentName = prompt('Enter agent name (e.g. "Zak"):', 'Agent') || 'Agent';
+            fd.append('agent_name', agentName);
+            for (const f of files) fd.append('files', f);
+
+            try {
+                const res = await fetch('/api/enroll-clean-upload', { method: 'POST', body: fd });
+                const data = await res.json();
+                if (!res.ok) {
+                    prog.textContent = 'Error: ' + (data.message || res.statusText);
+                    dot.className = 'enroll-dot';
+                    name.textContent = 'Enrollment failed';
+                    btn.disabled = false;
+                } else {
+                    prog.textContent = 'Enrollment started — processing…';
+                    checkEnrollmentStatus();
+                }
+            } catch (e) {
+                prog.textContent = 'Upload error: ' + e.message;
+                btn.disabled = false;
+            }
+            this.value = '';
+        });
+
         // Init
         loadCalls();
+        checkEnrollmentStatus();
     </script>
 </body>
 </html>

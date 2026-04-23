@@ -72,7 +72,7 @@ _enhance_lock = threading.Lock()
 _enroll_status: dict = {"running": False, "done": False, "error": None, "message": ""}
 _enroll_lock   = threading.Lock()
 # Directory of known-agent recordings used for voice enrollment
-AGENT_RECORDINGS_DIR = r"C:\Users\abhis\Desktop\SST-models\Agents-recoding\sd_agent_customer_audio"
+AGENT_RECORDINGS_DIR = r"C:\Users\abhis\Desktop\SST-models\Agents-recoding\zak_recodings"
 
 
 def _set_status(stage_num: int, stage: str, message: str):
@@ -400,6 +400,37 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     check_path  = original_path if original_path and os.path.exists(original_path) else audio_path
     n_channels  = _get_channels(check_path)
     is_stereo   = n_channels >= 2
+
+    # Verify the channels are actually different (not mono-saved-as-stereo).
+    # Phone/VoIP recorders often produce stereo MP3s where L == R (mixed audio).
+    # We detect this by extracting 20s of each channel and measuring correlation.
+    if is_stereo:
+        def _channels_are_independent(src: str) -> bool:
+            try:
+                import tempfile, soundfile as sf2, numpy as np2
+                tmpL = tempfile.mktemp(suffix=".wav")
+                tmpR = tempfile.mktemp(suffix=".wav")
+                _run_ffmpeg(["ffmpeg", "-y", "-i", src, "-t", "20",
+                             "-af", "pan=mono|c0=FL", "-ar", "16000", tmpL], timeout=30)
+                _run_ffmpeg(["ffmpeg", "-y", "-i", src, "-t", "20",
+                             "-af", "pan=mono|c0=FR", "-ar", "16000", tmpR], timeout=30)
+                L, _ = sf2.read(tmpL, dtype="float32")
+                R, _ = sf2.read(tmpR, dtype="float32")
+                n = min(len(L), len(R))
+                corr = float(np2.corrcoef(L[:n], R[:n])[0, 1]) if n > 0 else 1.0
+                for p in (tmpL, tmpR):
+                    try: os.unlink(p)
+                    except OSError: pass
+                print(f"[UI] Stereo channel correlation: {corr:.4f}", flush=True)
+                return corr < 0.95   # < 0.95 → genuinely independent channels
+            except Exception as e:
+                print(f"[UI] Channel correlation check failed ({e}) — assuming independent", flush=True)
+                return True
+
+        if not _channels_are_independent(check_path):
+            print("[UI] Channels are identical (mixed stereo) → switching to mono ECAPA path", flush=True)
+            is_stereo = False
+
     print(f"[UI] Audio channels: {n_channels} (from {'original' if check_path == original_path else 'enhanced'}) → {'STEREO path' if is_stereo else 'mono path'}", flush=True)
 
     # ── Normalize helper ──────────────────────────────────────────────────────
@@ -1074,8 +1105,14 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         if path == "/api/enrollment-status":
             with _enroll_lock:
                 st = dict(_enroll_status)
-            st["enrolled"] = os.path.exists(os.path.join("data", "enrolled_agent.npy"))
+            enrolled_path = os.path.join("data", "enrolled_agent.npy")
+            st["enrolled"] = os.path.exists(enrolled_path)
             st["recordings_dir"] = AGENT_RECORDINGS_DIR
+            # Include stored agent name if available
+            name_path = os.path.join("data", "enrolled_agent_name.txt")
+            if os.path.exists(name_path):
+                with open(name_path, "r") as _nf:
+                    st["agent_name"] = _nf.read().strip()
             self._json(st)
             return
 
@@ -1169,6 +1206,86 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             with open(result_path, "w", encoding="utf-8") as f:
                 json.dump(rdata, f, indent=2, ensure_ascii=False)
             self._json({"status": "ok", "swapped": rdata["roles_swapped"]})
+            return
+
+        if parsed.path == "/api/enroll-clean-upload":
+            # Multipart upload of clean single-speaker audio files for enrollment
+            import cgi as _cgi
+            content_type = self.headers.get("Content-Type", "")
+            if "multipart/form-data" not in content_type:
+                self._json({"status": "error", "message": "Expected multipart/form-data"}, 400)
+                return
+            with _enroll_lock:
+                if _enroll_status.get("running"):
+                    self._json({"status": "already_running",
+                                "message": _enroll_status.get("message", "")}, 409)
+                    return
+            n = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(n)
+            import io as _io
+            environ = {"REQUEST_METHOD": "POST", "CONTENT_TYPE": content_type,
+                       "CONTENT_LENGTH": str(n)}
+            try:
+                fs = _cgi.FieldStorage(
+                    fp=_io.BytesIO(body),
+                    environ=environ,
+                    keep_blank_values=True,
+                )
+            except Exception as _pe:
+                self._json({"status": "error", "message": f"Parse error: {_pe}"}, 400)
+                return
+
+            clean_dir = os.path.join("data", "clean_agent_recordings")
+            os.makedirs(clean_dir, exist_ok=True)
+
+            agent_name = ""
+            if "agent_name" in fs:
+                agent_name = fs["agent_name"].value.strip()
+
+            saved = 0
+            files_field = fs["files"] if "files" in fs else []
+            if not isinstance(files_field, list):
+                files_field = [files_field]
+            for item in files_field:
+                if not item.filename:
+                    continue
+                fname = os.path.basename(item.filename)
+                dest  = os.path.join(clean_dir, fname)
+                with open(dest, "wb") as _fout:
+                    _fout.write(item.file.read())
+                saved += 1
+
+            if saved == 0:
+                self._json({"status": "error", "message": "No files received"}, 400)
+                return
+
+            # Persist agent name
+            if agent_name:
+                with open(os.path.join("data", "enrolled_agent_name.txt"), "w") as _nf:
+                    _nf.write(agent_name)
+
+            # Trigger enrollment — uses KMeans to isolate the agent voice from
+            # call recordings that contain both the agent and customers.
+            def _clean_enroll_worker():
+                with _enroll_lock:
+                    _enroll_status.update(running=True, done=False, error=None,
+                                          message=f"Enrolling {agent_name or 'agent'}…")
+                try:
+                    from src.speaker_role import enroll_agent
+                    def _prog(i, tot, fname):
+                        with _enroll_lock:
+                            _enroll_status["message"] = f"{i+1}/{tot}: {fname}"
+                    msg = enroll_agent(clean_dir, progress_cb=_prog)
+                    with _enroll_lock:
+                        _enroll_status.update(running=False, done=True, message=msg)
+                except Exception as _e:
+                    with _enroll_lock:
+                        _enroll_status.update(running=False, done=False,
+                                              error=str(_e), message=str(_e))
+
+            threading.Thread(target=_clean_enroll_worker, daemon=True).start()
+            self._json({"status": "started", "files_saved": saved,
+                        "agent_name": agent_name})
             return
 
         if parsed.path == "/api/upload":
