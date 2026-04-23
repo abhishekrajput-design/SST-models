@@ -367,11 +367,14 @@ def _trim_to_speech(audio_path: str, segments: list, out_path: str,
 #  Whisper-only transcription (fallback when HF_TOKEN not set)
 # ══════════════════════════════════════════════════════════════════════════════
 
-def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-turbo") -> str:
+def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-turbo",
+                       original_path: str = "") -> str:
     """
     Run any registered transcriber in-process (Whisper, Cohere, Parakeet, Qwen3, VibeVoice).
     Returns result_id (basename of FFmpeg-enhanced file).
     Writes result.json to data/processed/<result_id>/.
+    original_path: path to the original upload (before enhancement) — used to
+                   detect stereo channels since enhanced audio is always mono.
     """
     import time
     from datetime import datetime
@@ -386,6 +389,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     os.makedirs(out_dir, exist_ok=True)
 
     # ── Detect stereo vs mono ─────────────────────────────────────────────────
+    # Check the ORIGINAL upload — enhanced audio is always forced to mono (-ac 1).
     def _get_channels(path: str) -> int:
         try:
             import soundfile as sf
@@ -393,9 +397,10 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         except Exception:
             return 1
 
-    n_channels = _get_channels(audio_path)
+    check_path  = original_path if original_path and os.path.exists(original_path) else audio_path
+    n_channels  = _get_channels(check_path)
     is_stereo   = n_channels >= 2
-    print(f"[UI] Audio channels: {n_channels} → {'stereo path' if is_stereo else 'mono path'}", flush=True)
+    print(f"[UI] Audio channels: {n_channels} (from {'original' if check_path == original_path else 'enhanced'}) → {'STEREO path' if is_stereo else 'mono path'}", flush=True)
 
     # ── Normalize helper ──────────────────────────────────────────────────────
     norm_dir = os.path.join("data", "processed", base)
@@ -737,7 +742,8 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             label = whisper_model if whisper_model in _WHISPER_MODELS else whisper_model
             _set_status(1, "Transcription", f"Transcribing with {label}...")
             print(f"[UI] Inline transcription mode ({label}).")
-            result_id = _transcribe_inline(pipeline_audio, whisper_model)
+            result_id = _transcribe_inline(pipeline_audio, whisper_model,
+                                           original_path=upload_path)
         else:
             # Full pipeline via run_e2e.py subprocess (Whisper + pyannote diarization)
             _set_status(1, "Speaker Diarization", "Loading pyannote · detecting who speaks when...")
