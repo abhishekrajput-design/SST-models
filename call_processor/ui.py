@@ -409,19 +409,21 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     _NORM_AF = "loudnorm=I=-16:TP=-1:LRA=7,dynaudnorm=p=0.9:m=100:s=5"
 
     def _make_norm_wav(src: str, dst: str, channel: str = ""):
-        """16 kHz mono WAV with loudnorm+dynaudnorm, optionally from one channel.
-        channel: 'L' for left, 'R' for right, '' for mixed mono.
-        Uses pan filter (FFmpeg 8+ compatible; -map_channel was removed in 5.x).
+        """16 kHz mono WAV from src with normalisation.
+        channel: 'L'/'R' extracts that channel via pan filter (FFmpeg 8+ safe).
+        '' mixes to mono. dynaudnorm omitted for channel extraction — it's slow
+        on 30-min files; basic loudnorm is sufficient since each channel is
+        already a single speaker.
         """
         if channel == "L":
-            af = f"pan=mono|c0=FL,{_NORM_AF}"
+            af = "pan=mono|c0=FL,loudnorm=I=-16:TP=-1:LRA=7"
         elif channel == "R":
-            af = f"pan=mono|c0=FR,{_NORM_AF}"
+            af = "pan=mono|c0=FR,loudnorm=I=-16:TP=-1:LRA=7"
         else:
             af = f"pan=mono|c0=0.5*FL+0.5*FR,{_NORM_AF}"
         _run_ffmpeg(
             ["ffmpeg", "-y", "-i", src, "-ar", "16000", "-af", af, dst],
-            timeout=180,
+            timeout=600,   # 30-min audio needs up to ~5 min for loudnorm
         )
 
     # ── Load transcriber (shared for both channels) ───────────────────────────
@@ -442,12 +444,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         norm_L = os.path.join(norm_dir, f"norm_{base}_L.wav")
         norm_R = os.path.join(norm_dir, f"norm_{base}_R.wav")
 
+        # Extract L/R from the ORIGINAL stereo upload — enhanced audio is
+        # always mono (-ac 1 in FFmpeg), so channel extraction must happen here.
+        src_stereo = original_path if original_path and os.path.exists(original_path) else audio_path
         if not os.path.exists(norm_L):
-            _make_norm_wav(audio_path, norm_L, channel="L")
+            _make_norm_wav(src_stereo, norm_L, channel="L")
         if not os.path.exists(norm_R):
-            _make_norm_wav(audio_path, norm_R, channel="R")
+            _make_norm_wav(src_stereo, norm_R, channel="R")
 
-        # also keep a merged mono for ECAPA fallback / trim
+        # Merged mono (enhanced audio, for trim and any fallback)
         norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
         if not os.path.exists(norm_wav):
             _make_norm_wav(audio_path, norm_wav)
