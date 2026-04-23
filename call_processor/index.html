@@ -1153,7 +1153,9 @@
             const totalT  = agentT + custT || 1;
             const agentPct = Math.round(agentT / totalT * 100);
             const custPct  = 100 - agentPct;
-            const diarLabel = data.diarization === 'ecapa-kmeans' ? 'ECAPA diarization' : 'heuristic';
+            const diarLabel = data.diarization === 'stereo-channels' ? 'stereo channels'
+                           : data.diarization === 'ecapa-kmeans'    ? 'ECAPA diarization'
+                           : 'heuristic';
 
             document.getElementById('speakerStatsBar').style.display = 'flex';
             document.getElementById('statDiarMethod').textContent = diarLabel;
@@ -1177,8 +1179,9 @@
 
             // ── Agent label in header ─────────────────────────────────────────
             const _diar = data.diarization || 'none';
-            DOM.statAgent.innerText = _diar === 'ecapa-kmeans' ? 'ECAPA ✓'
-                                    : _diar === 'pyannote'     ? 'Pyannote'
+            DOM.statAgent.innerText = _diar === 'stereo-channels' ? 'Stereo ✓'
+                                    : _diar === 'ecapa-kmeans'    ? 'ECAPA ✓'
+                                    : _diar === 'pyannote'        ? 'Pyannote'
                                     : currentSegments.some(s => resolveRole(s) === 'AGENT') ? 'Heuristic'
                                     : '—';
 
@@ -1461,7 +1464,6 @@
 
             btn.disabled = true;
             btnText.innerText = 'Uploading…';
-            showProgress();
 
             try {
                 const model = document.getElementById('modelSelect').value;
@@ -1471,14 +1473,15 @@
                 });
 
                 if (res.status === 409) {
-                    hideProgress();
-                    alert('A pipeline is already running. Please wait for it to finish.');
+                    alert('A transcription is already running. Please wait for it to finish, then try again.');
                     btnText.innerText = 'Upload New Audio';
                     btn.disabled = false;
+                    startPolling(); // show progress of the existing run
                     return;
                 }
 
                 if (!res.ok) throw new Error(`Upload failed (${res.status})`);
+                showProgress();
 
                 // Server accepted — pipeline is running in background
                 btnText.innerText = 'Upload New Audio';

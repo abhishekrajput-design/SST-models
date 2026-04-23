@@ -385,35 +385,179 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     out_dir  = os.path.join("data", "processed", dir_name)
     os.makedirs(out_dir, exist_ok=True)
 
-    # Normalize to 16 kHz mono WAV once (shared across models for the same audio)
+    # ── Detect stereo vs mono ─────────────────────────────────────────────────
+    def _get_channels(path: str) -> int:
+        try:
+            import soundfile as sf
+            return sf.info(path).channels
+        except Exception:
+            return 1
+
+    n_channels = _get_channels(audio_path)
+    is_stereo   = n_channels >= 2
+    print(f"[UI] Audio channels: {n_channels} → {'stereo path' if is_stereo else 'mono path'}", flush=True)
+
+    # ── Normalize helper ──────────────────────────────────────────────────────
     norm_dir = os.path.join("data", "processed", base)
     os.makedirs(norm_dir, exist_ok=True)
-    norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
-    if not os.path.exists(norm_wav):
-        _set_status(1, "Transcription", "Normalizing audio to 16 kHz mono...")
-        print("[UI] Normalizing audio...")
+
+    _NORM_AF = "loudnorm=I=-16:TP=-1:LRA=7,dynaudnorm=p=0.9:m=100:s=5"
+
+    def _make_norm_wav(src: str, dst: str, channel_map: str = ""):
+        """16 kHz mono WAV with loudnorm+dynaudnorm, optionally from one channel."""
+        extra = ["-map_channel", channel_map] if channel_map else ["-ac", "1"]
         _run_ffmpeg(
-            ["ffmpeg", "-y", "-i", audio_path,
-             "-ar", "16000", "-ac", "1",
-             "-af", "loudnorm=I=-16:TP=-1:LRA=7,dynaudnorm=p=0.9:m=100:s=5",
-             norm_wav],
+            ["ffmpeg", "-y", "-i", src, "-ar", "16000"] + extra
+            + ["-af", _NORM_AF, dst],
             timeout=180,
         )
 
+    # ── Load transcriber (shared for both channels) ───────────────────────────
     _set_status(2, "Transcription", f"Loading {whisper_model}...")
     print(f"[UI] Loading transcriber: {whisper_model}")
     transcriber = get_transcriber(whisper_model, device="cuda")
     transcriber.load()
 
-    _set_status(3, "Transcription", f"Transcribing with {whisper_model}...")
-    print(f"[UI] Transcribing with {whisper_model}...")
     t0 = time.time()
-    segments = transcriber.transcribe(norm_wav, language="en")
+    diarization_applied = False
+    speaker_stats: dict   = {}
+
+    if is_stereo:
+        # ── Stereo path: each channel = one speaker, no ECAPA needed ─────────
+        _set_status(1, "Transcription", "Normalizing stereo channels (L/R)...")
+        print("[UI] Stereo: extracting L and R channels separately...", flush=True)
+
+        norm_L = os.path.join(norm_dir, f"norm_{base}_L.wav")
+        norm_R = os.path.join(norm_dir, f"norm_{base}_R.wav")
+
+        if not os.path.exists(norm_L):
+            _make_norm_wav(audio_path, norm_L, channel_map="0.0")   # L
+        if not os.path.exists(norm_R):
+            _make_norm_wav(audio_path, norm_R, channel_map="0.1")   # R
+
+        # also keep a merged mono for ECAPA fallback / trim
+        norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
+        if not os.path.exists(norm_wav):
+            _make_norm_wav(audio_path, norm_wav)
+
+        _set_status(3, "Transcription", f"Transcribing channel L with {whisper_model}...")
+        print("[UI] Transcribing L channel...", flush=True)
+        segs_L = transcriber.transcribe(norm_L, language="en")
+
+        _set_status(3, "Transcription", f"Transcribing channel R with {whisper_model}...")
+        print("[UI] Transcribing R channel...", flush=True)
+        segs_R = transcriber.transcribe(norm_R, language="en")
+
+        # Tag raw channel
+        for s in segs_L: s["_ch"] = "L"
+        for s in segs_R: s["_ch"] = "R"
+
+        # Merge and sort by start time
+        all_segs = sorted(segs_L + segs_R, key=lambda s: float(s["start"]))
+
+        # Identify which channel is the agent
+        _set_status(3, "Transcription", "Identifying Agent vs Customer channel...")
+        print("[UI] Identifying agent channel...", flush=True)
+
+        # Keyword scoring per channel
+        from src.speaker_role import detect_agent_by_keywords, identify_agent_speaker
+        time_L = sum(float(s["end"]) - float(s["start"]) for s in segs_L)
+        time_R = sum(float(s["end"]) - float(s["start"]) for s in segs_R)
+
+        # Temporarily label segments for keyword detection
+        for s in segs_L: s["speaker"] = "SPEAKER_00"
+        for s in segs_R: s["speaker"] = "SPEAKER_01"
+        kw_agent = detect_agent_by_keywords(all_segs)
+
+        if kw_agent == "SPEAKER_00":
+            agent_ch = "L"
+        elif kw_agent == "SPEAKER_01":
+            agent_ch = "R"
+        elif os.path.exists(os.path.join("data", "enrolled_agent.npy")):
+            # Enrolled voiceprint: compare each channel
+            spk_time = {"SPEAKER_00": time_L, "SPEAKER_01": time_R}
+            agent_spk = identify_agent_speaker(all_segs, norm_wav, spk_time)
+            agent_ch = "L" if agent_spk == "SPEAKER_00" else "R"
+        else:
+            # Heuristic: agent typically speaks less in listening role
+            agent_ch = "L" if time_L <= time_R else "R"
+
+        print(f"[UI] Agent channel: {agent_ch}  (L={time_L:.0f}s  R={time_R:.0f}s)", flush=True)
+
+        agent_time = customer_time = 0.0
+        agent_turns = customer_turns = 0
+        for seg in all_segs:
+            ch  = seg.pop("_ch")
+            dur = float(seg["end"]) - float(seg["start"])
+            if ch == agent_ch:
+                seg["speaker"]             = "SPEAKER_00"
+                seg["identified_speaker"]  = "AGENT"
+                agent_time  += dur
+                agent_turns += 1
+            else:
+                seg["speaker"]             = "SPEAKER_01"
+                seg["identified_speaker"]  = "CUSTOMER"
+                customer_time  += dur
+                customer_turns += 1
+
+        segments = all_segs
+        diarization_applied = True
+
+    else:
+        # ── Mono path: ECAPA K-Means diarization ─────────────────────────────
+        norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
+        if not os.path.exists(norm_wav):
+            _set_status(1, "Transcription", "Normalizing audio to 16 kHz mono...")
+            print("[UI] Normalizing audio...")
+            _make_norm_wav(audio_path, norm_wav)
+
+        _set_status(3, "Transcription", f"Transcribing with {whisper_model}...")
+        print(f"[UI] Transcribing with {whisper_model}...")
+        segments = transcriber.transcribe(norm_wav, language="en")
+
+        agent_time = customer_time = 0.0
+        agent_turns = customer_turns = 0
+
+        _set_status(3, "Transcription", "Identifying speakers (Agent vs Customer)...")
+        try:
+            from src.diar_ecapa import diarize_segments_ecapa
+            print("[UI] Running ECAPA speaker diarization...", flush=True)
+            segments = diarize_segments_ecapa(segments, norm_wav, num_speakers=2)
+
+            spk_time: dict = {}
+            for seg in segments:
+                spk = seg.get("speaker", "SPEAKER_00")
+                spk_time[spk] = spk_time.get(spk, 0.0) + (
+                    float(seg["end"]) - float(seg["start"])
+                )
+
+            if len(spk_time) >= 2:
+                from src.speaker_role import identify_agent_speaker
+                agent_spk = identify_agent_speaker(segments, norm_wav, spk_time)
+            else:
+                agent_spk = next(iter(spk_time), "SPEAKER_00")
+
+            for seg in segments:
+                dur = float(seg["end"]) - float(seg["start"])
+                if seg.get("speaker") == agent_spk:
+                    seg["identified_speaker"] = "AGENT"
+                    agent_time  += dur;  agent_turns  += 1
+                else:
+                    seg["identified_speaker"] = "CUSTOMER"
+                    customer_time += dur; customer_turns += 1
+
+            diarization_applied = True
+        except Exception as _diar_err:
+            print(f"[UI] Diarization skipped ({repr(_diar_err)}) — single-speaker mode", flush=True)
+            for seg in segments:
+                seg.setdefault("speaker", "SPEAKER_00")
+                seg.setdefault("identified_speaker", "SPEAKER_00")
+
     elapsed = round(time.time() - t0, 2)
 
     transcriber.unload()
 
-    # Force-free GPU/CPU memory so the next model starts with a clean slate
+    # Force-free GPU/CPU memory
     try:
         import torch, gc as _gc
         _gc.collect()
@@ -423,47 +567,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception:
         pass
 
-    # ── Speaker Diarization: ECAPA-TDNN + K-Means ────────────────────────────
-    _set_status(3, "Transcription", "Identifying speakers (Agent vs Customer)...")
-    diarization_applied = False
-    speaker_stats: dict = {}
-    try:
-        from src.diar_ecapa import diarize_segments_ecapa
-        print("[UI] Running ECAPA speaker diarization...", flush=True)
-        segments = diarize_segments_ecapa(segments, norm_wav, num_speakers=2)
+    # Speaker stats (used by both paths)
+    first_agent_words    = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "AGENT"),    "")
+    first_customer_words = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "CUSTOMER"), "")
 
-        # Tally speaking time per raw cluster label
-        spk_time: dict = {}
-        for seg in segments:
-            spk = seg.get("speaker", "SPEAKER_00")
-            spk_time[spk] = spk_time.get(spk, 0.0) + (
-                float(seg["end"]) - float(seg["start"])
-            )
-
-        if len(spk_time) >= 2:
-            from src.speaker_role import identify_agent_speaker
-            agent_spk = identify_agent_speaker(segments, norm_wav, spk_time)
-        else:
-            agent_spk = next(iter(spk_time), "SPEAKER_00")
-
-        # Label each segment AGENT or CUSTOMER
-        agent_time = customer_time = 0.0
-        agent_turns = customer_turns = 0
-        for seg in segments:
-            dur = float(seg["end"]) - float(seg["start"])
-            if seg.get("speaker") == agent_spk:
-                seg["identified_speaker"] = "AGENT"
-                agent_time  += dur
-                agent_turns += 1
-            else:
-                seg["identified_speaker"] = "CUSTOMER"
-                customer_time  += dur
-                customer_turns += 1
-
-        # First words spoken by each role — helps human verification
-        first_agent_words    = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "AGENT"),    "")
-        first_customer_words = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "CUSTOMER"), "")
-
+    if diarization_applied:
         speaker_stats = {
             "AGENT": {
                 "time_s": round(agent_time, 1), "turns": agent_turns,
@@ -474,18 +582,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 "first_words": first_customer_words[:120],
             },
         }
-        diarization_applied = True
         print(
-            f"[UI] Diarization done: agent={agent_spk}  "
-            f"agent={agent_time:.0f}s/{agent_turns}t  "
+            f"[UI] Speaker ID done — agent={agent_time:.0f}s/{agent_turns}t  "
             f"customer={customer_time:.0f}s/{customer_turns}t",
             flush=True,
         )
-    except Exception as _diar_err:
-        print(f"[UI] Diarization skipped ({repr(_diar_err)}) — single-speaker mode", flush=True)
-        for seg in segments:
-            seg.setdefault("speaker", "SPEAKER_00")
-            seg.setdefault("identified_speaker", "SPEAKER_00")
 
     # Build transcription_json in the requested format:
     #   [{start: "HH:MM:SS.mmm", end: "...", speaker: "SPEAKER_XX"|"UNKNOWN",
@@ -527,7 +628,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "total_segments":           len(segments),
         "segments":                 segments,
         "transcription_json":       transcription_json,
-        "diarization":              "ecapa-kmeans" if diarization_applied else "none",
+        "diarization":              ("stereo-channels" if is_stereo else "ecapa-kmeans") if diarization_applied else "none",
         "speaker_stats":            speaker_stats,
         "note": f"Transcribed with {whisper_model}",
     }
