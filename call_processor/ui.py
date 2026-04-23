@@ -408,12 +408,19 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
 
     _NORM_AF = "loudnorm=I=-16:TP=-1:LRA=7,dynaudnorm=p=0.9:m=100:s=5"
 
-    def _make_norm_wav(src: str, dst: str, channel_map: str = ""):
-        """16 kHz mono WAV with loudnorm+dynaudnorm, optionally from one channel."""
-        extra = ["-map_channel", channel_map] if channel_map else ["-ac", "1"]
+    def _make_norm_wav(src: str, dst: str, channel: str = ""):
+        """16 kHz mono WAV with loudnorm+dynaudnorm, optionally from one channel.
+        channel: 'L' for left, 'R' for right, '' for mixed mono.
+        Uses pan filter (FFmpeg 8+ compatible; -map_channel was removed in 5.x).
+        """
+        if channel == "L":
+            af = f"pan=mono|c0=FL,{_NORM_AF}"
+        elif channel == "R":
+            af = f"pan=mono|c0=FR,{_NORM_AF}"
+        else:
+            af = f"pan=mono|c0=0.5*FL+0.5*FR,{_NORM_AF}"
         _run_ffmpeg(
-            ["ffmpeg", "-y", "-i", src, "-ar", "16000"] + extra
-            + ["-af", _NORM_AF, dst],
+            ["ffmpeg", "-y", "-i", src, "-ar", "16000", "-af", af, dst],
             timeout=180,
         )
 
@@ -436,9 +443,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         norm_R = os.path.join(norm_dir, f"norm_{base}_R.wav")
 
         if not os.path.exists(norm_L):
-            _make_norm_wav(audio_path, norm_L, channel_map="0.0")   # L
+            _make_norm_wav(audio_path, norm_L, channel="L")
         if not os.path.exists(norm_R):
-            _make_norm_wav(audio_path, norm_R, channel_map="0.1")   # R
+            _make_norm_wav(audio_path, norm_R, channel="R")
 
         # also keep a merged mono for ECAPA fallback / trim
         norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
