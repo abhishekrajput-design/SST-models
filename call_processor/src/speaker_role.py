@@ -261,44 +261,33 @@ def _match_enrolled(
     norm_wav: str,
     spk_time: Dict[str, float],
 ) -> Optional[str]:
-    enrolled_emb = np.load(ENROLLED_PATH)
-    speakers     = list(spk_time.keys())
+    enrolled_emb = np.load(ENROLLED_PATH).squeeze().astype(np.float32)
+    vp_dim = int(enrolled_emb.shape[0])
+    speakers = list(spk_time.keys())
 
-    audio, sr = sf.read(norm_wav, dtype="float32")
-    if audio.ndim > 1:
-        audio = audio[:, 0]
+    if vp_dim == 512:
+        spk_embs = _speaker_embeddings_campp(segments, norm_wav, speakers, expected_dim=512)
+    elif vp_dim == 192:
+        spk_embs = _speaker_embeddings_ecapa(segments, norm_wav, speakers)
+    else:
+        logger.warning("_match_enrolled: unsupported voiceprint dim=%s — skipping", vp_dim)
+        return None
 
-    model, device = _load_ecapa()
-    try:
-        best_spk, best_sim = None, -2.0
-        for spk in speakers:
-            chunks, collected = [], 0
-            for seg in segments:
-                if seg.get("speaker") != spk:
-                    continue
-                s = int(float(seg["start"]) * sr)
-                e = min(int(float(seg["end"]) * sr), len(audio))
-                chunk = audio[s:e]
-                if len(chunk) >= int(sr * MIN_CHUNK_S):
-                    chunks.append(chunk)
-                    collected += len(chunk)
-                if collected >= sr * 10:   # 10 s is enough
-                    break
+    n = np.linalg.norm(enrolled_emb)
+    enrolled_emb = enrolled_emb / n if n > 0 else enrolled_emb
 
-            embs = [_embed(model, c, device) for c in chunks]
-            embs = [e for e in embs if e is not None]
-            if not embs:
-                continue
-
-            avg = np.mean(np.stack(embs), axis=0)
-            n   = np.linalg.norm(avg)
-            avg = avg / n if n > 0 else avg
-            sim = float(np.dot(avg, enrolled_emb))
-            print(f"  [SpeakerID] {spk}: cosine={sim:.3f}", flush=True)
-            if sim > best_sim:
-                best_sim, best_spk = sim, spk
-    finally:
-        _free(model)
+    best_spk, best_sim = None, -2.0
+    for spk, emb in spk_embs.items():
+        if emb is None:
+            continue
+        if emb.shape[0] != vp_dim:
+            logger.warning("_match_enrolled: skip %s — emb dim %s != vp dim %s",
+                           spk, emb.shape[0], vp_dim)
+            continue
+        sim = float(np.dot(emb, enrolled_emb))
+        print(f"  [SpeakerID] {spk}: cosine={sim:.3f}", flush=True)
+        if sim > best_sim:
+            best_sim, best_spk = sim, spk
 
     if best_spk and best_sim > 0.25:
         print(f"  [SpeakerID] Agent={best_spk} via enrollment (cosine={best_sim:.3f})", flush=True)
