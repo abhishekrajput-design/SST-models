@@ -14,6 +14,7 @@ Enrollment workflow:
 from __future__ import annotations
 
 import gc
+import json
 import logging
 import os
 import subprocess
@@ -26,10 +27,12 @@ import soundfile as sf
 
 logger = logging.getLogger(__name__)
 
-TARGET_SR      = 16_000
-MIN_CHUNK_S    = 0.5
-ENROLLED_PATH  = os.path.join("data", "enrolled_agent.npy")
-ECAPA_SAVE_DIR = "./models/spkrec-ecapa"
+TARGET_SR         = 16_000
+MIN_CHUNK_S       = 0.5
+ENROLLED_PATH     = os.path.join("data", "enrolled_agent.npy")
+ECAPA_SAVE_DIR    = "./models/spkrec-ecapa"
+VOICEPRINT_DIR    = os.path.join("data", "agent_voiceprints")
+AGENTS_INDEX_PATH = os.path.join(VOICEPRINT_DIR, "agents.json")
 
 _FFMPEG_BIN = (
     r"C:\Users\abhis\AppData\Local\Microsoft\WinGet\Packages"
@@ -162,6 +165,32 @@ def detect_agent_by_keywords(segments: List[Dict]) -> Optional[str]:
 
 # ── Agent identification (called per transcription) ───────────────────────────
 
+def _find_best_voiceprint() -> Optional[str]:
+    """Return one unambiguous voiceprint for TS-VAD, or None."""
+    if os.path.exists(AGENTS_INDEX_PATH):
+        try:
+            with open(AGENTS_INDEX_PATH, encoding="utf-8") as f:
+                idx = json.load(f)
+            valid = []
+            for info in idx.values():
+                if not isinstance(info, dict):
+                    continue
+                vp = info.get("voiceprint_path") or info.get("voiceprint") or ""
+                if vp and os.path.exists(vp):
+                    valid.append(vp)
+            if len(valid) == 1:
+                return valid[0]
+            if len(valid) > 1:
+                logger.info("Multiple enrolled agents found; skipping single-target TS-VAD")
+                return None
+        except Exception:
+            pass
+    # Legacy single-agent fallback
+    if os.path.exists(ENROLLED_PATH):
+        return ENROLLED_PATH
+    return None
+
+
 def identify_agent_speaker(
     segments: List[Dict],
     norm_wav: str,
@@ -171,12 +200,41 @@ def identify_agent_speaker(
     Return which SPEAKER_XX is the agent.
 
     Priority order:
-      1. Enrolled voiceprint cosine similarity  (most accurate)
+      0. Target-Speaker VAD  (most accurate — requires CAM++ voiceprint)
+      1. Enrolled voiceprint cosine similarity
       2. Keyword detection — agent phrases in transcript
       3. Most total speaking time               (heuristic fallback)
     """
     if not spk_time:
         return "SPEAKER_00"
+
+    # 0 — Target-Speaker VAD (TS-VAD) with CAM++ or ECAPA voiceprint
+    vp_path = _find_best_voiceprint()
+    if vp_path:
+        try:
+            from src.target_speaker_vad import TargetSpeakerVAD
+            vp = np.load(vp_path)
+            tsvad = TargetSpeakerVAD(vp)
+            agent_regions = tsvad.agent_segments(norm_wav)
+            if agent_regions:
+                # Vote: which SPEAKER_XX overlaps most with TS-VAD agent regions
+                votes: Dict[str, float] = {s: 0.0 for s in spk_time}
+                for seg in segments:
+                    spk = seg.get("speaker", "")
+                    if spk not in votes:
+                        continue
+                    seg_s = float(seg["start"]); seg_e = float(seg["end"])
+                    for r in agent_regions:
+                        overlap = min(seg_e, r["end"]) - max(seg_s, r["start"])
+                        if overlap > 0:
+                            votes[spk] = votes.get(spk, 0.0) + overlap
+                if votes:
+                    best = max(votes, key=lambda k: votes[k])
+                    if votes[best] > 0:
+                        print(f"  [SpeakerID] TS-VAD agent={best} (overlap={votes[best]:.1f}s)", flush=True)
+                        return best
+        except Exception as e:
+            logger.warning(f"TS-VAD failed ({e}) — falling back")
 
     # 1 — Enrolled voiceprint
     if os.path.exists(ENROLLED_PATH):
@@ -281,7 +339,10 @@ def enroll_agent(
 
     # Run enrollment on CPU — one-time background task, so GPU speed not critical.
     # This prevents VRAM contention when a transcription request arrives mid-enrollment.
-    model, device  = _load_ecapa(force_cpu=True)
+    # EmbeddingModel uses CAM++ (512-dim) if wespeaker is installed, else ECAPA (192-dim).
+    from src.embedding_campp import EmbeddingModel
+    emb_model = EmbeddingModel()
+    emb_model.load(force_cpu=True)
     agent_embs: List[np.ndarray] = []
     n_ok = 0
 
@@ -302,7 +363,7 @@ def enroll_agent(
             window, stride = TARGET_SR * 2, TARGET_SR
             embs: List[np.ndarray] = []
             for start in range(0, len(audio) - window, stride):
-                emb = _embed(model, audio[start:start + window], device)
+                emb = emb_model.embed_chunk(audio[start:start + window], TARGET_SR)
                 if emb is not None:
                     embs.append(emb)
 
@@ -324,11 +385,11 @@ def enroll_agent(
             n_ok += 1
             print(
                 f"  [Enroll] {fname}: cluster={agent_cluster}"
-                f" agent_windows={len(a_embs)}/{len(embs)}",
+                f" agent_windows={len(a_embs)}/{len(embs)} dim={emb_model.dim}",
                 flush=True,
             )
     finally:
-        _free(model)
+        emb_model.unload()
 
     if not agent_embs:
         return "Enrollment failed — no valid embeddings extracted."
@@ -346,6 +407,214 @@ def enroll_agent(
     )
     print(f"  [Enroll] {msg}", flush=True)
     return msg
+
+
+# ── Multi-agent identification ────────────────────────────────────────────────
+
+def _load_agents_index() -> dict:
+    """Load {slug: {agent_name, voiceprint_path}} from agents.json."""
+    if not os.path.exists(AGENTS_INDEX_PATH):
+        return {}
+    try:
+        with open(AGENTS_INDEX_PATH, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _agent_voiceprint_path(info: dict) -> str:
+    return str(info.get("voiceprint") or info.get("voiceprint_path") or "")
+
+
+def _agent_name(info: dict, fallback: str) -> str:
+    return str(info.get("agent_name") or info.get("name") or fallback)
+
+
+def _speaker_embeddings_ecapa(
+    segments: List[Dict],
+    norm_wav: str,
+    speakers: List[str],
+) -> Dict[str, Optional[np.ndarray]]:
+    audio, sr = sf.read(norm_wav, dtype="float32")
+    if audio.ndim > 1:
+        audio = audio[:, 0]
+
+    model, device = _load_ecapa()
+    try:
+        spk_embs: Dict[str, Optional[np.ndarray]] = {}
+        for spk in speakers:
+            chunks, collected = [], 0
+            for seg in segments:
+                if seg.get("speaker") != spk:
+                    continue
+                s = int(float(seg["start"]) * sr)
+                e = min(int(float(seg["end"]) * sr), len(audio))
+                chunk = audio[s:e]
+                if len(chunk) >= int(sr * MIN_CHUNK_S):
+                    chunks.append(chunk)
+                    collected += len(chunk)
+                if collected >= sr * 10:
+                    break
+            embs = [_embed(model, c, device) for c in chunks]
+            embs = [em for em in embs if em is not None]
+            if embs:
+                avg = np.mean(np.stack(embs), axis=0)
+                n = np.linalg.norm(avg)
+                spk_embs[spk] = avg / n if n > 0 else avg
+            else:
+                spk_embs[spk] = None
+        return spk_embs
+    finally:
+        _free(model)
+
+
+def _speaker_embeddings_campp(
+    segments: List[Dict],
+    norm_wav: str,
+    speakers: List[str],
+    expected_dim: int,
+) -> Dict[str, Optional[np.ndarray]]:
+    from src.embedding_campp import get_model
+
+    audio, sr = sf.read(norm_wav, dtype="float32")
+    if audio.ndim > 1:
+        audio = audio[:, 0]
+
+    model = get_model(force_cpu=False)
+    if model.dim != expected_dim:
+        logger.warning(
+            "CAM++ speaker matching unavailable: embedding backend=%s dim=%s, voiceprint dim=%s",
+            model.model_name,
+            model.dim,
+            expected_dim,
+        )
+        return {spk: None for spk in speakers}
+
+    spk_embs: Dict[str, Optional[np.ndarray]] = {}
+    for spk in speakers:
+        embs, collected = [], 0
+        for seg in segments:
+            if seg.get("speaker") != spk:
+                continue
+            s = int(float(seg["start"]) * sr)
+            e = min(int(float(seg["end"]) * sr), len(audio))
+            chunk = audio[s:e]
+            if len(chunk) < int(sr * MIN_CHUNK_S):
+                continue
+            emb = model.embed_chunk(chunk, sr)
+            if emb is not None:
+                embs.append(emb)
+                collected += len(chunk)
+            if collected >= sr * 10:
+                break
+        if embs:
+            avg = np.mean(np.stack(embs), axis=0)
+            n = np.linalg.norm(avg)
+            spk_embs[spk] = avg / n if n > 0 else avg
+        else:
+            spk_embs[spk] = None
+    return spk_embs
+
+
+def identify_agent_name(
+    segments: List[Dict],
+    norm_wav: str,
+    spk_time: Dict[str, float],
+    threshold: float = 0.25,
+) -> tuple[str, str, float]:
+    """
+    Match speakers against ALL enrolled agent voiceprints.
+
+    Returns:
+        (agent_speaker_id, agent_name, best_cosine_similarity)
+
+    Falls back to heuristic (most speaking time) if no voiceprint matches.
+    """
+    agents = _load_agents_index()
+    if not agents:
+        # No multi-agent library; fall back to single enrolled + heuristic
+        spk = identify_agent_speaker(segments, norm_wav, spk_time)
+        return spk, "Unknown Agent", 0.0
+
+    try:
+        sf.info(norm_wav)
+    except Exception as e:
+        logger.warning(f"identify_agent_name: cannot read {norm_wav}: {e}")
+        spk = max(spk_time, key=lambda k: spk_time[k]) if spk_time else "SPEAKER_00"
+        return spk, "Unknown Agent", 0.0
+
+    speakers = list(spk_time.keys())
+
+    # Compare every speaker × every agent voiceprint
+    best_spk, best_name, best_sim = None, "Unknown Agent", -2.0
+    spk_embs_by_dim: Dict[int, Dict[str, Optional[np.ndarray]]] = {}
+
+    for a_slug, info in agents.items():
+        if not isinstance(info, dict):
+            continue
+        vp_path = _agent_voiceprint_path(info)
+        if not os.path.exists(vp_path):
+            continue
+        try:
+            vp = np.load(vp_path)
+        except Exception as e:
+            logger.warning("Could not load voiceprint %s: %s", vp_path, e)
+            continue
+        vp = np.asarray(vp, dtype=np.float32).squeeze()
+        if vp.ndim != 1:
+            logger.warning("Skipping %s voiceprint with invalid shape %s", a_slug, vp.shape)
+            continue
+        vp_dim = int(vp.shape[0])
+
+        if vp_dim not in spk_embs_by_dim:
+            try:
+                if vp_dim == 512:
+                    spk_embs_by_dim[vp_dim] = _speaker_embeddings_campp(
+                        segments, norm_wav, speakers, expected_dim=vp_dim
+                    )
+                elif vp_dim == 192:
+                    spk_embs_by_dim[vp_dim] = _speaker_embeddings_ecapa(
+                        segments, norm_wav, speakers
+                    )
+                else:
+                    logger.warning("Skipping unsupported voiceprint dim=%s for %s", vp_dim, a_slug)
+                    spk_embs_by_dim[vp_dim] = {spk: None for spk in speakers}
+            except Exception as e:
+                logger.warning("Could not build %s-dim speaker embeddings: %s", vp_dim, e)
+                spk_embs_by_dim[vp_dim] = {spk: None for spk in speakers}
+
+        spk_embs = spk_embs_by_dim[vp_dim]
+        agent_label = _agent_name(info, a_slug)
+        vp_norm = np.linalg.norm(vp)
+        vp = vp / vp_norm if vp_norm > 0 else vp
+
+        for spk, emb in spk_embs.items():
+            if emb is None:
+                continue
+            if emb.shape[0] != vp_dim:
+                logger.warning(
+                    "Skipping %s vs %s: embedding dim %s != voiceprint dim %s",
+                    spk,
+                    agent_label,
+                    emb.shape[0],
+                    vp_dim,
+                )
+                continue
+            sim = float(np.dot(emb, vp))
+            print(f"  [MultiID] {spk} vs {agent_label}: cosine={sim:.3f}", flush=True)
+            if sim > best_sim:
+                best_sim = sim
+                best_spk = spk
+                best_name = agent_label
+
+    if best_spk and best_sim >= threshold:
+        print(f"  [MultiID] Agent={best_spk} -> {best_name} (cosine={best_sim:.3f})", flush=True)
+        return best_spk, best_name, best_sim
+
+    # Below threshold: fall back to most speaking time
+    fallback = max(spk_time, key=lambda k: spk_time[k]) if spk_time else "SPEAKER_00"
+    print(f"  [MultiID] No confident match (best={best_sim:.3f}) - heuristic: {fallback}", flush=True)
+    return fallback, "Unknown Agent", best_sim
 
 
 def enroll_agent_clean(
@@ -374,7 +643,9 @@ def enroll_agent_clean(
     if not files:
         return f"No audio files found in {recordings_dir}"
 
-    model, device  = _load_ecapa(force_cpu=True)
+    from src.embedding_campp import EmbeddingModel
+    emb_model = EmbeddingModel()
+    emb_model.load(force_cpu=True)
     agent_embs: List[np.ndarray] = []
     n_ok = 0
 
@@ -394,7 +665,7 @@ def enroll_agent_clean(
             window, stride = TARGET_SR * 2, TARGET_SR
             embs: List[np.ndarray] = []
             for start in range(0, len(audio) - window, stride):
-                emb = _embed(model, audio[start:start + window], device)
+                emb = emb_model.embed_chunk(audio[start:start + window], TARGET_SR)
                 if emb is not None:
                     embs.append(emb)
 
@@ -406,9 +677,9 @@ def enroll_agent_clean(
             n   = np.linalg.norm(avg)
             agent_embs.append(avg / n if n > 0 else avg)
             n_ok += 1
-            print(f"  [EnrollClean] {fname}: {len(embs)} windows", flush=True)
+            print(f"  [EnrollClean] {fname}: {len(embs)} windows dim={emb_model.dim}", flush=True)
     finally:
-        _free(model)
+        emb_model.unload()
 
     if not agent_embs:
         return "Enrollment failed — no valid embeddings extracted."
