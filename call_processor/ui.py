@@ -11,6 +11,12 @@ import socketserver
 from urllib.parse import urlparse, unquote, parse_qs
 from pathlib import Path
 
+# Use expandable CUDA segments to prevent memory fragmentation.
+# Without this, after the first Parakeet/ECAPA run, PyTorch's reserved CUDA
+# pool becomes fragmented and DeepFilterNet3 (needs 4 GB contiguous) fails on
+# subsequent runs — even though enough VRAM is nominally free.
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+
 # SpeechBrain 1.1.0 has a Windows bug: importutils.py checks for "/inspect.py"
 # (Unix path) but Windows uses "\\inspect.py".  We patch it once at startup
 # in site-packages (see call_processor/src/transcribers/__init__.py comments).
@@ -46,9 +52,10 @@ if sys.platform == "win32" and os.path.isdir(_FFMPEG_BIN):
 # noise floor. dynaudnorm boosts quiet segments locally so Whisper/Parakeet
 # can hear them without over-amplifying loud peaks.
 AUDIO_FILTER = (
+    "aresample=44100,"                        # upsample first — loudnorm needs ≥44.1k
     "highpass=f=80,"                          # strip low-freq HVAC/rumble
     "afftdn=nf=-25:nt=w,"                     # FFmpeg spectral denoiser pass
-    "loudnorm=I=-14:TP=-1:LRA=8,"             # global loudness target
+    "loudnorm=I=-16:TP=-1.5:LRA=11,"          # bring quiet phone audio up to standard level
     "dynaudnorm=p=0.9:m=100:s=5:g=15"         # boost quiet passages locally
 )
 
@@ -116,7 +123,7 @@ def _wav_to_mp3(wav_path: str, out_mp3: str):
     ])
 
 
-# ── Pipeline 1: FFmpeg (highpass + afftdn + volume + loudnorm) ───────────────
+# ── Pipeline 1: FFmpeg (highpass + afftdn + dynaudnorm) ─────────────────────
 def _enhance_ffmpeg(input_path: str, output_path: str, max_seconds: int = 300):
     """FFmpeg DSP chain — fast, always works, full audio for main pipeline."""
     cmd = ["ffmpeg", "-y", "-i", input_path]
@@ -437,21 +444,24 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     norm_dir = os.path.join("data", "processed", base)
     os.makedirs(norm_dir, exist_ok=True)
 
-    _NORM_AF = "loudnorm=I=-16:TP=-1:LRA=7,dynaudnorm=p=0.9:m=100:s=5"
+    # Upsample to 44.1k before loudnorm — single-pass loudnorm on 8 kHz phone
+    # sources produces a silent WAV. After loudnorm we resample down to 16 kHz
+    # for the transcriber via the -ar arg below.
+    _NORM_AF = "aresample=44100,loudnorm=I=-16:TP=-1.5:LRA=11,dynaudnorm=p=0.9:m=100:s=5"
 
     def _make_norm_wav(src: str, dst: str, channel: str = ""):
         """16 kHz mono WAV from src with normalisation.
         channel: 'L'/'R' extracts that channel via pan filter (FFmpeg 8+ safe).
-        '' mixes to mono. dynaudnorm omitted for channel extraction — it's slow
-        on 30-min files; basic loudnorm is sufficient since each channel is
-        already a single speaker.
+        '' downmixes to mono via aformat — works for mono OR stereo input.
+        (pan=mono|c0=0.5*FL+0.5*FR was producing silent WAVs when the source
+        was already mono, since FL/FR don't exist in a mono channel layout.)
         """
         if channel == "L":
-            af = "pan=mono|c0=FL,loudnorm=I=-16:TP=-1:LRA=7"
+            af = f"pan=mono|c0=FL,{_NORM_AF}"
         elif channel == "R":
-            af = "pan=mono|c0=FR,loudnorm=I=-16:TP=-1:LRA=7"
+            af = f"pan=mono|c0=FR,{_NORM_AF}"
         else:
-            af = f"pan=mono|c0=0.5*FL+0.5*FR,{_NORM_AF}"
+            af = f"aformat=channel_layouts=mono,{_NORM_AF}"
         _run_ffmpeg(
             ["ffmpeg", "-y", "-i", src, "-ar", "16000", "-af", af, dst],
             timeout=600,   # 30-min audio needs up to ~5 min for loudnorm
@@ -462,6 +472,26 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     print(f"[UI] Loading transcriber: {whisper_model}")
     transcriber = get_transcriber(whisper_model, device="cuda")
     transcriber.load()
+
+    def _retry_empty_transcript(
+        current_segments: list,
+        wav_path: str,
+        reason: str,
+    ) -> list:
+        nonlocal transcriber, whisper_model
+        if current_segments or whisper_model in ("whisper-large-v3-turbo", "distil-whisper-large-v3.5"):
+            return current_segments
+        fallback_model = "whisper-large-v3-turbo"
+        _set_status(3, "Transcription", f"{reason}; retrying with {fallback_model}...")
+        print(f"[UI] {reason}; retrying with {fallback_model}", flush=True)
+        try:
+            transcriber.unload()
+        except Exception:
+            pass
+        whisper_model = fallback_model
+        transcriber = get_transcriber(whisper_model, device="cuda")
+        transcriber.load()
+        return transcriber.transcribe(wav_path, language="en")
 
     t0 = time.time()
     diarization_applied = False
@@ -562,36 +592,31 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         _set_status(3, "Transcription", f"Transcribing with {whisper_model}...")
         print(f"[UI] Transcribing with {whisper_model}...")
         segments = transcriber.transcribe(norm_wav, language="en")
+        segments = _retry_empty_transcript(
+            segments,
+            norm_wav,
+            "No transcript segments returned",
+        )
 
         agent_time = customer_time = 0.0
         agent_turns = customer_turns = 0
 
-        _set_status(3, "Transcription", "Identifying speakers (Agent vs Customer)...")
+        _set_status(3, "Transcription", "Identifying speakers (voiceprint matching)...")
         try:
-            from src.diar_ecapa import diarize_segments_ecapa
-            print("[UI] Running ECAPA speaker diarization...", flush=True)
-            segments = diarize_segments_ecapa(segments, norm_wav, num_speakers=2)
-
-            spk_time: dict = {}
-            for seg in segments:
-                spk = seg.get("speaker", "SPEAKER_00")
-                spk_time[spk] = spk_time.get(spk, 0.0) + (
-                    float(seg["end"]) - float(seg["start"])
-                )
-
-            if len(spk_time) >= 2:
-                from src.speaker_role import identify_agent_speaker
-                agent_spk = identify_agent_speaker(segments, norm_wav, spk_time)
-            else:
-                agent_spk = next(iter(spk_time), "SPEAKER_00")
+            from src.diar_multi import diarize_multi
+            print("[UI] Running voiceprint-first multi-speaker diarization...", flush=True)
+            diar_result = diarize_multi(segments, norm_wav, force_cpu=True)
+            segments     = diar_result["segments"]
+            agent_name_id = diar_result.get("agent_name", "Unknown Agent")
+            agent_sim     = diar_result.get("agent_similarity", 0.0)
+            print(f"[UI] Agent identified: {agent_name_id} (cosine={agent_sim:.3f})", flush=True)
+            print(f"[UI] Speakers: {list(diar_result.get('per_speaker', {}).keys())}", flush=True)
 
             for seg in segments:
                 dur = float(seg["end"]) - float(seg["start"])
-                if seg.get("speaker") == agent_spk:
-                    seg["identified_speaker"] = "AGENT"
+                if seg.get("identified_speaker") == "AGENT":
                     agent_time  += dur;  agent_turns  += 1
                 else:
-                    seg["identified_speaker"] = "CUSTOMER"
                     customer_time += dur; customer_turns += 1
 
             diarization_applied = True
@@ -600,6 +625,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             for seg in segments:
                 seg.setdefault("speaker", "SPEAKER_00")
                 seg.setdefault("identified_speaker", "SPEAKER_00")
+                seg.setdefault("display_speaker", seg.get("identified_speaker", "SPEAKER_00"))
 
     elapsed = round(time.time() - t0, 2)
 
@@ -644,15 +670,32 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         sec = s - (h*3600 + m*60)
         return f"{h:02d}:{m:02d}:{sec:06.3f}"
 
+    identified_agent_name = next(
+        (s.get("agent_name") for s in segments if s.get("agent_name")),
+        locals().get("agent_name_id", "Unknown Agent"),
+    )
+
     transcription_json = []
     for seg in segments:
         conf = seg.get("confidence", 0.0)
+        identified_speaker = seg.get("identified_speaker", seg.get("speaker", "UNKNOWN"))
+        display_speaker = seg.get("display_speaker")
+        if not display_speaker:
+            if identified_speaker == "AGENT":
+                display_speaker = seg.get("agent_name") or identified_agent_name
+            elif identified_speaker == "CUSTOMER":
+                display_speaker = "Customer"
+            else:
+                display_speaker = identified_speaker
         transcription_json.append({
             "start":     _fmt_ts(float(seg["start"])),
             "end":       _fmt_ts(float(seg["end"])),
             "speaker":   seg.get("speaker", "UNKNOWN"),
             "phrase":    seg.get("text", "").strip(),
             "avg_score": round(float(conf), 3) if conf else None,
+            "identified_speaker": identified_speaker,
+            "display_speaker": display_speaker,
+            "agent_name": seg.get("agent_name"),
         })
 
     # ── Trim audio to speech-only regions ────────────────────────────────────
@@ -667,6 +710,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     if not trim_ok:
         print("[UI] Trim skipped — using original enhanced audio.", flush=True)
 
+    # Collect identified agent name (set on segments during multi-agent ID)
+    _identified_agent = identified_agent_name
+
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
         "trimmed_audio_file":       trimmed_audio_file,
@@ -678,6 +724,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "transcription_json":       transcription_json,
         "diarization":              ("stereo-channels" if is_stereo else "ecapa-kmeans") if diarization_applied else "none",
         "speaker_stats":            speaker_stats,
+        "identified_agent":         _identified_agent,
         "note": f"Transcribed with {whisper_model}",
     }
     os.makedirs(out_dir, exist_ok=True)  # re-create if deleted during long transcription
@@ -834,6 +881,30 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                 with open(result_path, "r", encoding="utf-8") as f:
                     rdata = json.load(f)
                 rdata["enhancements"] = enhancement_paths
+
+                # Cache orig_meta once so /api/calls never needs to run ffprobe.
+                if not rdata.get("orig_meta"):
+                    orig_audio = upload_path
+                    try:
+                        r = subprocess.run(
+                            ["ffprobe", "-v", "quiet", "-print_format", "json",
+                             "-show_format", "-show_streams", orig_audio],
+                            capture_output=True, text=True, timeout=15, env=_ENV,
+                        )
+                        if r.returncode == 0:
+                            fd = json.loads(r.stdout)
+                            fmt_d  = fd.get("format", {})
+                            streams = fd.get("streams", [{}])
+                            rdata["orig_meta"] = {
+                                "duration_s":   round(float(fmt_d.get("duration", 0))),
+                                "bitrate_kbps": int(fmt_d.get("bit_rate", 0)) // 1000,
+                                "size_mb":      round(int(fmt_d.get("size", 0)) / 1024 / 1024, 1),
+                                "sample_rate":  streams[0].get("sample_rate", "?"),
+                                "channels":     streams[0].get("channels", 1),
+                            }
+                    except Exception as _e:
+                        print(f"[UI] orig_meta ffprobe failed: {_e}")
+
                 with open(result_path, "w", encoding="utf-8") as f:
                     json.dump(rdata, f, indent=2, ensure_ascii=False)
             except Exception as e:
@@ -983,31 +1054,10 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                         with open(rp, encoding="utf-8") as f:
                             rdata = json.load(f)
                         audio_file = rdata.get("audio_file", "")
-                        # Derive original file path (strip enhanced_ prefix)
                         orig_file = audio_file.replace("enhanced_", "").replace("\\", "/")
-                        # Get original audio metadata via ffprobe
-                        orig_meta = {}
-                        if orig_file and os.path.isfile(orig_file):
-                            try:
-                                import subprocess as _sp
-                                r = _sp.run(
-                                    ["ffprobe", "-v", "quiet", "-print_format", "json",
-                                     "-show_format", "-show_streams", orig_file],
-                                    capture_output=True, text=True, timeout=10
-                                )
-                                if r.returncode == 0:
-                                    fd = json.loads(r.stdout)
-                                    fmt = fd.get("format", {})
-                                    streams = fd.get("streams", [{}])
-                                    orig_meta = {
-                                        "duration_s": round(float(fmt.get("duration", 0))),
-                                        "bitrate_kbps": int(fmt.get("bit_rate", 0)) // 1000,
-                                        "size_mb": round(int(fmt.get("size", 0)) / 1024 / 1024, 1),
-                                        "sample_rate": streams[0].get("sample_rate", "?"),
-                                        "channels": streams[0].get("channels", 1),
-                                    }
-                            except Exception:
-                                pass
+                        # orig_meta is written into result.json by _run_pipeline at
+                        # completion — never computed here to keep this endpoint fast.
+                        orig_meta = rdata.get("orig_meta") or {}
                         calls.append({
                             "id": d,
                             "model": rdata.get("model", "unknown"),
@@ -1307,9 +1357,11 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             with _status_lock:
                 _status.update(running=False, done=False, error=None, result_id=None,
                                stage_num=0, stage="Idle", message="")
+            # Send the response BEFORE starting the pipeline thread so the client
+            # gets its confirmation even when the server becomes CPU/GPU-bound.
+            self._json({"status": "started", "filename": filename, "model": model})
             threading.Thread(target=_run_pipeline, args=(upload_path, filename, model),
                              daemon=True).start()
-            self._json({"status": "started", "filename": filename, "model": model})
             return
         self.send_response(404)
         self.end_headers()

@@ -6,1718 +6,1232 @@
     <title>Call Processor Dashboard</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --surface-color: #1e293b;
-            --surface-hover: #334155;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --agent-bg: #3b82f6;
-            --agent-text: #ffffff;
-            --customer-bg: #475569;
-            --customer-text: #ffffff;
-            --accent: #10b981;
-            --danger: #ef4444;
+            --bg:         #0b1120;
+            --surface:    #111827;
+            --surface2:   #1f2937;
+            --border:     rgba(255,255,255,0.07);
+            --agent-col:  #2563eb;
+            --cust-col:   #374151;
+            --accent:     #3b82f6;
+            --green:      #22c55e;
+            --text:       #f1f5f9;
+            --muted:      #64748b;
+            --muted2:     #374151;
         }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Sidebar for Calls */
+        /* ── Scrollbar ─────────────────────────────────────────────────── */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+
+        /* ══════════════════════════════════════════════════════════════════
+           SIDEBAR
+        ══════════════════════════════════════════════════════════════════ */
         aside {
-            width: 320px;
-            background-color: var(--surface-color);
-            border-right: 1px solid rgba(255,255,255,0.1);
+            width: 280px;
+            flex-shrink: 0;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            box-shadow: 4px 0 15px rgba(0,0,0,0.2);
-            z-index: 10;
+            overflow: hidden;
         }
 
         .brand {
-            padding: 24px;
-            font-size: 1.25rem;
+            padding: 18px 20px;
             font-weight: 700;
-            color: var(--text-main);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 1rem;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            flex-shrink: 0;
         }
-        
-        .brand span {
-            color: var(--agent-bg);
-            font-size: 1.5rem;
-        }
+        .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
 
         .call-list {
             flex: 1;
             overflow-y: auto;
-            padding: 12px;
+            padding: 10px;
         }
 
         .call-card {
-            padding: 16px;
-            margin-bottom: 8px;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.03);
+            padding: 12px 14px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.02);
             cursor: pointer;
-            transition: all 0.2s ease;
             border: 1px solid transparent;
+            transition: all 0.15s;
         }
-
-        .call-card:hover {
-            background: var(--surface-hover);
-            transform: translateY(-2px);
-        }
-
-        .call-card.active {
-            background: rgba(59, 130, 246, 0.15);
-            border-color: rgba(59, 130, 246, 0.4);
-        }
+        .call-card:hover  { background: var(--surface2); }
+        .call-card.active { background: rgba(37,99,235,0.12); border-color: rgba(59,130,246,0.35); }
 
         .call-title {
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 6px;
-            word-break: break-all;
-        }
-
-        /* Upload Section */
-        .upload-section {
-            padding: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.1);
-        }
-
-        .upload-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--agent-bg);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .upload-btn:hover {
-            background: #2563eb;
-            transform: translateY(-1px);
-        }
-
-        .upload-btn:disabled {
-            background: var(--surface-hover);
-            color: var(--text-muted);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Enrollment Section */
-        .enroll-section {
-            padding: 14px 20px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            background: rgba(0,0,0,0.08);
-        }
-        .enroll-section-title {
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-        .enroll-status-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: 0.8rem;
-        }
-        .enroll-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            background: #4b5563;
-        }
-        .enroll-dot.enrolled { background: #22c55e; }
-        .enroll-dot.running  { background: #f59e0b; animation: pulse 1s infinite; }
-        .enroll-name { color: var(--text-primary); font-weight: 600; }
-        .enroll-sub  { color: var(--text-muted); font-size: 0.75rem; }
-        .enroll-btn-sm {
-            width: 100%;
-            padding: 8px 12px;
-            background: rgba(99,102,241,0.15);
-            color: #a5b4fc;
-            border: 1px solid rgba(99,102,241,0.3);
-            border-radius: 6px;
             font-size: 0.78rem;
             font-weight: 600;
+            color: var(--text);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            word-break: break-all;
+        }
+        .call-meta { font-size: 0.7rem; color: var(--muted); line-height: 1.6; }
+        .badge-num {
+            flex-shrink: 0;
+            background: var(--surface2);
+            color: var(--muted);
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-top: 1px;
+        }
+        .badge-latest {
+            flex-shrink: 0;
+            background: #1e3a5f;
+            color: #60a5fa;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-top: 1px;
+        }
+        .model-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #fff;
+            margin-right: 5px;
+        }
+
+        /* Upload */
+        .upload-section {
+            padding: 14px 16px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .model-select {
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 7px 10px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            font-size: 0.78rem;
+            cursor: pointer;
+        }
+        .upload-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            font-weight: 600;
+            font-size: 0.85rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            transition: background 0.2s;
+            gap: 7px;
+            transition: background 0.15s;
         }
-        .enroll-btn-sm:hover { background: rgba(99,102,241,0.28); }
-        .enroll-btn-sm:disabled { opacity: 0.4; cursor: not-allowed; }
-        .enroll-progress {
-            margin-top: 6px;
-            font-size: 0.73rem;
-            color: var(--text-muted);
-            min-height: 1.2em;
-        }
+        .upload-btn:hover { background: #1d4ed8; }
+        .upload-btn:disabled { background: var(--surface2); color: var(--muted); cursor: not-allowed; }
 
-        /* Main Content */
+        /* Enrollment */
+        .enroll-section {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .enroll-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 7px; }
+        .enroll-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.78rem; }
+        .enroll-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted2); flex-shrink: 0; }
+        .enroll-dot.enrolled { background: var(--green); }
+        .enroll-dot.running  { background: #f59e0b; animation: pulse 1s infinite; }
+        .enroll-name { font-weight: 600; }
+        .enroll-sub { font-size: 0.7rem; color: var(--muted); }
+        .enroll-btn {
+            width: 100%;
+            padding: 7px;
+            background: rgba(99,102,241,0.12);
+            color: #a5b4fc;
+            border: 1px solid rgba(99,102,241,0.25);
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: background 0.15s;
+        }
+        .enroll-btn:hover { background: rgba(99,102,241,0.22); }
+        .enroll-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .enroll-progress { margin-top: 5px; font-size: 0.7rem; color: var(--muted); min-height: 1em; }
+
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+        /* ══════════════════════════════════════════════════════════════════
+           MAIN AREA
+        ══════════════════════════════════════════════════════════════════ */
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: var(--bg-color);
-            position: relative;
+            min-width: 0;
+            overflow: hidden;
         }
 
-        .header-stats {
-            padding: 24px 40px;
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: none; /* hidden until loaded */
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .stat-group {
-            display: flex;
-            gap: 32px;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .stat-val {
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-        
-        .stat-val.highlight {
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        /* ── Audio Comparison Panel ──────────────────────────────────────── */
-        .audio-compare {
-            display: none;
+        /* ── Audio players (top, always visible) ───────────────────────── */
+        .audio-bar {
             flex-shrink: 0;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: #080f1e;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-            padding: 16px 32px 14px;
-        }
-        .compare-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .compare-title {
-            font-size: 0.62rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: #334155;
-        }
-        .gen-all-btn {
-            font-size: 0.62rem;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 7px;
-            border: 1px solid rgba(59,130,246,0.3);
-            background: rgba(59,130,246,0.08);
-            color: #60a5fa;
-            cursor: pointer;
-            transition: all 0.2s;
-            letter-spacing: 0.04em;
-        }
-        .gen-all-btn:hover  { background: rgba(59,130,246,0.18); }
-        .gen-all-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .compare-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            display: none;
+            padding: 12px 24px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            gap: 14px;
         }
         .audio-track {
-            border-radius: 11px;
-            border: 1px solid rgba(255,255,255,0.06);
-            background: rgba(255,255,255,0.02);
-            padding: 9px 12px 7px;
-            transition: border-color 0.2s;
+            flex: 1;
             min-width: 0;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 12px;
         }
-        .audio-track:hover { border-color: rgba(255,255,255,0.14); }
-
-        .track-original   { border-color: rgba(100,116,139,0.25); }
-        .track-ffmpeg     { border-color: rgba(59,130,246,0.3); box-shadow: inset 0 0 0 1px rgba(59,130,246,0.08); }
-        .track-nr         { border-color: rgba(245,158,11,0.25);  }
-        .track-deepfilter { border-color: rgba(168,85,247,0.25);  }
-        .track-metricgan  { border-color: rgba(236,72,153,0.25);  }
-
-        .track-header {
+        .track-label {
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-bottom: 7px;
+            margin-bottom: 5px;
         }
         .track-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-        .dot-original   { background: #64748b; }
-        .dot-ffmpeg     { background: #3b82f6; }
-        .dot-nr         { background: #f59e0b; }
-        .dot-deepfilter { background: #a855f7; }
-        .dot-metricgan  { background: #ec4899; }
-
-        .track-title {
-            font-size: 0.64rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .track-original   .track-title { color: #94a3b8; }
-        .track-ffmpeg     .track-title { color: #60a5fa; }
-        .track-nr         .track-title { color: #fbbf24; }
-        .track-deepfilter .track-title { color: #c084fc; }
-        .track-metricgan  .track-title { color: #f472b6; }
-
+        .dot-orig { background: #64748b; }
+        .dot-enh  { background: #3b82f6; }
+        .track-name { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+        .track-orig .track-name { color: #94a3b8; }
+        .track-enh  .track-name { color: #60a5fa; }
         .track-badge {
             font-size: 0.5rem;
             font-weight: 700;
-            padding: 2px 5px;
+            padding: 2px 6px;
             border-radius: 99px;
-            letter-spacing: 0.04em;
+            letter-spacing: .04em;
             text-transform: uppercase;
-            flex-shrink: 0;
         }
-        .badge-raw       { background: rgba(100,116,139,0.15); color: #94a3b8; border: 1px solid rgba(100,116,139,0.25); }
-        .badge-ffmpeg    { background: rgba(59,130,246,0.12);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
-        .badge-nr        { background: rgba(245,158,11,0.12);  color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
-        .badge-df        { background: rgba(168,85,247,0.12);  color: #c084fc; border: 1px solid rgba(168,85,247,0.25); }
-        .badge-mg        { background: rgba(236,72,153,0.12);  color: #f472b6; border: 1px solid rgba(236,72,153,0.25); }
-
-        .track-note {
-            font-size: 0.58rem;
-            color: #374151;
-            margin-top: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .track-unavailable { opacity: 0.45; }
-        .track-unavailable .track-note { font-style: italic; color: #1e2d3d; }
-
-        .gen-btn {
-            margin-top: 6px;
-            width: 100%;
-            padding: 5px 0;
-            font-size: 0.62rem;
-            font-weight: 700;
-            border-radius: 6px;
-            border: 1px dashed rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.03);
-            color: #475569;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .gen-btn:hover { background: rgba(255,255,255,0.07); color: #94a3b8; }
-        .gen-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-        .gen-spinner {
-            display: inline-block;
-            width: 9px; height: 9px;
-            border: 2px solid rgba(255,255,255,0.12);
-            border-top-color: #94a3b8;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            vertical-align: middle;
-            margin-right: 5px;
-        }
-
-        audio {
-            width: 100%;
-            height: 36px;
-            border-radius: 6px;
-            outline: none;
-        }
-        .track-original   audio { accent-color: #64748b; }
-        .track-ffmpeg     audio { accent-color: #3b82f6; }
-        .track-nr         audio { accent-color: #f59e0b; }
-        .track-deepfilter audio { accent-color: #a855f7; }
-
-        /* Custom seek-bar player */
+        .badge-raw  { background: rgba(100,116,139,.15); color:#94a3b8; border:1px solid rgba(100,116,139,.25); }
+        .badge-sync { background: rgba(59,130,246,.12);  color:#60a5fa; border:1px solid rgba(59,130,246,.25); }
         .cp-player {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 0 4px;
+            gap: 7px;
         }
         .cp-btn {
-            background: none;
-            border: none;
-            color: #cbd5e1;
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.15s;
+            background: none; border: none; color: #cbd5e1; cursor: pointer;
+            padding: 3px; border-radius: 5px; display: flex; align-items: center;
             flex-shrink: 0;
         }
         .cp-btn:hover { color: #fff; }
         .cp-time, .cp-dur {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            font-variant-numeric: tabular-nums;
-            flex-shrink: 0;
-            min-width: 34px;
+            font-size: 0.68rem; color: var(--muted); font-variant-numeric: tabular-nums;
+            flex-shrink: 0; min-width: 28px;
         }
         .cp-dur { text-align: right; }
         .cp-seek {
-            flex: 1;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 4px;
-            border-radius: 2px;
-            background: rgba(255,255,255,0.12);
-            outline: none;
-            cursor: pointer;
-            min-width: 0;
+            flex: 1; -webkit-appearance: none; appearance: none;
+            height: 3px; border-radius: 2px; background: rgba(255,255,255,0.1);
+            outline: none; cursor: pointer; min-width: 0;
         }
         .cp-seek::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #3b82f6;
-            cursor: pointer;
-            box-shadow: 0 0 4px rgba(59,130,246,0.5);
-            transition: transform 0.1s;
+            -webkit-appearance: none; width: 12px; height: 12px;
+            border-radius: 50%; background: var(--accent); cursor: pointer;
         }
-        .cp-seek::-webkit-slider-thumb:hover { transform: scale(1.3); }
-        .track-original .cp-seek::-webkit-slider-thumb { background: #64748b; }
-        .cp-mute {
-            background: none;
-            border: none;
-            color: #64748b;
-            cursor: pointer;
-            padding: 2px;
-            font-size: 0.8rem;
+        .track-orig .cp-seek::-webkit-slider-thumb { background: #64748b; }
+        .cp-mute { background:none; border:none; color:var(--muted); cursor:pointer; font-size:.8rem; flex-shrink:0; }
+        .cp-mute:hover { color:var(--text); }
+
+        /* ── Speaker stats strip ────────────────────────────────────────── */
+        .spk-strip {
             flex-shrink: 0;
+            display: none;
+            padding: 8px 24px;
+            border-bottom: 1px solid var(--border);
+            gap: 6px;
+            flex-direction: column;
         }
-        .cp-mute:hover { color: #94a3b8; }
+        .spk-row { display: flex; align-items: center; gap: 10px; font-size: 0.72rem; }
+        .spk-label { width: 70px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; flex-shrink: 0; }
+        .spk-label.agent   { color: #60a5fa; }
+        .spk-label.cust    { color: #94a3b8; }
+        .spk-track { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+        .spk-fill  { height: 100%; border-radius: 3px; transition: width .4s; }
+        .spk-fill.agent { background: #3b82f6; }
+        .spk-fill.cust  { background: #475569; }
+        .spk-info { color: var(--muted); font-size: 0.7rem; min-width: 100px; }
+        .spk-diar-badge {
+            font-size: 0.62rem; padding: 2px 7px; border-radius: 8px;
+            background: rgba(34,197,94,0.1); color: #4ade80;
+            border: 1px solid rgba(34,197,94,0.2); margin-left: auto; flex-shrink: 0;
+        }
+        .swap-btn {
+            flex-shrink: 0; padding: 2px 10px; font-size: 0.68rem;
+            background: rgba(251,191,36,0.1); color: #fbbf24;
+            border: 1px solid rgba(251,191,36,0.25); border-radius: 5px; cursor: pointer;
+            margin-left: 4px;
+        }
+        .swap-btn:hover { background: rgba(251,191,36,0.2); }
 
-        /* Transcript-sync player gets a subtle glow */
-        .track-ffmpeg { box-shadow: 0 0 0 1px rgba(59,130,246,0.15) inset; }
+        /* ── Now speaking bar ───────────────────────────────────────────── */
+        .now-bar {
+            display: none;
+            flex-shrink: 0;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 24px;
+            background: rgba(8,15,30,0.98);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .now-wave { display:flex; align-items:center; gap:2px; height:16px; flex-shrink:0; }
+        .now-bar-el { width:3px; border-radius:2px; animation:nw .75s ease-in-out infinite; }
+        .now-bar-el:nth-child(1){height:4px;  animation-delay:.00s;}
+        .now-bar-el:nth-child(2){height:10px; animation-delay:.12s;}
+        .now-bar-el:nth-child(3){height:15px; animation-delay:.24s;}
+        .now-bar-el:nth-child(4){height:10px; animation-delay:.36s;}
+        .now-bar-el:nth-child(5){height:4px;  animation-delay:.48s;}
+        @keyframes nw { 0%,100%{transform:scaleY(.35);opacity:.4} 50%{transform:scaleY(1);opacity:1} }
+        .now-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+        .now-speaker { font-weight:800; font-size:.82rem; flex-shrink:0; white-space:nowrap; }
+        .now-sep { color:#1e293b; flex-shrink:0; }
+        .now-phrase { flex:1; color:#475569; font-size:.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .now-time { font-size:.68rem; color:#1e293b; flex-shrink:0; font-variant-numeric:tabular-nums; }
 
-        /* Chat View */
-        .chat-container {
+        /* ── Chat area ──────────────────────────────────────────────────── */
+        .chat {
             flex: 1;
-            padding: 40px;
             overflow-y: auto;
+            padding: 20px 28px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            scroll-behavior: smooth;
+            gap: 10px;
+            min-height: 0;
         }
 
-        .chat-bubble {
-            max-width: 72%;
-            padding: 14px 18px;
-            border-radius: 18px;
+        .chat-placeholder {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            color: var(--muted);
+            font-size: 1rem;
+        }
+        .chat-placeholder svg { opacity: .4; }
+
+        /* ── Chat bubbles ───────────────────────────────────────────────── */
+        .bubble {
+            max-width: 65%;
+            padding: 10px 14px 13px;
+            border-radius: 16px;
             position: relative;
-            animation: fadeIn 0.3s ease-out;
+            overflow: hidden;
+            font-size: 0.9rem;
             line-height: 1.5;
-            font-size: 0.93rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            transition: all 0.2s ease;
+            flex-shrink: 0;
+            animation: fadeUp .25s ease-out;
+            transition: transform .2s, box-shadow .2s, opacity .3s;
         }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
 
-        .chat-bubble.active {
-            transform: scale(1.02);
-            box-shadow: 0 0 0 2px var(--accent), 0 8px 25px rgba(16, 185, 129, 0.2);
-            z-index: 2;
-        }
-
-        .chat-agent {
-            background: linear-gradient(135deg, #1d4ed8, #2563eb);
-            color: #fff;
+        /* Agent — LEFT */
+        .bubble-agent {
             align-self: flex-start;
+            background: linear-gradient(135deg, #1e40af, #2563eb);
+            color: #fff;
             border-bottom-left-radius: 4px;
         }
 
-        .chat-customer {
-            background: linear-gradient(135deg, #334155, #475569);
-            color: #e2e8f0;
+        /* Customer — RIGHT */
+        .bubble-cust {
             align-self: flex-end;
+            background: var(--surface2);
+            color: #cbd5e1;
             border-bottom-right-radius: 4px;
         }
 
-        .chat-meta {
-            font-size: 0.72rem;
-            margin-bottom: 6px;
-            opacity: 0.85;
+        /* Bubble header */
+        .bubble-head {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            margin-bottom: 4px;
+            gap: 8px;
         }
-
-        .speaker-label {
+        .bubble-speaker {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .05em;
             display: flex;
             align-items: center;
             gap: 5px;
         }
-        .speaker-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-        }
-        .chat-agent .speaker-dot { background: #93c5fd; }
-        .chat-customer .speaker-dot { background: #94a3b8; }
+        .bubble-agent .bubble-speaker { color: #93c5fd; }
+        .bubble-cust  .bubble-speaker { color: #94a3b8; }
 
-        .time-badge {
-            background: rgba(0,0,0,0.2);
-            padding: 3px 8px;
-            border-radius: 12px;
-            cursor: pointer;
-        }
+        .spk-dot { width:5px; height:5px; border-radius:50%; }
+        .bubble-agent .spk-dot { background: #93c5fd; }
+        .bubble-cust  .spk-dot { background: #64748b; }
 
-        .time-badge:hover {
-            background: rgba(0,0,0,0.4);
-        }
-
-        /* Speaker stats bar */
-        .speaker-stats-bar {
+        /* LIVE badge */
+        .live-badge {
             display: none;
-            flex-shrink: 0;
-            padding: 10px 32px;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-            flex-direction: column;
-            gap: 6px;
-        }
-        .spk-bar-row {
-            display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.75rem;
-        }
-        .spk-bar-label {
-            width: 80px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
+            gap: 3px;
+            background: #ef4444;
+            color: #fff;
+            font-size: .52rem;
+            font-weight: 900;
+            padding: 2px 6px 2px 5px;
+            border-radius: 99px;
+            letter-spacing: .08em;
             text-transform: uppercase;
+            animation: liveFade 1.3s ease-in-out infinite;
         }
-        .spk-bar-label.agent  { color: #60a5fa; }
-        .spk-bar-label.cust   { color: #94a3b8; }
-        .spk-bar-track {
-            flex: 1;
-            height: 6px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 3px;
-            overflow: hidden;
+        .live-badge::before {
+            content:''; display:inline-block; width:4px; height:4px;
+            background:#fff; border-radius:50%;
+            animation:liveDot .8s ease-in-out infinite;
         }
-        .spk-bar-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.4s ease;
+        @keyframes liveDot  { 0%,100%{opacity:1} 50%{opacity:.1} }
+        @keyframes liveFade { 0%,100%{opacity:1} 50%{opacity:.65} }
+        .bubble.active .live-badge { display: inline-flex; }
+
+        /* Time stamp */
+        .bubble-time {
+            font-size: 0.62rem;
+            color: rgba(255,255,255,0.35);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color .15s;
         }
-        .spk-bar-fill.agent { background: #3b82f6; }
-        .spk-bar-fill.cust  { background: #64748b; }
-        .spk-bar-info { color: var(--text-muted); min-width: 120px; }
-        .spk-diar-badge {
-            font-size: 0.67rem;
-            padding: 2px 7px;
-            border-radius: 10px;
-            background: rgba(34,197,94,0.12);
-            color: #4ade80;
-            border: 1px solid rgba(34,197,94,0.25);
-            margin-left: auto;
+        .bubble-cust .bubble-time { color: rgba(148,163,184,0.5); }
+        .bubble-time:hover { color: rgba(255,255,255,0.7) !important; }
+
+        /* Text */
+        .bubble-text { font-size: .88rem; line-height: 1.55; }
+
+        /* Progress fill */
+        .seg-progress {
+            position: absolute;
+            bottom: 0; left: 0;
+            height: 3px; width: 0%;
+            transition: width .08s linear;
+            pointer-events: none;
+            border-radius: 0;
+        }
+        .bubble-agent .seg-progress { background: rgba(147,197,253,.8); }
+        .bubble-cust  .seg-progress { background: rgba(148,163,184,.5); }
+
+        /* Active states */
+        .bubble.active { transform: scale(1.02); z-index: 2; }
+        .bubble-agent.active {
+            background: linear-gradient(135deg, #1a44cc, #3b82f6) !important;
+            box-shadow: 0 0 0 2px #60a5fa, 0 4px 28px rgba(59,130,246,.5);
+        }
+        .bubble-cust.active {
+            background: linear-gradient(135deg, #312e81, #4c1d95) !important;
+            box-shadow: 0 0 0 2px #a78bfa, 0 4px 28px rgba(139,92,246,.45);
+            color: #e9d5ff;
         }
 
+        /* Dim non-active when playing */
+        .chat.playing .bubble:not(.active) { opacity: .5; transform: none; }
+        .chat.playing .bubble.active        { opacity: 1; }
 
-        .placeholder {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .placeholder svg {
-            width: 64px;
-            height: 64px;
-            opacity: 0.5;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ── Progress Modal ───────────────────────────────────────────── */
-        .progress-overlay {
+        /* ── Jump-to-now ────────────────────────────────────────────────── */
+        .jump-btn {
+            display: none;
             position: fixed;
-            inset: 0;
-            background: rgba(10, 15, 30, 0.82);
-            backdrop-filter: blur(6px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            bottom: 24px; right: 28px;
+            z-index: 300;
+            background: var(--accent); color: #fff;
+            border: none; border-radius: 99px;
+            padding: 9px 18px; font-size: .78rem; font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(59,130,246,.5);
+            align-items: center; gap: 6px;
+            animation: jb 1.6s ease-in-out infinite;
+        }
+        @keyframes jb { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+        /* ── Progress Modal ─────────────────────────────────────────────── */
+        .progress-overlay {
+            position:fixed; inset:0;
+            background:rgba(7,12,25,.85); backdrop-filter:blur(6px);
+            z-index:1000; display:flex; align-items:center; justify-content:center;
         }
         .progress-box {
-            background: #1e293b;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 36px 40px;
-            width: 460px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            background:#1e293b; border:1px solid rgba(255,255,255,.09);
+            border-radius:18px; padding:32px 36px; width:440px;
+            box-shadow:0 30px 80px rgba(0,0,0,.5);
         }
         .progress-title {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 28px;
-            color: #f8fafc;
+            display:flex; align-items:center; gap:12px;
+            font-size:1.1rem; font-weight:700; margin-bottom:24px; color:var(--text);
         }
         .progress-spinner {
-            width: 22px;
-            height: 22px;
-            border: 3px solid rgba(59,130,246,0.25);
-            border-top-color: #3b82f6;
-            border-radius: 50%;
-            animation: spin 0.9s linear infinite;
-            flex-shrink: 0;
+            width:20px; height:20px;
+            border:3px solid rgba(59,130,246,.2); border-top-color:#3b82f6;
+            border-radius:50%; animation:spin .9s linear infinite; flex-shrink:0;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .progress-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 24px;
-        }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .progress-steps { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
         .progress-step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.06);
-            background: rgba(255,255,255,0.03);
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            transition: all 0.3s ease;
+            display:flex; align-items:center; gap:10px;
+            padding:10px 14px; border-radius:10px;
+            border:1px solid rgba(255,255,255,.06);
+            background:rgba(255,255,255,.02); font-size:.87rem; color:var(--muted);
+            transition:all .3s;
         }
-        .progress-step.active {
-            background: rgba(59,130,246,0.12);
-            border-color: rgba(59,130,246,0.35);
-            color: #93c5fd;
-        }
-        .progress-step.done {
-            background: rgba(16,185,129,0.1);
-            border-color: rgba(16,185,129,0.3);
-            color: #6ee7b7;
-        }
-        .progress-step.error {
-            background: rgba(239,68,68,0.1);
-            border-color: rgba(239,68,68,0.3);
-            color: #fca5a5;
-        }
-        .step-icon {
-            font-size: 1rem;
-            width: 22px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        .step-label { flex: 1; font-weight: 500; }
-        .step-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
-
+        .progress-step.active { background:rgba(59,130,246,.1); border-color:rgba(59,130,246,.3); color:#93c5fd; }
+        .progress-step.done   { background:rgba(16,185,129,.08); border-color:rgba(16,185,129,.25); color:#6ee7b7; }
+        .progress-step.error  { background:rgba(239,68,68,.08); border-color:rgba(239,68,68,.25); color:#fca5a5; }
+        .step-icon { width:20px; text-align:center; flex-shrink:0; }
+        .step-label { flex:1; font-weight:500; }
         .progress-track {
-            height: 6px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 99px;
-            overflow: hidden;
-            margin-bottom: 14px;
+            height:5px; background:rgba(255,255,255,.07);
+            border-radius:99px; overflow:hidden; margin-bottom:12px;
         }
         .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #10b981);
-            border-radius: 99px;
-            transition: width 0.5s ease;
+            height:100%; background:linear-gradient(90deg,#3b82f6,#10b981);
+            border-radius:99px; transition:width .5s;
         }
-        .progress-msg {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            text-align: center;
-            min-height: 18px;
-        }
-        /* ── end progress modal ──────────────────────────────────────────── */
+        .progress-msg { font-size:.78rem; color:var(--muted); text-align:center; min-height:16px; }
 
-        /* Generic scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* Confirm modal */
+        .confirm-overlay {
+            position:fixed; inset:0; background:rgba(0,0,0,.6);
+            z-index:9998; display:flex; align-items:center; justify-content:center;
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.3);
+        .confirm-box {
+            background:#1e293b; border:1px solid #334155; border-radius:10px;
+            padding:22px 26px; max-width:400px; width:90%;
+            box-shadow:0 8px 32px rgba(0,0,0,.5);
         }
     </style>
 </head>
 <body>
 
-    <aside>
-        <div class="brand">
-            <span>●</span> AI Call Dashboard
-        </div>
-        <div class="call-list" id="callList">
-            <!-- Populated by JS -->
-            <div style="text-align: center; color: var(--text-muted); margin-top: 20px;">Loading calls...</div>
-        </div>
-        <div class="upload-section">
-            <input type="file" id="audioUpload" accept="audio/*" style="display: none;">
-            <select id="modelSelect" style="width:100%; margin-bottom:10px; padding:8px 10px; background:var(--surface-hover); color:var(--text-primary); border:1px solid rgba(255,255,255,0.12); border-radius:8px; font-size:0.82rem; cursor:pointer;">
-                <optgroup label="☁️ Cloud API · fast · no GPU">
-                <option value="deepgram-nova-3">⭐ #1 Deepgram Nova-3 · best accuracy · diarization · ~5s</option>
-                <option value="deepgram-nova-2-phonecall">Deepgram Nova-2 Phone · phone/desk audio · ~5s</option>
-                <option value="deepgram-nova-2-meeting">Deepgram Nova-2 Meeting · multi-speaker · ~5s</option>
-                </optgroup>
-                <optgroup label="🖥️ Local GPU models">
-                <option value="whisper-large-v3">⭐ #3 Whisper Large-v3 · best quality · 8.1% WER · ~70s</option>
-                <option value="whisper-large-v3-turbo">#4 Whisper Large-v3-Turbo · fast · 8.4% WER · ~52s</option>
-                <option value="distil-whisper-large-v3.5">⚡ #5 Distil-Whisper v3.5 · 6x faster · 8.6% WER · ~9s</option>
-                <option value="parakeet-tdt-0.6b-v3">#6 NVIDIA Parakeet TDT v3 · 94s · fastest NeMo · 3 GB</option>
-                <option value="cohere-transcribe-03-2026">#7 Cohere Transcribe 03-2026 · 5.42% WER · ~5 min</option>
-                </optgroup>
-            </select>
-            <button class="upload-btn" onclick="document.getElementById('audioUpload').click()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                <span id="uploadText">Upload New Audio</span>
-            </button>
-        </div>
+<!-- ══ SIDEBAR ═══════════════════════════════════════════════════════════ -->
+<aside>
+    <div class="brand">
+        <div class="brand-dot"></div>
+        AI Call Dashboard
+    </div>
 
-        <!-- Agent Voice Enrollment -->
-        <div class="enroll-section">
-            <div class="enroll-section-title">Agent Voice ID</div>
-            <div class="enroll-status-row">
-                <div class="enroll-dot" id="enrollDot"></div>
-                <div>
-                    <div class="enroll-name" id="enrollName">Not enrolled</div>
-                    <div class="enroll-sub" id="enrollSub">Upload clean voice to identify agent</div>
-                </div>
-            </div>
-            <input type="file" id="cleanVoiceUpload" accept="audio/*" multiple style="display:none;">
-            <button class="enroll-btn-sm" id="enrollBtn" onclick="document.getElementById('cleanVoiceUpload').click()">
-                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
-                Upload Agent Voice
-            </button>
-            <div class="enroll-progress" id="enrollProgress"></div>
-        </div>
-    </aside>
+    <div class="call-list" id="callList">
+        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem;">Loading…</div>
+    </div>
 
-    <main>
-        <div class="header-stats" id="headerStats">
-            <div class="stat-group">
-                <div class="stat-item">
-                    <span class="stat-label">Agent Identified</span>
-                    <span class="stat-val highlight" id="statAgent">Loading...</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Total Segments</span>
-                    <span class="stat-val" id="statSegs">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Processed At</span>
-                    <span class="stat-val" id="statTime">...</span>
-                </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div class="stat-item" style="align-items: flex-end;">
-                    <span class="stat-label">File</span>
-                    <span class="stat-val" id="statFile" style="font-size: 0.85rem; color: var(--text-muted);">...</span>
-                </div>
-                <button id="benchmarkBtn" onclick="toggleBenchmark()" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.07); color:var(--text-muted); border:1px solid rgba(255,255,255,0.12); border-radius:6px; font-size:0.78rem; cursor:pointer; white-space:nowrap;" title="Model Benchmark">&#9881; Benchmark</button>
-                <button onclick="deleteAllCalls()" style="flex-shrink:0; padding:6px 14px; background:rgba(220,38,38,0.12); color:#f87171; border:1px solid rgba(220,38,38,0.3); border-radius:6px; font-size:0.78rem; cursor:pointer; white-space:nowrap;" title="Delete All Recordings">&#128465; Delete All</button>
+    <div class="upload-section">
+        <input type="file" id="audioUpload" accept="audio/*" style="display:none">
+        <select id="modelSelect" class="model-select">
+            <optgroup label="☁️ Cloud API · no GPU">
+                <option value="deepgram-nova-3">⭐ Deepgram Nova-3 · best · ~5s</option>
+                <option value="deepgram-nova-2-phonecall">Deepgram Nova-2 Phone · ~5s</option>
+                <option value="deepgram-nova-2-meeting">Deepgram Nova-2 Meeting · ~5s</option>
+            </optgroup>
+            <optgroup label="🖥️ Local GPU">
+                <option value="whisper-large-v3">Whisper Large-v3 · 8.1% WER</option>
+                <option value="whisper-large-v3-turbo">Whisper v3-Turbo · fast</option>
+                <option value="distil-whisper-large-v3.5" selected>⚡ Distil-Whisper v3.5 · fastest</option>
+                <option value="parakeet-tdt-0.6b-v3">NVIDIA Parakeet TDT v3</option>
+                <option value="cohere-transcribe-03-2026">Cohere 03-2026 · 5.42% WER</option>
+            </optgroup>
+        </select>
+        <button class="upload-btn" onclick="document.getElementById('audioUpload').click()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+            </svg>
+            <span id="uploadText">Upload Audio</span>
+        </button>
+    </div>
+
+    <div class="enroll-section">
+        <div class="enroll-title">Agent Voice ID</div>
+        <div class="enroll-row">
+            <div class="enroll-dot" id="enrollDot"></div>
+            <div>
+                <div class="enroll-name" id="enrollName">Not enrolled</div>
+                <div class="enroll-sub" id="enrollSub">Upload voice samples</div>
             </div>
         </div>
+        <input type="file" id="cleanVoiceUpload" accept="audio/*" multiple style="display:none">
+        <button class="enroll-btn" id="enrollBtn" onclick="document.getElementById('cleanVoiceUpload').click()">
+            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+            </svg>
+            Upload Agent Voice
+        </button>
+        <div class="enroll-progress" id="enrollProgress"></div>
+    </div>
+</aside>
 
-        <div class="audio-compare" id="audioCompare">
-            <div class="compare-header">
-                <span class="compare-title">Audio</span>
+<!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
+<main>
+
+    <!-- Audio players -->
+    <div class="audio-bar" id="audioBar" style="display:none">
+        <!-- Original -->
+        <div class="audio-track track-orig">
+            <div class="track-label">
+                <div class="track-dot dot-orig"></div>
+                <span class="track-name">Original</span>
+                <span class="track-badge badge-raw">Raw</span>
             </div>
-            <div class="compare-grid">
-
-                <!-- 1. Original -->
-                <div class="audio-track track-original">
-                    <div class="track-header">
-                        <div class="track-dot dot-original"></div>
-                        <span class="track-title">Original</span>
-                        <span class="track-badge badge-raw">Raw</span>
-                    </div>
-                    <audio id="audioOriginal" preload="metadata"></audio>
-                    <div class="cp-player" id="cpOrig">
-                        <button class="cp-btn" id="cpOrigBtn" title="Play/Pause">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                        </button>
-                        <span class="cp-time" id="cpOrigTime">0:00</span>
-                        <input type="range" class="cp-seek" id="cpOrigSeek" value="0" min="0" max="100" step="0.01">
-                        <span class="cp-dur" id="cpOrigDur">--:--</span>
-                        <button class="cp-mute" id="cpOrigMute" title="Mute">🔊</button>
-                    </div>
-                    <div class="track-note">Unprocessed upload</div>
-                </div>
-
-                <!-- 2. Enhanced — synced to transcript -->
-                <div class="audio-track track-ffmpeg">
-                    <div class="track-header">
-                        <div class="track-dot dot-ffmpeg"></div>
-                        <span class="track-title">Enhanced</span>
-                        <span class="track-badge badge-ffmpeg">Synced</span>
-                    </div>
-                    <audio id="audioPlayer" preload="metadata"></audio>
-                    <div class="cp-player" id="cpEnh">
-                        <button class="cp-btn" id="cpEnhBtn" title="Play/Pause">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                        </button>
-                        <span class="cp-time" id="cpEnhTime">0:00</span>
-                        <input type="range" class="cp-seek" id="cpEnhSeek" value="0" min="0" max="100" step="0.01">
-                        <span class="cp-dur" id="cpEnhDur">--:--</span>
-                        <button class="cp-mute" id="cpEnhMute" title="Mute">🔊</button>
-                    </div>
-                    <div class="track-note">noise reduction · volume boost · loudnorm · transcript sync</div>
-                </div>
-
-
+            <div class="cp-player">
+                <button class="cp-btn" id="cpOrigBtn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <span class="cp-time" id="cpOrigTime">0:00</span>
+                <input type="range" class="cp-seek" id="cpOrigSeek" value="0" min="0" max="100" step="0.01">
+                <span class="cp-dur" id="cpOrigDur">--:--</span>
+                <button class="cp-mute" id="cpOrigMute">🔊</button>
             </div>
         </div>
 
-        <!-- Speaker stats bar — shown after transcription with diarization -->
-        <div class="speaker-stats-bar" id="speakerStatsBar">
-            <div class="spk-bar-row">
-                <span class="spk-bar-label agent">Agent</span>
-                <div class="spk-bar-track"><div class="spk-bar-fill agent" id="spkBarAgent" style="width:50%"></div></div>
-                <span class="spk-bar-info" id="statAgentTime">--</span>
-                <span class="spk-bar-info" id="statAgentTurns">--</span>
-                <span class="spk-diar-badge" id="statDiarMethod">--</span>
-                <button id="swapRolesBtn" onclick="swapRoles()" title="Swap Agent ↔ Customer if labels are wrong" style="flex-shrink:0; padding:3px 10px; font-size:0.72rem; background:rgba(251,191,36,0.12); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); border-radius:6px; cursor:pointer; margin-left:6px;">🔄 Swap Roles</button>
+        <!-- Enhanced (synced) -->
+        <div class="audio-track track-enh">
+            <div class="track-label">
+                <div class="track-dot dot-enh"></div>
+                <span class="track-name">Enhanced</span>
+                <span class="track-badge badge-sync">Synced</span>
             </div>
-            <div class="spk-bar-row">
-                <span class="spk-bar-label cust">Customer</span>
-                <div class="spk-bar-track"><div class="spk-bar-fill cust" id="spkBarCust" style="width:50%"></div></div>
-                <span class="spk-bar-info" id="statCustTime">--</span>
-                <span class="spk-bar-info" id="statCustTurns">--</span>
-            </div>
-            <!-- First-words preview so you can read and verify the assignment -->
-            <div id="spkFirstWords" style="display:none; margin-top:6px; grid-template-columns:1fr 1fr; gap:8px;">
-                <div style="background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); border-radius:8px; padding:8px 12px; font-size:0.75rem;">
-                    <div style="color:#60a5fa; font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em;">🎙 Agent — first words</div>
-                    <div id="firstWordsAgent" style="color:#cbd5e1; font-style:italic;">&mdash;</div>
-                </div>
-                <div style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.2); border-radius:8px; padding:8px 12px; font-size:0.75rem;">
-                    <div style="color:#94a3b8; font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em;">🧑 Customer — first words</div>
-                    <div id="firstWordsCustomer" style="color:#cbd5e1; font-style:italic;">&mdash;</div>
-                </div>
+            <div class="cp-player">
+                <button class="cp-btn" id="cpEnhBtn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <span class="cp-time" id="cpEnhTime">0:00</span>
+                <input type="range" class="cp-seek" id="cpEnhSeek" value="0" min="0" max="100" step="0.01">
+                <span class="cp-dur" id="cpEnhDur">--:--</span>
+                <button class="cp-mute" id="cpEnhMute">🔊</button>
             </div>
         </div>
 
-        <div class="chat-container" id="chatContainer">
-            <div class="placeholder">
-                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
-                Select a processed call to view transcription
-            </div>
-        </div>
+        <!-- Hidden audio elements -->
+        <audio id="audioOriginal" preload="metadata" style="display:none"></audio>
+        <audio id="audioPlayer"   preload="metadata" style="display:none"></audio>
+    </div>
 
-        <!-- Benchmark Panel -->
-        <div id="benchmarkPanel" style="display:none; padding:20px 0;">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-                <h2 style="font-size:1rem; font-weight:600; color:var(--text-primary); margin:0;">Model Benchmark</h2>
-                <span style="font-size:0.75rem; color:var(--text-muted);">Tested on 25-min desk recording · CPU-only server</span>
-            </div>
-            <div style="overflow-x:auto;">
-            <table id="benchmarkTable" style="width:100%; border-collapse:collapse; font-size:0.82rem;">
-                <thead>
-                    <tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
-                        <th style="text-align:left; padding:8px 10px; color:var(--text-muted); font-weight:500;">Model</th>
-                        <th style="text-align:left; padding:8px 10px; color:var(--text-muted); font-weight:500;">Type</th>
-                        <th style="text-align:right; padding:8px 10px; color:var(--text-muted); font-weight:500;">Speed</th>
-                        <th style="text-align:right; padding:8px 10px; color:var(--text-muted); font-weight:500;">Segments</th>
-                        <th style="text-align:left; padding:8px 10px; color:var(--text-muted); font-weight:500;">Notes</th>
-                        <th style="text-align:center; padding:8px 10px; color:var(--text-muted); font-weight:500;">Status</th>
-                    </tr>
-                </thead>
-                <tbody id="benchmarkBody">
-                    <tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">Loading...</td></tr>
-                </tbody>
-            </table>
-            </div>
+    <!-- Speaker stats strip -->
+    <div class="spk-strip" id="spkStrip">
+        <div class="spk-row">
+            <span class="spk-label agent">Agent</span>
+            <div class="spk-track"><div class="spk-fill agent" id="spkFillAgent" style="width:50%"></div></div>
+            <span class="spk-info" id="spkInfoAgent">--</span>
+            <span class="spk-info" id="spkTurnsAgent">--</span>
+            <span class="spk-diar-badge" id="spkDiarBadge">--</span>
+            <button class="swap-btn" onclick="swapRoles()" id="swapRolesBtn">🔄 Swap</button>
         </div>
-    </main>
-
-    <!-- Progress Modal -->
-    <div id="progressModal" class="progress-overlay" style="display:none">
-        <div class="progress-box">
-            <div class="progress-title">
-                <div class="progress-spinner"></div>
-                Processing Call…
-            </div>
-            <div class="progress-steps">
-                <div class="progress-step" id="pstep-0">
-                    <span class="step-icon">🔊</span>
-                    <div><div class="step-label">Audio Enhancement</div><div class="step-sub">Noise reduction · volume boost</div></div>
-                </div>
-                <div class="progress-step" id="pstep-1">
-                    <span class="step-icon">🎙️</span>
-                    <div><div class="step-label">Speaker Diarization</div><div class="step-sub">Who spoke when (pyannote)</div></div>
-                </div>
-                <div class="progress-step" id="pstep-2">
-                    <span class="step-icon">🪪</span>
-                    <div><div class="step-label">Speaker Identification</div><div class="step-sub">Matching voices to agents</div></div>
-                </div>
-                <div class="progress-step" id="pstep-3">
-                    <span class="step-icon">📝</span>
-                    <div><div class="step-label">Transcription</div><div class="step-sub">Speech to text (Whisper)</div></div>
-                </div>
-            </div>
-            <div class="progress-track">
-                <div class="progress-fill" id="progressFill" style="width:0%"></div>
-            </div>
-            <div class="progress-msg" id="progressMsg">Preparing…</div>
+        <div class="spk-row">
+            <span class="spk-label cust">Customer</span>
+            <div class="spk-track"><div class="spk-fill cust" id="spkFillCust" style="width:50%"></div></div>
+            <span class="spk-info" id="spkInfoCust">--</span>
+            <span class="spk-info" id="spkTurnsCust">--</span>
         </div>
     </div>
 
-    <script>
-        const DOM = {
-            callList:     document.getElementById('callList'),
-            headerStats:  document.getElementById('headerStats'),
-            audioCompare: document.getElementById('audioCompare'),
-            chatContainer:document.getElementById('chatContainer'),
-            audioPlayer:  document.getElementById('audioPlayer'),
-            audioOriginal:document.getElementById('audioOriginal'),
-            statAgent:    document.getElementById('statAgent'),
-            statSegs:     document.getElementById('statSegs'),
-            statTime:     document.getElementById('statTime'),
-            statFile:     document.getElementById('statFile'),
-        };
+    <!-- Now speaking bar -->
+    <div class="now-bar" id="nowBar">
+        <div class="now-wave">
+            <div class="now-bar-el" id="nwb1"></div>
+            <div class="now-bar-el" id="nwb2"></div>
+            <div class="now-bar-el" id="nwb3"></div>
+            <div class="now-bar-el" id="nwb4"></div>
+            <div class="now-bar-el" id="nwb5"></div>
+        </div>
+        <span class="now-dot" id="nowDot"></span>
+        <span class="now-speaker" id="nowSpeaker">—</span>
+        <span class="now-sep">·</span>
+        <span class="now-phrase" id="nowPhrase"></span>
+        <span class="now-time" id="nowTime"></span>
+    </div>
 
-        let currentSegments = [];
-        let currentCallId   = null;
-        let agentSpkId      = null;   // most-speaking SPEAKER_XX (fallback for old results)
+    <!-- Chat -->
+    <div class="chat" id="chatContainer">
+        <div class="chat-placeholder">
+            <svg width="56" height="56" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+            </svg>
+            Select a call to view transcript
+        </div>
+    </div>
+</main>
 
-        function resolveRole(seg) {
-            const spk = seg.identified_speaker || seg.speaker || 'Unknown';
-            if (spk === 'AGENT' || spk.startsWith('agent_')) return 'AGENT';
-            if (spk === 'CUSTOMER') return 'CUSTOMER';
-            if (agentSpkId && spk === agentSpkId) return 'AGENT';
-            return 'CUSTOMER';
+<!-- Jump-to-now -->
+<button class="jump-btn" id="jumpNowBtn" onclick="jumpToNow()">▶ Back to Now</button>
+
+<!-- Progress modal -->
+<div id="progressModal" class="progress-overlay" style="display:none">
+    <div class="progress-box">
+        <div class="progress-title">
+            <div class="progress-spinner"></div>
+            Processing Call…
+        </div>
+        <div class="progress-steps">
+            <div class="progress-step" id="pstep-0"><span class="step-icon">🔊</span><div><div class="step-label">Audio Enhancement</div></div></div>
+            <div class="progress-step" id="pstep-1"><span class="step-icon">🎙️</span><div><div class="step-label">Speaker Diarization</div></div></div>
+            <div class="progress-step" id="pstep-2"><span class="step-icon">🪪</span><div><div class="step-label">Speaker Identification</div></div></div>
+            <div class="progress-step" id="pstep-3"><span class="step-icon">📝</span><div><div class="step-label">Transcription</div></div></div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="progress-msg" id="progressMsg">Preparing…</div>
+    </div>
+</div>
+
+<script>
+// ── DOM refs ────────────────────────────────────────────────────────────────
+const DOM = {
+    callList:    document.getElementById('callList'),
+    audioBar:    document.getElementById('audioBar'),
+    spkStrip:    document.getElementById('spkStrip'),
+    nowBar:      document.getElementById('nowBar'),
+    chat:        document.getElementById('chatContainer'),
+    audioPlayer: document.getElementById('audioPlayer'),
+    audioOrig:   document.getElementById('audioOriginal'),
+};
+
+let currentSegments = [];
+let currentCallId   = null;
+let agentSpkId      = null;
+let _activeSegIdx   = -1;
+let _isPlaying      = false;
+let _autoScroll     = true;
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+function fmt(s) {
+    s = Math.floor(s || 0);
+    return `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
+}
+
+function timeAgo(iso) {
+    const d = Math.floor((Date.now() - new Date(iso)) / 1000);
+    if (d < 60)   return d + 's ago';
+    if (d < 3600) return Math.floor(d/60) + 'm ago';
+    if (d < 86400)return Math.floor(d/3600) + 'h ago';
+    return Math.floor(d/86400) + 'd ago';
+}
+
+function fmtDur(s) {
+    if (!s) return '—';
+    const m = Math.floor(s/60), sec = s%60;
+    return m > 0 ? `${m}m ${sec}s` : `${sec}s`;
+}
+
+function modelColor(m) {
+    if (!m) return '#374151';
+    if (m.startsWith('deepgram'))   return '#6d28d9';
+    if (m.startsWith('whisper'))    return '#0369a1';
+    if (m.startsWith('parakeet'))   return '#065f46';
+    if (m.startsWith('cohere'))     return '#0f766e';
+    if (m.startsWith('distil'))     return '#0369a1';
+    if (m.startsWith('groq'))       return '#4338ca';
+    if (m.startsWith('assemblyai')) return '#92400e';
+    return '#374151';
+}
+
+function shortModel(m) {
+    const map = {
+        'deepgram-nova-3':'Nova-3','deepgram-nova-2-phonecall':'Nova-2 Phone',
+        'deepgram-nova-2-meeting':'Nova-2 Meeting','whisper-large-v3':'Whisper v3',
+        'whisper-large-v3-turbo':'Whisper Turbo','large-v3-turbo':'Whisper Turbo',
+        'parakeet-tdt-0.6b-v3':'Parakeet v3','cohere-transcribe-03-2026':'Cohere Mar-26',
+        'distil-whisper-large-v3.5':'Distil-Whisper','assemblyai-universal-2':'AssemblyAI U2',
+    };
+    return map[m] || (m || 'unknown');
+}
+
+function resolveRole(seg) {
+    const spk = seg.identified_speaker || seg.speaker || 'Unknown';
+    if (spk === 'AGENT' || spk.startsWith('agent_')) return 'AGENT';
+    if (spk === 'CUSTOMER') return 'CUSTOMER';
+    if (agentSpkId && spk === agentSpkId) return 'AGENT';
+    return 'CUSTOMER';
+}
+
+function displaySpeaker(seg) {
+    const role = resolveRole(seg);
+    if (role === 'AGENT')    return seg.display_speaker || seg.agent_name || 'Agent';
+    if (role === 'CUSTOMER') return seg.display_speaker || 'Customer';
+    return seg.display_speaker || seg.speaker || 'Unknown';
+}
+
+// ── Render a single chat bubble ─────────────────────────────────────────────
+function renderBubble(seg, idx) {
+    if (!seg.text?.trim()) return '';
+    const role  = resolveRole(seg);
+    const isAg  = role === 'AGENT';
+    const css   = isAg ? 'bubble-agent' : 'bubble-cust';
+    const name  = displaySpeaker(seg);
+    return `<div class="bubble ${css}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
+        <div class="seg-progress"></div>
+        <div class="bubble-head">
+            <span class="bubble-speaker">
+                <span class="spk-dot"></span>
+                ${name}
+                <span class="live-badge">LIVE</span>
+            </span>
+            <span class="bubble-time" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
+        </div>
+        <div class="bubble-text">${seg.text}</div>
+    </div>`;
+}
+
+// ── Load calls list ─────────────────────────────────────────────────────────
+async function loadCalls() {
+    try {
+        const res  = await fetch('/api/calls');
+        const calls = await res.json();
+        if (!calls.length) {
+            DOM.callList.innerHTML = `<div style="text-align:center;color:var(--muted);padding:20px;font-size:.82rem;">No calls yet. Upload an audio file.</div>`;
+            return;
         }
+        calls.sort((a,b) => {
+            const ta = typeof a==='object' && a.processed_at ? new Date(a.processed_at).getTime() : 0;
+            const tb = typeof b==='object' && b.processed_at ? new Date(b.processed_at).getTime() : 0;
+            return tb - ta;
+        });
+        DOM.callList.innerHTML = calls.map((c, idx) => {
+            const id    = typeof c==='string' ? c : c.id;
+            const model = typeof c==='object' ? (c.model||'unknown') : 'unknown';
+            const segs  = typeof c==='object' ? (c.segments||0) : 0;
+            const meta  = typeof c==='object' ? (c.orig_meta||{}) : {};
+            const procT = typeof c==='object' ? (c.processing_time_s||0) : 0;
+            const procAt= typeof c==='object' ? (c.processed_at||'') : '';
+            const dur   = meta.duration_s ? fmtDur(meta.duration_s) : '—';
+            const size  = meta.size_mb ? `${meta.size_mb} MB` : '—';
+            const ch    = meta.channels===1?'Mono':meta.channels===2?'Stereo':'—';
+            const ago   = procAt ? timeAgo(procAt) : '';
+            return `<div class="call-card" onclick="loadCall('${id}', this)">
+                <div class="call-title">
+                    <span class="badge-num">#${idx+1}</span>
+                    ${idx===0?'<span class="badge-latest">LATEST</span>':''}
+                    📞 ${id}
+                </div>
+                <div class="call-meta" style="margin-bottom:4px;">
+                    <span class="model-tag" style="background:${modelColor(model)}">${shortModel(model)}</span>
+                    ${segs} segs · ${procT?Math.round(procT)+'s':'—'}
+                    ${ago?'<span style="float:right;color:var(--muted)">'+ago+'</span>':''}
+                </div>
+                <div class="call-meta">⏱ ${dur} &nbsp;·&nbsp; 📦 ${size} &nbsp;·&nbsp; ${ch}</div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                    <span style="font-size:.68rem;color:var(--muted)">Click to view</span>
+                    <button onclick="deleteCall(event,'${id}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;padding:2px;" title="Delete">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
 
-        // Fetch calls
-        function fmtDuration(s) {
-            if (!s) return '—';
-            const m = Math.floor(s / 60), sec = s % 60;
-            return m > 0 ? `${m}m ${sec}s` : `${sec}s`;
+        if (calls.length && !DOM.chat.querySelector('.bubble')) {
+            const firstId  = typeof calls[0]==='string' ? calls[0] : calls[0].id;
+            const firstCard= DOM.callList.querySelector('.call-card');
+            if (firstCard) loadCall(firstId, firstCard);
         }
+    } catch(e) {
+        DOM.callList.innerHTML = `<div style="color:#ef4444;padding:16px;">Failed to load calls.</div>`;
+    }
+}
 
-        function modelBadgeColor(model) {
-            if (!model || model === 'unknown') return '#475569';
-            if (model.startsWith('deepgram')) return '#7c3aed';
-            if (model.startsWith('whisper')) return '#0369a1';
-            if (model.startsWith('parakeet')) return '#065f46';
-            if (model.startsWith('cohere')) return '#0f766e';
-            if (model.startsWith('canary')) return '#92400e';
-            if (model.startsWith('groq')) return '#4338ca';
-            if (model.startsWith('assemblyai')) return '#b45309';
-            if (model.startsWith('distil')) return '#0369a1';
-            return '#374151';
+// ── Load a single call ──────────────────────────────────────────────────────
+async function loadCall(callId, el) {
+    document.querySelectorAll('.call-card').forEach(n => n.classList.remove('active'));
+    if (el) el.classList.add('active');
+
+    const res  = await fetch(`/api/call/${encodeURIComponent(callId)}`);
+    const data = await res.json();
+
+    currentSegments = data.segments || [];
+    currentCallId   = callId;
+    _activeSegIdx   = -1;
+    _autoScroll     = true;
+
+    // Audio URLs
+    function toUrl(raw) {
+        let p = (raw||'').replace(/\\/g,'/');
+        if (p.includes('call_processor/')) p = p.split('call_processor/')[1];
+        return '/' + p.split('/').map(encodeURIComponent).join('/');
+    }
+    const enhUrl  = toUrl(data.audio_file);
+    const origUrl = enhUrl.replace(/\/enhanced_([^/]+)$/, (_,f) => '/'+f);
+    DOM.audioOrig.src   = origUrl;   DOM.audioOrig.load();
+    DOM.audioPlayer.src = enhUrl;    DOM.audioPlayer.load();
+
+    // Show panels
+    DOM.audioBar.style.display = 'flex';
+    DOM.spkStrip.style.display = 'flex';
+
+    // Speaker stats
+    const spkTime = {};
+    currentSegments.forEach(s => {
+        const id = s.identified_speaker || s.speaker || 'Unknown';
+        spkTime[id] = (spkTime[id]||0) + (s.end - s.start);
+    });
+    agentSpkId = Object.entries(spkTime)
+        .filter(([k]) => k.startsWith('SPEAKER_'))
+        .sort((a,b) => b[1]-a[1])[0]?.[0] || null;
+
+    const ss     = data.speaker_stats || {};
+    const agT    = ss.AGENT?.time_s  ?? currentSegments.filter(s=>resolveRole(s)==='AGENT').reduce((a,s)=>a+(s.end-s.start),0);
+    const cuT    = ss.CUSTOMER?.time_s ?? currentSegments.filter(s=>resolveRole(s)==='CUSTOMER').reduce((a,s)=>a+(s.end-s.start),0);
+    const agTu   = ss.AGENT?.turns   ?? currentSegments.filter(s=>resolveRole(s)==='AGENT').length;
+    const cuTu   = ss.CUSTOMER?.turns ?? currentSegments.filter(s=>resolveRole(s)==='CUSTOMER').length;
+    const total  = agT + cuT || 1;
+    const agPct  = Math.round(agT/total*100);
+
+    document.getElementById('spkFillAgent').style.width  = agPct + '%';
+    document.getElementById('spkFillCust').style.width   = (100-agPct) + '%';
+    document.getElementById('spkInfoAgent').textContent  = `${Math.round(agT)}s (${agPct}%)`;
+    document.getElementById('spkInfoCust').textContent   = `${Math.round(cuT)}s (${100-agPct}%)`;
+    document.getElementById('spkTurnsAgent').textContent = agTu + ' turns';
+    document.getElementById('spkTurnsCust').textContent  = cuTu + ' turns';
+    document.getElementById('spkDiarBadge').textContent  =
+        data.diarization === 'stereo-channels' ? 'Stereo' :
+        data.diarization === 'ecapa-kmeans'    ? 'ECAPA'  : 'Heuristic';
+
+    // Render transcript
+    DOM.chat.innerHTML = currentSegments.map((seg, idx) => renderBubble(seg, idx)).join('');
+    if (!DOM.chat.querySelector('.bubble')) {
+        DOM.chat.innerHTML = `<div class="chat-placeholder"><span style="color:var(--muted);font-size:.9rem;">No transcript segments found.</span></div>`;
+    }
+
+    // Init players
+    initPlayer('audioOriginal', 'cpOrigBtn', 'cpOrigTime', 'cpOrigSeek', 'cpOrigDur', 'cpOrigMute');
+    initPlayer('audioPlayer',   'cpEnhBtn',  'cpEnhTime',  'cpEnhSeek',  'cpEnhDur',  'cpEnhMute');
+}
+
+// ── Custom player ───────────────────────────────────────────────────────────
+const _ps = {};
+function initPlayer(audioId, btnId, timeId, seekId, durId, muteId) {
+    const audio = document.getElementById(audioId);
+    const btn   = document.getElementById(btnId);
+    const tEl   = document.getElementById(timeId);
+    const seek  = document.getElementById(seekId);
+    const dur   = document.getElementById(durId);
+    const mute  = document.getElementById(muteId);
+    if (!audio || !btn) return;
+    if (_ps[audioId]) {
+        audio.removeEventListener('timeupdate', _ps[audioId].t);
+        audio.removeEventListener('loadedmetadata', _ps[audioId].m);
+        audio.removeEventListener('ended', _ps[audioId].e);
+    }
+    const t = () => { if (!audio.duration) return; tEl.textContent = fmt(audio.currentTime); seek.value = (audio.currentTime/audio.duration)*100; };
+    const m = () => { dur.textContent = fmt(audio.duration); };
+    const e = () => { btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'; };
+    audio.addEventListener('timeupdate', t);
+    audio.addEventListener('loadedmetadata', m);
+    audio.addEventListener('ended', e);
+    _ps[audioId] = {t, m, e};
+    btn.onclick = () => {
+        if (audio.paused) {
+            audio.play();
+            btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        } else {
+            audio.pause();
+            btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
         }
+    };
+    seek.oninput = () => { if (audio.duration) audio.currentTime = (seek.value/100)*audio.duration; };
+    if (mute) mute.onclick = () => { audio.muted = !audio.muted; mute.textContent = audio.muted ? '🔇' : '🔊'; };
+}
 
-        function shortModelName(model) {
-            if (!model || model === 'unknown') return 'unknown';
-            const map = {
-                'deepgram-nova-3': 'Deepgram Nova-3',
-                'deepgram-nova-2-phonecall': 'Nova-2 Phone',
-                'deepgram-nova-2-meeting': 'Nova-2 Meeting',
-                'whisper-large-v3-turbo': 'Whisper v3-Turbo',
-                'whisper-large-v3': 'Whisper v3',
-                'large-v3-turbo': 'Whisper v3-Turbo',
-                'parakeet-tdt-0.6b-v3': 'Parakeet v3',
-                'cohere-transcribe-03-2026': 'Cohere Mar-26',
-                'canary-qwen-2.5b': 'Canary-Qwen',
-                'whisper-large-v3': 'Whisper v3',
-                'assemblyai-universal-2': 'AssemblyAI U2',
-                'distil-whisper-large-v3.5': 'Distil-Whisper',
-            };
-            return map[model] || model;
-        }
+function playFrom(s) {
+    DOM.audioPlayer.currentTime = s;
+    DOM.audioPlayer.play();
+}
 
-        async function loadCalls() {
-            try {
-                const res = await fetch('/api/calls');
-                let calls = await res.json();
+// ── Binary search active segment ────────────────────────────────────────────
+function findSeg(t) {
+    const segs = currentSegments;
+    if (!segs.length) return -1;
+    let lo=0, hi=segs.length-1, best=-1;
+    while (lo<=hi) {
+        const mid=(lo+hi)>>1;
+        if (segs[mid].start<=t) { best=mid; lo=mid+1; } else hi=mid-1;
+    }
+    return (best>=0 && t<=segs[best].end) ? best : -1;
+}
 
-                if (calls.length === 0) {
-                    DOM.callList.innerHTML = `<div style="text-align:center; color:#94a3b8; padding: 20px;">No processed calls found.</div>`;
-                    return;
-                }
+// ── Now-speaking helpers ─────────────────────────────────────────────────────
+function showNow(seg) {
+    const nb = DOM.nowBar;
+    nb.style.display = 'flex';
+    const isAg  = resolveRole(seg) === 'AGENT';
+    const color = isAg ? '#60a5fa' : '#a78bfa';
+    document.getElementById('nowSpeaker').textContent  = displaySpeaker(seg);
+    document.getElementById('nowSpeaker').style.color  = color;
+    document.getElementById('nowDot').style.background = color;
+    document.getElementById('nowPhrase').textContent   = seg.text || '';
+    document.getElementById('nowTime').textContent     = fmt(seg.start) + ' → ' + fmt(seg.end);
+    document.querySelectorAll('.now-bar-el').forEach(b => b.style.background = color);
+}
+function hideNow() { DOM.nowBar.style.display = 'none'; }
 
-                // Sort newest first by processed_at timestamp
-                calls.sort((a, b) => {
-                    const ta = (typeof a === 'object' && a.processed_at) ? new Date(a.processed_at).getTime() : 0;
-                    const tb = (typeof b === 'object' && b.processed_at) ? new Date(b.processed_at).getTime() : 0;
-                    return tb - ta;
-                });
+// ── Jump to now ─────────────────────────────────────────────────────────────
+function jumpToNow() {
+    _autoScroll = true;
+    document.getElementById('jumpNowBtn').style.display = 'none';
+    if (_activeSegIdx >= 0) {
+        document.getElementById(`seg-${_activeSegIdx}`)?.scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+}
 
-                DOM.callList.innerHTML = calls.map((c, idx) => {
-                    // Support both old string format and new object format
-                    const id       = (typeof c === 'string') ? c : c.id;
-                    const num      = idx + 1;
-                    const model    = (typeof c === 'object') ? (c.model || 'unknown') : 'unknown';
-                    const segs     = (typeof c === 'object') ? (c.segments || 0) : 0;
-                    const meta     = (typeof c === 'object') ? (c.orig_meta || {}) : {};
-                    const procTime = (typeof c === 'object') ? (c.processing_time_s || 0) : 0;
-                    const procAt   = (typeof c === 'object') ? (c.processed_at || '') : '';
+DOM.chat.addEventListener('scroll', () => {
+    if (_activeSegIdx < 0 || !_isPlaying) return;
+    const el = document.getElementById(`seg-${_activeSegIdx}`);
+    if (!el) return;
+    const er = el.getBoundingClientRect();
+    const cr = DOM.chat.getBoundingClientRect();
+    const inView = er.top < cr.bottom-20 && er.bottom > cr.top+20;
+    _autoScroll = inView;
+    document.getElementById('jumpNowBtn').style.display = inView ? 'none' : 'flex';
+});
 
-                    const badgeColor = modelBadgeColor(model);
-                    const modelLabel = shortModelName(model);
+// ── Live highlight (Enhanced player timeupdate) ─────────────────────────────
+DOM.audioPlayer.addEventListener('play', () => {
+    _isPlaying = true;
+    DOM.chat.classList.add('playing');
+});
+DOM.audioPlayer.addEventListener('pause', () => {
+    _isPlaying = false;
+    DOM.chat.classList.remove('playing');
+    hideNow();
+    document.getElementById('jumpNowBtn').style.display = 'none';
+});
+DOM.audioPlayer.addEventListener('ended', () => {
+    _isPlaying = false;
+    DOM.chat.classList.remove('playing');
+    hideNow();
+    document.getElementById('jumpNowBtn').style.display = 'none';
+    if (_activeSegIdx >= 0) {
+        document.getElementById(`seg-${_activeSegIdx}`)?.classList.remove('active');
+        _activeSegIdx = -1;
+    }
+});
 
-                    const durStr    = meta.duration_s ? fmtDuration(meta.duration_s) : '—';
-                    const brStr     = meta.bitrate_kbps ? `${meta.bitrate_kbps} kbps` : '—';
-                    const sizeStr   = meta.size_mb ? `${meta.size_mb} MB` : '—';
-                    const chStr     = meta.channels === 1 ? 'Mono' : meta.channels === 2 ? 'Stereo' : '—';
-                    const srStr     = meta.sample_rate ? `${Math.round(meta.sample_rate/1000)}kHz` : '—';
-                    const procStr   = procTime ? `${Math.round(procTime)}s` : '—';
-                    const agoStr    = procAt ? timeAgo(procAt) : '';
-                    const latestBadge = idx === 0 ? `<span style="flex-shrink:0;background:#1e3a5f;color:#60a5fa;font-size:0.62rem;font-weight:700;padding:2px 5px;border-radius:3px;margin-top:1px;">LATEST</span>` : '';
+DOM.audioPlayer.addEventListener('timeupdate', () => {
+    const t      = DOM.audioPlayer.currentTime;
+    const newIdx = findSeg(t);
 
-                    return `
-                    <div class="call-card" onclick="loadCallData('${id}', this)">
-                        <div class="call-title" style="font-size:0.8rem; word-break:break-all; margin-bottom:6px; display:flex; align-items:flex-start; gap:6px;">
-                            <span style="flex-shrink:0; background:#334155; color:#94a3b8; font-size:0.65rem; font-weight:700; padding:2px 5px; border-radius:3px; margin-top:1px;">#${num}</span>
-                            ${latestBadge}
-                            <span>📞 ${id}</span>
-                        </div>
+    // Update progress bar (same segment)
+    if (newIdx === _activeSegIdx && newIdx >= 0) {
+        const seg = currentSegments[newIdx];
+        const dur = seg.end - seg.start;
+        const pct = dur > 0 ? Math.min(100, ((t - seg.start) / dur) * 100) : 0;
+        document.getElementById(`seg-${newIdx}`)?.querySelector('.seg-progress')
+            && (document.getElementById(`seg-${newIdx}`).querySelector('.seg-progress').style.width = pct + '%');
+        return;
+    }
 
-                        <div style="margin-bottom:5px; display:flex; align-items:center; justify-content:space-between;">
-                            <div>
-                                <span style="display:inline-block; background:${badgeColor}; color:#fff; font-size:0.68rem; font-weight:600; padding:2px 7px; border-radius:4px; letter-spacing:0.3px;">${modelLabel}</span>
-                                <span style="font-size:0.68rem; color:#94a3b8; margin-left:6px;">${segs} segs · ${procStr}</span>
-                            </div>
-                            ${agoStr ? `<span style="font-size:0.65rem; color:#64748b; white-space:nowrap;">${agoStr}</span>` : ''}
-                        </div>
+    // Deactivate old
+    if (_activeSegIdx >= 0) {
+        const old = document.getElementById(`seg-${_activeSegIdx}`);
+        if (old) { old.classList.remove('active'); const pb=old.querySelector('.seg-progress'); if(pb) pb.style.width='0%'; }
+    }
+    _activeSegIdx = newIdx;
 
-                        <div style="font-size:0.7rem; color:#64748b; background:#0f172a; border-radius:4px; padding:5px 7px; margin-bottom:5px; line-height:1.6;">
-                            <span style="color:#94a3b8; font-weight:500;">Original audio</span><br>
-                            ⏱ ${durStr} &nbsp;·&nbsp; 📦 ${sizeStr} &nbsp;·&nbsp; ${brStr}<br>
-                            🎙 ${srStr} &nbsp;·&nbsp; ${chStr}
-                        </div>
-
-                        <div style="font-size:0.72rem; color:#94a3b8; display:flex; justify-content:space-between; align-items:center;">
-                            <span>Click to view transcript</span>
-                            <button onclick="deleteCall(event, '${id}')" style="background:transparent; border:none; color:var(--danger); cursor:pointer; padding: 2px;" title="Delete Call">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                        </div>
-                    </div>`;
-                }).join('');
-
-                // Auto-load the newest call on first page load
-                if (calls.length > 0 && !DOM.chatContainer.querySelector('.segment')) {
-                    const firstId = (typeof calls[0] === 'string') ? calls[0] : calls[0].id;
-                    const firstCard = DOM.callList.querySelector('.call-card');
-                    if (firstCard) loadCallData(firstId, firstCard);
-                }
-
-            } catch (err) {
-                DOM.callList.innerHTML = `<div style="color:#ef4444; padding:20px;">Error loading data. Is the server running?</div>`;
-            }
-        }
-
-        function timeAgo(iso) {
-            if (!iso) return '';
-            const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
-            if (diff < 60)  return `${diff}s ago`;
-            if (diff < 3600) return `${Math.floor(diff/60)} min ago`;
-            if (diff < 86400) return `${Math.floor(diff/3600)} hr ago`;
-            return `${Math.floor(diff/86400)}d ago`;
-        }
-
-        // Format MM:SS
-        function fmt(seconds) {
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        }
-        
-        // Confirm modal (avoids browser-blocked confirm())
-        function showConfirm(msg, onYes) {
-            const overlay = document.createElement('div');
-            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9998;display:flex;align-items:center;justify-content:center;';
-            overlay.innerHTML = `
-                <div style="background:#1e293b;border:1px solid #334155;border-radius:10px;padding:24px 28px;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
-                    <p style="color:#e2e8f0;font-size:0.92rem;margin:0 0 20px;">${msg}</p>
-                    <div style="display:flex;gap:10px;justify-content:flex-end;">
-                        <button id="_confirmNo"  style="padding:7px 18px;background:#334155;color:#94a3b8;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;">Cancel</button>
-                        <button id="_confirmYes" style="padding:7px 18px;background:#dc2626;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.85rem;">Delete</button>
-                    </div>
-                </div>`;
-            document.body.appendChild(overlay);
-            overlay.querySelector('#_confirmNo').onclick  = () => document.body.removeChild(overlay);
-            overlay.querySelector('#_confirmYes').onclick = () => { document.body.removeChild(overlay); onYes(); };
-        }
-
-        // Delete a single call
-        function deleteCall(e, callId) {
-            e.stopPropagation();
-            showConfirm(`Delete <strong style="color:#f87171;">${callId}</strong>?`, async () => {
-                try {
-                    const res = await fetch(`/api/call/${encodeURIComponent(callId)}`, { method: 'DELETE' });
-                    if (res.ok) {
-                        DOM.chatContainer.innerHTML = `<div class="placeholder">Call deleted.</div>`;
-                        DOM.headerStats.style.display = 'none';
-                        DOM.audioCompare.style.display = 'none';
-                        [DOM.audioPlayer, DOM.audioOriginal]
-                            .forEach(a => { if (a) { a.pause(); a.removeAttribute('src'); } });
-                        document.getElementById('speakerStatsBar').style.display = 'none';
-                        loadCalls();
-                    } else {
-                        const err = await res.json().catch(() => ({}));
-                        showErrorPopup(err.message || `HTTP ${res.status}`);
-                    }
-                } catch (err) {
-                    showErrorPopup(err.message);
-                }
-            });
-        }
-
-        // Delete all calls
-        function deleteAllCalls() {
-            showConfirm('Delete <strong style="color:#f87171;">ALL recordings</strong>? This cannot be undone.', async () => {
-                const res = await fetch('/api/calls');
-                const calls = await res.json();
-                let failed = 0;
-                for (const c of calls) {
-                    const id = typeof c === 'string' ? c : c.id;
-                    const r = await fetch(`/api/call/${encodeURIComponent(id)}`, { method: 'DELETE' });
-                    if (!r.ok) failed++;
-                }
-                DOM.chatContainer.innerHTML = `<div class="placeholder">${failed ? failed + ' failed to delete.' : 'All recordings deleted.'}</div>`;
-                DOM.headerStats.style.display = 'none';
-                DOM.audioCompare.style.display = 'none';
-                [DOM.audioPlayer, DOM.audioOriginal]
-                    .forEach(a => { if (a) { a.pause(); a.removeAttribute('src'); } });
-                loadCalls();
-            });
-        }
-
-        // Load specific call
-        async function loadCallData(callId, el) {
-            // UI State
-            document.querySelectorAll('.call-card').forEach(n => n.classList.remove('active'));
+    if (newIdx >= 0) {
+        const el  = document.getElementById(`seg-${newIdx}`);
+        const seg = currentSegments[newIdx];
+        if (el) {
             el.classList.add('active');
+            if (_isPlaying && _autoScroll) el.scrollIntoView({ behavior:'smooth', block:'center' });
+        }
+        if (_isPlaying) showNow(seg);
+    } else {
+        hideNow();
+    }
+});
 
-            // Fetch JSON
-            const res = await fetch(`/api/call/${encodeURIComponent(callId)}`);
-            const data = await res.json();
-            
-            currentSegments = data.segments || [];
-            currentCallId   = callId;
-            _activeSegIdx   = -1;
+// ── Delete call ─────────────────────────────────────────────────────────────
+function deleteCall(e, id) {
+    e.stopPropagation();
+    showConfirm(`Delete <strong style="color:#f87171;">${id}</strong>?`, async () => {
+        const r = await fetch(`/api/call/${encodeURIComponent(id)}`, { method:'DELETE' });
+        if (r.ok) { DOM.chat.innerHTML='<div class="chat-placeholder">Deleted.</div>'; DOM.audioBar.style.display='none'; DOM.spkStrip.style.display='none'; loadCalls(); }
+    });
+}
 
-            // ── Audio URL helpers ─────────────────────────────────────────────
-            function toUrl(rawPath) {
-                let p = rawPath.replace(/\\/g, '/');
-                if (p.includes('call_processor/')) p = p.split('call_processor/')[1];
-                return '/' + p.split('/').map(encodeURIComponent).join('/');
+// ── Swap roles ──────────────────────────────────────────────────────────────
+async function swapRoles() {
+    if (!currentCallId) return;
+    const btn = document.getElementById('swapRolesBtn');
+    btn.disabled = true;
+    const SWAP = {'AGENT':'CUSTOMER','CUSTOMER':'AGENT'};
+    currentSegments.forEach(s => { const c=s.identified_speaker; if(SWAP[c]) s.identified_speaker=SWAP[c]; });
+    _activeSegIdx = -1;
+    DOM.chat.innerHTML = currentSegments.map((s,i) => renderBubble(s,i)).join('');
+    try {
+        const r = await fetch(`/api/call/${encodeURIComponent(currentCallId)}/swap-roles`, {method:'POST'});
+        const st = await r.json();
+        btn.textContent = st.swapped ? '↩ Undo' : '🔄 Swap';
+    } catch(_) {}
+    btn.disabled = false;
+}
+
+// ── Confirm dialog ───────────────────────────────────────────────────────────
+function showConfirm(msg, onYes) {
+    const ov = document.createElement('div');
+    ov.className = 'confirm-overlay';
+    ov.innerHTML = `<div class="confirm-box">
+        <p style="color:#e2e8f0;font-size:.9rem;margin-bottom:18px;">${msg}</p>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button id="_cNo"  style="padding:6px 16px;background:var(--surface2);color:var(--muted);border:none;border-radius:6px;cursor:pointer;">Cancel</button>
+            <button id="_cYes" style="padding:6px 16px;background:#dc2626;color:#fff;border:none;border-radius:6px;cursor:pointer;">Delete</button>
+        </div></div>`;
+    document.body.appendChild(ov);
+    ov.querySelector('#_cNo').onclick  = () => document.body.removeChild(ov);
+    ov.querySelector('#_cYes').onclick = () => { document.body.removeChild(ov); onYes(); };
+}
+
+// ── Progress modal ───────────────────────────────────────────────────────────
+const STAGE_PCTS = [8, 30, 58, 80, 100];
+let _pollTimer = null;
+
+function showProgress() { document.getElementById('progressModal').style.display='flex'; setStage(0,'Uploading…'); }
+function hideProgress() { document.getElementById('progressModal').style.display='none'; }
+
+function setStage(n, msg) {
+    for (let i=0;i<4;i++) {
+        const el=document.getElementById(`pstep-${i}`);
+        el.classList.remove('active','done','error');
+        el.querySelector('.step-icon').textContent = ['🔊','🎙️','🪪','📝'][i];
+        if (i<n)  { el.classList.add('done'); el.querySelector('.step-icon').textContent='✅'; }
+        else if (i===n && n<4) el.classList.add('active');
+    }
+    document.getElementById('progressFill').style.width = STAGE_PCTS[Math.min(n,4)] + '%';
+    document.getElementById('progressMsg').textContent  = msg || '';
+}
+
+function startPolling() {
+    if (_pollTimer) clearInterval(_pollTimer);
+    _pollTimer = setInterval(async () => {
+        try {
+            const s = await (await fetch('/api/status')).json();
+            if (s.error) { clearInterval(_pollTimer); hideProgress(); showError(s.error); return; }
+            setStage(s.stage_num, s.message);
+            if (s.done) { clearInterval(_pollTimer); document.getElementById('progressMsg').textContent='✅ Done!'; setTimeout(()=>{ hideProgress(); loadCalls(); },1200); }
+        } catch(_) {}
+    }, 1200);
+}
+
+function showError(msg) {
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;background:#1e1e2e;border:1px solid #ef4444;border-radius:10px;padding:16px 22px;max-width:500px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.5);';
+    el.innerHTML = `<div style="display:flex;gap:10px;align-items:flex-start;">
+        <span style="font-size:1.2rem;flex-shrink:0;">❌</span>
+        <div style="flex:1;"><div style="font-weight:600;color:#f87171;margin-bottom:5px;">Pipeline Failed</div>
+        <div style="font-size:.8rem;color:#cbd5e1;">${msg}</div></div>
+        <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">×</button>
+    </div>`;
+    document.body.appendChild(el);
+}
+
+// ── Upload ────────────────────────────────────────────────────────────────────
+document.getElementById('audioUpload').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const btn = document.querySelector('.upload-btn');
+    const txt = document.getElementById('uploadText');
+    btn.disabled = true; txt.textContent = 'Uploading…';
+    try {
+        const model = document.getElementById('modelSelect').value;
+        const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}&model=${encodeURIComponent(model)}`, { method:'POST', body:file });
+        if (res.status === 409) { alert('A transcription is already running.'); startPolling(); }
+        else if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        else { showProgress(); startPolling(); }
+    } catch(err) {
+        try {
+            const st = await (await fetch('/api/status')).json();
+            if (st.running || st.done) {
+                if (!st.done) { showProgress(); startPolling(); }
+                else loadCalls();
+                return;
             }
-            function deriveUrl(base, prefix) {
-                // base = URL of ffmpeg file, prefix = 'nr_' / 'df_' / 'mg_'
-                const parts = base.split('/');
-                parts[parts.length-1] = prefix + decodeURIComponent(parts[parts.length-1]).replace(/^enhanced_/i,'');
-                return parts.map((seg, i) => i === 0 ? seg : encodeURIComponent(decodeURIComponent(seg))).join('/');
-            }
+        } catch(_) {}
+        showError(err.message);
+    } finally {
+        btn.disabled = false; txt.textContent = 'Upload Audio'; e.target.value = '';
+    }
+});
 
-            const ffmpegUrl   = toUrl(data.audio_file);
-            const originalUrl = ffmpegUrl.replace(/\/enhanced_([^/]+)$/, (_, f) => '/' + f);
-            const enh = data.enhancements || {};
-
-            // 1 Original
-            DOM.audioOriginal.src = originalUrl;
-            DOM.audioOriginal.load();
-
-            // 2 Enhanced — always use full enhanced audio so timestamps match transcript segments
-            DOM.audioPlayer.src = ffmpegUrl;
-            DOM.audioPlayer.load();
-
-            // Show comparison panel
-            DOM.headerStats.style.display = 'flex';
-            DOM.audioCompare.style.display = 'block';
-
-            // Stats
-            DOM.statFile.innerText = data.audio_file.split(/[\/\\]/).pop();
-            DOM.statSegs.innerText = currentSegments.length;
-            DOM.statTime.innerText = new Date(data.processed_at).toLocaleString();
-
-            // ── Speaker resolution ────────────────────────────────────────────
-            // Compute agentSpkId for old results that have SPEAKER_XX labels
-            const spkTime = {};
-            currentSegments.forEach(s => {
-                const id = s.identified_speaker || s.speaker || 'Unknown';
-                spkTime[id] = (spkTime[id] || 0) + (s.end - s.start);
-            });
-            agentSpkId = Object.entries(spkTime)
-                .filter(([k]) => k.startsWith('SPEAKER_'))
-                .sort((a,b) => b[1]-a[1])[0]?.[0] || null;
-
-            // ── Speaker stats bar ─────────────────────────────────────────────
-            const ss = data.speaker_stats || {};
-            const agentT  = (ss.AGENT    && ss.AGENT.time_s    != null) ? ss.AGENT.time_s    : currentSegments.filter(s => resolveRole(s)==='AGENT').reduce((a,s)=>a+(s.end-s.start),0);
-            const custT   = (ss.CUSTOMER && ss.CUSTOMER.time_s != null) ? ss.CUSTOMER.time_s : currentSegments.filter(s => resolveRole(s)==='CUSTOMER').reduce((a,s)=>a+(s.end-s.start),0);
-            const agentTu = (ss.AGENT    && ss.AGENT.turns     != null) ? ss.AGENT.turns     : currentSegments.filter(s => resolveRole(s)==='AGENT').length;
-            const custTu  = (ss.CUSTOMER && ss.CUSTOMER.turns  != null) ? ss.CUSTOMER.turns  : currentSegments.filter(s => resolveRole(s)==='CUSTOMER').length;
-            const totalT  = agentT + custT || 1;
-            const agentPct = Math.round(agentT / totalT * 100);
-            const custPct  = 100 - agentPct;
-            const diarLabel = data.diarization === 'stereo-channels' ? 'stereo channels'
-                           : data.diarization === 'ecapa-kmeans'    ? 'ECAPA diarization'
-                           : 'heuristic';
-
-            document.getElementById('speakerStatsBar').style.display = 'flex';
-            document.getElementById('statDiarMethod').textContent = diarLabel;
-            document.getElementById('statAgentTime').textContent  = `${Math.round(agentT)}s (${agentPct}%)`;
-            document.getElementById('statAgentTurns').textContent = agentTu + ' turns';
-            document.getElementById('statCustTime').textContent   = `${Math.round(custT)}s (${custPct}%)`;
-            document.getElementById('statCustTurns').textContent  = custTu + ' turns';
-            document.getElementById('spkBarAgent').style.width    = agentPct + '%';
-            document.getElementById('spkBarCust').style.width     = custPct  + '%';
-
-            // First-words preview — show only when diarization was applied
-            const aFW = ss.AGENT?.first_words || '';
-            const cFW = ss.CUSTOMER?.first_words || '';
-            if (aFW || cFW) {
-                document.getElementById('spkFirstWords').style.display = 'grid';
-                document.getElementById('firstWordsAgent').textContent    = aFW ? `"${aFW}"` : '—';
-                document.getElementById('firstWordsCustomer').textContent = cFW ? `"${cFW}"` : '—';
-            } else {
-                document.getElementById('spkFirstWords').style.display = 'none';
-            }
-
-            // ── Agent label in header ─────────────────────────────────────────
-            const _diar = data.diarization || 'none';
-            DOM.statAgent.innerText = _diar === 'stereo-channels' ? 'Stereo ✓'
-                                    : _diar === 'ecapa-kmeans'    ? 'ECAPA ✓'
-                                    : _diar === 'pyannote'        ? 'Pyannote'
-                                    : currentSegments.some(s => resolveRole(s) === 'AGENT') ? 'Heuristic'
-                                    : '—';
-
-            // ── Chat View ─────────────────────────────────────────────────────
-            DOM.chatContainer.innerHTML = currentSegments.map((seg, idx) => {
-                const role      = resolveRole(seg);
-                const isAgent   = role === 'AGENT';
-                const cssClass  = isAgent ? 'chat-agent' : 'chat-customer';
-                if (!seg.text?.trim()) return '';
-                return `
-                    <div class="chat-bubble ${cssClass}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
-                        <div class="chat-meta">
-                            <span class="speaker-label"><span class="speaker-dot"></span>${role}</span>
-                            <span class="time-badge" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
-                        </div>
-                        <div>${seg.text}</div>
-                    </div>
-                `;
-            }).join('');
-
-            // ── Custom players ────────────────────────────────────────────────
-            initCustomPlayer('audioOriginal', 'cpOrigBtn', 'cpOrigTime', 'cpOrigSeek', 'cpOrigDur', 'cpOrigMute');
-            initCustomPlayer('audioPlayer',   'cpEnhBtn',  'cpEnhTime',  'cpEnhSeek',  'cpEnhDur',  'cpEnhMute');
+// ── Enrollment ────────────────────────────────────────────────────────────────
+async function checkEnrollment() {
+    try {
+        const d   = await (await fetch('/api/enrollment-status')).json();
+        const dot = document.getElementById('enrollDot');
+        const nm  = document.getElementById('enrollName');
+        const sub = document.getElementById('enrollSub');
+        const btn = document.getElementById('enrollBtn');
+        if (d.running) {
+            dot.className='enroll-dot running'; nm.textContent='Enrolling…'; sub.textContent=d.message||'';
+            btn.disabled=true; setTimeout(checkEnrollment,2000);
+        } else if (d.enrolled) {
+            dot.className='enroll-dot enrolled'; nm.textContent=d.agent_name||'Voice enrolled';
+            sub.textContent='Active — matches on next upload'; btn.textContent='Re-enroll'; btn.disabled=false;
+        } else {
+            dot.className='enroll-dot'; nm.textContent='Not enrolled';
+            sub.textContent=d.error||'Upload voice to identify agent'; btn.disabled=false;
         }
+    } catch(_) {}
+}
 
-        // ── Custom audio player ───────────────────────────────────────────────
-        const _cpState = {};
+document.getElementById('cleanVoiceUpload').addEventListener('change', async function() {
+    const files = this.files;
+    if (!files || !files.length) return;
+    const btn  = document.getElementById('enrollBtn');
+    const prog = document.getElementById('enrollProgress');
+    const dot  = document.getElementById('enrollDot');
+    const nm   = document.getElementById('enrollName');
+    btn.disabled=true; dot.className='enroll-dot running'; nm.textContent='Uploading…';
+    prog.textContent=`Uploading ${files.length} file(s)…`;
+    const fd = new FormData();
+    const agentName = prompt('Agent name (e.g. "Zak"):','Agent')||'Agent';
+    fd.append('agent_name', agentName);
+    for (const f of files) fd.append('files', f);
+    try {
+        const r = await fetch('/api/enroll-clean-upload',{method:'POST',body:fd});
+        const d = await r.json();
+        if (!r.ok) { prog.textContent='Error: '+(d.message||r.statusText); dot.className='enroll-dot'; nm.textContent='Failed'; btn.disabled=false; }
+        else { prog.textContent='Processing…'; checkEnrollment(); }
+    } catch(err) { prog.textContent='Upload error: '+err.message; btn.disabled=false; }
+    this.value='';
+});
 
-        function cpFmt(s) {
-            s = Math.floor(s || 0);
-            const m = Math.floor(s/60), sec = s%60;
-            return `${m}:${sec.toString().padStart(2,'0')}`;
-        }
-
-        function initCustomPlayer(audioId, btnId, timeId, seekId, durId, muteId) {
-            const audio = document.getElementById(audioId);
-            const btn   = document.getElementById(btnId);
-            const tEl   = document.getElementById(timeId);
-            const seek  = document.getElementById(seekId);
-            const dur   = document.getElementById(durId);
-            const mute  = document.getElementById(muteId);
-            if (!audio || !btn) return;
-
-            // Clean up old listeners
-            if (_cpState[audioId]) {
-                const old = _cpState[audioId];
-                audio.removeEventListener('timeupdate', old.onTime);
-                audio.removeEventListener('loadedmetadata', old.onMeta);
-                audio.removeEventListener('ended', old.onEnd);
-            }
-
-            const onTime = () => {
-                if (!audio.duration) return;
-                tEl.textContent = cpFmt(audio.currentTime);
-                seek.value = (audio.currentTime / audio.duration) * 100;
-            };
-            const onMeta = () => {
-                dur.textContent = cpFmt(audio.duration);
-                seek.max = 100;
-            };
-            const onEnd = () => {
-                btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-            };
-
-            audio.addEventListener('timeupdate', onTime);
-            audio.addEventListener('loadedmetadata', onMeta);
-            audio.addEventListener('ended', onEnd);
-            _cpState[audioId] = { onTime, onMeta, onEnd };
-
-            btn.onclick = () => {
-                if (audio.paused) {
-                    audio.play();
-                    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-                } else {
-                    audio.pause();
-                    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-                }
-            };
-
-            seek.oninput = () => {
-                if (audio.duration) audio.currentTime = (seek.value / 100) * audio.duration;
-            };
-
-            mute.onclick = () => {
-                audio.muted = !audio.muted;
-                mute.textContent = audio.muted ? '🔇' : '🔊';
-            };
-        }
-
-        function playFrom(seconds) {
-            DOM.audioPlayer.currentTime = seconds;
-            DOM.audioPlayer.play();
-        }
-
-        // Binary-search helper — O(log n) segment lookup by playback time
-        let _activeSegIdx = -1;
-
-        function _findActiveSeg(t) {
-            const segs = currentSegments;
-            if (!segs.length) return -1;
-            let lo = 0, hi = segs.length - 1, best = -1;
-            while (lo <= hi) {
-                const mid = (lo + hi) >> 1;
-                if (segs[mid].start <= t) { best = mid; lo = mid + 1; }
-                else hi = mid - 1;
-            }
-            return (best >= 0 && t <= segs[best].end) ? best : -1;
-        }
-
-        // Sync transcript highlight to Enhanced (synced) audio player
-        DOM.audioPlayer.addEventListener('timeupdate', () => {
-            const newIdx = _findActiveSeg(DOM.audioPlayer.currentTime);
-            if (newIdx === _activeSegIdx) return;
-            if (_activeSegIdx >= 0) {
-                const old = document.getElementById(`seg-${_activeSegIdx}`);
-                if (old) old.classList.remove('active');
-            }
-            _activeSegIdx = newIdx;
-            if (newIdx >= 0) {
-                const el = document.getElementById(`seg-${newIdx}`);
-                if (el) {
-                    el.classList.add('active');
-                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }
-        });
-
-        // ── Progress Modal ────────────────────────────────────────────────
-        const STAGE_PCTS = [8, 30, 58, 80, 100];
-        let _pollTimer = null;
-
-        function showProgress() {
-            document.getElementById('progressModal').style.display = 'flex';
-            setProgressStage(0, 'Uploading file…');
-        }
-
-        function hideProgress() {
-            document.getElementById('progressModal').style.display = 'none';
-        }
-
-        function setProgressStage(stageNum, message) {
-            // Reset all steps
-            for (let i = 0; i < 4; i++) {
-                const el = document.getElementById(`pstep-${i}`);
-                el.classList.remove('active', 'done', 'error');
-                const icon = el.querySelector('.step-icon');
-                icon.textContent = ['🔊','🎙️','🪪','📝'][i];
-                if (i < stageNum) {
-                    el.classList.add('done');
-                    icon.textContent = '✅';
-                } else if (i === stageNum && stageNum < 4) {
-                    el.classList.add('active');
-                }
-            }
-            const pct = STAGE_PCTS[Math.min(stageNum, 4)];
-            document.getElementById('progressFill').style.width = pct + '%';
-            document.getElementById('progressMsg').textContent = message || '';
-        }
-
-        function markProgressError(msg) {
-            for (let i = 0; i < 4; i++) {
-                const el = document.getElementById(`pstep-${i}`);
-                if (el.classList.contains('active')) {
-                    el.classList.remove('active');
-                    el.classList.add('error');
-                    el.querySelector('.step-icon').textContent = '❌';
-                }
-            }
-            document.getElementById('progressMsg').textContent = msg || 'Something went wrong.';
-        }
-
-        // ── Error Popup ───────────────────────────────────────────────────
-        function showErrorPopup(msg) {
-            const existing = document.getElementById('errorPopup');
-            if (existing) existing.remove();
-            const el = document.createElement('div');
-            el.id = 'errorPopup';
-            el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;background:#1e1e2e;border:1px solid #ef4444;border-radius:10px;padding:18px 24px;max-width:520px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.5);';
-            el.innerHTML = `
-                <div style="display:flex;align-items:flex-start;gap:12px;">
-                    <span style="font-size:1.4rem;flex-shrink:0;">&#10060;</span>
-                    <div style="flex:1;">
-                        <div style="font-weight:600;color:#f87171;margin-bottom:6px;">Transcription Failed</div>
-                        <div style="font-size:0.82rem;color:#cbd5e1;word-break:break-word;">${msg}</div>
-                    </div>
-                    <button onclick="document.getElementById('errorPopup').remove()" style="background:none;border:none;color:#94a3b8;font-size:1.2rem;cursor:pointer;flex-shrink:0;line-height:1;" title="Dismiss">&times;</button>
-                </div>`;
-            document.body.appendChild(el);
-        }
-
-        // ── Benchmark Panel ───────────────────────────────────────────────
-        let _benchmarkOpen = false;
-
-        async function loadBenchmark() {
-            try {
-                const res = await fetch('/api/benchmark');
-                const rows = await res.json();
-                const tbody = document.getElementById('benchmarkBody');
-                const STATUS_COLORS = { ok: '#22c55e', disabled: '#94a3b8' };
-                const STATUS_LABELS = { ok: 'Working', disabled: 'Disabled' };
-                tbody.innerHTML = rows.map(r => {
-                    const speedStr = r.speed_s != null ? (r.speed_s >= 60 ? `${Math.round(r.speed_s/60)} min` : `${r.speed_s}s`) : '—';
-                    const segsStr  = r.segments != null ? r.segments : '—';
-                    const color    = STATUS_COLORS[r.status] || '#94a3b8';
-                    const label    = STATUS_LABELS[r.status] || r.status;
-                    const rowStyle = r.status === 'disabled' ? 'opacity:0.5;' : '';
-                    return `<tr style="border-bottom:1px solid rgba(255,255,255,0.06);${rowStyle}">
-                        <td style="padding:9px 10px; color:var(--text-primary); font-weight:500;">${r.label}</td>
-                        <td style="padding:9px 10px; color:var(--text-muted);">${r.type}</td>
-                        <td style="padding:9px 10px; text-align:right; color:var(--text-primary);">${speedStr}</td>
-                        <td style="padding:9px 10px; text-align:right; color:var(--text-muted);">${segsStr}</td>
-                        <td style="padding:9px 10px; color:var(--text-muted); font-size:0.78rem;">${r.notes}</td>
-                        <td style="padding:9px 10px; text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:600;background:${color}22;color:${color};">${label}</span></td>
-                    </tr>`;
-                }).join('');
-            } catch (e) {
-                document.getElementById('benchmarkBody').innerHTML =
-                    `<tr><td colspan="6" style="text-align:center;color:#ef4444;padding:16px;">Failed to load benchmark data</td></tr>`;
-            }
-        }
-
-        function toggleBenchmark() {
-            _benchmarkOpen = !_benchmarkOpen;
-            const panel = document.getElementById('benchmarkPanel');
-            const chat  = document.getElementById('chatContainer');
-            const audio = document.getElementById('audioCompare');
-            const btn   = document.getElementById('benchmarkBtn');
-            if (_benchmarkOpen) {
-                panel.style.display = 'block';
-                chat.style.display  = 'none';
-                audio.style.display = 'none';
-                btn.style.background = 'rgba(99,102,241,0.2)';
-                btn.style.color = '#a5b4fc';
-                loadBenchmark();
-            } else {
-                panel.style.display = 'none';
-                chat.style.display  = '';
-                audio.style.display = '';
-                btn.style.background = 'rgba(255,255,255,0.07)';
-                btn.style.color = 'var(--text-muted)';
-            }
-        }
-
-        function startPolling() {
-            if (_pollTimer) clearInterval(_pollTimer);
-            _pollTimer = setInterval(async () => {
-                try {
-                    const res = await fetch('/api/status');
-                    const s = await res.json();
-
-                    if (s.error) {
-                        clearInterval(_pollTimer);
-                        markProgressError(s.error);
-                        hideProgress();
-                        showErrorPopup(s.error);
-                        return;
-                    }
-
-                    setProgressStage(s.stage_num, s.message);
-
-                    if (s.done) {
-                        clearInterval(_pollTimer);
-                        document.getElementById('progressMsg').textContent = '✅ Done! Loading results…';
-                        setTimeout(() => {
-                            hideProgress();
-                            loadCalls();
-                        }, 1200);
-                    }
-                } catch (_) { /* network blip, keep polling */ }
-            }, 1200);
-        }
-
-        // Handle File Upload
-        document.getElementById('audioUpload').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const btnText = document.getElementById('uploadText');
-            const btn = document.querySelector('.upload-btn');
-
-            btn.disabled = true;
-            btnText.innerText = 'Uploading…';
-
-            try {
-                const model = document.getElementById('modelSelect').value;
-                const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}&model=${encodeURIComponent(model)}`, {
-                    method: 'POST',
-                    body: file,
-                });
-
-                if (res.status === 409) {
-                    alert('A transcription is already running. Please wait for it to finish, then try again.');
-                    btnText.innerText = 'Upload New Audio';
-                    btn.disabled = false;
-                    startPolling(); // show progress of the existing run
-                    return;
-                }
-
-                if (!res.ok) throw new Error(`Upload failed (${res.status})`);
-                showProgress();
-
-                // Server accepted — pipeline is running in background
-                btnText.innerText = 'Upload New Audio';
-                btn.disabled = false;
-                // Reset file input so same file can be re-uploaded
-                e.target.value = '';
-
-                startPolling();
-
-            } catch (err) {
-                // Network error (e.g. connection reset on large upload) — the
-                // server may have still received the file and started the pipeline.
-                // Poll /api/status once to check before showing an error.
-                try {
-                    const st = await fetch('/api/status');
-                    const stj = await st.json();
-                    if (stj.running || stj.done) {
-                        // Pipeline started — treat as success
-                        btnText.innerText = 'Upload New Audio';
-                        btn.disabled = false;
-                        e.target.value = '';
-                        if (!stj.done) startPolling();
-                        else loadCalls();
-                        return;
-                    }
-                } catch (_) {}
-                hideProgress();
-                alert('Upload error: ' + err.message);
-                btnText.innerText = 'Upload New Audio';
-                btn.disabled = false;
-            }
-        });
-
-        // ── Swap Agent ↔ Customer ─────────────────────────────────────────
-        async function swapRoles() {
-            if (!currentCallId) return;
-            const btn = document.getElementById('swapRolesBtn');
-            btn.disabled = true;
-
-            // Flip in memory
-            const SWAP = { 'AGENT': 'CUSTOMER', 'CUSTOMER': 'AGENT' };
-            currentSegments.forEach(seg => {
-                const cur = seg.identified_speaker;
-                if (SWAP[cur]) seg.identified_speaker = SWAP[cur];
-            });
-
-            // Swap first-words previews
-            const aEl = document.getElementById('firstWordsAgent');
-            const cEl = document.getElementById('firstWordsCustomer');
-            const tmp = aEl.textContent;
-            aEl.textContent = cEl.textContent;
-            cEl.textContent = tmp;
-
-            // Swap stats bar times
-            const atEl = document.getElementById('statAgentTime');
-            const ctEl = document.getElementById('statCustTime');
-            const at = atEl.textContent; atEl.textContent = ctEl.textContent; ctEl.textContent = at;
-            const auEl = document.getElementById('statAgentTurns');
-            const cuEl = document.getElementById('statCustTurns');
-            const au = auEl.textContent; auEl.textContent = cuEl.textContent; cuEl.textContent = au;
-            const agW = document.getElementById('spkBarAgent').style.width;
-            document.getElementById('spkBarAgent').style.width = document.getElementById('spkBarCust').style.width;
-            document.getElementById('spkBarCust').style.width = agW;
-
-            // Re-render chat bubbles with swapped roles
-            _activeSegIdx = -1;
-            DOM.chatContainer.innerHTML = currentSegments.map((seg, idx) => {
-                const role    = resolveRole(seg);
-                const isAg    = role === 'AGENT';
-                if (!seg.text?.trim()) return '';
-                return `<div class="chat-bubble ${isAg ? 'chat-agent' : 'chat-customer'}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
-                    <div class="chat-meta">
-                        <span class="speaker-label"><span class="speaker-dot"></span>${role}</span>
-                        <span class="time-badge" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
-                    </div>
-                    <div>${seg.text}</div>
-                </div>`;
-            }).join('');
-
-            // Persist to disk
-            try {
-                const res = await fetch(`/api/call/${encodeURIComponent(currentCallId)}/swap-roles`,
-                                        { method: 'POST' });
-                const st  = await res.json();
-                btn.textContent = st.swapped ? '↩ Undo Swap' : '🔄 Swap Roles';
-            } catch (_) {}
-            btn.disabled = false;
-        }
-
-        // ── Agent Voice Enrollment ────────────────────────────────────────────
-        async function checkEnrollmentStatus() {
-            try {
-                const res  = await fetch('/api/enrollment-status');
-                const data = await res.json();
-                const dot  = document.getElementById('enrollDot');
-                const name = document.getElementById('enrollName');
-                const sub  = document.getElementById('enrollSub');
-                const btn  = document.getElementById('enrollBtn');
-                const prog = document.getElementById('enrollProgress');
-
-                if (data.running) {
-                    dot.className = 'enroll-dot running';
-                    name.textContent = 'Enrolling…';
-                    sub.textContent  = data.message || '';
-                    btn.disabled = true;
-                    setTimeout(checkEnrollmentStatus, 2000);
-                } else if (data.enrolled) {
-                    dot.className = 'enroll-dot enrolled';
-                    name.textContent = data.agent_name || 'Voice enrolled';
-                    sub.textContent  = 'Agent ID active — will match in next upload';
-                    btn.textContent  = 'Re-enroll Voice';
-                    btn.disabled = false;
-                } else {
-                    dot.className = 'enroll-dot';
-                    name.textContent = 'Not enrolled';
-                    sub.textContent  = data.error || 'Upload clean voice samples to identify agent';
-                    btn.disabled = false;
-                }
-            } catch (_) {}
-        }
-
-        document.getElementById('cleanVoiceUpload').addEventListener('change', async function() {
-            const files = this.files;
-            if (!files || files.length === 0) return;
-
-            const btn  = document.getElementById('enrollBtn');
-            const prog = document.getElementById('enrollProgress');
-            const dot  = document.getElementById('enrollDot');
-            const name = document.getElementById('enrollName');
-
-            btn.disabled = true;
-            dot.className = 'enroll-dot running';
-            name.textContent = 'Uploading…';
-            prog.textContent = `Uploading ${files.length} file(s)…`;
-
-            const fd = new FormData();
-            const agentName = prompt('Enter agent name (e.g. "Zak"):', 'Agent') || 'Agent';
-            fd.append('agent_name', agentName);
-            for (const f of files) fd.append('files', f);
-
-            try {
-                const res = await fetch('/api/enroll-clean-upload', { method: 'POST', body: fd });
-                const data = await res.json();
-                if (!res.ok) {
-                    prog.textContent = 'Error: ' + (data.message || res.statusText);
-                    dot.className = 'enroll-dot';
-                    name.textContent = 'Enrollment failed';
-                    btn.disabled = false;
-                } else {
-                    prog.textContent = 'Enrollment started — processing…';
-                    checkEnrollmentStatus();
-                }
-            } catch (e) {
-                prog.textContent = 'Upload error: ' + e.message;
-                btn.disabled = false;
-            }
-            this.value = '';
-        });
-
-        // Init
-        loadCalls();
-        checkEnrollmentStatus();
-    </script>
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadCalls();
+checkEnrollment();
+</script>
 </body>
 </html>
