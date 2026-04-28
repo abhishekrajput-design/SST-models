@@ -171,9 +171,13 @@ class ParakeetV3Transcriber(BaseTranscriber):
             if segs:
                 return segs
 
-        # No timestamps — emit the whole chunk as one segment
-        text = (getattr(hyp, "text", None) or str(hyp)).strip()
-        if text:
+        # No timestamps — emit the whole chunk as one segment (text only)
+        text = getattr(hyp, "text", None)
+        if not text and isinstance(hyp, str):
+            text = hyp
+        text = (text or "").strip()
+        # Only emit if it looks like real speech (not an empty Hypothesis repr)
+        if text and not text.startswith("Hypothesis("):
             segs.append({
                 "start": round(chunk_offset, 2),
                 "end":   round(chunk_offset + CHUNK_S, 2),

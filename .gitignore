@@ -49,6 +49,17 @@ granite-4.0-1b-speech/
 call_processor/data/processed/
 .env
 
+# Generated/sensitive Audiofy scrape and voice biometric artifacts
+call_processor/data/all_users.json
+call_processor/data/api_probe.json
+call_processor/data/audiofy/
+call_processor/data/audiofy_*.html
+call_processor/data/audiofy_*.js
+call_processor/data/agent_clean_clips/
+call_processor/data/agent_voiceprints/
+call_processor/data/enrolled_agent*.npy
+call_processor/data/enrolled_agent_name.txt
+
 # Screenshots / test artifacts
 *.png
 *.jpg

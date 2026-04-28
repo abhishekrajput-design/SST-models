@@ -534,8 +534,13 @@ def identify_agent_name(
 
     speakers = list(spk_time.keys())
 
+    # Time-fraction weights: dominant speakers get a mild preference (30% weight)
+    # so that a customer who happens to match another agent's voiceprint doesn't win.
+    total_time = sum(spk_time.values()) or 1.0
+    time_frac = {spk: spk_time.get(spk, 0.0) / total_time for spk in speakers}
+
     # Compare every speaker × every agent voiceprint
-    best_spk, best_name, best_sim = None, "Unknown Agent", -2.0
+    best_spk, best_name, best_sim, best_weighted = None, "Unknown Agent", -2.0, -2.0
     spk_embs_by_dim: Dict[int, Dict[str, Optional[np.ndarray]]] = {}
 
     for a_slug, info in agents.items():
@@ -591,7 +596,10 @@ def identify_agent_name(
                 continue
             sim = float(np.dot(emb, vp))
             print(f"  [MultiID] {spk} vs {agent_label}: cosine={sim:.3f}", flush=True)
-            if sim > best_sim:
+            # Weight by speaking-time fraction: 70% cosine + 30% time bonus
+            weighted = sim * (0.70 + 0.30 * time_frac.get(spk, 0.0))
+            if weighted > best_weighted:
+                best_weighted = weighted
                 best_sim = sim
                 best_spk = spk
                 best_name = agent_label

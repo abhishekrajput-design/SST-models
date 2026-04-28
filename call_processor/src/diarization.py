@@ -105,15 +105,25 @@ class Diarizer:
 
         from pyannote.audio import Pipeline
 
-        checkpoint = self._build_local_checkpoint("pyannote/speaker-diarization-3.1")
-        logger.info("Loading pyannote diarization pipeline...")
-        self.pipeline = Pipeline.from_pretrained(
-            checkpoint,
-            token=self.hf_token,
-            cache_dir=self.cache_dir,
-        )
-        self.pipeline.to(self.device)
-        logger.info(f"Diarization pipeline loaded on {self.device}")
+        # Try pyannote 4.0 community-1 first (VBx clustering, ~28% better DER)
+        for model_id in (
+            "pyannote/speaker-diarization-community-1",
+            "pyannote/speaker-diarization-3.1",
+        ):
+            try:
+                checkpoint = self._build_local_checkpoint(model_id)
+                logger.info(f"Loading pyannote pipeline: {model_id}")
+                self.pipeline = Pipeline.from_pretrained(
+                    checkpoint,
+                    token=self.hf_token,
+                    cache_dir=self.cache_dir,
+                )
+                self.pipeline.to(self.device)
+                self._model_id = model_id
+                logger.info(f"Diarization pipeline loaded ({model_id}) on {self.device}")
+                break
+            except Exception as e:
+                logger.warning(f"Could not load {model_id}: {e}")
 
     def unload_model(self):
         """Free GPU memory by unloading the model."""
@@ -156,6 +166,14 @@ class Diarizer:
         else:
             if min_speakers is not None: kwargs["min_speakers"] = min_speakers
             if max_speakers is not None: kwargs["max_speakers"] = max_speakers
+        # exclusive=True (pyannote 4.0): 1 speaker per timestep — eliminates overlap
+        # confusion and cleans up embeddings used downstream for voiceprint training
+        model_id = getattr(self, "_model_id", "")
+        if "community-1" in model_id:
+            try:
+                kwargs["exclusive"] = True
+            except Exception:
+                pass
         diarization = self.pipeline(
             {"waveform": waveform, "sample_rate": sample_rate},
             **kwargs,

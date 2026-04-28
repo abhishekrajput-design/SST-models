@@ -37,8 +37,27 @@ class PipelineConfig:
     min_segment_duration: float = 1.0
     merge_gap: float = 0.5
 
+    # Speaker embeddings — CAM++ (2026 SOTA) with ECAPA fallback
+    embedding_model: str = "cam++"              # "cam++" | "ecapa"
+    embedding_dim: int = 512                    # CAM++=512, ECAPA=192
+    campp_model_name: str = "cam++"
+
+    # Diarization — pyannote 4.0 community-1 + exclusive mode
+    diarization_model: str = "pyannote/speaker-diarization-community-1"
+    diarization_exclusive: bool = True           # 1 speaker per timestep
+
+    # Agent voiceprint paths
+    voiceprint_dir: str = os.path.join(PROJECT_ROOT, "data", "agent_voiceprints")
+    agents_index_path: str = os.path.join(PROJECT_ROOT, "data", "agent_voiceprints", "agents.json")
+    enrolled_agent_path: str = os.path.join(PROJECT_ROOT, "data", "enrolled_agent.npy")
+
+    # Legacy ECAPA (kept for backward compat + fallback)
     ecapa_source: str = "speechbrain/spkrec-ecapa-voxceleb"
-    embedding_dim: int = 192
+
+    # TS-VAD threshold
+    tsvad_threshold: float = 0.42
+    tsvad_window_s: float = 1.5
+    tsvad_stride_s: float = 0.5
 
     similarity_threshold: float = 0.25
     unknown_label: str = "Customer"

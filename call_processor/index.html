@@ -46,6 +46,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            height: 100vh;
         }
 
         .brand {
@@ -63,6 +64,7 @@
 
         .call-list {
             flex: 1;
+            min-height: 0;
             overflow-y: auto;
             padding: 10px;
         }
@@ -154,7 +156,8 @@
             transition: background 0.15s;
         }
         .upload-btn:hover { background: #1d4ed8; }
-        .upload-btn:disabled { background: var(--surface2); color: var(--muted); cursor: not-allowed; }
+        .upload-btn.uploading { background: var(--surface2); color: var(--muted); cursor: not-allowed; pointer-events: none; }
+        .upload-btn.uploading * { pointer-events: none; }
 
         /* Enrollment */
         .enroll-section {
@@ -528,6 +531,11 @@
             border-radius:99px; transition:width .5s;
         }
         .progress-msg { font-size:.78rem; color:var(--muted); text-align:center; min-height:16px; }
+        .progress-timer {
+            font-size: .95rem; color: var(--accent); text-align:center;
+            font-variant-numeric: tabular-nums; font-weight: 600;
+            margin-top: 8px; letter-spacing: .5px;
+        }
 
         /* Confirm modal */
         .confirm-overlay {
@@ -555,7 +563,6 @@
     </div>
 
     <div class="upload-section">
-        <input type="file" id="audioUpload" accept="audio/*" style="display:none">
         <select id="modelSelect" class="model-select">
             <optgroup label="☁️ Cloud API · no GPU">
                 <option value="deepgram-nova-3">⭐ Deepgram Nova-3 · best · ~5s</option>
@@ -566,16 +573,18 @@
                 <option value="whisper-large-v3">Whisper Large-v3 · 8.1% WER</option>
                 <option value="whisper-large-v3-turbo">Whisper v3-Turbo · fast</option>
                 <option value="distil-whisper-large-v3.5" selected>⚡ Distil-Whisper v3.5 · fastest</option>
-                <option value="parakeet-tdt-0.6b-v3">NVIDIA Parakeet TDT v3</option>
+                <option value="parakeet-tdt-0.6b-v3">NVIDIA Parakeet TDT v3 · CPU stable</option>
                 <option value="cohere-transcribe-03-2026">Cohere 03-2026 · 5.42% WER</option>
             </optgroup>
         </select>
-        <button class="upload-btn" onclick="document.getElementById('audioUpload').click()">
+        <div class="upload-btn" id="uploadBtn" style="position:relative;overflow:hidden;">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
             </svg>
             <span id="uploadText">Upload Audio</span>
-        </button>
+            <input type="file" id="audioUpload" accept="audio/*"
+                   style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0;">
+        </div>
     </div>
 
     <div class="enroll-section">
@@ -707,6 +716,7 @@
         </div>
         <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
         <div class="progress-msg" id="progressMsg">Preparing…</div>
+        <div class="progress-timer" id="progressTimer">0:00</div>
     </div>
 </div>
 
@@ -724,6 +734,7 @@ const DOM = {
 
 let currentSegments = [];
 let currentCallId   = null;
+let currentIdentifiedAgent = 'Agent';
 let agentSpkId      = null;
 let _activeSegIdx   = -1;
 let _isPlaying      = false;
@@ -874,6 +885,7 @@ async function loadCall(callId, el) {
 
     currentSegments = data.segments || [];
     currentCallId   = callId;
+    currentIdentifiedAgent = data.identified_agent || 'Agent';
     _activeSegIdx   = -1;
     _autoScroll     = true;
 
@@ -917,8 +929,11 @@ async function loadCall(callId, el) {
     document.getElementById('spkTurnsAgent').textContent = agTu + ' turns';
     document.getElementById('spkTurnsCust').textContent  = cuTu + ' turns';
     document.getElementById('spkDiarBadge').textContent  =
-        data.diarization === 'stereo-channels' ? 'Stereo' :
-        data.diarization === 'ecapa-kmeans'    ? 'ECAPA'  : 'Heuristic';
+        data.diarization === 'diar_multi_voiceprint'    ? 'Voiceprint' :
+        data.diarization === 'multi-speaker-voiceprint' ? 'Voiceprint' :
+        data.diarization === 'ecapa-kmeans'             ? 'ECAPA'      :
+        data.diarization === 'pyannote'                 ? 'Pyannote'   :
+        data.diarization === 'none'                     ? 'None'       : 'Heuristic';
 
     // Render transcript
     DOM.chat.innerHTML = currentSegments.map((seg, idx) => renderBubble(seg, idx)).join('');
@@ -1089,7 +1104,18 @@ async function swapRoles() {
     const btn = document.getElementById('swapRolesBtn');
     btn.disabled = true;
     const SWAP = {'AGENT':'CUSTOMER','CUSTOMER':'AGENT'};
-    currentSegments.forEach(s => { const c=s.identified_speaker; if(SWAP[c]) s.identified_speaker=SWAP[c]; });
+    currentSegments.forEach(s => {
+        const c = s.identified_speaker;
+        if (!SWAP[c]) return;
+        s.identified_speaker = SWAP[c];
+        if (s.identified_speaker === 'AGENT') {
+            s.agent_name = s.agent_name || currentIdentifiedAgent || 'Agent';
+            s.display_speaker = s.agent_name;
+        } else {
+            delete s.agent_name;
+            s.display_speaker = 'Customer';
+        }
+    });
     _activeSegIdx = -1;
     DOM.chat.innerHTML = currentSegments.map((s,i) => renderBubble(s,i)).join('');
     try {
@@ -1118,9 +1144,41 @@ function showConfirm(msg, onYes) {
 // ── Progress modal ───────────────────────────────────────────────────────────
 const STAGE_PCTS = [8, 30, 58, 80, 100];
 let _pollTimer = null;
+let _elapsedTimer = null;
+let _elapsedStart = 0;
 
-function showProgress() { document.getElementById('progressModal').style.display='flex'; setStage(0,'Uploading…'); }
-function hideProgress() { document.getElementById('progressModal').style.display='none'; }
+function _fmtElapsed(sec) {
+    sec = Math.max(0, Math.floor(sec));
+    const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+    return h > 0
+        ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+        : `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function _startElapsed() {
+    _elapsedStart = Date.now();
+    const el = document.getElementById('progressTimer');
+    if (el) el.textContent = '0:00';
+    if (_elapsedTimer) clearInterval(_elapsedTimer);
+    _elapsedTimer = setInterval(() => {
+        const el = document.getElementById('progressTimer');
+        if (el) el.textContent = _fmtElapsed((Date.now() - _elapsedStart) / 1000);
+    }, 1000);
+}
+
+function _stopElapsed() {
+    if (_elapsedTimer) { clearInterval(_elapsedTimer); _elapsedTimer = null; }
+}
+
+function showProgress() {
+    document.getElementById('progressModal').style.display='flex';
+    setStage(0,'Uploading…');
+    _startElapsed();
+}
+function hideProgress() {
+    document.getElementById('progressModal').style.display='none';
+    _stopElapsed();
+}
 
 function setStage(n, msg) {
     for (let i=0;i<4;i++) {
@@ -1162,9 +1220,10 @@ function showError(msg) {
 document.getElementById('audioUpload').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const btn = document.querySelector('.upload-btn');
+    const btn = document.getElementById('uploadBtn');
     const txt = document.getElementById('uploadText');
-    btn.disabled = true; txt.textContent = 'Uploading…';
+    btn.classList.add('uploading'); txt.textContent = 'Uploading…';
+    document.getElementById('audioUpload').disabled = true;
     try {
         const model = document.getElementById('modelSelect').value;
         const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}&model=${encodeURIComponent(model)}`, { method:'POST', body:file });
@@ -1182,7 +1241,8 @@ document.getElementById('audioUpload').addEventListener('change', async (e) => {
         } catch(_) {}
         showError(err.message);
     } finally {
-        btn.disabled = false; txt.textContent = 'Upload Audio'; e.target.value = '';
+        btn.classList.remove('uploading'); txt.textContent = 'Upload Audio';
+        const inp = document.getElementById('audioUpload'); inp.disabled = false; inp.value = '';
     }
 });
 

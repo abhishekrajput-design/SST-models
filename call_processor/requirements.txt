@@ -8,11 +8,18 @@
 torch>=2.8.0
 torchaudio>=2.8.0
 
-# Speaker diarization
-pyannote.audio>=3.1.0
+# Speaker diarization — 4.0 uses VBx clustering + exclusive mode (~28% better DER)
+pyannote.audio>=4.0.0
 
-# Speaker recognition (ECAPA-TDNN embeddings)
+# Speaker recognition (ECAPA-TDNN — kept as fallback)
 speechbrain>=1.0.0
+
+# WeSpeaker CAM++ — 512-dim embeddings, EER 0.62% (vs ECAPA 0.93%)
+# pip install git+https://github.com/wenet-e2e/wespeaker.git
+# wespeaker @ git+https://github.com/wenet-e2e/wespeaker.git
+
+# Clustering (KMeans fallback when TS-VAD not available)
+scikit-learn>=1.3.0
 
 # Fast Whisper transcription (CTranslate2-based, int8 support)
 faster-whisper>=1.0.0

@@ -182,11 +182,11 @@ def _enhance_angelina(input_path: str, output_path: str, max_seconds: int = 300)
 
 
 # ── Pipeline 3b: DeepFilterNet3 — neural (GPU, soundfile I/O) ────────────────
-def _enhance_deepfilternet(input_path: str, output_path: str, max_seconds: int = 300):
+def _enhance_deepfilternet(input_path: str, output_path: str,
+                           max_seconds: int = None, chunk_seconds: int = 300):
     """
     DeepFilterNet3 neural noise suppression.
-    pip install deepfilternet
-    Uses soundfile instead of torchaudio.load (torchaudio 2.x compat fix).
+    Processes audio in chunk_seconds chunks to avoid VRAM OOM on long files.
     """
     import numpy as np
     import torch
@@ -210,14 +210,30 @@ def _enhance_deepfilternet(input_path: str, output_path: str, max_seconds: int =
         if orig_sr != target_sr:
             audio = F_ta.resample(audio, orig_sr, target_sr)
 
-        enhanced = enhance(model, df_state, audio)
-        enh_np = enhanced.cpu().numpy().squeeze(0)
-        enh_np = np.clip(enh_np * 3.0, -0.98, 0.98)
+        chunk_samples = int(chunk_seconds * target_sr)
+        total = audio.shape[-1]
 
+        if total <= chunk_samples:
+            enhanced = enhance(model, df_state, audio)
+            enh_np = enhanced.cpu().numpy().squeeze(0)
+            del enhanced
+        else:
+            # Process in chunks to stay within 6 GB VRAM
+            parts = []
+            for start in range(0, total, chunk_samples):
+                chunk = audio[:, start: start + chunk_samples]
+                enh_chunk = enhance(model, df_state, chunk)
+                parts.append(enh_chunk.cpu().numpy().squeeze(0))
+                del enh_chunk
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+            enh_np = np.concatenate(parts)
+
+        enh_np = np.clip(enh_np * 3.0, -0.98, 0.98)
         sf.write(out_wav, enh_np, target_sr, subtype="PCM_16")
         _wav_to_mp3(out_wav, output_path)
 
-        del model, df_state, audio, enhanced
+        del model, df_state, audio
         gc.collect()
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
@@ -380,14 +396,49 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     Run any registered transcriber in-process (Whisper, Cohere, Parakeet, Qwen3, VibeVoice).
     Returns result_id (basename of FFmpeg-enhanced file).
     Writes result.json to data/processed/<result_id>/.
-    original_path: path to the original upload (before enhancement) — used to
-                   detect stereo channels since enhanced audio is always mono.
+    Mono-only pipeline: all audio is downmixed to 16 kHz mono regardless of source.
     """
     import time
     from datetime import datetime
     import sys as _sys
     _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from src.transcribers import get_transcriber
+
+    requested_model = whisper_model
+
+    def _audio_duration_s(path: str) -> float:
+        try:
+            import soundfile as _sf
+            return float(_sf.info(path).duration)
+        except Exception:
+            pass
+        try:
+            r = subprocess.run(
+                ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", path],
+                capture_output=True,
+                text=True,
+                env=_ENV,
+                timeout=30,
+            )
+            return float(json.loads(r.stdout)["format"]["duration"])
+        except Exception:
+            return 0.0
+
+    # CUDA Parakeet can abort the Python process on this Windows workstation.
+    # Parakeet is forced to CPU below, so keep the selected model and surface
+    # long-call runtime honestly instead of silently switching to Whisper.
+    if whisper_model == "parakeet-tdt-0.6b-v3":
+        dur_s = _audio_duration_s(audio_path)
+        if dur_s > 600:
+            print(
+                f"[UI] Parakeet CPU mode selected for long audio ({dur_s:.0f}s).",
+                flush=True,
+            )
+            _set_status(
+                2,
+                "Transcription",
+                f"Parakeet CPU mode selected for {dur_s:.0f}s audio; this can take several minutes...",
+            )
 
     base     = os.path.splitext(os.path.basename(audio_path))[0]
     # Use a per-model directory so each model run is stored separately
@@ -405,19 +456,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     # for the transcriber via the -ar arg below.
     _NORM_AF = "aresample=44100,loudnorm=I=-16:TP=-1.5:LRA=11,dynaudnorm=p=0.9:m=100:s=5"
 
-    def _make_norm_wav(src: str, dst: str, channel: str = ""):
-        """16 kHz mono WAV from src with normalisation.
-        channel: 'L'/'R' extracts that channel via pan filter (FFmpeg 8+ safe).
-        '' downmixes to mono via aformat — works for mono OR stereo input.
-        (pan=mono|c0=0.5*FL+0.5*FR was producing silent WAVs when the source
-        was already mono, since FL/FR don't exist in a mono channel layout.)
-        """
-        if channel == "L":
-            af = f"pan=mono|c0=FL,{_NORM_AF}"
-        elif channel == "R":
-            af = f"pan=mono|c0=FR,{_NORM_AF}"
-        else:
-            af = f"aformat=channel_layouts=mono,{_NORM_AF}"
+    def _make_norm_wav(src: str, dst: str):
+        """16 kHz mono WAV from src with normalisation. Mono-only pipeline."""
+        af = f"aformat=channel_layouts=mono,{_NORM_AF}"
         _run_ffmpeg(
             ["ffmpeg", "-y", "-i", src, "-ar", "16000", "-af", af, dst],
             timeout=600,   # 30-min audio needs up to ~5 min for loudnorm
@@ -426,7 +467,10 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     # ── Load transcriber (shared for both channels) ───────────────────────────
     _set_status(2, "Transcription", f"Loading {whisper_model}...")
     print(f"[UI] Loading transcriber: {whisper_model}")
-    transcriber = get_transcriber(whisper_model, device="cuda")
+    transcriber_device = "cpu" if whisper_model == "parakeet-tdt-0.6b-v3" else "cuda"
+    if transcriber_device == "cpu" and whisper_model == "parakeet-tdt-0.6b-v3":
+        print("[UI] Parakeet uses CPU mode for stability.", flush=True)
+    transcriber = get_transcriber(whisper_model, device=transcriber_device)
     transcriber.load()
 
     def _retry_empty_transcript(
@@ -445,13 +489,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         except Exception:
             pass
         whisper_model = fallback_model
-        transcriber = get_transcriber(whisper_model, device="cuda")
+        retry_device = "cpu" if whisper_model == "parakeet-tdt-0.6b-v3" else "cuda"
+        transcriber = get_transcriber(whisper_model, device=retry_device)
         transcriber.load()
         return transcriber.transcribe(wav_path, language="en")
 
     t0 = time.time()
     diarization_applied = False
     speaker_stats: dict   = {}
+    diar_result: dict = {}
 
     # ── Mono path: voiceprint-first multi-speaker diarization ────────────────
     norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
@@ -472,6 +518,17 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     agent_time = customer_time = 0.0
     agent_turns = customer_turns = 0
 
+    # Free GPU memory before diarization — embeddings run on CPU (force_cpu=True)
+    # but leftover VRAM from Parakeet can cause fragmentation issues.
+    try:
+        import torch as _torch, gc as _gc
+        _gc.collect()
+        if _torch.cuda.is_available():
+            _torch.cuda.empty_cache()
+            _torch.cuda.synchronize()
+    except Exception:
+        pass
+
     _set_status(3, "Transcription", "Identifying speakers (voiceprint matching)...")
     try:
         from src.diar_multi import diarize_multi
@@ -480,7 +537,12 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         segments     = diar_result["segments"]
         agent_name_id = diar_result.get("agent_name", "Unknown Agent")
         agent_sim     = diar_result.get("agent_similarity", 0.0)
-        print(f"[UI] Agent identified: {agent_name_id} (cosine={agent_sim:.3f})", flush=True)
+        backend_dim   = diar_result.get("matched_backend_dim")
+        print(
+            f"[UI] Agent identified: {agent_name_id} "
+            f"(cosine={agent_sim:.3f}, dim={backend_dim})",
+            flush=True,
+        )
         print(f"[UI] Speakers: {list(diar_result.get('per_speaker', {}).keys())}", flush=True)
 
         for seg in segments:
@@ -494,9 +556,10 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception as _diar_err:
         print(f"[UI] Diarization skipped ({repr(_diar_err)}) — single-speaker mode", flush=True)
         for seg in segments:
-            seg.setdefault("speaker", "SPEAKER_00")
-            seg.setdefault("identified_speaker", "SPEAKER_00")
-            seg.setdefault("display_speaker", seg.get("identified_speaker", "SPEAKER_00"))
+            seg["speaker"] = seg.get("speaker") or "SPEAKER_99"
+            seg["identified_speaker"] = "CUSTOMER"
+            seg.pop("agent_name", None)
+            seg["display_speaker"] = "Unknown"
 
     elapsed = round(time.time() - t0, 2)
 
@@ -588,15 +651,23 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "audio_file":               audio_path.replace("\\", "/"),
         "trimmed_audio_file":       trimmed_audio_file,
         "model":                    whisper_model,
+        "requested_model":          requested_model,
         "processed_at":             datetime.utcnow().isoformat() + "Z",
         "processing_time_seconds":  elapsed,
         "total_segments":           len(segments),
         "segments":                 segments,
         "transcription_json":       transcription_json,
-        "diarization":              "ecapa-kmeans" if diarization_applied else "none",
+        "diarization":              "diar_multi_voiceprint" if diarization_applied else "none",
         "speaker_stats":            speaker_stats,
         "identified_agent":         _identified_agent,
-        "note": f"Transcribed with {whisper_model}",
+        "speaker_id_backend_dim":   diar_result.get("matched_backend_dim"),
+        "voiceprint_dims":          diar_result.get("voiceprint_dims", {}),
+        "speaker_id_warning":       diar_result.get("warning"),
+        "note": (
+            f"Requested {requested_model}; transcribed with {whisper_model}"
+            if requested_model != whisper_model
+            else f"Transcribed with {whisper_model}"
+        ),
     }
     os.makedirs(out_dir, exist_ok=True)  # re-create if deleted during long transcription
     result_path = os.path.join(out_dir, "result.json")
@@ -676,7 +747,7 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             print("[UI] Stage 0b: DeepFilterNet3...")
             pipeline_audio = paths["ffmpeg"]   # fallback
             try:
-                _enhance_deepfilternet(paths["ffmpeg"], paths["deepfilter"], max_seconds=None)
+                _enhance_deepfilternet(paths["ffmpeg"], paths["deepfilter"])
                 enhancement_paths["deepfilter"] = paths["deepfilter"]
                 pipeline_audio = paths["deepfilter"]
                 print("[UI] DeepFilterNet3 done.")
@@ -787,8 +858,10 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                            result_id=result_id)
         print(f"[UI] Pipeline complete. Result: {result_id}")
 
-    except Exception as e:
-        print(f"[UI] Pipeline error: {e}")
+    except BaseException as e:
+        import traceback as _tb
+        print(f"[UI] Pipeline error: {e}", flush=True)
+        _tb.print_exc()
         with _status_lock:
             _status.update(error=str(e), running=False)
 
@@ -954,7 +1027,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 {"model": "whisper-large-v3",          "label": "Whisper Large-v3",         "type": "Local GPU",  "speed_s": 78,   "segments": 306,  "notes": "Best quality local Whisper",     "rank": 2, "wer": "8.1%",  "status": "ok"},
                 {"model": "whisper-large-v3-turbo",    "label": "Whisper Large-v3-Turbo",   "type": "Local GPU",  "speed_s": 35,   "segments": 307,  "notes": "Fast, near large-v3 quality",    "rank": 3, "wer": "8.4%",  "status": "ok"},
                 {"model": "distil-whisper-large-v3.5", "label": "Distil-Whisper v3.5",      "type": "Local GPU",  "speed_s": 29,   "segments": 433,  "notes": "Fastest local, most granular",   "rank": 4, "wer": "8.6%",  "status": "ok"},
-                {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local GPU",  "speed_s": 22,   "segments": 126,  "notes": "Fast NeMo, English only",        "rank": 5, "wer": "~5.5%", "status": "ok"},
+                {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local CPU",  "speed_s": 45,   "segments": 126,  "notes": "CPU mode for stable UI runs; long audio may be slow", "rank": 5, "wer": "~5.5%", "status": "ok"},
                 {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 52,   "segments": 60,   "notes": "Lowest WER on leaderboard",      "rank": 6, "wer": "5.42%", "status": "ok"},
                 {"model": "deepgram-nova-2-phonecall", "label": "Deepgram Nova-2 Phone",    "type": "Cloud API",  "speed_s": 6,    "segments": 33,   "notes": "Optimised for phone call audio", "rank": 7, "wer": "~9%",   "status": "ok"},
                 {"model": "deepgram-nova-2-meeting",   "label": "Deepgram Nova-2 Meeting",  "type": "Cloud API",  "speed_s": 8,    "segments": 51,   "notes": "Multi-speaker meetings",         "rank": 8, "wer": "~9%",   "status": "ok"},
@@ -1115,9 +1188,25 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             with open(result_path, "r", encoding="utf-8") as f:
                 rdata = json.load(f)
             _SWAP = {"AGENT": "CUSTOMER", "CUSTOMER": "AGENT"}
+            agent_label = rdata.get("identified_agent") or "Agent"
+
+            def _apply_swapped_display(item: dict) -> None:
+                new_role = _SWAP.get(
+                    item.get("identified_speaker", ""),
+                    item.get("identified_speaker", ""),
+                )
+                item["identified_speaker"] = new_role
+                if new_role == "AGENT":
+                    item["agent_name"] = item.get("agent_name") or agent_label
+                    item["display_speaker"] = item["agent_name"]
+                elif new_role == "CUSTOMER":
+                    item.pop("agent_name", None)
+                    item["display_speaker"] = "Customer"
+
             for seg in rdata.get("segments", []):
-                seg["identified_speaker"] = _SWAP.get(
-                    seg.get("identified_speaker", ""), seg.get("identified_speaker", ""))
+                _apply_swapped_display(seg)
+            for seg in rdata.get("transcription_json", []):
+                _apply_swapped_display(seg)
             ss = rdata.get("speaker_stats", {})
             rdata["speaker_stats"] = {
                 "AGENT":    ss.get("CUSTOMER", {}),
@@ -1262,6 +1351,9 @@ elif os.path.exists(_enrolled_path):
     print("[Startup] Agent voiceprint loaded — cosine similarity active.", flush=True)
 
 # ── Server startup ────────────────────────────────────────────────────────────
+import faulthandler as _fh
+_fh.enable()   # dump traceback to stderr on SIGSEGV / fatal Python errors
+
 socketserver.ThreadingTCPServer.allow_reuse_address = True
 
 with socketserver.ThreadingTCPServer(("", PORT), RequestHandler) as httpd:

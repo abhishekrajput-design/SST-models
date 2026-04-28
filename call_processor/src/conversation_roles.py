@@ -16,6 +16,18 @@ def _segment_duration(segment: Dict) -> float:
     return max(0.0, end - start)
 
 
+def _agent_identity(segment: Dict, identified: str) -> str:
+    if identified.lower().startswith("agent_"):
+        return identified
+    if identified.upper() == "AGENT":
+        return str(
+            segment.get("agent_name")
+            or segment.get("display_speaker")
+            or "Agent"
+        )
+    return ""
+
+
 def build_conversation_view(
     segments: List[Dict],
     agent_confidence_threshold: float = 0.25,
@@ -36,6 +48,8 @@ def build_conversation_view(
         diarized_label = str(segment.get("speaker") or f"SPEAKER_{index:02d}")
         identified = str(segment.get("identified_speaker") or diarized_label)
         confidence = float(segment.get("confidence", 0) or 0)
+        if identified.upper() == "AGENT" and confidence <= 0:
+            confidence = max(float(segment.get("_best_sim", 0) or 0), 1.0)
         duration = _segment_duration(segment)
         start = float(segment.get("start", 0) or 0)
 
@@ -54,9 +68,10 @@ def build_conversation_view(
         stats["duration"] += duration
         stats["segment_count"] += 1
 
-        if identified.lower().startswith("agent_"):
-            stats["agent_scores"][identified] += max(confidence, 0.0) * max(duration, 1.0)
-            score = stats["agent_scores"][identified]
+        agent_identity = _agent_identity(segment, identified)
+        if agent_identity:
+            stats["agent_scores"][agent_identity] += max(confidence, 0.0) * max(duration, 1.0)
+            score = stats["agent_scores"][agent_identity]
             if (
                 stats["best_agent_name"] is None
                 or confidence > stats["best_agent_confidence"]
@@ -65,7 +80,7 @@ def build_conversation_view(
                     and score > stats["agent_scores"][stats["best_agent_name"]]
                 )
             ):
-                stats["best_agent_name"] = identified
+                stats["best_agent_name"] = agent_identity
                 stats["best_agent_confidence"] = confidence
 
     agent_candidates: Dict[str, List[Tuple[str, Dict]]] = defaultdict(list)

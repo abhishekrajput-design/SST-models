@@ -20,8 +20,15 @@ import torchaudio.functional as F_ta
 logger = logging.getLogger(__name__)
 
 _TARGET_SR = 16000
+# CAM++ needs at least ~1.5s of audio to produce a stable embedding.
+# Below this we repeat-pad the chunk up to _MIN_SAMPLES (better than rejecting,
+# which leaves short segments unembedded and forces unreliable neighbour-vote
+# smoothing in the diariser — a major source of mis-labelling).
 _MIN_DURATION_S = 1.5
 _MIN_SAMPLES = int(_TARGET_SR * _MIN_DURATION_S)
+# Hard floor — clips shorter than this carry too little speech to embed at all.
+_REJECT_DURATION_S = 0.3
+_REJECT_SAMPLES = int(_TARGET_SR * _REJECT_DURATION_S)
 
 _DEFAULT_MODEL: Optional["EmbeddingModel"] = None
 
@@ -121,8 +128,14 @@ class EmbeddingModel:
             audio = F_ta.resample(
                 torch.from_numpy(audio.astype(np.float32)), sr, _TARGET_SR
             ).numpy()
-        if len(audio) < _MIN_SAMPLES:
+        if len(audio) < _REJECT_SAMPLES:
             return None
+        if len(audio) < _MIN_SAMPLES:
+            # Repeat-pad short clips up to the model's minimum so they embed
+            # instead of being dropped (which forces neighbour-vote smoothing
+            # downstream and mis-labels back-channel responses).
+            n_repeats = int(np.ceil(_MIN_SAMPLES / max(len(audio), 1)))
+            audio = np.tile(audio, n_repeats)[:_MIN_SAMPLES]
 
         if self._backend == "cam++":
             return self._embed_campp_from_array(audio)

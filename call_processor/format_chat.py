@@ -21,6 +21,15 @@ if sys.platform == "win32":
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 
+def _agent_display_name(seg: Dict) -> str:
+    speaker = seg.get("identified_speaker", seg.get("speaker", "Unknown"))
+    if speaker == "AGENT":
+        return seg.get("agent_name") or seg.get("display_speaker") or "Agent"
+    if speaker.startswith("agent_"):
+        return speaker.replace("agent_", "").title()
+    return seg.get("display_speaker") or speaker
+
+
 def fmt_time(seconds: float) -> str:
     """Convert seconds to MM:SS format."""
     m = int(seconds // 60)
@@ -47,9 +56,9 @@ def render_conversation(segments: List[Dict]) -> str:
         conf = seg.get("confidence", 0)
 
         # Clean up agent name for display
-        display_name = speaker.replace("agent_", "").title() if speaker.startswith("agent_") else speaker
+        display_name = _agent_display_name(seg)
 
-        if speaker.startswith("agent_") or speaker == "Agent":
+        if speaker.startswith("agent_") or speaker in {"Agent", "AGENT"}:
             # Agent message -- left aligned with tag
             lines.append(f"  [{start}-{end}]  AGENT ({display_name}) [{conf:.0%}]")
             lines.append(f"  | {text}")
@@ -77,11 +86,11 @@ def render_split_view(segments: List[Dict]) -> str:
         start = fmt_time(seg["start"])
         end = fmt_time(seg["end"])
         conf = seg.get("confidence", 0)
-        display_name = speaker.replace("agent_", "").title() if speaker.startswith("agent_") else speaker
+        display_name = _agent_display_name(seg)
 
         entry = f"[{start}-{end}] {text}"
 
-        if speaker.startswith("agent_") or speaker == "Agent":
+        if speaker.startswith("agent_") or speaker in {"Agent", "AGENT"}:
             agent_lines.append((seg["start"], display_name, entry, conf))
         else:
             customer_lines.append((seg["start"], entry))
@@ -119,8 +128,12 @@ def render_split_view(segments: List[Dict]) -> str:
 def render_stats(result: Dict) -> str:
     """Render summary statistics."""
     segments = result.get("segments", [])
-    agent_segs = [s for s in segments if s.get("identified_speaker", "").startswith("agent_")]
-    customer_segs = [s for s in segments if not s.get("identified_speaker", "").startswith("agent_")]
+    agent_segs = [
+        s for s in segments
+        if s.get("identified_speaker", "").startswith("agent_")
+        or s.get("identified_speaker") == "AGENT"
+    ]
+    customer_segs = [s for s in segments if s not in agent_segs]
 
     agent_time = sum(s["end"] - s["start"] for s in agent_segs)
     customer_time = sum(s["end"] - s["start"] for s in customer_segs)
@@ -141,9 +154,16 @@ def render_stats(result: Dict) -> str:
         lines.append(f"  Talk ratio    : Agent {agent_time/total_time:.0%} / Customer {customer_time/total_time:.0%}")
 
     # Agent identification
-    agent_names = set(s.get("identified_speaker", "") for s in agent_segs)
+    agent_names = sorted({
+        s.get("agent_name") or s.get("display_speaker") or s.get("identified_speaker", "")
+        for s in agent_segs
+        if s.get("agent_name") or s.get("display_speaker") or s.get("identified_speaker")
+    })
     if agent_names:
-        names = ", ".join(n.replace("agent_", "").title() for n in agent_names)
+        names = ", ".join(
+            n.replace("agent_", "").title() if n.startswith("agent_") else n
+            for n in agent_names
+        )
         lines.append(f"  Identified as : {names}")
 
     lines.append("=" * 70)
