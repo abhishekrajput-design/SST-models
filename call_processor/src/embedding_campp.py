@@ -60,6 +60,11 @@ class EmbeddingModel:
         self._device = "cpu" if force_cpu or not torch.cuda.is_available() else "cuda"
 
         try:
+            # s3prl/wespeaker still calls torchaudio.set_audio_backend(),
+            # which was removed in newer torchaudio releases.
+            import torchaudio
+            if not hasattr(torchaudio, "set_audio_backend"):
+                torchaudio.set_audio_backend = lambda *args, **kwargs: None
             import wespeaker
             campplus_dir = str(Path(__file__).parent.parent / "models" / "campplus_en")
             self._wsp = wespeaker.load_model(campplus_dir)

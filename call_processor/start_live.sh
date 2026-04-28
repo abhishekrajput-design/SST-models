@@ -18,6 +18,12 @@ find_python() {
         printf '%s\n' "$APP_DIR/../.venv/bin/python"
     elif [ -x "$APP_DIR/../venv/bin/python" ]; then
         printf '%s\n' "$APP_DIR/../venv/bin/python"
+    elif [ -n "${CONDA_PREFIX:-}" ] && [ -x "$CONDA_PREFIX/bin/python" ]; then
+        printf '%s\n' "$CONDA_PREFIX/bin/python"
+    elif [ -x "$HOME/anaconda3/envs/sst-models/bin/python" ]; then
+        printf '%s\n' "$HOME/anaconda3/envs/sst-models/bin/python"
+    elif [ -x "$HOME/miniconda3/envs/sst-models/bin/python" ]; then
+        printf '%s\n' "$HOME/miniconda3/envs/sst-models/bin/python"
     elif command -v python3 >/dev/null 2>&1; then
         command -v python3
     elif command -v python >/dev/null 2>&1; then
