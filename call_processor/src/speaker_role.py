@@ -428,7 +428,7 @@ def _speaker_embeddings_ecapa(
     if audio.ndim > 1:
         audio = audio[:, 0]
 
-    model, device = _load_ecapa()
+    model, device = _load_ecapa(force_cpu=True)
     try:
         spk_embs: Dict[str, Optional[np.ndarray]] = {}
         for spk in speakers:
