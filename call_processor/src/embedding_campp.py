@@ -8,7 +8,9 @@ from __future__ import annotations
 import gc
 import logging
 import os
+import sys
 import tempfile
+import types
 from pathlib import Path
 from typing import List, Optional
 
@@ -65,6 +67,13 @@ class EmbeddingModel:
             import torchaudio
             if not hasattr(torchaudio, "set_audio_backend"):
                 torchaudio.set_audio_backend = lambda *args, **kwargs: None
+            if "torchaudio.sox_effects" not in sys.modules:
+                sox_effects = types.ModuleType("torchaudio.sox_effects")
+                sox_effects.apply_effects_tensor = (
+                    lambda waveform, sample_rate, effects, *args, **kwargs:
+                    (waveform, sample_rate)
+                )
+                sys.modules["torchaudio.sox_effects"] = sox_effects
             import wespeaker
             campplus_dir = str(Path(__file__).parent.parent / "models" / "campplus_en")
             self._wsp = wespeaker.load_model(campplus_dir)
