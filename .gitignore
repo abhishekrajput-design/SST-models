@@ -50,8 +50,10 @@ call_processor/data/processed/
 .env
 
 # Generated/sensitive Audiofy scrape and voice biometric artifacts
+api response.txt
 call_processor/data/all_users.json
 call_processor/data/api_probe.json
+call_processor/data/api_compare/
 call_processor/data/audiofy/
 call_processor/data/audiofy_*.html
 call_processor/data/audiofy_*.js
@@ -59,6 +61,33 @@ call_processor/data/agent_clean_clips/
 call_processor/data/agent_voiceprints/
 call_processor/data/enrolled_agent*.npy
 call_processor/data/enrolled_agent_name.txt
+call_processor/data/test_sample_fixed_segs.json
+call_processor/data/zak_transcript_calls.json
+
+# Local agent training/evaluation scratch scripts and reports
+call_processor/ZAK_LOCAL_E2E_STATUS.md
+call_processor/build_combined_ui_result.py
+call_processor/clean_extract_agent.py
+call_processor/enroll_hussein.py
+call_processor/enroll_hussein_clean.py
+call_processor/enroll_omar.py
+call_processor/scrape_audiofy.py
+call_processor/scrape_dataset_api.py
+call_processor/test_combined_speakers.py
+call_processor/test_desk_id.py
+call_processor/test_hussein_e2e.py
+call_processor/test_omar_e2e.py
+call_processor/test_sd_audio_id.py
+call_processor/test_zak_e2e.py
+call_processor/tmpezyb8tzh_enroll_hussein.py
+call_processor/train_from_audiofy.py
+call_processor/src/diar_campp.py
+call_processor/src/diar_voiceprint.py
+call_processor/src/target_speaker_vad.py
+call_processor/ui_test.err
+
+# Local state stores
+data/
 
 # Screenshots / test artifacts
 *.png
