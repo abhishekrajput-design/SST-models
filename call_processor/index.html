@@ -1259,7 +1259,13 @@ async function checkEnrollment() {
             btn.disabled=true; setTimeout(checkEnrollment,2000);
         } else if (d.enrolled) {
             dot.className='enroll-dot enrolled'; nm.textContent=d.agent_name||'Voice enrolled';
-            sub.textContent='Active — matches on next upload'; btn.textContent='Re-enroll'; btn.disabled=false;
+            const dimText = d.voiceprint_dims && Object.keys(d.voiceprint_dims).length
+                ? ` · dims ${Object.entries(d.voiceprint_dims).map(([k,v])=>`${k}:${v}`).join(', ')}`
+                : '';
+            sub.textContent = d.agent_count > 1
+                ? `Active · ${d.agent_count} agents${dimText}`
+                : 'Active · matches on next upload';
+            btn.textContent='Re-enroll'; btn.disabled=false;
         } else {
             dot.className='enroll-dot'; nm.textContent='Not enrolled';
             sub.textContent=d.error||'Upload voice to identify agent'; btn.disabled=false;

@@ -24,6 +24,7 @@ from typing import Callable, Dict, List, Optional
 
 import numpy as np
 import soundfile as sf
+from src.voiceprints import resolve_voiceprint_path
 
 logger = logging.getLogger(__name__)
 
@@ -175,7 +176,10 @@ def _find_best_voiceprint() -> Optional[str]:
             for info in idx.values():
                 if not isinstance(info, dict):
                     continue
-                vp = info.get("voiceprint_path") or info.get("voiceprint") or ""
+                vp = resolve_voiceprint_path(
+                    info.get("voiceprint_path") or info.get("voiceprint") or "",
+                    AGENTS_INDEX_PATH,
+                )
                 if vp and os.path.exists(vp):
                     valid.append(vp)
             if len(valid) == 1:
@@ -412,7 +416,10 @@ def _load_agents_index() -> dict:
 
 
 def _agent_voiceprint_path(info: dict) -> str:
-    return str(info.get("voiceprint") or info.get("voiceprint_path") or "")
+    return resolve_voiceprint_path(
+        str(info.get("voiceprint") or info.get("voiceprint_path") or ""),
+        AGENTS_INDEX_PATH,
+    )
 
 
 def _agent_name(info: dict, fallback: str) -> str:

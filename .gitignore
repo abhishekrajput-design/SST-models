@@ -64,6 +64,7 @@ call_processor/data/enrolled_agent*.npy
 call_processor/data/enrolled_agent_name.txt
 call_processor/data/test_sample_fixed_segs.json
 call_processor/data/zak_transcript_calls.json
+call_processor/data/voiceprints_bundle*.tar.gz
 
 # Local agent training/evaluation scratch scripts and reports
 call_processor/ZAK_LOCAL_E2E_STATUS.md

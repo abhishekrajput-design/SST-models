@@ -18,6 +18,7 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import soundfile as sf
+from src.voiceprints import resolve_voiceprint_path
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +52,7 @@ def _load_voiceprints(path: Optional[str] = None) -> Dict[str, Tuple[str, np.nda
         vp_path = info.get("voiceprint_path") or info.get("voiceprint")
         if not vp_path:
             continue
-        if not os.path.isabs(vp_path):
-            vp_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), vp_path)
+        vp_path = resolve_voiceprint_path(vp_path, p)
         if not os.path.isfile(vp_path):
             continue
         try:

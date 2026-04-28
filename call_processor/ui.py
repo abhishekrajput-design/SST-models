@@ -1099,14 +1099,27 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         if path == "/api/enrollment-status":
             with _enroll_lock:
                 st = dict(_enroll_status)
-            enrolled_path = os.path.join("data", "enrolled_agent.npy")
-            st["enrolled"] = os.path.exists(enrolled_path)
             st["recordings_dir"] = AGENT_RECORDINGS_DIR
-            # Include stored agent name if available
-            name_path = os.path.join("data", "enrolled_agent_name.txt")
-            if os.path.exists(name_path):
-                with open(name_path, "r") as _nf:
-                    st["agent_name"] = _nf.read().strip()
+            try:
+                from src.voiceprints import voiceprint_inventory
+                inv = voiceprint_inventory()
+            except Exception as _vp_err:
+                inv = {"enrolled": False, "agent_count": 0, "voiceprint_dims": {},
+                       "legacy_enrolled": False, "legacy_agent_name": "",
+                       "missing_count": 0, "error": str(_vp_err)}
+            st["enrolled"] = bool(inv.get("enrolled"))
+            st["agent_count"] = int(inv.get("agent_count") or 0)
+            st["voiceprint_dims"] = inv.get("voiceprint_dims", {})
+            st["missing_voiceprints"] = int(inv.get("missing_count") or 0)
+            st["legacy_enrolled"] = bool(inv.get("legacy_enrolled"))
+            if st["agent_count"] > 1:
+                st["agent_name"] = f"{st['agent_count']} agents enrolled"
+            elif st["agent_count"] == 1:
+                st["agent_name"] = (inv.get("agent_names") or ["Agent"])[0]
+            elif inv.get("legacy_agent_name"):
+                st["agent_name"] = inv.get("legacy_agent_name")
+            if inv.get("error"):
+                st["error"] = inv.get("error")
             self._json(st)
             return
 
