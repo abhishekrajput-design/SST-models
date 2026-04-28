@@ -5,7 +5,8 @@ APP_DIR="$(CDPATH= cd "$(dirname "$0")" && pwd)"
 PID_FILE="${PID_FILE:-$APP_DIR/ui.pid}"
 STDOUT_LOG="${STDOUT_LOG:-$APP_DIR/ui_stdout.log}"
 STDERR_LOG="${STDERR_LOG:-$APP_DIR/ui_stderr.log}"
-STATUS_URL="${STATUS_URL:-http://127.0.0.1:8080/api/status}"
+PORT="${PORT:-8080}"
+STATUS_URL="${STATUS_URL:-http://127.0.0.1:$PORT/api/status}"
 TAIL_LINES="${TAIL_LINES:-120}"
 
 find_python() {
@@ -38,8 +39,41 @@ is_running() {
     [ -n "$pid" ] && kill -0 "$pid" >/dev/null 2>&1
 }
 
+status_ok() {
+    command -v curl >/dev/null 2>&1 && curl -fsS "$STATUS_URL" >/dev/null 2>&1
+}
+
+port_pid() {
+    if command -v lsof >/dev/null 2>&1; then
+        lsof -tiTCP:"$PORT" -sTCP:LISTEN 2>/dev/null | head -n 1
+        return 0
+    fi
+    if command -v fuser >/dev/null 2>&1; then
+        fuser "$PORT"/tcp 2>/dev/null | awk '{print $1; exit}'
+        return 0
+    fi
+    if command -v ss >/dev/null 2>&1; then
+        ss -ltnp "sport = :$PORT" 2>/dev/null | awk 'match($0, /pid=[0-9]+/) {print substr($0, RSTART + 4, RLENGTH - 4); exit}'
+        return 0
+    fi
+}
+
+adopt_existing_server() {
+    existing_pid="$(port_pid)"
+    if [ -n "$existing_pid" ] && kill -0 "$existing_pid" >/dev/null 2>&1; then
+        if status_ok; then
+            echo "$existing_pid" > "$PID_FILE"
+            echo "Found existing healthy UI server on port $PORT: pid $existing_pid"
+            return 0
+        fi
+        echo "Port $PORT is already in use by pid $existing_pid, but $STATUS_URL is not healthy."
+        return 2
+    fi
+    return 1
+}
+
 status() {
-    if is_running; then
+    if is_running || adopt_existing_server >/dev/null 2>&1; then
         echo "UI server running: pid $(pid_value)"
     else
         echo "UI server not running"
@@ -58,6 +92,17 @@ start() {
         echo "UI server already running: pid $(pid_value)"
         status
         return 0
+    fi
+
+    if adopt_existing_server; then
+        status
+        return 0
+    else
+        adopt_status="$?"
+        if [ "$adopt_status" -eq 2 ]; then
+            echo "Stop that process first or run with a different port, for example: PORT=8081 sh start_live.sh start"
+            exit 1
+        fi
     fi
 
     python_bin="$(find_python)"
@@ -85,9 +130,11 @@ start() {
 
 stop() {
     if ! is_running; then
-        echo "UI server not running"
-        rm -f "$PID_FILE"
-        return 0
+        if ! adopt_existing_server >/dev/null 2>&1; then
+            echo "UI server not running"
+            rm -f "$PID_FILE"
+            return 0
+        fi
     fi
 
     pid="$(pid_value)"
