@@ -29,6 +29,7 @@ call_processor/processed/*
 *.log
 *.err.log
 *.out.log
+*.pid
 
 # OS
 .DS_Store
