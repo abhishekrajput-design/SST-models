@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
-APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+APP_DIR="$(CDPATH= cd "$(dirname "$0")" && pwd)"
 PID_FILE="${PID_FILE:-$APP_DIR/ui.pid}"
 STDOUT_LOG="${STDOUT_LOG:-$APP_DIR/ui_stdout.log}"
 STDERR_LOG="${STDERR_LOG:-$APP_DIR/ui_stderr.log}"
@@ -9,31 +9,33 @@ STATUS_URL="${STATUS_URL:-http://127.0.0.1:8080/api/status}"
 TAIL_LINES="${TAIL_LINES:-120}"
 
 find_python() {
-    if [[ -n "${PYTHON:-}" ]]; then
+    if [ -n "${PYTHON:-}" ]; then
         printf '%s\n' "$PYTHON"
-    elif [[ -x "$APP_DIR/.venv/bin/python" ]]; then
+    elif [ -x "$APP_DIR/.venv/bin/python" ]; then
         printf '%s\n' "$APP_DIR/.venv/bin/python"
-    elif [[ -x "$APP_DIR/../.venv/bin/python" ]]; then
+    elif [ -x "$APP_DIR/../.venv/bin/python" ]; then
         printf '%s\n' "$APP_DIR/../.venv/bin/python"
-    elif [[ -x "$APP_DIR/../venv/bin/python" ]]; then
+    elif [ -x "$APP_DIR/../venv/bin/python" ]; then
         printf '%s\n' "$APP_DIR/../venv/bin/python"
     elif command -v python3 >/dev/null 2>&1; then
         command -v python3
-    else
+    elif command -v python >/dev/null 2>&1; then
         command -v python
+    else
+        echo "python not found. Activate your venv or set PYTHON=/path/to/python." >&2
+        exit 1
     fi
 }
 
 pid_value() {
-    if [[ -f "$PID_FILE" ]]; then
+    if [ -f "$PID_FILE" ]; then
         tr -d '[:space:]' < "$PID_FILE"
     fi
 }
 
 is_running() {
-    local pid
     pid="$(pid_value)"
-    [[ -n "$pid" ]] && kill -0 "$pid" >/dev/null 2>&1
+    [ -n "$pid" ] && kill -0 "$pid" >/dev/null 2>&1
 }
 
 status() {
@@ -58,7 +60,6 @@ start() {
         return 0
     fi
 
-    local python_bin
     python_bin="$(find_python)"
     mkdir -p "$APP_DIR/data/raw_calls" "$APP_DIR/data/processed"
     touch "$STDOUT_LOG" "$STDERR_LOG"
@@ -89,12 +90,11 @@ stop() {
         return 0
     fi
 
-    local pid
     pid="$(pid_value)"
     echo "Stopping UI server: pid $pid"
     kill "$pid" >/dev/null 2>&1 || true
 
-    for _ in $(seq 1 20); do
+    for _ in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
         if ! kill -0 "$pid" >/dev/null 2>&1; then
             rm -f "$PID_FILE"
             echo "Stopped"
