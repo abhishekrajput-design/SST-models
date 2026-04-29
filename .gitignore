@@ -12,7 +12,6 @@ ENV/
 # Models and data
 models/
 testing-audio/
-call_processor/pretrained_models/
 call_processor/data/raw_calls/*
 !call_processor/data/raw_calls/.gitkeep
 call_processor/data/agent_samples/*
@@ -21,6 +20,8 @@ call_processor/embeddings/*
 !call_processor/embeddings/.gitkeep
 call_processor/models/*
 !call_processor/models/.gitkeep
+call_processor/checkpoints/
+call_processor/pretrained_models/
 call_processor/processed/*
 *.mp3
 *.wav
@@ -33,6 +34,8 @@ call_processor/processed/*
 *.err.log
 *.out.log
 *.pid
+nohup.out
+call_processor/nohup.out
 
 # OS
 .DS_Store
@@ -68,6 +71,8 @@ call_processor/data/enrolled_agent_name.txt
 call_processor/data/test_sample_fixed_segs.json
 call_processor/data/zak_transcript_calls.json
 call_processor/data/voiceprints_bundle*.tar.gz
+call_processor/voiceprints_manifest.json
+call_processor/=3.1.0
 
 # Local agent training/evaluation scratch scripts and reports
 call_processor/ZAK_LOCAL_E2E_STATUS.md
