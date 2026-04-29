@@ -10,6 +10,9 @@ venv/
 ENV/
 
 # Models and data
+models/
+testing-audio/
+call_processor/pretrained_models/
 call_processor/data/raw_calls/*
 !call_processor/data/raw_calls/.gitkeep
 call_processor/data/agent_samples/*
