@@ -33,6 +33,9 @@ MERGE_TO_AGENT_SIM = 0.28
 SHORT_REPLY_MAX_DUR = 0.95
 SHORT_REPLY_MAX_SIM = 0.30
 FAREWELL_AGENT_MIN_SIM = 0.18
+CLUSTER_FIRST_MIN_DUR = 180.0
+CLUSTER_FIRST_MIN_SEGMENTS = 30
+CLUSTER_FIRST_AGENT_RATIO = 0.68
 
 _DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 _AGENTS_INDEX = os.path.join(_DATA_DIR, "agent_voiceprints", "agents.json")
@@ -193,6 +196,116 @@ def _cluster_customers(X: np.ndarray, max_k: int = MAX_CUSTOMER_CLUSTERS) -> np.
             best_score = score
             best_labels = labels
     return best_labels
+
+
+def _cluster_speaker_roles(
+    segments: List[dict],
+    embs: List[Optional[np.ndarray]],
+    sims: np.ndarray,
+    j_agent: int,
+    agent_slug: str,
+    agent_name: str,
+) -> Tuple[bool, Dict[str, object]]:
+    try:
+        from sklearn.cluster import KMeans
+    except ImportError:
+        return False, {"reason": "sklearn unavailable"}
+
+    valid_idxs = [i for i, emb in enumerate(embs) if emb is not None]
+    if len(valid_idxs) < CLUSTER_FIRST_MIN_SEGMENTS:
+        return False, {"reason": "not enough embeddable segments"}
+
+    X = np.stack([embs[i] for i in valid_idxs]).astype(np.float32)
+    norms = np.linalg.norm(X, axis=1, keepdims=True)
+    norms[norms == 0] = 1.0
+    X = X / norms
+
+    labels = KMeans(n_clusters=2, random_state=42, n_init=20).fit_predict(X)
+    valid_sims = np.array(
+        [
+            float(sims[i, j_agent]) if j_agent >= 0 else 0.0
+            for i in valid_idxs
+        ],
+        dtype=np.float32,
+    )
+
+    cluster_stats: Dict[int, Dict[str, float]] = {}
+    for pos, seg_i in enumerate(valid_idxs):
+        cid = int(labels[pos])
+        dur = max(
+            float(segments[seg_i]["end"]) - float(segments[seg_i]["start"]),
+            0.0,
+        )
+        stat = cluster_stats.setdefault(
+            cid,
+            {
+                "count": 0,
+                "seconds": 0.0,
+                "sim_sum": 0.0,
+                "first_start": float(segments[seg_i]["start"]),
+            },
+        )
+        stat["count"] += 1
+        stat["seconds"] += dur
+        stat["sim_sum"] += float(valid_sims[pos])
+        stat["first_start"] = min(stat["first_start"], float(segments[seg_i]["start"]))
+
+    for stat in cluster_stats.values():
+        stat["mean_sim"] = stat["sim_sum"] / max(stat["count"], 1)
+
+    agent_cluster = max(cluster_stats, key=lambda c: cluster_stats[c]["mean_sim"])
+    customer_clusters = sorted(
+        (c for c in cluster_stats if c != agent_cluster),
+        key=lambda c: cluster_stats[c]["first_start"],
+    )
+    customer_name = {cid: f"Customer {i + 1}" for i, cid in enumerate(customer_clusters)}
+    customer_speaker = {cid: f"SPEAKER_{i + 1:02d}" for i, cid in enumerate(customer_clusters)}
+
+    idx_to_label = {seg_i: int(labels[pos]) for pos, seg_i in enumerate(valid_idxs)}
+    valid_mids = [
+        (float(segments[i]["start"]) + float(segments[i]["end"])) / 2.0
+        for i in valid_idxs
+    ]
+
+    agent_count = 0
+    agent_sims: List[float] = []
+    for i, seg in enumerate(segments):
+        if i in idx_to_label:
+            cid = idx_to_label[i]
+        else:
+            seg_mid = (float(seg["start"]) + float(seg["end"])) / 2.0
+            nearest_pos = int(np.argmin([abs(seg_mid - mid) for mid in valid_mids]))
+            cid = idx_to_label[valid_idxs[nearest_pos]]
+
+        sim = float(sims[i, j_agent]) if j_agent >= 0 and i < len(sims) else 0.0
+        seg["_best_sim"] = sim
+        seg["_best_match"] = agent_slug
+        if cid == agent_cluster:
+            seg["speaker"] = "SPEAKER_00"
+            seg["identified_speaker"] = "AGENT"
+            seg["agent_name"] = agent_name
+            seg["display_speaker"] = agent_name
+            agent_count += 1
+            agent_sims.append(sim)
+        else:
+            seg["speaker"] = customer_speaker.get(cid, "SPEAKER_01")
+            seg["identified_speaker"] = "CUSTOMER"
+            seg["display_speaker"] = customer_name.get(cid, "Customer 1")
+            seg.pop("agent_name", None)
+
+    return True, {
+        "agent_cluster": int(agent_cluster),
+        "cluster_stats": {
+            str(cid): {
+                "count": int(stat["count"]),
+                "seconds": round(float(stat["seconds"]), 3),
+                "mean_sim": round(float(stat["mean_sim"]), 4),
+            }
+            for cid, stat in cluster_stats.items()
+        },
+        "agent_count": agent_count,
+        "agent_sims": agent_sims,
+    }
 
 
 def _unknown_result(segments: List[dict], reason: str) -> Dict[str, object]:
@@ -490,6 +603,52 @@ def diarize_multi(
             MERGE_TO_AGENT_SIM,
         )
 
+    speaker_mode = "per_segment_similarity"
+    cluster_report: Dict[str, object] = {}
+    total_segment_dur = sum(
+        max(float(seg["end"]) - float(seg["start"]), 0.0) for seg in segments
+    )
+    initial_agent_dur = sum(
+        max(float(seg["end"]) - float(seg["start"]), 0.0)
+        for seg in segments
+        if seg.get("identified_speaker") == "AGENT"
+    )
+    initial_agent_ratio = initial_agent_dur / max(total_segment_dur, 1e-6)
+    valid_count = int(np.sum(valid))
+    if (
+        agent_slug
+        and total_segment_dur >= CLUSTER_FIRST_MIN_DUR
+        and valid_count >= CLUSTER_FIRST_MIN_SEGMENTS
+        and initial_agent_ratio >= CLUSTER_FIRST_AGENT_RATIO
+    ):
+        cluster_ok, cluster_report = _cluster_speaker_roles(
+            segments,
+            embs,
+            sims,
+            j_agent,
+            agent_slug,
+            agent_name,
+        )
+        if cluster_ok:
+            speaker_mode = "cluster_first_voiceprint"
+            agent_cluster_sims = cluster_report.get("agent_sims") or []
+            match_counts = {agent_slug: int(cluster_report.get("agent_count") or 0)}
+            match_sims = {agent_slug: list(agent_cluster_sims)}
+            agent_avg_sim = (
+                float(np.mean(agent_cluster_sims)) if agent_cluster_sims else 0.0
+            )
+            cluster_report.pop("agent_sims", None)
+            logger.info(
+                "cluster-first role assignment enabled: dur=%.1fs valid=%d "
+                "initial_agent_ratio=%.2f clusters=%s",
+                total_segment_dur,
+                valid_count,
+                initial_agent_ratio,
+                cluster_report.get("cluster_stats"),
+            )
+        else:
+            logger.info("cluster-first role assignment skipped: %s", cluster_report)
+
     def _apply(seg: dict, ref: dict) -> None:
         seg["speaker"] = ref["speaker"]
         seg["identified_speaker"] = ref["identified_speaker"]
@@ -637,4 +796,6 @@ def diarize_multi(
         "matched_backend_dim": agent_dim if agent_slug else None,
         "voiceprint_dims": voiceprint_dims,
         "role_corrections": role_corrections,
+        "speaker_mode": speaker_mode,
+        "cluster_report": cluster_report,
     }
