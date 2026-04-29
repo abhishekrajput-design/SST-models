@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -29,9 +30,83 @@ AGENT_MIN_MATCHED = 3
 MAX_CUSTOMER_CLUSTERS = 3
 MIN_CONF_DUR = 1.0
 MERGE_TO_AGENT_SIM = 0.28
+SHORT_REPLY_MAX_DUR = 0.95
+SHORT_REPLY_MAX_SIM = 0.30
+FAREWELL_AGENT_MIN_SIM = 0.18
 
 _DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 _AGENTS_INDEX = os.path.join(_DATA_DIR, "agent_voiceprints", "agents.json")
+
+
+def _norm_words(text: str) -> List[str]:
+    return re.findall(r"[a-z0-9']+", (text or "").lower())
+
+
+def _norm_text(text: str) -> str:
+    return " ".join(_norm_words(text))
+
+
+def _looks_like_question(text: str) -> bool:
+    words = _norm_words(text)
+    if "?" in (text or ""):
+        return True
+    if not words:
+        return False
+    return words[0] in {
+        "are",
+        "can",
+        "could",
+        "do",
+        "does",
+        "did",
+        "is",
+        "what",
+        "when",
+        "where",
+        "who",
+        "why",
+        "will",
+        "would",
+    }
+
+
+def _short_customer_reply(text: str) -> bool:
+    words = _norm_words(text)
+    if not words or len(words) > 3:
+        return False
+    norm = " ".join(words)
+    if norm in {
+        "yeah",
+        "yes",
+        "yep",
+        "ok",
+        "okay",
+        "sure",
+        "alright",
+        "all right",
+        "speaking yes",
+    }:
+        return True
+    # Short one-word answers to an agent question are often customer place/name
+    # replies that can be pulled into the agent cluster by voiceprint similarity.
+    return len(words) == 1 and len(words[0]) <= 16
+
+
+def _agent_phrase(text: str) -> bool:
+    norm = _norm_text(text)
+    return norm in {
+        "okay okay",
+        "okay perfect",
+        "perfect",
+        "cheers",
+        "thank you",
+        "what are your plans",
+    }
+
+
+def _farewell(text: str) -> bool:
+    norm = _norm_text(text).replace("bye bye", "bye-bye")
+    return norm in {"bye", "bye-bye", "goodbye"}
 
 
 def _load_voiceprints(path: Optional[str] = None) -> Dict[str, Tuple[str, np.ndarray]]:
@@ -473,6 +548,76 @@ def diarize_multi(
         if prev and nxt and prev == nxt and cur != prev:
             _apply(segments[i], segments[i - 1])
 
+    def _nearest_customer_ref(idx: int) -> Optional[dict]:
+        center = (float(segments[idx]["start"]) + float(segments[idx]["end"])) / 2.0
+        refs = [
+            s
+            for s in segments
+            if s.get("identified_speaker") == "CUSTOMER" and s.get("display_speaker")
+        ]
+        if not refs:
+            return None
+        return min(
+            refs,
+            key=lambda s: abs(
+                ((float(s["start"]) + float(s["end"])) / 2.0) - center
+            ),
+        )
+
+    def _apply_agent(seg: dict) -> None:
+        seg["speaker"] = "SPEAKER_00"
+        seg["identified_speaker"] = "AGENT"
+        seg["agent_name"] = agent_name
+        seg["display_speaker"] = agent_name
+        seg["_best_match"] = agent_slug
+
+    role_corrections = {"agent_to_customer": 0, "customer_to_agent": 0}
+    for i, seg in enumerate(segments):
+        dur = float(seg["end"]) - float(seg["start"])
+        sim = float(seg.get("_best_sim") or 0.0)
+        prev_seg = segments[i - 1] if i > 0 else None
+        next_seg = segments[i + 1] if i + 1 < n else None
+        prev_is_agent = bool(prev_seg and prev_seg.get("identified_speaker") == "AGENT")
+        prev_is_customer = bool(
+            prev_seg and prev_seg.get("identified_speaker") == "CUSTOMER"
+        )
+        next_is_customer = bool(
+            next_seg and next_seg.get("identified_speaker") == "CUSTOMER"
+        )
+
+        if (
+            seg.get("identified_speaker") == "AGENT"
+            and dur <= SHORT_REPLY_MAX_DUR
+            and sim <= SHORT_REPLY_MAX_SIM
+            and not _agent_phrase(str(seg.get("text") or ""))
+            and _short_customer_reply(str(seg.get("text") or ""))
+            and prev_is_agent
+            and (
+                _looks_like_question(str(prev_seg.get("text") or ""))
+                or next_is_customer
+            )
+        ):
+            ref = _nearest_customer_ref(i)
+            if ref:
+                _apply(seg, ref)
+                role_corrections["agent_to_customer"] += 1
+                continue
+
+        at_call_end = i >= n - 2
+        if (
+            seg.get("identified_speaker") == "CUSTOMER"
+            and dur <= SHORT_REPLY_MAX_DUR
+            and sim >= FAREWELL_AGENT_MIN_SIM
+            and prev_is_customer
+            and at_call_end
+            and _farewell(str(seg.get("text") or ""))
+        ):
+            _apply_agent(seg)
+            role_corrections["customer_to_agent"] += 1
+
+    if any(role_corrections.values()):
+        logger.info("role corrections applied: %s", role_corrections)
+
     per_speaker: Dict[str, Dict[str, float]] = {}
     for seg in segments:
         lbl = seg.get("display_speaker", "?")
@@ -491,4 +636,5 @@ def diarize_multi(
         "per_speaker": per_speaker,
         "matched_backend_dim": agent_dim if agent_slug else None,
         "voiceprint_dims": voiceprint_dims,
+        "role_corrections": role_corrections,
     }
