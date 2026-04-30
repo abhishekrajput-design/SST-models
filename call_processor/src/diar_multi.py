@@ -25,7 +25,9 @@ logger = logging.getLogger(__name__)
 
 TARGET_SR = 16000
 MIN_SEG_S_FOR_EMB = 0.3
-PER_SEG_THRESHOLD = 0.30
+PER_SEG_THRESHOLD = 0.30           # default / floor
+PER_AGENT_MARGIN  = 0.05            # added on top of max_outside_sim per-agent
+PER_AGENT_THRESH_CAP = 0.42         # tightened: 0.55 was too strict, dropped many true-agent segs
 AGENT_MIN_MATCHED = 3
 MAX_CUSTOMER_CLUSTERS = 3
 MIN_CONF_DUR = 1.0
@@ -33,9 +35,9 @@ MERGE_TO_AGENT_SIM = 0.28
 SHORT_REPLY_MAX_DUR = 0.95
 SHORT_REPLY_MAX_SIM = 0.30
 FAREWELL_AGENT_MIN_SIM = 0.18
-CLUSTER_FIRST_MIN_DUR = 180.0
-CLUSTER_FIRST_MIN_SEGMENTS = 30
-CLUSTER_FIRST_AGENT_RATIO = 0.68
+CLUSTER_FIRST_MIN_DUR = 60.0           # was 180 — short phone calls benefit too
+CLUSTER_FIRST_MIN_SEGMENTS = 15        # was 30
+CLUSTER_FIRST_AGENT_RATIO = 0.55       # was 0.68 — allow more even agent/customer splits
 
 _DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 _AGENTS_INDEX = os.path.join(_DATA_DIR, "agent_voiceprints", "agents.json")
@@ -149,6 +151,58 @@ def _load_voiceprints(path: Optional[str] = None) -> Dict[str, Tuple[str, np.nda
     return out
 
 
+def _per_agent_thresholds(
+    global_thresh: float,
+    index_path: Optional[str] = None,
+) -> Dict[str, float]:
+    """Per-agent threshold = max(global, max_outside_sim + PER_AGENT_MARGIN), capped.
+
+    Lets high-purity enrolments (low max_outside_sim) keep the loose global
+    threshold while forcing fuzzy enrolments (e.g. Amandeep max_outside=0.669,
+    inside=0.65) to use a stricter cutoff so customer audio doesn't slip in.
+    """
+    p = index_path or _AGENTS_INDEX
+    out: Dict[str, float] = {}
+    if not os.path.isfile(p):
+        return out
+    try:
+        with open(p, encoding="utf-8") as f:
+            agents = json.load(f)
+    except Exception:
+        return out
+    for slug, info in agents.items():
+        if not isinstance(info, dict):
+            continue
+        max_out = info.get("max_outside_sim")
+        try:
+            t = max(global_thresh, float(max_out) + PER_AGENT_MARGIN) if max_out is not None else global_thresh
+        except (TypeError, ValueError):
+            t = global_thresh
+        out[slug] = float(min(t, PER_AGENT_THRESH_CAP))
+    return out
+
+
+def _speech_ratio(chunk: np.ndarray, sr: int) -> float:
+    """Fraction of 25ms frames whose RMS exceeds a noise floor.
+
+    Cheap voice-activity surrogate: speech-dominant chunks score >0.5,
+    silence/noise <0.3. Used to reject embedding inputs that won't yield
+    a stable speaker vector.
+    """
+    if chunk.size < int(sr * 0.05):
+        return 0.0
+    win = int(sr * 0.025)
+    n = chunk.size // win
+    if n < 4:
+        return 0.0
+    frames = chunk[: n * win].reshape(n, win)
+    rms = np.sqrt((frames ** 2).mean(axis=1) + 1e-12)
+    # Adaptive floor — 1.5x the median frame RMS of this chunk.
+    floor = float(np.median(rms)) * 1.5
+    floor = max(floor, 0.005)
+    return float((rms > floor).mean())
+
+
 def _seg_embeddings(
     segments: List[dict],
     audio: np.ndarray,
@@ -156,14 +210,33 @@ def _seg_embeddings(
     model,
     device: str,
 ) -> Tuple[List[Optional[np.ndarray]], np.ndarray]:
+    """Extract ECAPA embedding for each segment.
+
+    For short segments (<1.5s) we widen the audio window symmetrically up to
+    1.5s total. We also reject chunks dominated by silence/noise (speech ratio
+    <0.30) — those produce unstable embeddings that mis-match voiceprints.
+    """
     from src.speaker_role import _embed
 
+    # Conservative widening: only pad segments <0.8s, and only by ±0.2s.
+    # Wider padding pulled in surrounding speaker audio and polluted short
+    # customer back-channels with neighbouring agent voice → false AGENT match.
+    SHORT_THRESH = int(sr * 0.8)
+    PAD_EACH = int(sr * 0.2)
     embs: List[Optional[np.ndarray]] = []
     for seg in segments:
         s = int(float(seg["start"]) * sr)
         e = min(int(float(seg["end"]) * sr), len(audio))
-        chunk = audio[s:e]
-        if len(chunk) < int(sr * MIN_SEG_S_FOR_EMB):
+        if e - s < int(sr * MIN_SEG_S_FOR_EMB):
+            embs.append(None)
+            continue
+        if e - s < SHORT_THRESH:
+            s2 = max(0, s - PAD_EACH)
+            e2 = min(len(audio), e + PAD_EACH)
+            chunk = audio[s2:e2]
+        else:
+            chunk = audio[s:e]
+        if _speech_ratio(chunk, sr) < 0.25:
             embs.append(None)
             continue
         embs.append(_embed(model, chunk, device))
@@ -267,8 +340,22 @@ def _cluster_speaker_roles(
         for i in valid_idxs
     ]
 
+    # Cluster centroids — used to reconcile per-segment label with cosine sim.
+    # A segment that lands in the agent cluster but has sim < CLUSTER_AGENT_FLOOR
+    # to the agent voiceprint AND is closer to the customer centroid in
+    # embedding space gets re-assigned to customer.
+    CLUSTER_AGENT_FLOOR = 0.20
+    centroids: Dict[int, np.ndarray] = {}
+    for cid in cluster_stats:
+        cluster_X = X[labels == cid]
+        c = cluster_X.mean(axis=0)
+        n = np.linalg.norm(c)
+        centroids[cid] = c / n if n > 0 else c
+    customer_cids = list(customer_clusters)
+
     agent_count = 0
     agent_sims: List[float] = []
+    reassigned = 0
     for i, seg in enumerate(segments):
         if i in idx_to_label:
             cid = idx_to_label[i]
@@ -280,6 +367,38 @@ def _cluster_speaker_roles(
         sim = float(sims[i, j_agent]) if j_agent >= 0 and i < len(sims) else 0.0
         seg["_best_sim"] = sim
         seg["_best_match"] = agent_slug
+
+        # Reconcile: if cluster says agent but sim is too low and there's a
+        # better customer cluster match, demote.
+        if cid == agent_cluster and sim < CLUSTER_AGENT_FLOOR and embs[i] is not None and customer_cids:
+            emb = embs[i].astype(np.float32)
+            n_emb = np.linalg.norm(emb)
+            if n_emb > 0:
+                emb = emb / n_emb
+                agent_cent_sim = float(emb @ centroids[agent_cluster])
+                cust_cent_sims = {c: float(emb @ centroids[c]) for c in customer_cids}
+                best_cust = max(cust_cent_sims, key=cust_cent_sims.get)
+                if cust_cent_sims[best_cust] > agent_cent_sim + 0.05:
+                    cid = best_cust
+                    reassigned += 1
+
+        # Reverse reconcile: cluster says CUSTOMER but sim is high.
+        #   sim >= 0.50 → unconditional promote to AGENT (very high voiceprint match).
+        #   0.42 <= sim < 0.50 → promote only if embedding closer to agent than to customer cluster.
+        promoted_to_agent = False
+        if cid != agent_cluster and sim >= 0.50:
+            cid = agent_cluster
+            promoted_to_agent = True
+        elif cid != agent_cluster and sim >= 0.42 and embs[i] is not None:
+            emb = embs[i].astype(np.float32)
+            n_emb = np.linalg.norm(emb)
+            if n_emb > 0 and cid in centroids:
+                emb_n = emb / n_emb
+                cust_cent_sim = float(emb_n @ centroids[cid])
+                if sim > cust_cent_sim:
+                    cid = agent_cluster
+                    promoted_to_agent = True
+
         if cid == agent_cluster:
             seg["speaker"] = "SPEAKER_00"
             seg["identified_speaker"] = "AGENT"
@@ -292,6 +411,8 @@ def _cluster_speaker_roles(
             seg["identified_speaker"] = "CUSTOMER"
             seg["display_speaker"] = customer_name.get(cid, "Customer 1")
             seg.pop("agent_name", None)
+    if reassigned:
+        logger.info("cluster_first: reassigned %d weak agent-cluster segs to customer", reassigned)
 
     return True, {
         "agent_cluster": int(agent_cluster),
@@ -376,11 +497,21 @@ def _segment_embeddings_for_dim(
                 )
                 embs = [None] * len(segments)
             else:
+                SHORT_THRESH = int(sr * 0.8)
+                PAD_EACH = int(sr * 0.2)
                 for seg in segments:
                     s = int(float(seg["start"]) * sr)
                     e = min(int(float(seg["end"]) * sr), len(audio))
-                    chunk = audio[s:e]
-                    if len(chunk) < int(sr * MIN_SEG_S_FOR_EMB):
+                    if e - s < int(sr * MIN_SEG_S_FOR_EMB):
+                        embs.append(None)
+                        continue
+                    if e - s < SHORT_THRESH:
+                        s2 = max(0, s - PAD_EACH)
+                        e2 = min(len(audio), e + PAD_EACH)
+                        chunk = audio[s2:e2]
+                    else:
+                        chunk = audio[s:e]
+                    if _speech_ratio(chunk, sr) < 0.25:
                         embs.append(None)
                         continue
                     embs.append(model.embed_chunk(chunk, sr))
@@ -434,6 +565,8 @@ def diarize_multi(
     voiceprint_dims = {dim: len(vps) for dim, vps in voiceprints_by_dim.items()}
     if not voiceprints_by_dim:
         return _unknown_result(segments, "no supported enrolled voiceprints")
+
+    per_agent_thresh = _per_agent_thresholds(threshold, agents_index_path)
 
     embs_by_dim: Dict[int, List[Optional[np.ndarray]]] = {}
     valid_by_dim: Dict[int, np.ndarray] = {}
@@ -499,6 +632,14 @@ def diarize_multi(
     sims = sims_by_dim[agent_dim]
     embs = embs_by_dim[agent_dim]
 
+    # Per-agent threshold derived from agents.json (max_outside_sim + margin),
+    # falling back to the global threshold for agents without enrollment stats.
+    agent_threshold = float(per_agent_thresh.get(agent_slug, threshold))
+    if agent_threshold != threshold:
+        logger.info(
+            "per-agent threshold for %s = %.3f (global=%.3f)",
+            agent_slug, agent_threshold, threshold,
+        )
     seg_best_agent: List[Optional[str]] = []
     match_counts: Dict[str, int] = {}
     match_sims: Dict[str, List[float]] = {}
@@ -507,7 +648,7 @@ def diarize_multi(
             seg_best_agent.append(None)
             continue
         sim = float(sims[i, j_agent])
-        if sim >= threshold:
+        if sim >= agent_threshold:
             seg_best_agent.append(agent_slug)
             match_counts[agent_slug] = match_counts.get(agent_slug, 0) + 1
             match_sims.setdefault(agent_slug, []).append(sim)
@@ -573,6 +714,22 @@ def diarize_multi(
         next_spk = 1 + len(other_agent_count)
         cid_to_spk = {cid: f"SPEAKER_{next_spk + i:02d}" for i, cid in enumerate(order)}
 
+        # Compute customer-cluster centroids in normalised embedding space.
+        # Used below to gate the "soft reclaim" — a segment is only pulled back
+        # to AGENT if its cosine to the agent voiceprint EXCEEDS its similarity
+        # to every customer-cluster centroid by a margin. This prevents the
+        # previous over-reclaim where any sim>=0.28 segment became AGENT (which
+        # mis-labelled customer turns at borderline phone-quality cosine).
+        cust_centroids: Dict[int, np.ndarray] = {}
+        for cid_u in set(int(c) for c in labels_u):
+            mask_c = (labels_u == cid_u)
+            if not mask_c.any():
+                continue
+            c = Xu[mask_c].mean(axis=0)
+            n = np.linalg.norm(c)
+            if n > 0:
+                cust_centroids[cid_u] = c / n
+
         k_iter = 0
         soft_reclaimed = 0
         for seg_i in unmatched_idxs:
@@ -584,7 +741,26 @@ def diarize_multi(
             cid = int(labels_u[k_iter])
             k_iter += 1
             own_sim = float(sims[seg_i, j_agent]) if agent_slug and j_agent >= 0 else 0.0
-            if agent_slug and own_sim >= MERGE_TO_AGENT_SIM:
+            # Soft reclaim conditions:
+            #  1. Cosine to agent voiceprint ≥ MERGE_TO_AGENT_SIM (0.28) — basic floor
+            #  2. Cosine to agent voiceprint ≥ cosine to OWN customer cluster centroid
+            #     (i.e. closer to the agent than to its assigned customer peers)
+            #  3. OR cosine ≥ (agent_threshold − 0.07) — close to the hard threshold
+            reclaim = False
+            if agent_slug and own_sim >= MERGE_TO_AGENT_SIM and embs[seg_i] is not None:
+                emb = embs[seg_i].astype(np.float32)
+                n_emb = np.linalg.norm(emb)
+                if n_emb > 0 and cid in cust_centroids:
+                    emb_n = emb / n_emb
+                    cust_sim = float(emb_n @ cust_centroids[cid])
+                    if own_sim >= cust_sim:
+                        reclaim = True
+                # Borderline-but-close-to-threshold also reclaims (rescues short
+                # agent acks like "Hi Edgar." / "What are your plans?" with sim
+                # in the 0.30–0.42 band that the centroid check rejected).
+                if not reclaim and own_sim >= max(agent_threshold - 0.07, 0.28):
+                    reclaim = True
+            if reclaim:
                 seg["speaker"] = "SPEAKER_00"
                 seg["identified_speaker"] = "AGENT"
                 seg["agent_name"] = agent_name
@@ -598,9 +774,8 @@ def diarize_multi(
                 seg["identified_speaker"] = "CUSTOMER"
                 seg.pop("agent_name", None)
         logger.info(
-            "soft-reclaimed %d segments via per-seg sim>=%.2f",
+            "soft-reclaimed %d segments (gated by centroid distance)",
             soft_reclaimed,
-            MERGE_TO_AGENT_SIM,
         )
 
     speaker_mode = "per_segment_similarity"
@@ -697,6 +872,7 @@ def diarize_multi(
             seg["display_speaker"] = "Unknown"
             seg.pop("agent_name", None)
 
+    # ── Anti-flip pass 1: tight (≤0.6s sandwiched between same speaker) ──
     for i in range(1, n - 1):
         dur = float(segments[i]["end"]) - float(segments[i]["start"])
         if dur > 0.6:
@@ -706,6 +882,84 @@ def diarize_multi(
         cur = segments[i].get("display_speaker")
         if prev and nxt and prev == nxt and cur != prev:
             _apply(segments[i], segments[i - 1])
+
+    # ── Anti-flip pass 2: low-confidence sandwich (<2.5s, sim<0.30) ──
+    # Catches the "Yeah." / "Okay." back-channels that get smoothed to AGENT
+    # even though their cosine to the agent voiceprint is essentially zero.
+    # If neighbours agree, trust them over the noisy embedding.
+    for i in range(1, n - 1):
+        dur = float(segments[i]["end"]) - float(segments[i]["start"])
+        sim = float(segments[i].get("_best_sim") or 0.0)
+        if dur > 2.5 or sim >= 0.30:
+            continue
+        prev = segments[i - 1].get("display_speaker")
+        nxt = segments[i + 1].get("display_speaker")
+        cur = segments[i].get("display_speaker")
+        if prev and nxt and prev == nxt and cur != prev:
+            # Only flip if at least one neighbour has a strong (≥0.40) signal
+            prev_sim = float(segments[i - 1].get("_best_sim") or 0.0)
+            nxt_sim = float(segments[i + 1].get("_best_sim") or 0.0)
+            if max(prev_sim, nxt_sim) >= 0.40:
+                _apply(segments[i], segments[i - 1])
+
+    # ── Anti-flip pass 2.5: low-sim AGENT segments starting with back-channel ──
+    # Customer acknowledgements like "Yeah, please.", "Okay, that's right.",
+    # "Yeah, I'm good, thank you." are mis-labelled AGENT when the embedding
+    # cosine is borderline. Rule: if the FIRST word is a back-channel AND total
+    # words ≤ 5 AND duration < 2.5s AND cosine < 0.30, demote to CUSTOMER.
+    BACKCHANNEL_STARTS = {
+        "yeah", "yes", "yep", "yup", "ok", "okay", "right", "sure",
+        "alright", "uhuh", "mhm", "mm", "mhmm", "kay",
+    }
+    backchannel_demoted = 0
+    for i, seg in enumerate(segments):
+        if seg.get("identified_speaker") != "AGENT":
+            continue
+        sim = float(seg.get("_best_sim") or 0.0)
+        if sim >= 0.30:
+            continue
+        dur = float(seg["end"]) - float(seg["start"])
+        if dur > 4.0:
+            continue
+        words = _norm_words(seg.get("text") or "")
+        if not (1 <= len(words) <= 15):
+            continue
+        if words[0] not in BACKCHANNEL_STARTS:
+            continue
+        seg["identified_speaker"] = "CUSTOMER"
+        seg["display_speaker"] = "Customer 1"
+        seg["speaker"] = "SPEAKER_01"
+        seg.pop("agent_name", None)
+        backchannel_demoted += 1
+    if backchannel_demoted:
+        logger.info("demoted %d low-sim back-channel-led segs AGENT → CUSTOMER", backchannel_demoted)
+
+    # ── Anti-flip pass 3: zero-similarity AGENT segments are smoothing artefacts ──
+    # If a segment is labelled AGENT but its cosine to the agent voiceprint is
+    # below 0.10, it was almost certainly assigned by neighbour-vote on noisy
+    # input. If the *previous* meaningful segment is CUSTOMER, demote it.
+    for i, seg in enumerate(segments):
+        if seg.get("identified_speaker") != "AGENT":
+            continue
+        sim = float(seg.get("_best_sim") or 0.0)
+        if sim >= 0.10:
+            continue
+        # Check if surrounded by customer segments
+        prev_cust = any(
+            segments[j].get("identified_speaker") == "CUSTOMER"
+            for j in range(max(0, i - 2), i)
+        )
+        next_cust = any(
+            segments[j].get("identified_speaker") == "CUSTOMER"
+            for j in range(i + 1, min(n, i + 3))
+        )
+        if prev_cust and next_cust:
+            ref = _nearest_customer_ref(i) if "_nearest_customer_ref" in dir() else None
+            # Use inline lookup instead of _nearest_customer_ref (defined below)
+            for j in (i - 1, i + 1):
+                if 0 <= j < n and segments[j].get("identified_speaker") == "CUSTOMER":
+                    _apply(seg, segments[j])
+                    break
 
     def _nearest_customer_ref(idx: int) -> Optional[dict]:
         center = (float(segments[idx]["start"]) + float(segments[idx]["end"])) / 2.0
@@ -797,5 +1051,6 @@ def diarize_multi(
         "voiceprint_dims": voiceprint_dims,
         "role_corrections": role_corrections,
         "speaker_mode": speaker_mode,
+        "agent_threshold_used": round(float(agent_threshold), 3) if agent_slug else round(float(threshold), 3),
         "cluster_report": cluster_report,
     }

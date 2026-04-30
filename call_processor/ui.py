@@ -68,8 +68,19 @@ _status = {
     "done": False,
     "error": None,
     "result_id": None,
+    "cancel_requested": False,
 }
 _status_lock = threading.Lock()
+
+
+class PipelineCancelled(Exception):
+    """Raised between stages when the user requested a cancel."""
+
+
+def _check_cancelled():
+    with _status_lock:
+        if _status.get("cancel_requested"):
+            raise PipelineCancelled("user requested cancel")
 
 # ── Enhancement job status (separate from main pipeline) ─────────────────────
 _enhance_status: dict = {}          # call_id -> {"running", "done", "error", "paths"}
@@ -102,6 +113,36 @@ def _run_ffmpeg(cmd: list, timeout: int = 180):
     )
     if result.returncode != 0:
         raise RuntimeError(f"FFmpeg failed: {result.stderr.decode(errors='replace')[-500:]}")
+
+
+def _is_clean_audio(path: str, sample_seconds: int = 30) -> bool:
+    """Heuristic: True if `path` is already broadcast-quality clean speech.
+
+    DFN3 over-enhances pristine sources and can mute synthetic test files.
+    We sniff the first 30s, compute RMS and spectral flatness; high RMS +
+    low flatness ⇒ clean speech, skip DFN3.
+    """
+    try:
+        import soundfile as sf
+        import numpy as np
+        info = sf.info(path)
+        n = min(info.frames, info.samplerate * sample_seconds)
+        a, sr = sf.read(path, frames=n, dtype="float32")
+        if a.ndim > 1:
+            a = a.mean(axis=1)
+        if a.size < sr:
+            return False
+        rms = float(np.sqrt((a ** 2).mean()))
+        # Spectral flatness: geometric / arithmetic mean of power spectrum.
+        # Speech ≈ 0.05-0.20, white noise → 1.0, tone → 0.0.
+        spec = np.abs(np.fft.rfft(a[:sr * 5])) ** 2 + 1e-12
+        flat = float(np.exp(np.log(spec).mean()) / spec.mean())
+        clean = rms > 0.10 and flat < 0.20
+        print(f"[UI] clean-audio check: RMS={rms:.3f} flatness={flat:.3f} → {'CLEAN' if clean else 'NOISY'}", flush=True)
+        return clean
+    except Exception as e:
+        print(f"[UI] clean-audio check failed ({e}); assuming noisy.", flush=True)
+        return False
 
 
 def _to_wav(input_path: str, max_seconds: int = None) -> str:
@@ -424,9 +465,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         except Exception:
             return 0.0
 
-    # CUDA Parakeet can abort the Python process on this Windows workstation.
-    # Parakeet is forced to CPU below, so keep the selected model and surface
-    # long-call runtime honestly instead of silently switching to Whisper.
+    # CUDA Parakeet can abort the UI process on this workstation. Keep Parakeet
+    # CPU-only in the web pipeline; other models still use CUDA below.
     if whisper_model == "parakeet-tdt-0.6b-v3":
         dur_s = _audio_duration_s(audio_path)
         if dur_s > 600:
@@ -489,8 +529,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         except Exception:
             pass
         whisper_model = fallback_model
-        retry_device = "cpu" if whisper_model == "parakeet-tdt-0.6b-v3" else "cuda"
-        transcriber = get_transcriber(whisper_model, device=retry_device)
+        transcriber = get_transcriber(whisper_model, device="cuda")
         transcriber.load()
         return transcriber.transcribe(wav_path, language="en")
 
@@ -656,6 +695,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "trimmed_audio_file":       trimmed_audio_file,
         "model":                    whisper_model,
         "requested_model":          requested_model,
+        "fallback_used":            requested_model != whisper_model,
         "processed_at":             datetime.utcnow().isoformat() + "Z",
         "processing_time_seconds":  elapsed,
         "total_segments":           len(segments),
@@ -720,9 +760,11 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
     enhancement_paths: dict = {}
 
     with _status_lock:
-        _status.update(running=True, done=False, error=None, result_id=None)
+        _status.update(running=True, done=False, error=None, result_id=None,
+                       cancel_requested=False)
 
     try:
+        _check_cancelled()
         # If the file is already an enhanced output, skip re-enhancement to
         # avoid double-processing (which truncates the audio to garbage).
         already_enhanced = os.path.basename(upload_path).startswith("enhanced_")
@@ -747,21 +789,26 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                 enhancement_paths["ffmpeg"] = upload_path.replace("\\", "/")
 
             # ── 0b DeepFilterNet3 — neural denoising (full audio) ────────────
-            # Replaces noisereduce + angelina + MetricGAN+ chain which was
-            # over-processing the audio and causing Whisper hallucinations.
-            _set_status(0, "Enhancing Audio", "[2/2] DeepFilterNet3 · neural denoising...")
-            print("[UI] Stage 0b: DeepFilterNet3...")
+            # Skip on already-clean audio (synthetic test files, broadcast-grade
+            # recordings) since DFN3 can over-process them into silence.
             pipeline_audio = paths["ffmpeg"]   # fallback
-            try:
-                _enhance_deepfilternet(paths["ffmpeg"], paths["deepfilter"])
-                enhancement_paths["deepfilter"] = paths["deepfilter"]
-                pipeline_audio = paths["deepfilter"]
-                print("[UI] DeepFilterNet3 done.")
-            except ImportError:
-                print("[UI] deepfilternet not installed — using FFmpeg output.")
-            except Exception as e:
-                print(f"[UI] DeepFilterNet3 failed: {e} — using FFmpeg output.")
+            if _is_clean_audio(paths["ffmpeg"]):
+                _set_status(0, "Enhancing Audio", "[2/2] Source already clean — skipping DFN3")
+                print("[UI] Stage 0b: skipped (audio already clean)")
+            else:
+                _set_status(0, "Enhancing Audio", "[2/2] DeepFilterNet3 · neural denoising...")
+                print("[UI] Stage 0b: DeepFilterNet3...")
+                try:
+                    _enhance_deepfilternet(paths["ffmpeg"], paths["deepfilter"])
+                    enhancement_paths["deepfilter"] = paths["deepfilter"]
+                    pipeline_audio = paths["deepfilter"]
+                    print("[UI] DeepFilterNet3 done.")
+                except ImportError:
+                    print("[UI] deepfilternet not installed — using FFmpeg output.")
+                except Exception as e:
+                    print(f"[UI] DeepFilterNet3 failed: {e} — using FFmpeg output.")
 
+        _check_cancelled()
         # run_e2e.py (pyannote diarization) only used when enrolled agent
         # embeddings exist. Without enrollment, all models use inline path.
         _WHISPER_MODELS = {
@@ -864,12 +911,18 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
                            result_id=result_id)
         print(f"[UI] Pipeline complete. Result: {result_id}")
 
+    except PipelineCancelled:
+        print("[UI] Pipeline cancelled by user.", flush=True)
+        with _status_lock:
+            _status.update(running=False, done=False, error=None,
+                           stage_num=0, stage="Cancelled",
+                           message="Cancelled by user", cancel_requested=False)
     except BaseException as e:
         import traceback as _tb
         print(f"[UI] Pipeline error: {e}", flush=True)
         _tb.print_exc()
         with _status_lock:
-            _status.update(error=str(e), running=False)
+            _status.update(error=str(e), running=False, cancel_requested=False)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1152,8 +1205,24 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self._serve_audio(decoded_path)
             return
 
-        if path == "/":
-            self.path = "/index.html"
+        if path == "/" or path == "/index.html":
+            # Serve fresh HTML/JS — disable browser cache so UI fixes hit immediately.
+            try:
+                with open("index.html", "rb") as f:
+                    body = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+                self.send_header("Pragma", "no-cache")
+                self.send_header("Expires", "0")
+                self.end_headers()
+                self.wfile.write(body)
+                return
+            except FileNotFoundError:
+                self.send_response(404)
+                self.end_headers()
+                return
         return super().do_GET()
 
     def _serve_audio(self, url_path: str):
@@ -1317,6 +1386,14 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                         "agent_name": agent_name})
             return
 
+        if parsed.path == "/api/cancel":
+            with _status_lock:
+                running = _status["running"]
+                if running:
+                    _status["cancel_requested"] = True
+            self._json({"status": "cancelling" if running else "idle"})
+            return
+
         if parsed.path == "/api/upload":
             with _status_lock:
                 busy = _status["running"]
@@ -1368,6 +1445,36 @@ if os.path.isdir(AGENT_RECORDINGS_DIR) and not os.path.exists(_enrolled_path):
     threading.Thread(target=_enroll_worker, args=(AGENT_RECORDINGS_DIR,), daemon=True).start()
 elif os.path.exists(_enrolled_path):
     print("[Startup] Agent voiceprint loaded — cosine similarity active.", flush=True)
+
+# ── Startup: garbage-collect orphan / half-finished result dirs ──────────────
+def _gc_orphan_processed_dirs() -> None:
+    """Remove data/processed/* dirs that have no result.json (failed runs).
+
+    Keeps norm_*.wav directories (data/processed/<base>/) since those are
+    intermediate artifacts shared across model runs — they have no result.json
+    by design. Only deletes per-model dirs (suffix '__<model>') with no result.
+    """
+    if not os.path.isdir(PROCESSED_DIR):
+        return
+    removed = 0
+    for name in os.listdir(PROCESSED_DIR):
+        full = os.path.join(PROCESSED_DIR, name)
+        if not os.path.isdir(full):
+            continue
+        if "__" not in name:
+            continue   # intermediate norm dir, keep
+        if os.path.isfile(os.path.join(full, "result.json")):
+            continue   # successful run, keep
+        try:
+            shutil.rmtree(full)
+            removed += 1
+        except Exception as e:
+            print(f"[Startup] Could not GC {name}: {e}", flush=True)
+    if removed:
+        print(f"[Startup] GC'd {removed} orphan result dir(s)", flush=True)
+
+
+_gc_orphan_processed_dirs()
 
 # ── Server startup ────────────────────────────────────────────────────────────
 import faulthandler as _fh

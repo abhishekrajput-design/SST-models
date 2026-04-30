@@ -140,6 +140,7 @@
             cursor: pointer;
         }
         .upload-btn {
+            position: relative;
             width: 100%;
             padding: 10px;
             background: var(--accent);
@@ -156,8 +157,16 @@
             transition: background 0.15s;
         }
         .upload-btn:hover { background: #1d4ed8; }
-        .upload-btn.uploading { background: var(--surface2); color: var(--muted); cursor: not-allowed; pointer-events: none; }
-        .upload-btn.uploading * { pointer-events: none; }
+        .upload-btn.uploading { background: var(--surface2); color: var(--muted); cursor: not-allowed; }
+        .upload-file-input {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            font-size: 0;
+        }
 
         /* Enrollment */
         .enroll-section {
@@ -577,13 +586,12 @@
                 <option value="cohere-transcribe-03-2026">Cohere 03-2026 · 5.42% WER</option>
             </optgroup>
         </select>
-        <div class="upload-btn" id="uploadBtn" style="position:relative;overflow:hidden;">
+        <div class="upload-btn" id="uploadBtn">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
             </svg>
             <span id="uploadText">Upload Audio</span>
-            <input type="file" id="audioUpload" accept="audio/*"
-                   style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0;">
+            <input type="file" id="audioUpload" accept="audio/*" class="upload-file-input">
         </div>
     </div>
 
@@ -717,6 +725,13 @@
         <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
         <div class="progress-msg" id="progressMsg">Preparing…</div>
         <div class="progress-timer" id="progressTimer">0:00</div>
+        <div style="text-align:center;margin-top:14px;">
+            <button id="cancelBtn" onclick="cancelPipeline()"
+                style="padding:6px 16px;background:#dc2626;color:#fff;border:none;
+                       border-radius:6px;cursor:pointer;font-size:.82rem;">
+                Cancel
+            </button>
+        </div>
     </div>
 </div>
 
@@ -805,6 +820,13 @@ function renderBubble(seg, idx) {
     const isAg  = role === 'AGENT';
     const css   = isAg ? 'bubble-agent' : 'bubble-cust';
     const name  = displaySpeaker(seg);
+    // Confidence: cosine sim 0.30..0.85 → 0..100% bar.
+    // Low confidence (faint orange) indicates the segment was assigned by
+    // neighbour-vote smoothing, not direct voiceprint match.
+    const sim = Math.max(0, Math.min(1, (seg._best_sim || 0)));
+    const conf = Math.round(Math.min(1, Math.max(0, (sim - 0.30) / 0.55)) * 100);
+    const confColor = sim >= 0.45 ? 'rgba(34,197,94,0.55)' : sim >= 0.30 ? 'rgba(245,158,11,0.55)' : 'rgba(148,163,184,0.30)';
+    const confTitle = `voiceprint cosine: ${sim.toFixed(3)}`;
     return `<div class="bubble ${css}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
         <div class="seg-progress"></div>
         <div class="bubble-head">
@@ -816,6 +838,9 @@ function renderBubble(seg, idx) {
             <span class="bubble-time" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
         </div>
         <div class="bubble-text">${seg.text}</div>
+        <div class="conf-bar" title="${confTitle}" style="height:2px;margin-top:6px;background:rgba(148,163,184,0.10);border-radius:2px;overflow:hidden;">
+            <div style="width:${conf}%;height:100%;background:${confColor};"></div>
+        </div>
     </div>`;
 }
 
@@ -1178,6 +1203,15 @@ function showProgress() {
 function hideProgress() {
     document.getElementById('progressModal').style.display='none';
     _stopElapsed();
+    const btn = document.getElementById('cancelBtn');
+    if (btn) { btn.disabled = false; btn.textContent = 'Cancel'; }
+}
+
+async function cancelPipeline() {
+    const btn = document.getElementById('cancelBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Cancelling…'; }
+    try { await fetch('/api/cancel', { method:'POST' }); } catch(_) {}
+    document.getElementById('progressMsg').textContent = 'Cancelling — finishing current stage…';
 }
 
 function setStage(n, msg) {
@@ -1198,6 +1232,7 @@ function startPolling() {
         try {
             const s = await (await fetch('/api/status')).json();
             if (s.error) { clearInterval(_pollTimer); hideProgress(); showError(s.error); return; }
+            if (s.stage === 'Cancelled') { clearInterval(_pollTimer); hideProgress(); return; }
             setStage(s.stage_num, s.message);
             if (s.done) { clearInterval(_pollTimer); document.getElementById('progressMsg').textContent='✅ Done!'; setTimeout(()=>{ hideProgress(); loadCalls(); },1200); }
         } catch(_) {}
@@ -1296,6 +1331,19 @@ document.getElementById('cleanVoiceUpload').addEventListener('change', async fun
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+// Reset any stuck UI state from a previous session.
+(function _resetUiState() {
+    const ub = document.getElementById('uploadBtn');
+    if (ub) ub.classList.remove('uploading');
+    const ut = document.getElementById('uploadText');
+    if (ut) ut.textContent = 'Upload Audio';
+    const au = document.getElementById('audioUpload');
+    if (au) { au.disabled = false; au.value = ''; }
+    // If pipeline is running on the server when page loads, resume the polling.
+    fetch('/api/status').then(r => r.json()).then(s => {
+        if (s.running && !s.done) { showProgress(); startPolling(); }
+    }).catch(() => {});
+})();
 loadCalls();
 checkEnrollment();
 </script>
