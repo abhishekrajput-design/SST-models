@@ -8,6 +8,8 @@ import subprocess
 import threading
 import http.server
 import socketserver
+import tempfile
+import time
 from urllib.parse import urlparse, unquote, parse_qs
 from pathlib import Path
 
@@ -69,6 +71,13 @@ _status = {
     "error": None,
     "result_id": None,
     "cancel_requested": False,
+    "started_at": None,
+    "stage_started_at": None,
+    "updated_at": None,
+    "completed_at": None,
+    "elapsed_seconds": 0.0,
+    "stage_elapsed_seconds": 0.0,
+    "processing_time_seconds": None,
 }
 _status_lock = threading.Lock()
 
@@ -94,10 +103,36 @@ AGENT_RECORDINGS_DIR = r"C:\Users\abhis\Desktop\SST-models\Agents-recoding\zak_r
 
 
 def _set_status(stage_num: int, stage: str, message: str):
+    now = time.time()
     with _status_lock:
+        if _status.get("stage_num") != stage_num or _status.get("stage") != stage:
+            _status["stage_started_at"] = now
         _status["stage_num"] = stage_num
         _status["stage"]     = stage
         _status["message"]   = message
+        _status["updated_at"] = now
+        started = _status.get("started_at")
+        if started:
+            _status["elapsed_seconds"] = round(now - float(started), 2)
+        stage_started = _status.get("stage_started_at")
+        if stage_started:
+            _status["stage_elapsed_seconds"] = round(now - float(stage_started), 2)
+
+
+def _status_snapshot() -> dict:
+    now = time.time()
+    with _status_lock:
+        data = dict(_status)
+    started = data.get("started_at")
+    completed = data.get("completed_at")
+    if started:
+        end = float(completed) if completed else now
+        data["elapsed_seconds"] = round(max(0.0, end - float(started)), 2)
+    stage_started = data.get("stage_started_at")
+    if stage_started:
+        end = float(completed) if completed else now
+        data["stage_elapsed_seconds"] = round(max(0.0, end - float(stage_started)), 2)
+    return data
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -113,6 +148,79 @@ def _run_ffmpeg(cmd: list, timeout: int = 180):
     )
     if result.returncode != 0:
         raise RuntimeError(f"FFmpeg failed: {result.stderr.decode(errors='replace')[-500:]}")
+
+
+def _cuda_available() -> bool:
+    try:
+        import torch
+        return bool(torch.cuda.is_available())
+    except Exception:
+        return False
+
+
+def _extract_marked_json(stdout: str) -> str:
+    start = stdout.find("RESULT_START")
+    end = stdout.find("RESULT_END")
+    if start < 0 or end < 0:
+        return ""
+    return stdout[start + len("RESULT_START"):end]
+
+
+def _transcribe_isolated(audio_path: str, model_name: str, device: str, language: str, timeout_s: int) -> list:
+    """Run a transcriber in a child process so native CUDA aborts do not kill the UI."""
+    root = os.path.dirname(os.path.abspath(__file__))
+    code = f"""
+import gc, json, os, sys
+root = {root!r}
+sys.path.insert(0, root)
+os.chdir(root)
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+from src.transcribers import get_transcriber
+tr = get_transcriber(sys.argv[2], device=sys.argv[3])
+tr.load()
+segments = tr.transcribe(sys.argv[1], language=sys.argv[4])
+tr.unload()
+gc.collect()
+try:
+    import torch
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
+except Exception:
+    pass
+print("RESULT_START" + json.dumps(segments, ensure_ascii=False) + "RESULT_END")
+sys.stdout.flush()
+"""
+    fd, script = tempfile.mkstemp(suffix="_ui_transcribe.py", dir=root)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(code)
+        proc = subprocess.run(
+            [sys.executable, "-u", script, audio_path, model_name, device, language],
+            cwd=root,
+            env=_ENV,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout_s,
+        )
+    finally:
+        try:
+            os.unlink(script)
+        except OSError:
+            pass
+    if proc.returncode != 0:
+        details = (proc.stderr or proc.stdout or "").strip()
+        raise RuntimeError(f"{model_name} {device} subprocess failed: {details[-1500:]}")
+    raw = _extract_marked_json(proc.stdout)
+    if not raw:
+        details = (proc.stdout + proc.stderr).strip()
+        raise RuntimeError(f"{model_name} {device} subprocess returned no transcript JSON: {details[-1500:]}")
+    return json.loads(raw)
 
 
 def _is_clean_audio(path: str, sample_seconds: int = 30) -> bool:
@@ -465,20 +573,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         except Exception:
             return 0.0
 
-    # CUDA Parakeet can abort the UI process on this workstation. Keep Parakeet
-    # CPU-only in the web pipeline; other models still use CUDA below.
-    if whisper_model == "parakeet-tdt-0.6b-v3":
-        dur_s = _audio_duration_s(audio_path)
-        if dur_s > 600:
-            print(
-                f"[UI] Parakeet CPU mode selected for long audio ({dur_s:.0f}s).",
-                flush=True,
-            )
-            _set_status(
-                2,
-                "Transcription",
-                f"Parakeet CPU mode selected for {dur_s:.0f}s audio; this can take several minutes...",
-            )
+    dur_s = _audio_duration_s(audio_path)
 
     base     = os.path.splitext(os.path.basename(audio_path))[0]
     # Use a per-model directory so each model run is stored separately
@@ -505,13 +600,22 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         )
 
     # ── Load transcriber (shared for both channels) ───────────────────────────
-    _set_status(2, "Transcription", f"Loading {whisper_model}...")
-    print(f"[UI] Loading transcriber: {whisper_model}")
-    transcriber_device = "cpu" if whisper_model == "parakeet-tdt-0.6b-v3" else "cuda"
-    if transcriber_device == "cpu" and whisper_model == "parakeet-tdt-0.6b-v3":
-        print("[UI] Parakeet uses CPU mode for stability.", flush=True)
-    transcriber = get_transcriber(whisper_model, device=transcriber_device)
-    transcriber.load()
+    cuda_ok = _cuda_available()
+    transcriber_device = "cuda" if cuda_ok else "cpu"
+    isolated_transcriber = whisper_model == "parakeet-tdt-0.6b-v3"
+    transcriber = None
+    if isolated_transcriber:
+        _set_status(2, "Transcription", f"Loading {whisper_model} on {transcriber_device.upper()} (isolated)...")
+        print(
+            f"[UI] Loading transcriber: {whisper_model} "
+            f"on {transcriber_device} in isolated subprocess",
+            flush=True,
+        )
+    else:
+        _set_status(2, "Transcription", f"Loading {whisper_model} on {transcriber_device.upper()}...")
+        print(f"[UI] Loading transcriber: {whisper_model} on {transcriber_device}")
+        transcriber = get_transcriber(whisper_model, device=transcriber_device)
+        transcriber.load()
 
     def _retry_empty_transcript(
         current_segments: list,
@@ -524,10 +628,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         fallback_model = "whisper-large-v3-turbo"
         _set_status(3, "Transcription", f"{reason}; retrying with {fallback_model}...")
         print(f"[UI] {reason}; retrying with {fallback_model}", flush=True)
-        try:
-            transcriber.unload()
-        except Exception:
-            pass
+        if transcriber is not None:
+            try:
+                transcriber.unload()
+            except Exception:
+                pass
         whisper_model = fallback_model
         transcriber = get_transcriber(whisper_model, device="cuda")
         transcriber.load()
@@ -545,9 +650,19 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         print("[UI] Normalizing audio...")
         _make_norm_wav(audio_path, norm_wav)
 
-    _set_status(3, "Transcription", f"Transcribing with {whisper_model}...")
-    print(f"[UI] Transcribing with {whisper_model}...")
-    segments = transcriber.transcribe(norm_wav, language="en")
+    _set_status(3, "Transcription", f"Transcribing with {whisper_model} on {transcriber_device.upper()}...")
+    print(f"[UI] Transcribing with {whisper_model} on {transcriber_device}...")
+    if isolated_transcriber:
+        timeout_s = max(900, int(max(dur_s, 60.0) * 6))
+        segments = _transcribe_isolated(
+            norm_wav,
+            whisper_model,
+            transcriber_device,
+            "en",
+            timeout_s,
+        )
+    else:
+        segments = transcriber.transcribe(norm_wav, language="en")
     segments = _retry_empty_transcript(
         segments,
         norm_wav,
@@ -557,8 +672,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     agent_time = customer_time = 0.0
     agent_turns = customer_turns = 0
 
-    # Free GPU memory before diarization — embeddings run on CPU (force_cpu=True)
-    # but leftover VRAM from Parakeet can cause fragmentation issues.
+    # Free unused memory before speaker identification. diar_multi can use CUDA
+    # for supported embedding backends; CAM++ remains CPU inside WeSpeaker.
     try:
         import torch as _torch, gc as _gc
         _gc.collect()
@@ -572,7 +687,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     try:
         from src.diar_multi import diarize_multi
         print("[UI] Running voiceprint-first multi-speaker diarization...", flush=True)
-        diar_result = diarize_multi(segments, norm_wav, force_cpu=True)
+        diar_result = diarize_multi(segments, norm_wav, force_cpu=False)
         segments     = diar_result["segments"]
         agent_name_id = diar_result.get("agent_name", "Unknown Agent")
         agent_sim     = diar_result.get("agent_similarity", 0.0)
@@ -606,7 +721,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
 
     elapsed = round(time.time() - t0, 2)
 
-    transcriber.unload()
+    if transcriber is not None:
+        transcriber.unload()
 
     # Force-free GPU/CPU memory
     try:
@@ -696,6 +812,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "model":                    whisper_model,
         "requested_model":          requested_model,
         "fallback_used":            requested_model != whisper_model,
+        "transcriber_device":       transcriber_device,
+        "transcriber_isolated":     isolated_transcriber,
         "processed_at":             datetime.utcnow().isoformat() + "Z",
         "processing_time_seconds":  elapsed,
         "total_segments":           len(segments),
@@ -754,6 +872,7 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
     Stages 1-3 — diarize → speaker ID → transcribe
     Patch result.json with all enhancement paths.
     """
+    pipeline_started_at = time.time()
     paths = _derive_paths(upload_path)
     os.makedirs("data/raw_calls", exist_ok=True)
 
@@ -761,7 +880,11 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
 
     with _status_lock:
         _status.update(running=True, done=False, error=None, result_id=None,
-                       cancel_requested=False)
+                       cancel_requested=False, started_at=pipeline_started_at,
+                       stage_started_at=pipeline_started_at,
+                       updated_at=pipeline_started_at, completed_at=None,
+                       elapsed_seconds=0.0, stage_elapsed_seconds=0.0,
+                       processing_time_seconds=None)
 
     try:
         _check_cancelled()
@@ -875,6 +998,12 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             try:
                 with open(result_path, "r", encoding="utf-8") as f:
                     rdata = json.load(f)
+                pipeline_elapsed = round(time.time() - pipeline_started_at, 2)
+                inner_elapsed = rdata.get("processing_time_seconds")
+                if inner_elapsed is not None:
+                    rdata["model_processing_time_seconds"] = inner_elapsed
+                rdata["processing_time_seconds"] = pipeline_elapsed
+                rdata["pipeline_time_seconds"] = pipeline_elapsed
                 rdata["enhancements"] = enhancement_paths
 
                 # Cache orig_meta once so /api/calls never needs to run ffprobe.
@@ -905,24 +1034,36 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             except Exception as e:
                 print(f"[UI] result.json patch failed: {e}")
 
+        completed_at = time.time()
+        pipeline_elapsed = round(completed_at - pipeline_started_at, 2)
         with _status_lock:
             _status.update(done=True, running=False, stage_num=4,
                            stage="Complete", message="Done! Results saved.",
-                           result_id=result_id)
+                           result_id=result_id, completed_at=completed_at,
+                           updated_at=completed_at,
+                           elapsed_seconds=pipeline_elapsed,
+                           stage_elapsed_seconds=0.0,
+                           processing_time_seconds=pipeline_elapsed)
         print(f"[UI] Pipeline complete. Result: {result_id}")
 
     except PipelineCancelled:
         print("[UI] Pipeline cancelled by user.", flush=True)
         with _status_lock:
+            completed_at = time.time()
             _status.update(running=False, done=False, error=None,
                            stage_num=0, stage="Cancelled",
-                           message="Cancelled by user", cancel_requested=False)
+                           message="Cancelled by user", cancel_requested=False,
+                           completed_at=completed_at, updated_at=completed_at,
+                           elapsed_seconds=round(completed_at - pipeline_started_at, 2))
     except BaseException as e:
         import traceback as _tb
         print(f"[UI] Pipeline error: {e}", flush=True)
         _tb.print_exc()
         with _status_lock:
-            _status.update(error=str(e), running=False, cancel_requested=False)
+            completed_at = time.time()
+            _status.update(error=str(e), running=False, cancel_requested=False,
+                           completed_at=completed_at, updated_at=completed_at,
+                           elapsed_seconds=round(completed_at - pipeline_started_at, 2))
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1041,8 +1182,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
         # /api/status
         if path == "/api/status":
-            with _status_lock:
-                self._json(dict(_status))
+            self._json(_status_snapshot())
             return
 
         # /api/calls
@@ -1086,7 +1226,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 {"model": "whisper-large-v3",          "label": "Whisper Large-v3",         "type": "Local GPU",  "speed_s": 78,   "segments": 306,  "notes": "Best quality local Whisper",     "rank": 2, "wer": "8.1%",  "status": "ok"},
                 {"model": "whisper-large-v3-turbo",    "label": "Whisper Large-v3-Turbo",   "type": "Local GPU",  "speed_s": 35,   "segments": 307,  "notes": "Fast, near large-v3 quality",    "rank": 3, "wer": "8.4%",  "status": "ok"},
                 {"model": "distil-whisper-large-v3.5", "label": "Distil-Whisper v3.5",      "type": "Local GPU",  "speed_s": 29,   "segments": 433,  "notes": "Fastest local, most granular",   "rank": 4, "wer": "8.6%",  "status": "ok"},
-                {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local CPU",  "speed_s": 45,   "segments": 126,  "notes": "CPU mode for stable UI runs; long audio may be slow", "rank": 5, "wer": "~5.5%", "status": "ok"},
+                {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local GPU",  "speed_s": 45,   "segments": 126,  "notes": "GPU subprocess isolation protects UI from native CUDA aborts", "rank": 5, "wer": "~5.5%", "status": "ok"},
                 {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 52,   "segments": 60,   "notes": "Lowest WER on leaderboard",      "rank": 6, "wer": "5.42%", "status": "ok"},
                 {"model": "deepgram-nova-2-phonecall", "label": "Deepgram Nova-2 Phone",    "type": "Cloud API",  "speed_s": 6,    "segments": 33,   "notes": "Optimised for phone call audio", "rank": 7, "wer": "~9%",   "status": "ok"},
                 {"model": "deepgram-nova-2-meeting",   "label": "Deepgram Nova-2 Meeting",  "type": "Cloud API",  "speed_s": 8,    "segments": 51,   "notes": "Multi-speaker meetings",         "rank": 8, "wer": "~9%",   "status": "ok"},
@@ -1412,7 +1552,11 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             # Clear any stale error from a previous run
             with _status_lock:
                 _status.update(running=False, done=False, error=None, result_id=None,
-                               stage_num=0, stage="Idle", message="")
+                               stage_num=0, stage="Idle", message="",
+                               started_at=None, stage_started_at=None,
+                               updated_at=time.time(), completed_at=None,
+                               elapsed_seconds=0.0, stage_elapsed_seconds=0.0,
+                               processing_time_seconds=None)
             # Send the response BEFORE starting the pipeline thread so the client
             # gets its confirmation even when the server becomes CPU/GPU-bound.
             self._json({"status": "started", "filename": filename, "model": model})

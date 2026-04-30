@@ -167,6 +167,44 @@
             cursor: pointer;
             font-size: 0;
         }
+        .process-timing {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: rgba(255,255,255,0.025);
+        }
+        .process-timing.running { border-color: rgba(59,130,246,0.35); background: rgba(59,130,246,0.07); }
+        .process-timing.done { border-color: rgba(34,197,94,0.24); background: rgba(34,197,94,0.06); }
+        .process-time-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .process-stage {
+            min-width: 0;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .process-elapsed {
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent);
+        }
+        .process-time-sub {
+            min-height: 1em;
+            font-size: 0.68rem;
+            color: var(--muted);
+            line-height: 1.35;
+        }
 
         /* Enrollment */
         .enroll-section {
@@ -582,7 +620,7 @@
                 <option value="whisper-large-v3">Whisper Large-v3 · 8.1% WER</option>
                 <option value="whisper-large-v3-turbo">Whisper v3-Turbo · fast</option>
                 <option value="distil-whisper-large-v3.5" selected>⚡ Distil-Whisper v3.5 · fastest</option>
-                <option value="parakeet-tdt-0.6b-v3">NVIDIA Parakeet TDT v3 · CPU stable</option>
+                <option value="parakeet-tdt-0.6b-v3">NVIDIA Parakeet TDT v3 · GPU isolated</option>
                 <option value="cohere-transcribe-03-2026">Cohere 03-2026 · 5.42% WER</option>
             </optgroup>
         </select>
@@ -592,6 +630,13 @@
             </svg>
             <span id="uploadText">Upload Audio</span>
             <input type="file" id="audioUpload" accept="audio/*" class="upload-file-input">
+        </div>
+        <div class="process-timing" id="processTiming">
+            <div class="process-time-head">
+                <div class="process-stage" id="processStage">Idle</div>
+                <div class="process-elapsed" id="processElapsed">0:00</div>
+            </div>
+            <div class="process-time-sub" id="processTimingSub">Ready for upload</div>
         </div>
     </div>
 
@@ -1180,14 +1225,49 @@ function _fmtElapsed(sec) {
         : `${m}:${String(s).padStart(2,'0')}`;
 }
 
+function _setProgressElapsed(sec) {
+    const el = document.getElementById('progressTimer');
+    if (el) el.textContent = _fmtElapsed(sec || 0);
+}
+
+function updateProcessTiming(status) {
+    const box = document.getElementById('processTiming');
+    const stageEl = document.getElementById('processStage');
+    const elapsedEl = document.getElementById('processElapsed');
+    const subEl = document.getElementById('processTimingSub');
+    if (!box || !stageEl || !elapsedEl || !subEl) return;
+
+    const s = status || {};
+    const elapsed = Number(s.elapsed_seconds ?? s.processing_time_seconds ?? 0);
+    box.classList.toggle('running', !!s.running);
+    box.classList.toggle('done', !!s.done && !s.running);
+    elapsedEl.textContent = _fmtElapsed(elapsed);
+
+    if (s.running) {
+        stageEl.textContent = s.stage || 'Processing';
+        subEl.textContent = s.message || 'Processing audio...';
+    } else if (s.done) {
+        stageEl.textContent = 'Last process complete';
+        subEl.textContent = s.result_id ? `Saved: ${s.result_id}` : 'Done';
+    } else if (s.error) {
+        stageEl.textContent = 'Process failed';
+        subEl.textContent = s.error;
+    } else {
+        stageEl.textContent = 'Idle';
+        subEl.textContent = 'Ready for upload';
+    }
+}
+
 function _startElapsed() {
     _elapsedStart = Date.now();
-    const el = document.getElementById('progressTimer');
-    if (el) el.textContent = '0:00';
+    _setProgressElapsed(0);
+    updateProcessTiming({running:true, stage:'Uploading', message:'Uploading audio...', elapsed_seconds:0});
     if (_elapsedTimer) clearInterval(_elapsedTimer);
     _elapsedTimer = setInterval(() => {
-        const el = document.getElementById('progressTimer');
-        if (el) el.textContent = _fmtElapsed((Date.now() - _elapsedStart) / 1000);
+        const elapsed = (Date.now() - _elapsedStart) / 1000;
+        _setProgressElapsed(elapsed);
+        const elapsedEl = document.getElementById('processElapsed');
+        if (elapsedEl) elapsedEl.textContent = _fmtElapsed(elapsed);
     }, 1000);
 }
 
@@ -1231,6 +1311,8 @@ function startPolling() {
     _pollTimer = setInterval(async () => {
         try {
             const s = await (await fetch('/api/status')).json();
+            updateProcessTiming(s);
+            if (typeof s.elapsed_seconds === 'number') _setProgressElapsed(s.elapsed_seconds);
             if (s.error) { clearInterval(_pollTimer); hideProgress(); showError(s.error); return; }
             if (s.stage === 'Cancelled') { clearInterval(_pollTimer); hideProgress(); return; }
             setStage(s.stage_num, s.message);
@@ -1341,6 +1423,7 @@ document.getElementById('cleanVoiceUpload').addEventListener('change', async fun
     if (au) { au.disabled = false; au.value = ''; }
     // If pipeline is running on the server when page loads, resume the polling.
     fetch('/api/status').then(r => r.json()).then(s => {
+        updateProcessTiming(s);
         if (s.running && !s.done) { showProgress(); startPolling(); }
     }).catch(() => {});
 })();
