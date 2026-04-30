@@ -816,7 +816,11 @@ function timeAgo(iso) {
 
 function fmtDur(s) {
     if (!s) return '—';
-    const m = Math.floor(s/60), sec = s%60;
+    s = Math.max(0, Math.round(Number(s) || 0));
+    const h = Math.floor(s/3600);
+    const m = Math.floor((s%3600)/60);
+    const sec = s%60;
+    if (h > 0) return `${h}h ${m}m ${sec}s`;
     return m > 0 ? `${m}m ${sec}s` : `${sec}s`;
 }
 
@@ -913,6 +917,7 @@ async function loadCalls() {
             const dur   = meta.duration_s ? fmtDur(meta.duration_s) : '—';
             const size  = meta.size_mb ? `${meta.size_mb} MB` : '—';
             const ch    = meta.channels===1?'Mono':meta.channels===2?'Stereo':'—';
+            const proc  = procT ? fmtDur(procT) : '—';
             const ago   = procAt ? timeAgo(procAt) : '';
             return `<div class="call-card" onclick="loadCall('${id}', this)">
                 <div class="call-title">
@@ -922,10 +927,11 @@ async function loadCalls() {
                 </div>
                 <div class="call-meta" style="margin-bottom:4px;">
                     <span class="model-tag" style="background:${modelColor(model)}">${shortModel(model)}</span>
-                    ${segs} segs · ${procT?Math.round(procT)+'s':'—'}
+                    ${segs} segs
                     ${ago?'<span style="float:right;color:var(--muted)">'+ago+'</span>':''}
                 </div>
-                <div class="call-meta">⏱ ${dur} &nbsp;·&nbsp; 📦 ${size} &nbsp;·&nbsp; ${ch}</div>
+                <div class="call-meta">Proc ${proc} &nbsp;|&nbsp; Audio ${dur}</div>
+                <div class="call-meta">📦 ${size} &nbsp;·&nbsp; ${ch}</div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
                     <span style="font-size:.68rem;color:var(--muted)">Click to view</span>
                     <button onclick="deleteCall(event,'${id}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;padding:2px;" title="Delete">
