@@ -1,0 +1,30 @@
+C:\Users\abhis\AppData\Local\Programs\Python\Python311\Lib\site-packages\s3prl\upstream\byol_s\byol_a\common.py:20: UserWarning: torchaudio._backend.set_audio_backend has been deprecated. With dispatcher enabled, this function is no-op. You can remove the function call.
+  torchaudio.set_audio_backend("sox_io")
+ESPnet is not installed, cannot use espnet_hubert upstream
+C:\Users\abhis\AppData\Local\Programs\Python\Python311\Lib\site-packages\wespeaker\utils\checkpoint.py:25: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(path, map_location="cpu")
+{'model': 'CAMPPlus', 'model_args': {'feat_dim': 80, 'embed_dim': 512}}
+[test-api] cam++ ready (dim=512)
+[test-api] multi-VP: 36 agents / 71 centroids
+[test-api] single-VP baseline: 36 agents / 36 centroids
+[test-api] 1 held-out calls selected
+  [  1/1] 69ef9bf8 (         Jenifer Bajrami,  mid,  13.0dB) multi=   ok single=   ok  (6.3s)
+
+=== MULTI-VP ===
+  calls scored:           1
+  call-level agent ID:    1/1 (100.0%)
+  segment AGENT P/R/F1:   0.684 / 0.812 / 0.743
+  segment counts:         tp=13 fp=6 tn=3 fn=3
+  [mid] 1 calls  call-id=1/1  P/R/F1=0.684/0.812/0.743
+
+=== SINGLE-VP (legacy) ===
+  calls scored:           1
+  call-level agent ID:    1/1 (100.0%)
+  segment AGENT P/R/F1:   0.684 / 0.812 / 0.743
+  segment counts:         tp=13 fp=6 tn=3 fn=3
+  [mid] 1 calls  call-id=1/1  P/R/F1=0.684/0.812/0.743
+
+=== HEAD-TO-HEAD (call-level agent ID) ===
+  multi-VP fixed single-VP miss:  0
+  multi-VP regressed single-VP:   0
+  same outcome:                   1
