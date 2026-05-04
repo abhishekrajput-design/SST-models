@@ -74,23 +74,42 @@ def voiceprint_inventory(index_path: str | None = None) -> Dict[str, Any]:
     for slug, info in agents.items():
         if not isinstance(info, dict):
             continue
-        vp_path = resolve_voiceprint_path(
-            info.get("voiceprint_path") or info.get("voiceprint") or info.get("path"),
-            path,
-        )
-        if not os.path.isfile(vp_path):
+
+        candidates = []
+        vps_field = info.get("voiceprints")
+        if isinstance(vps_field, list):
+            for entry in vps_field:
+                if isinstance(entry, dict):
+                    p = entry.get("path") or entry.get("voiceprint_path")
+                    if p:
+                        candidates.append(p)
+                elif isinstance(entry, str):
+                    candidates.append(entry)
+        if not candidates:
+            legacy = info.get("voiceprint_path") or info.get("voiceprint") or info.get("path")
+            if legacy:
+                candidates.append(legacy)
+
+        agent_usable = 0
+        agent_dim: Optional[int] = None
+        for raw in candidates:
+            vp_path = resolve_voiceprint_path(raw, path)
+            if not os.path.isfile(vp_path):
+                continue
+            try:
+                vp = np.load(vp_path).squeeze()
+            except Exception:
+                continue
+            if vp.ndim != 1:
+                continue
+            agent_usable += 1
+            agent_dim = int(vp.shape[0])
+
+        if agent_usable == 0:
             missing += 1
             continue
-        try:
-            vp = np.load(vp_path).squeeze()
-        except Exception:
-            missing += 1
-            continue
-        if vp.ndim != 1:
-            missing += 1
-            continue
-        dim = str(int(vp.shape[0]))
-        dims[dim] = dims.get(dim, 0) + 1
+        dim_key = str(agent_dim)
+        dims[dim_key] = dims.get(dim_key, 0) + 1
         usable += 1
         names.append(str(info.get("agent_name") or info.get("name") or slug))
 

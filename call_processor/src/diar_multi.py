@@ -115,6 +115,11 @@ def _farewell(text: str) -> bool:
 
 
 def _load_voiceprints(path: Optional[str] = None) -> Dict[str, Tuple[str, np.ndarray]]:
+    """Returns ``{slug: (display_name, stack)}`` where ``stack`` has shape
+    ``(N, dim)``. Prefers the multi-VP ``voiceprints`` list; falls back to the
+    legacy single ``voiceprint_path``. Centroids with mismatched dim within
+    one agent are dropped (the dominant dim wins).
+    """
     p = path or _AGENTS_INDEX
     if not os.path.isfile(p):
         return {}
@@ -129,25 +134,50 @@ def _load_voiceprints(path: Optional[str] = None) -> Dict[str, Tuple[str, np.nda
     for slug, info in agents.items():
         if not isinstance(info, dict):
             continue
-        vp_path = info.get("voiceprint_path") or info.get("voiceprint")
-        if not vp_path:
+
+        raw_paths: List[str] = []
+        vps_field = info.get("voiceprints")
+        if isinstance(vps_field, list):
+            for entry in vps_field:
+                pp = entry.get("path") if isinstance(entry, dict) else entry
+                if pp:
+                    raw_paths.append(pp)
+        if not raw_paths:
+            legacy = info.get("voiceprint_path") or info.get("voiceprint")
+            if legacy:
+                raw_paths.append(legacy)
+        if not raw_paths:
             continue
-        vp_path = resolve_voiceprint_path(vp_path, p)
-        if not os.path.isfile(vp_path):
+
+        loaded: List[np.ndarray] = []
+        for raw in raw_paths:
+            vp_path = resolve_voiceprint_path(raw, p)
+            if not os.path.isfile(vp_path):
+                continue
+            try:
+                vp = np.load(vp_path).astype(np.float32).squeeze()
+            except Exception as e:
+                logger.warning("Skipping %s: failed to load voiceprint (%s)", slug, e)
+                continue
+            if vp.ndim != 1:
+                logger.warning("Skipping %s entry: invalid shape %s", slug, vp.shape)
+                continue
+            n = np.linalg.norm(vp)
+            if n > 0:
+                vp = vp / n
+            loaded.append(vp)
+        if not loaded:
             continue
-        try:
-            vp = np.load(vp_path).astype(np.float32).squeeze()
-        except Exception as e:
-            logger.warning("Skipping %s: failed to load voiceprint (%s)", slug, e)
-            continue
-        if vp.ndim != 1:
-            logger.warning("Skipping %s: invalid voiceprint shape %s", slug, vp.shape)
-            continue
-        n = np.linalg.norm(vp)
-        if n > 0:
-            vp = vp / n
+
+        dims = {v.shape[0] for v in loaded}
+        if len(dims) > 1:
+            counts = {d: sum(1 for v in loaded if v.shape[0] == d) for d in dims}
+            best_dim = max(counts, key=counts.get)
+            loaded = [v for v in loaded if v.shape[0] == best_dim]
+
+        stack = np.stack(loaded).astype(np.float32)
         name = info.get("agent_name") or info.get("name") or slug
-        out[slug] = (name, vp)
+        out[slug] = (name, stack)
     return out
 
 
@@ -465,12 +495,14 @@ def _group_voiceprints_by_dim(
 ) -> Dict[int, Dict[str, Tuple[str, np.ndarray]]]:
     grouped: Dict[int, Dict[str, Tuple[str, np.ndarray]]] = {}
     for slug, value in voiceprints.items():
-        name, vp = value
-        dim = int(vp.shape[0])
+        name, stack = value
+        if stack.ndim == 1:
+            stack = stack[None, :]
+        dim = int(stack.shape[1])
         if dim not in (192, 512):
             logger.warning("Skipping %s: unsupported voiceprint dim=%s", slug, dim)
             continue
-        grouped.setdefault(dim, {})[slug] = (name, vp)
+        grouped.setdefault(dim, {})[slug] = (name, stack)
     return grouped
 
 
@@ -590,7 +622,9 @@ def diarize_multi(
 
         sims = np.zeros((len(segments), len(slugs)), dtype=np.float32)
         if slugs:
-            V = np.stack([voiceprints_by_dim[dim][s][1] for s in slugs])
+            # Each agent has an (N, dim) stack of centroids; per-segment
+            # similarity is the max cosine across that agent's centroids.
+            stacks = [voiceprints_by_dim[dim][s][1] for s in slugs]
             for i, emb in enumerate(embs_dim):
                 if emb is None:
                     continue
@@ -598,7 +632,8 @@ def diarize_multi(
                 if emb.ndim != 1 or emb.shape[0] != dim:
                     continue
                 en = emb / max(np.linalg.norm(emb), 1e-8)
-                sims[i] = V @ en
+                for j, stack in enumerate(stacks):
+                    sims[i, j] = float(np.max(stack @ en))
         sims_by_dim[dim] = sims
 
     if not any(valid.any() for valid in valid_by_dim.values()):

@@ -46,6 +46,24 @@ class SpeakerMatcher:
             return 0.0
         return float(np.dot(a, b) / (norm_a * norm_b))
 
+    def _max_cosine(self, embedding: np.ndarray, ref: np.ndarray) -> float:
+        """Cosine similarity to the closest of N reference vectors.
+
+        Accepts a 1D ``ref`` (legacy single voiceprint) or a 2D ``(N, dim)``
+        stack of multi-bucket centroids. Both inputs are L2-normalised first.
+        """
+        ne = np.linalg.norm(embedding)
+        if ne == 0:
+            return 0.0
+        e = embedding / ne
+        if ref.ndim == 1:
+            nr = np.linalg.norm(ref)
+            return 0.0 if nr == 0 else float(np.dot(e, ref / nr))
+        norms = np.linalg.norm(ref, axis=1, keepdims=True)
+        norms[norms == 0] = 1.0
+        rn = ref / norms
+        return float(np.max(rn @ e))
+
     def match(self, embedding: np.ndarray) -> Tuple[str, float]:
         """
         Match a single embedding against all enrolled agents.
@@ -64,7 +82,7 @@ class SpeakerMatcher:
         best_score = -1.0
 
         for agent_name, agent_emb in self.agent_embeddings.items():
-            score = self._cosine_similarity(embedding, agent_emb)
+            score = self._max_cosine(embedding, agent_emb)
             if score > best_score:
                 best_score = score
                 best_name = agent_name

@@ -7,14 +7,141 @@
   },
   "omar_el_harchaoui": {
     "agent_name": "Omar El Harchaoui",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui.npy",
-    "n_clips": 585,
-    "n_windows_total": 727,
-    "total_seconds": 735.1,
-    "used_calls": 5,
-    "mean_inside_sim": 0.679,
-    "max_outside_sim": 0.551,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "omar_el_harchaoui.npy",
+    "voiceprints": [
+      {
+        "path": "omar_el_harchaoui__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 717,
+        "snr_db": 13.0
+      },
+      {
+        "path": "omar_el_harchaoui__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 717,
+        "snr_db": 13.0
+      },
+      {
+        "path": "omar_el_harchaoui__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 717,
+        "snr_db": 13.0
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 1877.1270000000027,
+    "used_calls": 36,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efc071f91ac02559f83167"
+      },
+      {
+        "_id": "69efbb58f91ac02559f827f6"
+      },
+      {
+        "_id": "69efb51af91ac02559f8170a"
+      },
+      {
+        "_id": "69efb4a1f91ac02559f8158b"
+      },
+      {
+        "_id": "69efb362f91ac02559f813fe"
+      },
+      {
+        "_id": "69efb158f91ac02559f8108e"
+      },
+      {
+        "_id": "69efa7e7f91ac02559f7f436"
+      },
+      {
+        "_id": "69efa637f91ac02559f7efd6"
+      },
+      {
+        "_id": "69efa32cf91ac02559f7e8cb"
+      },
+      {
+        "_id": "69efa2c6f91ac02559f7e78a"
+      },
+      {
+        "_id": "69efa0a8f91ac02559f7e3cb"
+      },
+      {
+        "_id": "69ef9b69f91ac02559f7d822"
+      },
+      {
+        "_id": "69efc071f91ac02559f83167"
+      },
+      {
+        "_id": "69efbb58f91ac02559f827f6"
+      },
+      {
+        "_id": "69efb51af91ac02559f8170a"
+      },
+      {
+        "_id": "69efb4a1f91ac02559f8158b"
+      },
+      {
+        "_id": "69efb362f91ac02559f813fe"
+      },
+      {
+        "_id": "69efb158f91ac02559f8108e"
+      },
+      {
+        "_id": "69efa7e7f91ac02559f7f436"
+      },
+      {
+        "_id": "69efa637f91ac02559f7efd6"
+      },
+      {
+        "_id": "69efa32cf91ac02559f7e8cb"
+      },
+      {
+        "_id": "69efa2c6f91ac02559f7e78a"
+      },
+      {
+        "_id": "69efa0a8f91ac02559f7e3cb"
+      },
+      {
+        "_id": "69ef9b69f91ac02559f7d822"
+      },
+      {
+        "_id": "69efc071f91ac02559f83167"
+      },
+      {
+        "_id": "69efbb58f91ac02559f827f6"
+      },
+      {
+        "_id": "69efb51af91ac02559f8170a"
+      },
+      {
+        "_id": "69efb4a1f91ac02559f8158b"
+      },
+      {
+        "_id": "69efb362f91ac02559f813fe"
+      },
+      {
+        "_id": "69efb158f91ac02559f8108e"
+      },
+      {
+        "_id": "69efa7e7f91ac02559f7f436"
+      },
+      {
+        "_id": "69efa637f91ac02559f7efd6"
+      },
+      {
+        "_id": "69efa32cf91ac02559f7e8cb"
+      },
+      {
+        "_id": "69efa2c6f91ac02559f7e78a"
+      },
+      {
+        "_id": "69efa0a8f91ac02559f7e3cb"
+      },
+      {
+        "_id": "69ef9b69f91ac02559f7d822"
+      }
+    ]
   },
   "mohammed_al_russell": {
     "agent_name": "Mohammed Al Russell",
@@ -26,14 +153,267 @@
   },
   "haris_bajwa": {
     "agent_name": "Haris Bajwa",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\haris_bajwa.npy",
-    "n_clips": 474,
-    "n_windows_total": 721,
-    "total_seconds": 728.3,
-    "used_calls": 5,
-    "mean_inside_sim": 0.67,
-    "max_outside_sim": 0.545,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "haris_bajwa.npy",
+    "voiceprints": [
+      {
+        "path": "haris_bajwa__low_0.npy",
+        "bucket": "low",
+        "n_clips": 966,
+        "snr_db": 6.0
+      },
+      {
+        "path": "haris_bajwa__low_1.npy",
+        "bucket": "low",
+        "n_clips": 966,
+        "snr_db": 6.0
+      },
+      {
+        "path": "haris_bajwa__low_2.npy",
+        "bucket": "low",
+        "n_clips": 966,
+        "snr_db": 6.0
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 2468.604000000004,
+    "used_calls": 78,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efbb12f91ac02559f82756"
+      },
+      {
+        "_id": "69efbaaef91ac02559f8267b"
+      },
+      {
+        "_id": "69efb7b2f91ac02559f81b41"
+      },
+      {
+        "_id": "69efb764f91ac02559f81ab7"
+      },
+      {
+        "_id": "69efb684f91ac02559f81999"
+      },
+      {
+        "_id": "69efb296f91ac02559f81252"
+      },
+      {
+        "_id": "69efb1edf91ac02559f8117b"
+      },
+      {
+        "_id": "69efb181f91ac02559f810d7"
+      },
+      {
+        "_id": "69efaf2bf91ac02559f80ad9"
+      },
+      {
+        "_id": "69efaee4f91ac02559f80972"
+      },
+      {
+        "_id": "69efae88f91ac02559f80800"
+      },
+      {
+        "_id": "69efae31f91ac02559f806ec"
+      },
+      {
+        "_id": "69efabbff91ac02559f7fe9b"
+      },
+      {
+        "_id": "69efab8af91ac02559f7fdb9"
+      },
+      {
+        "_id": "69efab6af91ac02559f7fd48"
+      },
+      {
+        "_id": "69efab33f91ac02559f7fc64"
+      },
+      {
+        "_id": "69efaa99f91ac02559f7fa28"
+      },
+      {
+        "_id": "69efa923f91ac02559f7f817"
+      },
+      {
+        "_id": "69efa889f91ac02559f7f640"
+      },
+      {
+        "_id": "69efa20df91ac02559f7e600"
+      },
+      {
+        "_id": "69efa196f91ac02559f7e4bd"
+      },
+      {
+        "_id": "69ef9fbbf91ac02559f7e28f"
+      },
+      {
+        "_id": "69ef9c65f91ac02559f7db33"
+      },
+      {
+        "_id": "69ef9b94f91ac02559f7d893"
+      },
+      {
+        "_id": "69ef9b79f91ac02559f7d854"
+      },
+      {
+        "_id": "69ef9a7ef91ac02559f7d5cd"
+      },
+      {
+        "_id": "69efbb12f91ac02559f82756"
+      },
+      {
+        "_id": "69efbaaef91ac02559f8267b"
+      },
+      {
+        "_id": "69efb7b2f91ac02559f81b41"
+      },
+      {
+        "_id": "69efb764f91ac02559f81ab7"
+      },
+      {
+        "_id": "69efb684f91ac02559f81999"
+      },
+      {
+        "_id": "69efb296f91ac02559f81252"
+      },
+      {
+        "_id": "69efb1edf91ac02559f8117b"
+      },
+      {
+        "_id": "69efb181f91ac02559f810d7"
+      },
+      {
+        "_id": "69efaf2bf91ac02559f80ad9"
+      },
+      {
+        "_id": "69efaee4f91ac02559f80972"
+      },
+      {
+        "_id": "69efae88f91ac02559f80800"
+      },
+      {
+        "_id": "69efae31f91ac02559f806ec"
+      },
+      {
+        "_id": "69efabbff91ac02559f7fe9b"
+      },
+      {
+        "_id": "69efab8af91ac02559f7fdb9"
+      },
+      {
+        "_id": "69efab6af91ac02559f7fd48"
+      },
+      {
+        "_id": "69efab33f91ac02559f7fc64"
+      },
+      {
+        "_id": "69efaa99f91ac02559f7fa28"
+      },
+      {
+        "_id": "69efa923f91ac02559f7f817"
+      },
+      {
+        "_id": "69efa889f91ac02559f7f640"
+      },
+      {
+        "_id": "69efa20df91ac02559f7e600"
+      },
+      {
+        "_id": "69efa196f91ac02559f7e4bd"
+      },
+      {
+        "_id": "69ef9fbbf91ac02559f7e28f"
+      },
+      {
+        "_id": "69ef9c65f91ac02559f7db33"
+      },
+      {
+        "_id": "69ef9b94f91ac02559f7d893"
+      },
+      {
+        "_id": "69ef9b79f91ac02559f7d854"
+      },
+      {
+        "_id": "69ef9a7ef91ac02559f7d5cd"
+      },
+      {
+        "_id": "69efbb12f91ac02559f82756"
+      },
+      {
+        "_id": "69efbaaef91ac02559f8267b"
+      },
+      {
+        "_id": "69efb7b2f91ac02559f81b41"
+      },
+      {
+        "_id": "69efb764f91ac02559f81ab7"
+      },
+      {
+        "_id": "69efb684f91ac02559f81999"
+      },
+      {
+        "_id": "69efb296f91ac02559f81252"
+      },
+      {
+        "_id": "69efb1edf91ac02559f8117b"
+      },
+      {
+        "_id": "69efb181f91ac02559f810d7"
+      },
+      {
+        "_id": "69efaf2bf91ac02559f80ad9"
+      },
+      {
+        "_id": "69efaee4f91ac02559f80972"
+      },
+      {
+        "_id": "69efae88f91ac02559f80800"
+      },
+      {
+        "_id": "69efae31f91ac02559f806ec"
+      },
+      {
+        "_id": "69efabbff91ac02559f7fe9b"
+      },
+      {
+        "_id": "69efab8af91ac02559f7fdb9"
+      },
+      {
+        "_id": "69efab6af91ac02559f7fd48"
+      },
+      {
+        "_id": "69efab33f91ac02559f7fc64"
+      },
+      {
+        "_id": "69efaa99f91ac02559f7fa28"
+      },
+      {
+        "_id": "69efa923f91ac02559f7f817"
+      },
+      {
+        "_id": "69efa889f91ac02559f7f640"
+      },
+      {
+        "_id": "69efa20df91ac02559f7e600"
+      },
+      {
+        "_id": "69efa196f91ac02559f7e4bd"
+      },
+      {
+        "_id": "69ef9fbbf91ac02559f7e28f"
+      },
+      {
+        "_id": "69ef9c65f91ac02559f7db33"
+      },
+      {
+        "_id": "69ef9b94f91ac02559f7d893"
+      },
+      {
+        "_id": "69ef9b79f91ac02559f7d854"
+      },
+      {
+        "_id": "69ef9a7ef91ac02559f7d5cd"
+      }
+    ]
   },
   "sarah_aziz": {
     "agent_name": "Sarah Aziz",
@@ -180,14 +560,51 @@
   },
   "allan_johnson": {
     "agent_name": "Allan Johnson",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\allan_johnson.npy",
-    "n_clips": 543,
-    "n_windows_total": 1997,
-    "total_seconds": 2003.7,
-    "used_calls": 5,
-    "mean_inside_sim": 0.636,
-    "max_outside_sim": 0.645,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "allan_johnson.npy",
+    "voiceprints": [
+      {
+        "path": "allan_johnson__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 963,
+        "snr_db": 15.7
+      },
+      {
+        "path": "allan_johnson__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 963,
+        "snr_db": 15.7
+      },
+      {
+        "path": "allan_johnson__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 963,
+        "snr_db": 15.7
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 2158.6470000000027,
+    "used_calls": 6,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efb162f91ac02559f810af"
+      },
+      {
+        "_id": "69efae3bf91ac02559f8071c"
+      },
+      {
+        "_id": "69efb162f91ac02559f810af"
+      },
+      {
+        "_id": "69efae3bf91ac02559f8071c"
+      },
+      {
+        "_id": "69efb162f91ac02559f810af"
+      },
+      {
+        "_id": "69efae3bf91ac02559f8071c"
+      }
+    ]
   },
   "sababa_hossain": {
     "agent_name": "Sababa Hossain",
@@ -246,14 +663,33 @@
   },
   "talha_azam": {
     "agent_name": "Talha Azam",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\talha_azam.npy",
+    "voiceprint_path": "talha_azam.npy",
     "n_clips": 90,
     "n_windows_total": 106,
-    "total_seconds": 107.0,
-    "used_calls": 1,
+    "total_seconds": 58.93199999999998,
+    "used_calls": 3,
     "mean_inside_sim": 0.711,
     "max_outside_sim": 0.523,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "talha_azam__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 24,
+        "snr_db": 14.4
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efabe2f91ac02559f7ff60"
+      },
+      {
+        "_id": "69efabe2f91ac02559f7ff60"
+      },
+      {
+        "_id": "69efabe2f91ac02559f7ff60"
+      }
+    ]
   },
   "gabriel_bighiu": {
     "agent_name": "Gabriel Bighiu",
@@ -279,14 +715,45 @@
   },
   "mohammad_malki": {
     "agent_name": "Mohammad Malki",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohammad_malki.npy",
+    "voiceprint_path": "mohammad_malki.npy",
     "n_clips": 378,
     "n_windows_total": 741,
-    "total_seconds": 746.0,
+    "total_seconds": 749.7000000000004,
     "used_calls": 3,
     "mean_inside_sim": 0.71,
     "max_outside_sim": 0.533,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "mohammad_malki__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 306,
+        "snr_db": 12.2
+      },
+      {
+        "path": "mohammad_malki__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 306,
+        "snr_db": 12.2
+      },
+      {
+        "path": "mohammad_malki__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 306,
+        "snr_db": 12.2
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efb3a1f91ac02559f81468"
+      },
+      {
+        "_id": "69efb3a1f91ac02559f81468"
+      },
+      {
+        "_id": "69efb3a1f91ac02559f81468"
+      }
+    ]
   },
   "arfat_barnet": {
     "agent_name": "Arfat Barnet",
@@ -323,14 +790,45 @@
   },
   "sylwia_recruitment": {
     "agent_name": "Sylwia Recruitment",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\sylwia_recruitment.npy",
+    "voiceprint_path": "sylwia_recruitment.npy",
     "n_clips": 1113,
     "n_windows_total": 1563,
-    "total_seconds": 1566.2,
+    "total_seconds": 1567.4789999999994,
     "used_calls": 3,
     "mean_inside_sim": 0.698,
     "max_outside_sim": 0.543,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "sylwia_recruitment__low_0.npy",
+        "bucket": "low",
+        "n_clips": 534,
+        "snr_db": 11.3
+      },
+      {
+        "path": "sylwia_recruitment__low_1.npy",
+        "bucket": "low",
+        "n_clips": 534,
+        "snr_db": 11.3
+      },
+      {
+        "path": "sylwia_recruitment__low_2.npy",
+        "bucket": "low",
+        "n_clips": 534,
+        "snr_db": 11.3
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efa265f91ac02559f7e699"
+      },
+      {
+        "_id": "69efa265f91ac02559f7e699"
+      },
+      {
+        "_id": "69efa265f91ac02559f7e699"
+      }
+    ]
   },
   "zak_raissi_barnet": {
     "agent_name": "Zak Raissi Barnet",
@@ -343,157 +841,840 @@
   },
   "ideal_dacaj": {
     "agent_name": "Ideal Dacaj",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\ideal_dacaj.npy",
-    "n_clips": 905,
-    "n_windows_total": 2031,
-    "total_seconds": 2039.0,
-    "used_calls": 5,
-    "mean_inside_sim": 0.623,
-    "max_outside_sim": 0.604,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "ideal_dacaj.npy",
+    "voiceprints": [
+      {
+        "path": "ideal_dacaj__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 2298,
+        "snr_db": 13.6
+      },
+      {
+        "path": "ideal_dacaj__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 2298,
+        "snr_db": 13.6
+      },
+      {
+        "path": "ideal_dacaj__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 2298,
+        "snr_db": 13.6
+      }
+    ],
+    "n_voiceprints": 3,
+    "total_seconds": 5977.215000000008,
+    "used_calls": 15,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efc3acf91ac02559f83a89"
+      },
+      {
+        "_id": "69efb9b2f91ac02559f821c7"
+      },
+      {
+        "_id": "69efa1ecf91ac02559f7e56d"
+      },
+      {
+        "_id": "69ef9c53f91ac02559f7dafa"
+      },
+      {
+        "_id": "69ef9bf1f91ac02559f7d9ed"
+      },
+      {
+        "_id": "69efc3acf91ac02559f83a89"
+      },
+      {
+        "_id": "69efb9b2f91ac02559f821c7"
+      },
+      {
+        "_id": "69efa1ecf91ac02559f7e56d"
+      },
+      {
+        "_id": "69ef9c53f91ac02559f7dafa"
+      },
+      {
+        "_id": "69ef9bf1f91ac02559f7d9ed"
+      },
+      {
+        "_id": "69efc3acf91ac02559f83a89"
+      },
+      {
+        "_id": "69efb9b2f91ac02559f821c7"
+      },
+      {
+        "_id": "69efa1ecf91ac02559f7e56d"
+      },
+      {
+        "_id": "69ef9c53f91ac02559f7dafa"
+      },
+      {
+        "_id": "69ef9bf1f91ac02559f7d9ed"
+      }
+    ]
   },
   "harrison_morgan": {
     "agent_name": "Harrison Morgan",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\harrison_morgan.npy",
-    "n_clips": 180,
-    "n_windows_total": 236,
-    "total_seconds": 238.5,
-    "used_calls": 2,
-    "mean_inside_sim": 0.712,
-    "max_outside_sim": 0.519,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "harrison_morgan.npy",
+    "voiceprints": [
+      {
+        "path": "harrison_morgan__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 36,
+        "snr_db": 13.8
+      },
+      {
+        "path": "harrison_morgan__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 36,
+        "snr_db": 13.8
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 104.44800000000009,
+    "used_calls": 3,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69ef9d79f91ac02559f7dea1"
+      },
+      {
+        "_id": "69ef9d79f91ac02559f7dea1"
+      },
+      {
+        "_id": "69ef9d79f91ac02559f7dea1"
+      }
+    ]
   },
   "adil_al_sammerai": {
     "agent_name": "Adil Al- Sammerai",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\adil_al_sammerai.npy",
-    "n_clips": 757,
-    "n_windows_total": 1253,
-    "total_seconds": 1260.9,
-    "used_calls": 5,
-    "mean_inside_sim": 0.63,
-    "max_outside_sim": 0.581,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "adil_al_sammerai.npy",
+    "voiceprints": [
+      {
+        "path": "adil_al_sammerai__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 612,
+        "snr_db": 13.3
+      },
+      {
+        "path": "adil_al_sammerai__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 612,
+        "snr_db": 13.3
+      },
+      {
+        "path": "adil_al_sammerai__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 612,
+        "snr_db": 13.3
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 1832.5739999999987,
+    "used_calls": 9,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efbe5df91ac02559f82c99"
+      },
+      {
+        "_id": "69efa455f91ac02559f7eaf3"
+      },
+      {
+        "_id": "69ef9d76f91ac02559f7de8e"
+      },
+      {
+        "_id": "69efbe5df91ac02559f82c99"
+      },
+      {
+        "_id": "69efa455f91ac02559f7eaf3"
+      },
+      {
+        "_id": "69ef9d76f91ac02559f7de8e"
+      },
+      {
+        "_id": "69efbe5df91ac02559f82c99"
+      },
+      {
+        "_id": "69efa455f91ac02559f7eaf3"
+      },
+      {
+        "_id": "69ef9d76f91ac02559f7de8e"
+      }
+    ]
   },
   "angeline_packiyaseelan": {
     "agent_name": "Angeline Packiyaseelan",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\angeline_packiyaseelan.npy",
-    "n_clips": 189,
-    "n_windows_total": 251,
-    "total_seconds": 259.1,
-    "used_calls": 5,
-    "mean_inside_sim": 0.7,
-    "max_outside_sim": 0.535,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "angeline_packiyaseelan.npy",
+    "voiceprints": [
+      {
+        "path": "angeline_packiyaseelan__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 48,
+        "snr_db": 12.2
+      },
+      {
+        "path": "angeline_packiyaseelan__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 48,
+        "snr_db": 12.2
+      },
+      {
+        "path": "angeline_packiyaseelan__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 48,
+        "snr_db": 12.2
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 143.8079999999999,
+    "used_calls": 9,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efbacff91ac02559f826d8"
+      },
+      {
+        "_id": "69efb9aff91ac02559f821b8"
+      },
+      {
+        "_id": "69efb56af91ac02559f81788"
+      },
+      {
+        "_id": "69efbacff91ac02559f826d8"
+      },
+      {
+        "_id": "69efb9aff91ac02559f821b8"
+      },
+      {
+        "_id": "69efb56af91ac02559f81788"
+      },
+      {
+        "_id": "69efbacff91ac02559f826d8"
+      },
+      {
+        "_id": "69efb9aff91ac02559f821b8"
+      },
+      {
+        "_id": "69efb56af91ac02559f81788"
+      }
+    ]
   },
   "jason_kurti": {
     "agent_name": "Jason Kurti",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\jason_kurti.npy",
-    "n_clips": 377,
-    "n_windows_total": 755,
-    "total_seconds": 763.0,
-    "used_calls": 5,
-    "mean_inside_sim": 0.691,
-    "max_outside_sim": 0.542,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "jason_kurti.npy",
+    "voiceprints": [
+      {
+        "path": "jason_kurti__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 420,
+        "snr_db": 15.3
+      },
+      {
+        "path": "jason_kurti__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 420,
+        "snr_db": 15.3
+      },
+      {
+        "path": "jason_kurti__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 420,
+        "snr_db": 15.3
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 1054.386,
+    "used_calls": 12,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efb7fcf91ac02559f81c45"
+      },
+      {
+        "_id": "69efaad9f91ac02559f7fafe"
+      },
+      {
+        "_id": "69ef9bbff91ac02559f7d918"
+      },
+      {
+        "_id": "69ef9aabf91ac02559f7d65f"
+      },
+      {
+        "_id": "69efb7fcf91ac02559f81c45"
+      },
+      {
+        "_id": "69efaad9f91ac02559f7fafe"
+      },
+      {
+        "_id": "69ef9bbff91ac02559f7d918"
+      },
+      {
+        "_id": "69ef9aabf91ac02559f7d65f"
+      },
+      {
+        "_id": "69efb7fcf91ac02559f81c45"
+      },
+      {
+        "_id": "69efaad9f91ac02559f7fafe"
+      },
+      {
+        "_id": "69ef9bbff91ac02559f7d918"
+      },
+      {
+        "_id": "69ef9aabf91ac02559f7d65f"
+      }
+    ]
   },
   "anoush_sefatzadeh": {
     "agent_name": "Anoush Sefatzadeh",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\anoush_sefatzadeh.npy",
-    "n_clips": 502,
-    "n_windows_total": 1403,
-    "total_seconds": 1409.6,
-    "used_calls": 5,
-    "mean_inside_sim": 0.689,
-    "max_outside_sim": 0.648,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "anoush_sefatzadeh.npy",
+    "voiceprints": [
+      {
+        "path": "anoush_sefatzadeh__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 1308,
+        "snr_db": 12.1
+      },
+      {
+        "path": "anoush_sefatzadeh__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 1308,
+        "snr_db": 12.1
+      },
+      {
+        "path": "anoush_sefatzadeh__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 1308,
+        "snr_db": 12.1
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 3674.4209999999953,
+    "used_calls": 12,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efb57ff91ac02559f817b4"
+      },
+      {
+        "_id": "69efa8a0f91ac02559f7f67d"
+      },
+      {
+        "_id": "69efa6ecf91ac02559f7f13f"
+      },
+      {
+        "_id": "69efa1a8f91ac02559f7e4ee"
+      },
+      {
+        "_id": "69efb57ff91ac02559f817b4"
+      },
+      {
+        "_id": "69efa8a0f91ac02559f7f67d"
+      },
+      {
+        "_id": "69efa6ecf91ac02559f7f13f"
+      },
+      {
+        "_id": "69efa1a8f91ac02559f7e4ee"
+      },
+      {
+        "_id": "69efb57ff91ac02559f817b4"
+      },
+      {
+        "_id": "69efa8a0f91ac02559f7f67d"
+      },
+      {
+        "_id": "69efa6ecf91ac02559f7f13f"
+      },
+      {
+        "_id": "69efa1a8f91ac02559f7e4ee"
+      }
+    ]
   },
   "kowsar_alam": {
     "agent_name": "Kowsar Alam",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kowsar_alam.npy",
-    "n_clips": 445,
-    "n_windows_total": 541,
-    "total_seconds": 548.5,
-    "used_calls": 5,
-    "mean_inside_sim": 0.711,
-    "max_outside_sim": 0.544,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "kowsar_alam.npy",
+    "voiceprints": [
+      {
+        "path": "kowsar_alam__low_0.npy",
+        "bucket": "low",
+        "n_clips": 843,
+        "snr_db": 11.9
+      },
+      {
+        "path": "kowsar_alam__low_1.npy",
+        "bucket": "low",
+        "n_clips": 843,
+        "snr_db": 11.9
+      },
+      {
+        "path": "kowsar_alam__low_2.npy",
+        "bucket": "low",
+        "n_clips": 843,
+        "snr_db": 11.9
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 2416.835999999999,
+    "used_calls": 45,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efb237f91ac02559f811e2"
+      },
+      {
+        "_id": "69efad9ef91ac02559f80533"
+      },
+      {
+        "_id": "69efa9d2f91ac02559f7f906"
+      },
+      {
+        "_id": "69efa860f91ac02559f7f5de"
+      },
+      {
+        "_id": "69efa7f6f91ac02559f7f4a7"
+      },
+      {
+        "_id": "69efa6a4f91ac02559f7f0a0"
+      },
+      {
+        "_id": "69efa590f91ac02559f7eed4"
+      },
+      {
+        "_id": "69efa187f91ac02559f7e4a1"
+      },
+      {
+        "_id": "69efa0ccf91ac02559f7e3f1"
+      },
+      {
+        "_id": "69efa013f91ac02559f7e30f"
+      },
+      {
+        "_id": "69ef9fb1f91ac02559f7e26e"
+      },
+      {
+        "_id": "69ef9f57f91ac02559f7e1f3"
+      },
+      {
+        "_id": "69ef9d59f91ac02559f7de2b"
+      },
+      {
+        "_id": "69ef9aa4f91ac02559f7d640"
+      },
+      {
+        "_id": "69ef99cbf91ac02559f7d3b5"
+      },
+      {
+        "_id": "69efb237f91ac02559f811e2"
+      },
+      {
+        "_id": "69efad9ef91ac02559f80533"
+      },
+      {
+        "_id": "69efa9d2f91ac02559f7f906"
+      },
+      {
+        "_id": "69efa860f91ac02559f7f5de"
+      },
+      {
+        "_id": "69efa7f6f91ac02559f7f4a7"
+      },
+      {
+        "_id": "69efa6a4f91ac02559f7f0a0"
+      },
+      {
+        "_id": "69efa590f91ac02559f7eed4"
+      },
+      {
+        "_id": "69efa187f91ac02559f7e4a1"
+      },
+      {
+        "_id": "69efa0ccf91ac02559f7e3f1"
+      },
+      {
+        "_id": "69efa013f91ac02559f7e30f"
+      },
+      {
+        "_id": "69ef9fb1f91ac02559f7e26e"
+      },
+      {
+        "_id": "69ef9f57f91ac02559f7e1f3"
+      },
+      {
+        "_id": "69ef9d59f91ac02559f7de2b"
+      },
+      {
+        "_id": "69ef9aa4f91ac02559f7d640"
+      },
+      {
+        "_id": "69ef99cbf91ac02559f7d3b5"
+      },
+      {
+        "_id": "69efb237f91ac02559f811e2"
+      },
+      {
+        "_id": "69efad9ef91ac02559f80533"
+      },
+      {
+        "_id": "69efa9d2f91ac02559f7f906"
+      },
+      {
+        "_id": "69efa860f91ac02559f7f5de"
+      },
+      {
+        "_id": "69efa7f6f91ac02559f7f4a7"
+      },
+      {
+        "_id": "69efa6a4f91ac02559f7f0a0"
+      },
+      {
+        "_id": "69efa590f91ac02559f7eed4"
+      },
+      {
+        "_id": "69efa187f91ac02559f7e4a1"
+      },
+      {
+        "_id": "69efa0ccf91ac02559f7e3f1"
+      },
+      {
+        "_id": "69efa013f91ac02559f7e30f"
+      },
+      {
+        "_id": "69ef9fb1f91ac02559f7e26e"
+      },
+      {
+        "_id": "69ef9f57f91ac02559f7e1f3"
+      },
+      {
+        "_id": "69ef9d59f91ac02559f7de2b"
+      },
+      {
+        "_id": "69ef9aa4f91ac02559f7d640"
+      },
+      {
+        "_id": "69ef99cbf91ac02559f7d3b5"
+      }
+    ]
   },
   "georgi_angelov": {
     "agent_name": "Georgi Angelov",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\georgi_angelov.npy",
-    "n_clips": 32,
-    "n_windows_total": 331,
-    "total_seconds": 338.9,
-    "used_calls": 5,
-    "mean_inside_sim": 0.639,
-    "max_outside_sim": 0.674,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "georgi_angelov.npy",
+    "voiceprints": [
+      {
+        "path": "georgi_angelov__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 165,
+        "snr_db": 17.4
+      }
+    ],
+    "n_voiceprints": 1,
+    "total_seconds": 479.3219999999999,
+    "used_calls": 6,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efaf83f91ac02559f80c19"
+      },
+      {
+        "_id": "69efae51f91ac02559f80769"
+      },
+      {
+        "_id": "69efaf83f91ac02559f80c19"
+      },
+      {
+        "_id": "69efae51f91ac02559f80769"
+      },
+      {
+        "_id": "69efaf83f91ac02559f80c19"
+      },
+      {
+        "_id": "69efae51f91ac02559f80769"
+      }
+    ]
   },
   "janusaan_jeyachandran": {
     "agent_name": "Janusaan Jeyachandran",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\janusaan_jeyachandran.npy",
-    "n_clips": 176,
-    "n_windows_total": 1159,
-    "total_seconds": 1166.6,
-    "used_calls": 5,
-    "mean_inside_sim": 0.619,
-    "max_outside_sim": 0.633,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "janusaan_jeyachandran.npy",
+    "voiceprints": [
+      {
+        "path": "janusaan_jeyachandran__low_0.npy",
+        "bucket": "low",
+        "n_clips": 813,
+        "snr_db": 11.7
+      },
+      {
+        "path": "janusaan_jeyachandran__low_1.npy",
+        "bucket": "low",
+        "n_clips": 813,
+        "snr_db": 11.7
+      },
+      {
+        "path": "janusaan_jeyachandran__low_2.npy",
+        "bucket": "low",
+        "n_clips": 813,
+        "snr_db": 11.7
+      }
+    ],
+    "n_voiceprints": 5,
+    "total_seconds": 2152.043999999999,
+    "used_calls": 9,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efad47f91ac02559f80437"
+      },
+      {
+        "_id": "69efa4bbf91ac02559f7ec3c"
+      },
+      {
+        "_id": "69ef9e2df91ac02559f7e08f"
+      },
+      {
+        "_id": "69efad47f91ac02559f80437"
+      },
+      {
+        "_id": "69efa4bbf91ac02559f7ec3c"
+      },
+      {
+        "_id": "69ef9e2df91ac02559f7e08f"
+      },
+      {
+        "_id": "69efad47f91ac02559f80437"
+      },
+      {
+        "_id": "69efa4bbf91ac02559f7ec3c"
+      },
+      {
+        "_id": "69ef9e2df91ac02559f7e08f"
+      }
+    ]
   },
   "aftaab_supervisor": {
     "agent_name": "Aftaab Supervisor",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aftaab_supervisor.npy",
-    "n_clips": 325,
-    "n_windows_total": 583,
-    "total_seconds": 590.3,
-    "used_calls": 5,
-    "mean_inside_sim": 0.718,
-    "max_outside_sim": 0.548,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "aftaab_supervisor.npy",
+    "voiceprints": [
+      {
+        "path": "aftaab_supervisor__low_0.npy",
+        "bucket": "low",
+        "n_clips": 441,
+        "snr_db": 11.3
+      },
+      {
+        "path": "aftaab_supervisor__low_1.npy",
+        "bucket": "low",
+        "n_clips": 441,
+        "snr_db": 11.3
+      },
+      {
+        "path": "aftaab_supervisor__low_2.npy",
+        "bucket": "low",
+        "n_clips": 441,
+        "snr_db": 11.3
+      }
+    ],
+    "n_voiceprints": 3,
+    "total_seconds": 1276.3199999999997,
+    "used_calls": 12,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efac50f91ac02559f8012b"
+      },
+      {
+        "_id": "69ef9f46f91ac02559f7e1cf"
+      },
+      {
+        "_id": "69ef9cacf91ac02559f7dc34"
+      },
+      {
+        "_id": "69ef9c15f91ac02559f7da4b"
+      },
+      {
+        "_id": "69efac50f91ac02559f8012b"
+      },
+      {
+        "_id": "69ef9f46f91ac02559f7e1cf"
+      },
+      {
+        "_id": "69ef9cacf91ac02559f7dc34"
+      },
+      {
+        "_id": "69ef9c15f91ac02559f7da4b"
+      },
+      {
+        "_id": "69efac50f91ac02559f8012b"
+      },
+      {
+        "_id": "69ef9f46f91ac02559f7e1cf"
+      },
+      {
+        "_id": "69ef9cacf91ac02559f7dc34"
+      },
+      {
+        "_id": "69ef9c15f91ac02559f7da4b"
+      }
+    ]
   },
   "mohamed_yasin_ali": {
     "agent_name": "Mohamed Yasin-ali",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohamed_yasin_ali.npy",
-    "n_clips": 118,
-    "n_windows_total": 146,
-    "total_seconds": 153.4,
-    "used_calls": 5,
-    "mean_inside_sim": 0.68,
-    "max_outside_sim": 0.534,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "mohamed_yasin_ali.npy",
+    "voiceprints": [
+      {
+        "path": "mohamed_yasin_ali__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 18,
+        "snr_db": 19.1
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 57.23100000000004,
+    "used_calls": 9,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efa53ff91ac02559f7ede6"
+      },
+      {
+        "_id": "69efa30af91ac02559f7e860"
+      },
+      {
+        "_id": "69ef9fe9f91ac02559f7e2d0"
+      },
+      {
+        "_id": "69efa53ff91ac02559f7ede6"
+      },
+      {
+        "_id": "69efa30af91ac02559f7e860"
+      },
+      {
+        "_id": "69ef9fe9f91ac02559f7e2d0"
+      },
+      {
+        "_id": "69efa53ff91ac02559f7ede6"
+      },
+      {
+        "_id": "69efa30af91ac02559f7e860"
+      },
+      {
+        "_id": "69ef9fe9f91ac02559f7e2d0"
+      }
+    ]
   },
   "rayyan_ali_khan": {
     "agent_name": "Rayyan Ali Khan",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rayyan_ali_khan.npy",
+    "voiceprint_path": "rayyan_ali_khan.npy",
     "n_clips": 537,
     "n_windows_total": 1251,
-    "total_seconds": 1255.9,
+    "total_seconds": 1262.7719999999995,
     "used_calls": 3,
     "mean_inside_sim": 0.679,
     "max_outside_sim": 0.537,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "rayyan_ali_khan__high_0.npy",
+        "bucket": "high",
+        "n_clips": 528,
+        "snr_db": 20.1
+      },
+      {
+        "path": "rayyan_ali_khan__high_1.npy",
+        "bucket": "high",
+        "n_clips": 528,
+        "snr_db": 20.1
+      },
+      {
+        "path": "rayyan_ali_khan__high_2.npy",
+        "bucket": "high",
+        "n_clips": 528,
+        "snr_db": 20.1
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efb80ef91ac02559f81c62"
+      },
+      {
+        "_id": "69efb80ef91ac02559f81c62"
+      },
+      {
+        "_id": "69efb80ef91ac02559f81c62"
+      }
+    ]
   },
   "adorena_ishtar_hossain": {
     "agent_name": "Adorena Ishtar Hossain",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\adorena_ishtar_hossain.npy",
+    "voiceprint_path": "adorena_ishtar_hossain.npy",
     "n_clips": 117,
     "n_windows_total": 237,
-    "total_seconds": 242.0,
+    "total_seconds": 242.00400000000013,
     "used_calls": 3,
     "mean_inside_sim": 0.619,
     "max_outside_sim": 0.515,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "adorena_ishtar_hossain__low_0.npy",
+        "bucket": "low",
+        "n_clips": 93,
+        "snr_db": 11.1
+      },
+      {
+        "path": "adorena_ishtar_hossain__low_1.npy",
+        "bucket": "low",
+        "n_clips": 93,
+        "snr_db": 11.1
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efa774f91ac02559f7f2c4"
+      },
+      {
+        "_id": "69efa774f91ac02559f7f2c4"
+      },
+      {
+        "_id": "69efa774f91ac02559f7f2c4"
+      }
+    ]
   },
   "waris_sales_controllers": {
     "agent_name": "Waris Sales Controllers",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\waris_sales_controllers.npy",
+    "voiceprint_path": "waris_sales_controllers.npy",
     "n_clips": 93,
     "n_windows_total": 252,
-    "total_seconds": 255.3,
+    "total_seconds": 255.32099999999988,
     "used_calls": 3,
     "mean_inside_sim": 0.648,
     "max_outside_sim": 0.577,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "waris_sales_controllers__high_0.npy",
+        "bucket": "high",
+        "n_clips": 117,
+        "snr_db": 26.7
+      },
+      {
+        "path": "waris_sales_controllers__high_1.npy",
+        "bucket": "high",
+        "n_clips": 117,
+        "snr_db": 26.7
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efa645f91ac02559f7f004"
+      },
+      {
+        "_id": "69efa645f91ac02559f7f004"
+      },
+      {
+        "_id": "69efa645f91ac02559f7f004"
+      }
+    ]
   },
   "jenifer_bajrami": {
     "agent_name": "Jenifer Bajrami",
@@ -508,24 +1689,86 @@
   },
   "kacper_barnet": {
     "agent_name": "Kacper Barnet",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kacper_barnet.npy",
+    "voiceprint_path": "kacper_barnet.npy",
     "n_clips": 828,
     "n_windows_total": 2313,
-    "total_seconds": 2317.4,
+    "total_seconds": 2319.9629999999975,
     "used_calls": 3,
     "mean_inside_sim": 0.665,
     "max_outside_sim": 0.57,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "kacper_barnet__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 912,
+        "snr_db": 13.4
+      },
+      {
+        "path": "kacper_barnet__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 912,
+        "snr_db": 13.4
+      },
+      {
+        "path": "kacper_barnet__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 912,
+        "snr_db": 13.4
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69ef9f5ef91ac02559f7e204"
+      },
+      {
+        "_id": "69ef9f5ef91ac02559f7e204"
+      },
+      {
+        "_id": "69ef9f5ef91ac02559f7e204"
+      }
+    ]
   },
   "dinosh_sinnathamby": {
     "agent_name": "Dinosh Sinnathamby",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\dinosh_sinnathamby.npy",
+    "voiceprint_path": "dinosh_sinnathamby.npy",
     "n_clips": 561,
     "n_windows_total": 603,
-    "total_seconds": 608.0,
+    "total_seconds": 261.74100000000004,
     "used_calls": 3,
     "mean_inside_sim": 0.713,
     "max_outside_sim": 0.523,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "dinosh_sinnathamby__low_0.npy",
+        "bucket": "low",
+        "n_clips": 108,
+        "snr_db": 11.4
+      },
+      {
+        "path": "dinosh_sinnathamby__low_1.npy",
+        "bucket": "low",
+        "n_clips": 108,
+        "snr_db": 11.4
+      },
+      {
+        "path": "dinosh_sinnathamby__low_2.npy",
+        "bucket": "low",
+        "n_clips": 108,
+        "snr_db": 11.4
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69ef99e5f91ac02559f7d422"
+      },
+      {
+        "_id": "69ef99e5f91ac02559f7d422"
+      },
+      {
+        "_id": "69ef99e5f91ac02559f7d422"
+      }
+    ]
   }
 }
