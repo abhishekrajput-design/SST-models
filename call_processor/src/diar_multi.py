@@ -708,6 +708,13 @@ def diarize_multi(
         else 0.0
     )
 
+    # Fallback: if agent_avg_sim is still 0, compute from segment similarities
+    if agent_avg_sim == 0.0 and agent_slug:
+        agent_sims = [s.get("_best_sim", 0) for s in segments
+                      if s.get("_best_match") == agent_slug]
+        if agent_sims:
+            agent_avg_sim = float(np.mean(agent_sims))
+
     other_agent_count: Dict[str, int] = {}
     for i, seg in enumerate(segments):
         matched_slug = seg_best_agent[i]
@@ -1073,6 +1080,11 @@ def diarize_multi(
         per_speaker[lbl]["turns"] += 1
         per_speaker[lbl]["seconds"] += float(seg["end"]) - float(seg["start"])
 
+    # Add warning if confidence is suspiciously low
+    warning = None
+    if agent_slug and agent_avg_sim < 0.50:
+        warning = f"Low confidence identification (avg_similarity={agent_avg_sim:.2f} < 0.50)"
+
     return {
         "segments": segments,
         "agent_slug": agent_slug,
@@ -1088,4 +1100,5 @@ def diarize_multi(
         "speaker_mode": speaker_mode,
         "agent_threshold_used": round(float(agent_threshold), 3) if agent_slug else round(float(threshold), 3),
         "cluster_report": cluster_report,
+        "speaker_id_warning": warning,
     }
