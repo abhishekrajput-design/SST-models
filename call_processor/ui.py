@@ -623,20 +623,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         reason: str,
     ) -> list:
         nonlocal transcriber, whisper_model
-        if current_segments or whisper_model in ("whisper-large-v3-turbo", "distil-whisper-large-v3.5"):
-            return current_segments
-        fallback_model = "whisper-large-v3-turbo"
-        _set_status(3, "Transcription", f"{reason}; retrying with {fallback_model}...")
-        print(f"[UI] {reason}; retrying with {fallback_model}", flush=True)
-        if transcriber is not None:
-            try:
-                transcriber.unload()
-            except Exception:
-                pass
-        whisper_model = fallback_model
-        transcriber = get_transcriber(whisper_model, device="cuda")
-        transcriber.load()
-        return transcriber.transcribe(wav_path, language="en")
+        # No fallback - use Parakeet only
+        return current_segments or []
 
     t0 = time.time()
     diarization_applied = False
@@ -1542,7 +1530,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 return
             query    = parse_qs(parsed.query)
             filename = query.get("filename", ["upload.mp3"])[0]
-            model    = query.get("model",    ["whisper-large-v3-turbo"])[0]
+            model    = query.get("model",    ["parakeet-tdt-0.6b-v3"])[0]
             os.makedirs("data/raw_calls", exist_ok=True)
             upload_path = os.path.join("data", "raw_calls", filename)
             n = int(self.headers.get("Content-Length", 0))
