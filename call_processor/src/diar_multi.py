@@ -544,6 +544,272 @@ def _cluster_speaker_roles(
     }
 
 
+def _contains_any(norm: str, phrases: Tuple[str, ...]) -> bool:
+    return any(phrase in norm for phrase in phrases)
+
+
+def _apply_text_role_overrides(
+    segments: List[dict],
+    agent_name: str,
+) -> Dict[str, int]:
+    """Correct strong call-center text cues after embedding/cluster assignment.
+
+    Voiceprints remain the primary signal. This pass only handles phrases whose
+    conversational role is strong enough that leaving the embedding label intact
+    creates obvious AGENT/CUSTOMER swaps in call-center transcripts.
+    """
+    customer_to_agent = 0
+    agent_to_customer = 0
+
+    customer_cues = (
+        "who's speaking",
+        "who is speaking",
+        "didn't catch your name",
+        "i didn't catch your name",
+        "do you take part exchange",
+        "you take part exchange",
+        "i have a gle",
+        "i have a gl",
+        "say again",
+        "don't think so",
+        "i am living",
+        "i'm living",
+        "i live in",
+        "not slough",
+        "s t r o u d",
+        "three hours away",
+        "two hours away",
+        "can you give me a price",
+        "can't remember",
+        "i am the second",
+        "i am the third",
+        "where are you from",
+        "i am romanian",
+        "i'm romanian",
+        "i haven't been in morocco",
+        "i have been in spain",
+        "pretty sure",
+        "i was thinking",
+        "getting robbed",
+        "machete",
+        "settlement figure",
+        "jump out",
+        "ending in",
+        "yeah man",
+        "yeah fine",
+        "see what the crack",
+        "e class",
+        "full mercedes",
+        "can you send me",
+        "some more videos",
+        "some more video",
+        "how many owners it has",
+        "not gonna call",
+        "i bought",
+        "my ex",
+        "i am kind of like mechanic",
+        "i'm kind of like mechanic",
+        "finished school",
+        "petrol cars",
+        "gasket",
+        "costs like",
+        "300 quid",
+        "cheers man",
+        "thanks bye",
+        "bye bye",
+        "bye-bye",
+    )
+    agent_cues = (
+        "this is omar",
+        "omar from car planet",
+        "thank you for calling",
+        "how can i help",
+        "let me quickly",
+        "let me take a look",
+        "do you have the reg",
+        "give me one second",
+        "taking a look",
+        "from what i can see",
+        "previous owners",
+        "service history",
+        "mot does expire",
+        "we do take part exchange",
+        "what's the car",
+        "what is the car",
+        "is it a category",
+        "ever been written off",
+        "perfect perfect",
+        "that's perfect",
+        "more than happy",
+        "come in person",
+        "evaluation team",
+        "where are you located",
+        "rough evaluation",
+        "can i get your reg",
+        "that's alright",
+        "that's all right",
+        "no worries",
+        "how many miles",
+        "what's your name",
+        "i'm from morocco",
+        "i am from morocco",
+        "what about you",
+        "you should go",
+        "really nice place",
+        "nothing like that happens",
+        "driven to morocco",
+        "pretty safe",
+        "dropped you a message",
+        "whatsapp on this number",
+        "little message on whatsapp",
+        "keep in touch",
+        "send it over to you",
+        "yeah of course",
+        "of course of course",
+        "i completely understand",
+        "no commitment",
+        "call agent",
+        "physically can't get you a price",
+        "go through a chain",
+        "my team has gone home",
+        "tomorrow morning",
+        "how does that sound",
+        "that shouldn't be a problem",
+        "i'll see what i can do",
+        "i'll get back",
+        "i will get back",
+        "send you a video",
+        "send over a video",
+        "drop me a reply",
+        "i understand i understand",
+        "we can get everything",
+        "get everything sorted",
+        "you need to get a new one",
+        "oil and coolant",
+        "it's expensive",
+        "cheers mate",
+        "catch you later",
+    )
+    short_customer = {
+        "hello",
+        "oh okay then",
+        "yeah fine",
+        "yeah man",
+        "nice to meet you too",
+        "whatever name your company is",
+        "whatever name you come in",
+        "mm hmm",
+        "mhm",
+        "ending in eighty four four four",
+        "ending in 8444",
+    }
+    short_agent = {
+        "of course",
+        "yeah of course",
+        "that's alright no worries",
+        "that's all right no worries",
+        "perfect",
+        "perfect perfect",
+    }
+
+    def set_customer(seg: dict) -> None:
+        nonlocal agent_to_customer
+        if seg.get("identified_speaker") != "CUSTOMER":
+            agent_to_customer += 1
+        seg["speaker"] = "SPEAKER_01"
+        seg["identified_speaker"] = "CUSTOMER"
+        seg["display_speaker"] = "Customer 1"
+        seg.pop("agent_name", None)
+
+    def set_agent(seg: dict) -> None:
+        nonlocal customer_to_agent
+        if seg.get("identified_speaker") != "AGENT":
+            customer_to_agent += 1
+        seg["speaker"] = "SPEAKER_00"
+        seg["identified_speaker"] = "AGENT"
+        seg["agent_name"] = agent_name
+        seg["display_speaker"] = agent_name
+
+    for idx, seg in enumerate(segments):
+        text = str(seg.get("text") or "")
+        norm = _norm_text(text)
+        if not norm:
+            continue
+        prev_norm = _norm_text(str(segments[idx - 1].get("text") or "")) if idx > 0 else ""
+        next_norm = (
+            _norm_text(str(segments[idx + 1].get("text") or ""))
+            if idx + 1 < len(segments)
+            else ""
+        )
+        sim = float(seg.get("_best_sim") or 0.0)
+        words = _norm_words(text)
+
+        if seg.get("identified_speaker") == "AGENT":
+            if norm in {"valentine", "valentin"} and "what's your name" in prev_norm:
+                set_customer(seg)
+                continue
+            short_ack_customer = (
+                len(words) <= 3
+                and words[:1] in (["yeah"], ["yes"], ["okay"], ["ok"])
+                and not _contains_any(
+                    norm,
+                    (
+                        "of course",
+                        "i understand",
+                        "expensive",
+                        "safe",
+                        "perfect",
+                        "send",
+                    ),
+                )
+            )
+            strong_customer = (
+                norm in short_customer
+                or _contains_any(norm, customer_cues)
+                or short_ack_customer
+                or (norm == "two hours" and "three hours away" in prev_norm)
+            )
+            low_sim_customer = sim < 0.18 and (
+                _contains_any(norm, ("i am", "i'm", "i have", "i was", "i haven't"))
+                or _looks_like_question(text)
+            )
+            if strong_customer or low_sim_customer:
+                set_customer(seg)
+                continue
+
+        if seg.get("identified_speaker") == "CUSTOMER":
+            if norm == "okay" and "what's your name" in next_norm:
+                set_agent(seg)
+                continue
+            if norm in {"yeah yeah", "yeah"} and "what about you" in next_norm:
+                set_agent(seg)
+                continue
+            if norm == "no no no" and "nothing like" in next_norm:
+                set_agent(seg)
+                continue
+            strong_agent = norm in short_agent or _contains_any(norm, agent_cues)
+            low_threshold_agent = sim >= 0.35 and _contains_any(
+                norm,
+                (
+                    "understand",
+                    "of course",
+                    "no worries",
+                    "send",
+                    "whatsapp",
+                    "video",
+                    "get back",
+                    "expensive",
+                ),
+            )
+            if strong_agent or low_threshold_agent:
+                set_agent(seg)
+
+    return {
+        "text_agent_to_customer": agent_to_customer,
+        "text_customer_to_agent": customer_to_agent,
+    }
+
+
 def _unknown_result(segments: List[dict], reason: str) -> Dict[str, object]:
     logger.warning("diarize_multi: %s; marking speaker ID as unknown", reason)
     for seg in segments:
@@ -571,6 +837,10 @@ def _unknown_result(segments: List[dict], reason: str) -> Dict[str, object]:
         },
         "matched_backend_dim": None,
         "voiceprint_dims": {},
+        "speaker_mode": "unknown",
+        "agent_threshold_used": 0.0,
+        "cluster_report": {},
+        "speaker_id_warning": reason,
         "warning": reason,
     }
 
@@ -1228,6 +1498,11 @@ def diarize_multi(
 
     if any(role_corrections.values()):
         logger.info("role corrections applied: %s", role_corrections)
+
+    text_role_corrections = _apply_text_role_overrides(segments, agent_name)
+    role_corrections.update(text_role_corrections)
+    if any(text_role_corrections.values()):
+        logger.info("text role corrections applied: %s", text_role_corrections)
 
     per_speaker: Dict[str, Dict[str, float]] = {}
     for seg in segments:

@@ -177,8 +177,9 @@ class EmbeddingModel:
             run_opts={"device": self._device},
         )
         try:
-            from speechbrain.utils.fetching import LocalStrategy
+            from speechbrain.utils.fetching import FetchConfig, LocalStrategy
             kwargs["local_strategy"] = LocalStrategy.COPY
+            kwargs["fetch_config"] = FetchConfig(allow_network=False)
         except ImportError:
             pass
         self._ecapa = SpeakerRecognition.from_hparams(**kwargs)

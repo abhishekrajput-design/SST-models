@@ -59,11 +59,18 @@ def _load_ecapa(force_cpu: bool = False):
     import torch
     from speechbrain.inference.speaker import SpeakerRecognition
     device = "cpu" if force_cpu else ("cuda" if torch.cuda.is_available() else "cpu")
-    model = SpeakerRecognition.from_hparams(
+    kwargs = dict(
         source="speechbrain/spkrec-ecapa-voxceleb",
         savedir=ECAPA_SAVE_DIR,
         run_opts={"device": device},
     )
+    try:
+        from speechbrain.utils.fetching import FetchConfig, LocalStrategy
+        kwargs["local_strategy"] = LocalStrategy.COPY
+        kwargs["fetch_config"] = FetchConfig(allow_network=False)
+    except ImportError:
+        pass
+    model = SpeakerRecognition.from_hparams(**kwargs)
     return model, device
 
 

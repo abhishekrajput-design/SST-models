@@ -812,7 +812,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "identified_agent":         _identified_agent,
         "speaker_id_backend_dim":   diar_result.get("matched_backend_dim"),
         "voiceprint_dims":          diar_result.get("voiceprint_dims", {}),
-        "speaker_id_warning":       diar_result.get("warning"),
+        "speaker_id_warning":       (
+            diar_result.get("speaker_id_warning") or diar_result.get("warning")
+        ),
         "speaker_id_mode":          diar_result.get("speaker_mode"),
         "speaker_id_cluster_report": diar_result.get("cluster_report", {}),
         "note": (

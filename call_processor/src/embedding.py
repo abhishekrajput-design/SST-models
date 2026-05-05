@@ -48,8 +48,9 @@ class EmbeddingExtractor:
         )
         # LocalStrategy.COPY available only in newer SpeechBrain versions
         try:
-            from speechbrain.utils.fetching import LocalStrategy
+            from speechbrain.utils.fetching import FetchConfig, LocalStrategy
             kwargs["local_strategy"] = LocalStrategy.COPY
+            kwargs["fetch_config"] = FetchConfig(allow_network=False)
         except ImportError:
             pass
 
