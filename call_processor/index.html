@@ -491,6 +491,18 @@
         /* Text */
         .bubble-text { font-size: .88rem; line-height: 1.55; }
 
+        /* Word-level highlighting */
+        .transcript-word {
+            transition: background-color 0.1s, font-weight 0.1s;
+            position: relative;
+        }
+        .transcript-word.highlighted {
+            background-color: rgba(251,191,36,0.35);
+            font-weight: 600;
+            border-radius: 2px;
+            padding: 0 2px;
+        }
+
         /* Progress fill */
         .seg-progress {
             position: absolute;
@@ -657,6 +669,12 @@
             Upload Agent Voice
         </button>
         <div class="enroll-progress" id="enrollProgress"></div>
+    </div>
+
+    <!-- Test Results Panel -->
+    <div style="padding:12px 16px; border-top:1px solid var(--border); flex-shrink:0; max-height:320px; overflow-y:auto;">
+        <div style="font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:8px;">Test Results</div>
+        <div id="testResultsContainer" style="font-size:0.75rem; color:var(--text);">Loading...</div>
     </div>
 </aside>
 
@@ -876,6 +894,22 @@ function renderBubble(seg, idx) {
     const conf = Math.round(Math.min(1, Math.max(0, (sim - 0.30) / 0.55)) * 100);
     const confColor = sim >= 0.45 ? 'rgba(34,197,94,0.55)' : sim >= 0.30 ? 'rgba(245,158,11,0.55)' : 'rgba(148,163,184,0.30)';
     const confTitle = `voiceprint cosine: ${sim.toFixed(3)}`;
+
+    // Break text into words with calculated timings
+    const words = seg.text.trim().split(/(\s+)/);
+    const segDur = seg.end - seg.start;
+    const wordCount = words.filter(w => w.trim()).length;
+    const timePerWord = wordCount > 0 ? segDur / wordCount : 0;
+
+    let wordTime = seg.start;
+    const wordSpans = words.map((word, wIdx) => {
+        if (!word.trim()) return word;
+        const wStart = wordTime;
+        const wEnd = wordTime + timePerWord;
+        wordTime = wEnd;
+        return `<span class="transcript-word" data-start="${wStart.toFixed(3)}" data-end="${wEnd.toFixed(3)}">${word}</span>`;
+    }).join('');
+
     return `<div class="bubble ${css}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
         <div class="seg-progress"></div>
         <div class="bubble-head">
@@ -886,7 +920,7 @@ function renderBubble(seg, idx) {
             </span>
             <span class="bubble-time" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
         </div>
-        <div class="bubble-text">${seg.text}</div>
+        <div class="bubble-text">${wordSpans}</div>
         <div class="conf-bar" title="${confTitle}" style="height:2px;margin-top:6px;background:rgba(148,163,184,0.10);border-radius:2px;overflow:hidden;">
             <div style="width:${conf}%;height:100%;background:${confColor};"></div>
         </div>
@@ -956,7 +990,7 @@ async function loadCall(callId, el) {
     document.querySelectorAll('.call-card').forEach(n => n.classList.remove('active'));
     if (el) el.classList.add('active');
 
-    const res  = await fetch(`/api/call/${encodeURIComponent(callId)}`);
+    const res  = await fetch(`/data/processed/${encodeURIComponent(callId)}/result.json`);
     const data = await res.json();
 
     currentSegments = data.segments || [];
@@ -971,8 +1005,8 @@ async function loadCall(callId, el) {
         if (p.includes('call_processor/')) p = p.split('call_processor/')[1];
         return '/' + p.split('/').map(encodeURIComponent).join('/');
     }
-    const enhUrl  = toUrl(data.audio_file);
-    const origUrl = enhUrl.replace(/\/enhanced_([^/]+)$/, (_,f) => '/'+f);
+    const enhUrl  = toUrl(data.enhanced_file || data.audio_file);
+    const origUrl = toUrl(data.audio_file) || enhUrl.replace(/\/enhanced_([^/]+)$/, (_,f) => '/'+f);
     DOM.audioOrig.src   = origUrl;   DOM.audioOrig.load();
     DOM.audioPlayer.src = enhUrl;    DOM.audioPlayer.load();
 
@@ -1119,6 +1153,8 @@ DOM.audioPlayer.addEventListener('pause', () => {
     DOM.chat.classList.remove('playing');
     hideNow();
     document.getElementById('jumpNowBtn').style.display = 'none';
+    // Clear word highlighting
+    document.querySelectorAll('.transcript-word.highlighted').forEach(w => w.classList.remove('highlighted'));
 });
 DOM.audioPlayer.addEventListener('ended', () => {
     _isPlaying = false;
@@ -1126,29 +1162,57 @@ DOM.audioPlayer.addEventListener('ended', () => {
     hideNow();
     document.getElementById('jumpNowBtn').style.display = 'none';
     if (_activeSegIdx >= 0) {
-        document.getElementById(`seg-${_activeSegIdx}`)?.classList.remove('active');
+        const el = document.getElementById(`seg-${_activeSegIdx}`);
+        el?.classList.remove('active');
+        // Clear word highlighting
+        el?.querySelectorAll('.transcript-word.highlighted').forEach(w => w.classList.remove('highlighted'));
         _activeSegIdx = -1;
     }
+    // Clear all highlighting
+    document.querySelectorAll('.transcript-word.highlighted').forEach(w => w.classList.remove('highlighted'));
 });
 
 DOM.audioPlayer.addEventListener('timeupdate', () => {
     const t      = DOM.audioPlayer.currentTime;
     const newIdx = findSeg(t);
 
-    // Update progress bar (same segment)
+    // Update progress bar and word highlighting (same segment)
     if (newIdx === _activeSegIdx && newIdx >= 0) {
         const seg = currentSegments[newIdx];
         const dur = seg.end - seg.start;
         const pct = dur > 0 ? Math.min(100, ((t - seg.start) / dur) * 100) : 0;
-        document.getElementById(`seg-${newIdx}`)?.querySelector('.seg-progress')
-            && (document.getElementById(`seg-${newIdx}`).querySelector('.seg-progress').style.width = pct + '%');
+        const pb = document.getElementById(`seg-${newIdx}`)?.querySelector('.seg-progress');
+        if (pb) pb.style.width = pct + '%';
+
+        // Highlight words based on current time
+        const segEl = document.getElementById(`seg-${newIdx}`);
+        if (segEl) {
+            const words = segEl.querySelectorAll('.transcript-word');
+            words.forEach(word => {
+                const wStart = parseFloat(word.getAttribute('data-start'));
+                const wEnd = parseFloat(word.getAttribute('data-end'));
+                if (t >= wStart && t < wEnd) {
+                    word.classList.add('highlighted');
+                } else if (t >= wEnd) {
+                    word.classList.add('highlighted');
+                } else {
+                    word.classList.remove('highlighted');
+                }
+            });
+        }
         return;
     }
 
     // Deactivate old
     if (_activeSegIdx >= 0) {
         const old = document.getElementById(`seg-${_activeSegIdx}`);
-        if (old) { old.classList.remove('active'); const pb=old.querySelector('.seg-progress'); if(pb) pb.style.width='0%'; }
+        if (old) {
+            old.classList.remove('active');
+            const pb=old.querySelector('.seg-progress');
+            if(pb) pb.style.width='0%';
+            // Clear word highlighting
+            old.querySelectorAll('.transcript-word').forEach(w => w.classList.remove('highlighted'));
+        }
     }
     _activeSegIdx = newIdx;
 
@@ -1158,6 +1222,20 @@ DOM.audioPlayer.addEventListener('timeupdate', () => {
         if (el) {
             el.classList.add('active');
             if (_isPlaying && _autoScroll) el.scrollIntoView({ behavior:'smooth', block:'center' });
+
+            // Highlight words in the newly activated segment
+            const words = el.querySelectorAll('.transcript-word');
+            words.forEach(word => {
+                const wStart = parseFloat(word.getAttribute('data-start'));
+                const wEnd = parseFloat(word.getAttribute('data-end'));
+                if (t >= wStart && t < wEnd) {
+                    word.classList.add('highlighted');
+                } else if (t >= wEnd) {
+                    word.classList.add('highlighted');
+                } else {
+                    word.classList.remove('highlighted');
+                }
+            });
         }
         if (_isPlaying) showNow(seg);
     } else {
@@ -1418,6 +1496,83 @@ document.getElementById('cleanVoiceUpload').addEventListener('change', async fun
     this.value='';
 });
 
+// ── Load test results ──────────────────────────────────────────────────────────
+async function loadTestResults() {
+    try {
+        let data = null;
+        let testName = '';
+
+        // Try loading the new top-5 agent test results first
+        try {
+            const res = await fetch('call_processor/data/test_results_top5_parakeet.json');
+            if (res.ok) {
+                data = await res.json();
+                testName = 'Top 5 Agents (Parakeet)';
+            }
+        } catch(e) {}
+
+        // Fallback to original test results
+        if (!data) {
+            const res = await fetch('test_results_parakeet_final.json');
+            data = await res.json();
+            testName = 'Final Test';
+        }
+
+        const container = document.getElementById('testResultsContainer');
+
+        if (!data || (!data.results && !Array.isArray(data))) {
+            container.innerHTML = '<span style="color:var(--muted);">No test data</span>';
+            return;
+        }
+
+        // Handle both old array format and new object format
+        const results = Array.isArray(data) ? data : data.results || [];
+        if (!results.length) {
+            container.innerHTML = '<span style="color:var(--muted);">No test data</span>';
+            return;
+        }
+
+        const correct = results.filter(r => r.match === 'OK').length;
+        const total = results.length;
+        const accuracy = Math.round(100 * correct / total);
+
+        let html = `<div style="padding-bottom:8px;">
+            <div style="font-size:0.7rem; color:var(--muted); margin-bottom:2px;">${testName}</div>
+            <div style="font-size:0.85rem; color:#22c55e; font-weight:700;">
+                ${accuracy}% • ${correct}/${total} correct
+            </div>
+        </div>`;
+
+        html += '<div style="font-size:0.7rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:6px;">';
+
+        // Display by agent if we have that structure
+        if (data.by_agent) {
+            for (const [agent, summary] of Object.entries(data.by_agent)) {
+                const acc = Math.round(summary.accuracy_pct);
+                const color = acc === 100 ? '#22c55e' : acc >= 50 ? '#facc15' : '#ef4444';
+                html += `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <span style="max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${agent}</span>
+                    <span style="color:${color}; font-weight:600;">${acc}%</span>
+                </div>`;
+            }
+        } else {
+            // Fallback: show results in a simple list
+            results.slice(0, 5).forEach(r => {
+                const color = r.match === 'OK' ? '#22c55e' : '#ef4444';
+                html += `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <span style="max-width:150px; overflow:hidden; text-overflow:ellipsis;">${r.agent}</span>
+                    <span style="color:${color}; font-weight:600;">${r.match === 'OK' ? 'OK' : 'WRONG'}</span>
+                </div>`;
+            });
+        }
+        html += '</div>';
+        container.innerHTML = html;
+    } catch(e) {
+        console.error('Test results error:', e);
+        document.getElementById('testResultsContainer').innerHTML = '<span style="color:#ef4444;">Unable to load</span>';
+    }
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 // Reset any stuck UI state from a previous session.
 (function _resetUiState() {
@@ -1435,6 +1590,7 @@ document.getElementById('cleanVoiceUpload').addEventListener('change', async fun
 })();
 loadCalls();
 checkEnrollment();
+loadTestResults();
 </script>
 </body>
 </html>

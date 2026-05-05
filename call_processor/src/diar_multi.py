@@ -25,10 +25,11 @@ logger = logging.getLogger(__name__)
 
 TARGET_SR = 16000
 MIN_SEG_S_FOR_EMB = 0.3
-PER_SEG_THRESHOLD = 0.30           # default / floor
-PER_AGENT_MARGIN  = 0.05            # added on top of max_outside_sim per-agent
-PER_AGENT_THRESH_CAP = 0.42         # tightened: 0.55 was too strict, dropped many true-agent segs
+PER_SEG_THRESHOLD = 0.25           # lowered from 0.30 for better initial detection
+PER_AGENT_MARGIN  = 0.04            # lowered from 0.05 to be less strict
+PER_AGENT_THRESH_CAP = 0.40         # lowered from 0.42 to tighten fuzzy enrollments
 AGENT_MIN_MATCHED = 3
+INITIAL_SEGMENT_BOOST = True        # special handling for first 3 segments
 MAX_CUSTOMER_CLUSTERS = 3
 MIN_CONF_DUR = 1.0
 MERGE_TO_AGENT_SIM = 0.28
@@ -38,6 +39,21 @@ FAREWELL_AGENT_MIN_SIM = 0.18
 CLUSTER_FIRST_MIN_DUR = 60.0           # was 180 — short phone calls benefit too
 CLUSTER_FIRST_MIN_SEGMENTS = 15        # was 30
 CLUSTER_FIRST_AGENT_RATIO = 0.55       # was 0.68 — allow more even agent/customer splits
+
+# Filler / back-channel handling
+FILLER_MAX_DUR         = 0.80   # segments ≤ this duration with filler-only text are down-weighted
+FILLER_SIM_WEIGHT      = 0.15   # fractional weight for filler segments in agent scoring
+
+# Progressive confidence: short calls need more evidence before committing
+PROG_CONF_MIN_SPEECH_S = 8.0    # seconds of non-filler speech needed to use AGENT_MIN_MATCHED=3
+PROG_CONF_MIN_MATCHED  = 5      # min matched segments on very short calls (< 8s speech)
+
+# SNR-adaptive threshold
+SNR_LOW_DB             = 14.0   # below this, relax threshold (raised from 12.0)
+SNR_LOW_FLOOR          = 0.18   # effective threshold on low-SNR calls (lowered from 0.22)
+
+# Neighbor-pool for short embeddings
+NEIGHBOR_POOL_RADIUS   = 2      # ±2 segments borrowed for neighbor-pool on short clips
 
 _DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 _AGENTS_INDEX = os.path.join(_DATA_DIR, "agent_voiceprints", "agents.json")
@@ -112,6 +128,27 @@ def _agent_phrase(text: str) -> bool:
 def _farewell(text: str) -> bool:
     norm = _norm_text(text).replace("bye bye", "bye-bye")
     return norm in {"bye", "bye-bye", "goodbye"}
+
+
+_FILLER_WORDS = frozenset({
+    "yeah","yep","yup","yes","no","nope",
+    "ok","okay","kay","k",
+    "uh","um","hmm","hm","mhm","mm","mmm","uhuh","uh-huh","mhmm",
+    "sure","right","alright",
+    "so","and","but","well","now","oh","ah",
+    "of course","i see","i know","got it","got ya",
+    "no problem","no worries","thank you","thanks",
+    "sounds good","all good",
+})
+
+
+def _is_filler_only(text: str, dur: float) -> bool:
+    """True if segment is ≤ FILLER_MAX_DUR and text is a filler word/phrase."""
+    if dur >= FILLER_MAX_DUR:
+        return False
+    norm = _norm_text(text)
+    return bool(norm) and (norm in _FILLER_WORDS or
+           (len(_norm_words(text)) == 1 and _norm_words(text)[0] in _FILLER_WORDS))
 
 
 def _load_voiceprints(path: Optional[str] = None) -> Dict[str, Tuple[str, np.ndarray]]:
@@ -231,6 +268,54 @@ def _speech_ratio(chunk: np.ndarray, sr: int) -> float:
     floor = float(np.median(rms)) * 1.5
     floor = max(floor, 0.005)
     return float((rms > floor).mean())
+
+
+def _estimate_snr(audio: np.ndarray, sr: int) -> float:
+    """Estimate call-level SNR in dB using 85th vs 15th percentile frame energy.
+    Returns 20.0 (clean) if estimation fails. O(N) but touches <10% of frames."""
+    win = int(sr * 0.025)
+    if audio.size < win * 4:
+        return 20.0
+    step = max(1, (audio.size // win) // 500)   # at most ~500 frames
+    idxs = range(0, (audio.size // win) * win, step * win)
+    rms_vals = [float(np.sqrt(np.mean(audio[s:s+win]**2) + 1e-12)) for s in idxs
+                if s + win <= audio.size]
+    if len(rms_vals) < 4:
+        return 20.0
+    voiced = np.array([r for r in rms_vals if r > 1e-5], dtype=np.float32)
+    if len(voiced) < 4:
+        return 20.0
+    ratio = float(np.percentile(voiced, 85)) / float(np.percentile(voiced, 15))
+    return float(20.0 * np.log10(max(ratio, 1.0)))
+
+
+def _pool_embedding_for_short_seg(
+    seg_idx: int, segments, audio: np.ndarray, sr: int, model
+) -> Optional[np.ndarray]:
+    """Pool audio from ±NEIGHBOR_POOL_RADIUS segments to reach 1.5s for embedding.
+    Returns None if <0.5s pooled. Does NOT require neighbors to share a label —
+    used before labels are assigned (first pass only)."""
+    target = int(1.5 * sr)
+    seg = segments[seg_idx]
+    s0 = int(float(seg["start"]) * sr)
+    e0 = min(int(float(seg["end"]) * sr), len(audio))
+    chunks = [audio[s0:e0]]
+    total = e0 - s0
+    left, right = seg_idx - 1, seg_idx + 1
+    for _ in range(NEIGHBOR_POOL_RADIUS * 2):
+        if total >= target:
+            break
+        if left >= 0:
+            nb = segments[left]
+            ns, ne = int(float(nb["start"])*sr), min(int(float(nb["end"])*sr), len(audio))
+            chunks.insert(0, audio[ns:ne]);  total += ne - ns;  left -= 1
+        if total < target and right < len(segments):
+            nb = segments[right]
+            ns, ne = int(float(nb["start"])*sr), min(int(float(nb["end"])*sr), len(audio))
+            chunks.append(audio[ns:ne]);  total += ne - ns;  right += 1
+    if total < int(sr * 0.5):
+        return None
+    return model.embed_chunk(np.concatenate(chunks).astype(np.float32), sr)
 
 
 def _seg_embeddings(
@@ -529,23 +614,43 @@ def _segment_embeddings_for_dim(
                 )
                 embs = [None] * len(segments)
             else:
+                call_snr = _estimate_snr(audio, sr)      # once per call, O(N/step)
+                is_low_snr = call_snr < SNR_LOW_DB
                 SHORT_THRESH = int(sr * 0.8)
                 PAD_EACH = int(sr * 0.2)
-                for seg in segments:
+
+                for seg_idx, seg in enumerate(segments):
                     s = int(float(seg["start"]) * sr)
                     e = min(int(float(seg["end"]) * sr), len(audio))
+                    seg_dur = float(seg["end"]) - float(seg["start"])
+
+                    seg["_is_filler"] = _is_filler_only(seg.get("text", ""), seg_dur)
+                    seg["_snr_low"]   = is_low_snr
+
                     if e - s < int(sr * MIN_SEG_S_FOR_EMB):
-                        embs.append(None)
-                        continue
+                        embs.append(None); continue
+
+                    # Initial segments: try neighbor pool for better context (improves agent/customer distinction)
+                    # This helps when customer speaks first or when first segments are unclear
+                    if seg_idx < 3:
+                        pooled = _pool_embedding_for_short_seg(seg_idx, segments, audio, sr, model)
+                        if pooled is not None:
+                            embs.append(pooled); continue
+
+                    # SHORT SEGMENT: try neighbor pool before symmetric pad
                     if e - s < SHORT_THRESH:
-                        s2 = max(0, s - PAD_EACH)
-                        e2 = min(len(audio), e + PAD_EACH)
-                        chunk = audio[s2:e2]
+                        pooled = _pool_embedding_for_short_seg(seg_idx, segments, audio, sr, model)
+                        if pooled is not None:
+                            embs.append(pooled); continue
+                        # Fallback: symmetric pad (existing behavior)
+                        chunk = audio[max(0,s-PAD_EACH) : min(len(audio),e+PAD_EACH)]
                     else:
                         chunk = audio[s:e]
-                    if _speech_ratio(chunk, sr) < 0.25:
-                        embs.append(None)
-                        continue
+
+                    sr_gate = 0.20 if is_low_snr else 0.25     # more lenient gate for noisy audio
+                    if _speech_ratio(chunk, sr) < sr_gate:
+                        embs.append(None); continue
+
                     embs.append(model.embed_chunk(chunk, sr))
         finally:
             model.unload()
@@ -641,14 +746,41 @@ def diarize_multi(
 
     agent_scores: Dict[str, float] = {}
     agent_backend: Dict[str, Tuple[int, int]] = {}
+
+    # ── Filler weights ─────────────────────────────────────────────
+    seg_weights = np.ones(len(segments), dtype=np.float32)
+    for i, seg in enumerate(segments):
+        if seg.get("_is_filler", False):
+            seg_weights[i] = FILLER_SIM_WEIGHT
+
+    # ── Progressive confidence: how much non-filler speech do we have? ──
+    non_filler_speech_s = sum(
+        max(float(seg["end"]) - float(seg["start"]), 0.0)
+        for i, seg in enumerate(segments)
+        if i in set(np.where(np.concatenate([valid_by_dim[d] for d in valid_by_dim.keys()]))[0])
+        and not seg.get("_is_filler", False)
+    )
+    effective_min_matched = (PROG_CONF_MIN_MATCHED
+                             if non_filler_speech_s < PROG_CONF_MIN_SPEECH_S
+                             else AGENT_MIN_MATCHED)
+    if effective_min_matched != AGENT_MIN_MATCHED:
+        logger.info("progressive confidence: %.1fs non-filler speech → min_matched=%d",
+                    non_filler_speech_s, effective_min_matched)
+
     for dim, slugs in slugs_by_dim.items():
         valid_rows = np.where(valid_by_dim[dim])[0]
         if not len(valid_rows):
             continue
         for j, slug in enumerate(slugs):
             col = sims_by_dim[dim][valid_rows, j]
-            k_top = max(5, int(len(col) * 0.30))
-            agent_scores[slug] = float(np.mean(np.sort(col)[-k_top:]))
+            w   = seg_weights[valid_rows]
+            order = np.argsort(col)[::-1]
+            col_s, w_s = col[order], w[order]
+            n_nonfiller = max(int(np.sum(w_s > 0.5)), 1)
+            k_top = max(3, int(n_nonfiller * 0.30))
+            top_w = w_s[:k_top];  top_s = col_s[:k_top]
+            denom = float(np.sum(top_w))
+            agent_scores[slug] = float(np.dot(top_s, top_w) / max(denom, 1e-8))
             agent_backend[slug] = (dim, j)
 
     if not agent_scores:
@@ -675,22 +807,43 @@ def diarize_multi(
             "per-agent threshold for %s = %.3f (global=%.3f)",
             agent_slug, agent_threshold, threshold,
         )
+
+    # SNR-adaptive: relax threshold on low-SNR calls (low-bucket VPs cover this)
+    is_low_snr_call = any(seg.get("_snr_low", False) for seg in segments[:10])
+    if is_low_snr_call and agent_threshold > SNR_LOW_FLOOR:
+        old = agent_threshold
+        agent_threshold = max(SNR_LOW_FLOOR, agent_threshold - 0.06)
+        logger.info("SNR-adaptive threshold: %.3f → %.3f", old, agent_threshold)
+
     seg_best_agent: List[Optional[str]] = []
     match_counts: Dict[str, int] = {}
     match_sims: Dict[str, List[float]] = {}
+
+    # For first 3 segments, use slightly lowered threshold to bootstrap agent ID
+    # BUT: only if segment is ≥1s long (agent greetings are longer)
+    initial_threshold = max(agent_threshold - 0.08, 0.18)
+
     for i in range(len(segments)):
         if not valid[i]:
             seg_best_agent.append(None)
             continue
         sim = float(sims[i, j_agent])
-        if sim >= agent_threshold:
+        seg_dur = float(segments[i]["end"]) - float(segments[i]["start"])
+
+        # Use lower threshold for initial segments (first 3) BUT only if ≥1s long
+        # Short initial segments (< 1s) use full threshold — agent greetings aren't that brief
+        threshold_for_seg = agent_threshold
+        if i < 3 and seg_dur >= 1.0:
+            threshold_for_seg = initial_threshold
+
+        if sim >= threshold_for_seg:
             seg_best_agent.append(agent_slug)
             match_counts[agent_slug] = match_counts.get(agent_slug, 0) + 1
             match_sims.setdefault(agent_slug, []).append(sim)
         else:
             seg_best_agent.append(None)
 
-    if match_counts.get(agent_slug, 0) < AGENT_MIN_MATCHED:
+    if match_counts.get(agent_slug, 0) < effective_min_matched:
         logger.info(
             "Only %d segments beat threshold for %s; falling back to Unknown",
             match_counts.get(agent_slug, 0),
@@ -950,8 +1103,11 @@ def diarize_multi(
     # cosine is borderline. Rule: if the FIRST word is a back-channel AND total
     # words ≤ 5 AND duration < 2.5s AND cosine < 0.30, demote to CUSTOMER.
     BACKCHANNEL_STARTS = {
-        "yeah", "yes", "yep", "yup", "ok", "okay", "right", "sure",
-        "alright", "uhuh", "mhm", "mm", "mhmm", "kay",
+        "yeah","yes","yep","yup","no","nope",
+        "ok","okay","kay","k",
+        "right","sure","alright",
+        "uhuh","mhm","mm","mhmm","hmm","hm","uh","um",
+        "so","well","oh","ah",
     }
     backchannel_demoted = 0
     for i, seg in enumerate(segments):
@@ -964,7 +1120,7 @@ def diarize_multi(
         if dur > 4.0:
             continue
         words = _norm_words(seg.get("text") or "")
-        if not (1 <= len(words) <= 15):
+        if not (1 <= len(words) <= 10):
             continue
         if words[0] not in BACKCHANNEL_STARTS:
             continue

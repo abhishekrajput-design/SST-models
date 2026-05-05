@@ -1282,6 +1282,32 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self._json(st if st else {"status": "not_started"})
             return
 
+        # /api/test-results — Load actual test results from file if available
+        if path == "/api/test-results":
+            test_results = None
+            # Use absolute path relative to the call_processor directory
+            base_dir = Path(__file__).parent
+            test_file = base_dir / "data" / "test_results_top5_parakeet.json"
+
+            if test_file.exists():
+                try:
+                    with open(test_file) as f:
+                        test_results = json.load(f)
+                except Exception:
+                    pass
+
+            # Fallback to placeholder if file doesn't exist yet
+            if not test_results:
+                test_results = {
+                    "test_date": "2026-05-05",
+                    "test_type": "Top 5 Agents Test (In Progress)",
+                    "status": "Test running...",
+                    "message": "Check back in a few minutes for results"
+                }
+
+            self._json(test_results)
+            return
+
         # /api/enrollment-status
         if path == "/api/enrollment-status":
             with _enroll_lock:
