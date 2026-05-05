@@ -1,0 +1,14 @@
+{
+  "parakeet": {
+    "segments": 189,
+    "processing_time": 112.05,
+    "identified_agent": "Omar El Harchaoui",
+    "agent_pct": 48.136990645314704
+  },
+  "whisper": {
+    "segments": 269,
+    "processing_time": 163.74,
+    "identified_agent": "Omar El Harchaoui",
+    "agent_pct": 48.62092222498311
+  }
+}

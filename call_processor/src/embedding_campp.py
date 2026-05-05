@@ -164,6 +164,54 @@ class EmbeddingModel:
                 results.append(emb)
         return results
 
+    def embed_dual(self, audio: np.ndarray, sr: int = 16000) -> tuple:
+        """Get both CAM++ and ECAPA embeddings for fusion."""
+        self.load()
+        if audio.ndim > 1:
+            audio = audio.mean(axis=0)
+        if sr != _TARGET_SR:
+            audio = F_ta.resample(
+                torch.from_numpy(audio.astype(np.float32)), sr, _TARGET_SR
+            ).numpy()
+        if len(audio) < _REJECT_SAMPLES:
+            return None, None
+        if len(audio) < _MIN_SAMPLES:
+            n_repeats = int(np.ceil(_MIN_SAMPLES / max(len(audio), 1)))
+            audio = np.tile(audio, n_repeats)[:_MIN_SAMPLES]
+
+        campp_emb = None
+        ecapa_emb = None
+
+        # Get CAM++ if available
+        if self._wsp is not None:
+            try:
+                fd, tmp_path = tempfile.mkstemp(suffix=".wav")
+                os.close(fd)
+                try:
+                    sf.write(tmp_path, audio.astype(np.float32), _TARGET_SR)
+                    emb = self._wsp.extract_embedding(tmp_path)
+                    if emb is not None:
+                        campp_emb = l2_norm(np.asarray(emb, dtype=np.float32) if isinstance(emb, torch.Tensor) else emb)
+                finally:
+                    try:
+                        os.unlink(tmp_path)
+                    except OSError:
+                        pass
+            except Exception as exc:
+                logger.debug("CAM++ dual embed failed: %s", exc)
+
+        # Get ECAPA if available
+        if self._ecapa is not None:
+            try:
+                t = torch.tensor(audio.astype(np.float32)).unsqueeze(0)
+                with torch.no_grad():
+                    emb = self._ecapa.encode_batch(t.to(self._device)).squeeze().cpu().numpy()
+                ecapa_emb = l2_norm(emb)
+            except Exception as exc:
+                logger.debug("ECAPA dual embed failed: %s", exc)
+
+        return campp_emb, ecapa_emb
+
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------

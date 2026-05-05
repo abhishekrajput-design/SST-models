@@ -27,7 +27,13 @@ TARGET_SR = 16000
 MIN_SEG_S_FOR_EMB = 0.3
 PER_SEG_THRESHOLD = 0.25           # lowered from 0.30 for better initial detection
 PER_AGENT_MARGIN  = 0.04            # lowered from 0.05 to be less strict
-PER_AGENT_THRESH_CAP = 0.40         # lowered from 0.42 to tighten fuzzy enrollments
+PER_AGENT_THRESH_CAP = 0.36         # lowered from 0.40 after clean re-enrollment: wider agent-customer similarity gap
+
+# Phase 3: Confidence gating and unknown rejection
+CONFIDENCE_GATE_UNCERTAIN_BAND = 0.22  # lower bound of uncertain confidence zone
+CONFIDENCE_GATE_UPPER_BOUND = 0.25     # upper bound of uncertain confidence zone
+UNKNOWN_REJECTION_FLOOR = 0.20         # below this: definitely not enrolled agent
+UNKNOWN_REJECTION_MIN_MATCHES = 3      # need at least N matches above floor
 AGENT_MIN_MATCHED = 3
 INITIAL_SEGMENT_BOOST = True        # special handling for first 3 segments
 MAX_CUSTOMER_CLUSTERS = 3
@@ -478,6 +484,17 @@ def _cluster_speaker_roles(
             seg_mid = (float(seg["start"]) + float(seg["end"])) / 2.0
             nearest_pos = int(np.argmin([abs(seg_mid - mid) for mid in valid_mids]))
             cid = idx_to_label[valid_idxs[nearest_pos]]
+            # Hotfix D: if embedding failed but nearby segments are in agent_cluster,
+            # pull this segment to agent_cluster too (don't let failed embedding mask agent context).
+            if seg.get("_emb_failed"):
+                nearby_agent_cluster = any(
+                    0 <= j < len(segments)
+                    and j in idx_to_label
+                    and idx_to_label[j] == agent_cluster
+                    for j in (i - 1, i + 1)
+                )
+                if nearby_agent_cluster:
+                    cid = agent_cluster
 
         sim = float(sims[i, j_agent]) if j_agent >= 0 and i < len(sims) else 0.0
         seg["_best_sim"] = sim
@@ -485,7 +502,17 @@ def _cluster_speaker_roles(
 
         # Reconcile: if cluster says agent but sim is too low and there's a
         # better customer cluster match, demote.
-        if cid == agent_cluster and sim < CLUSTER_AGENT_FLOOR and embs[i] is not None and customer_cids:
+        # But protect segments with _emb_failed=True if they're anchored by high-sim neighbors.
+        should_protect_emb_failed = (
+            segments[i].get("_emb_failed")
+            and any(
+                j >= 0 and j < len(segments)
+                and segments[j].get("identified_speaker") == "AGENT"
+                and float(segments[j].get("_best_sim") or 0.0) >= 0.30
+                for j in (i - 1, i + 1)
+            )
+        )
+        if cid == agent_cluster and sim < CLUSTER_AGENT_FLOOR and embs[i] is not None and customer_cids and not should_protect_emb_failed:
             emb = embs[i].astype(np.float32)
             n_emb = np.linalg.norm(emb)
             if n_emb > 0:
@@ -952,6 +979,133 @@ def _load_audio(norm_wav: str) -> Tuple[np.ndarray, int]:
     return audio, sr
 
 
+def _apply_unknown_rejection(segments: List[Dict]) -> Dict[str, int]:
+    """
+    Apply unknown speaker rejection gate.
+    If a segment's best match is below the floor OR doesn't have enough matches,
+    mark it for conservative classification.
+    """
+    rejections = {"total": 0, "below_floor": 0, "min_match_fail": 0}
+
+    for seg in segments:
+        sim = float(seg.get("_best_sim", 0.0))
+
+        # Check if below rejection floor
+        if sim < UNKNOWN_REJECTION_FLOOR:
+            seg["_unknown_risk"] = True
+            seg["_confidence_gate"] = "REJECTED_BELOW_FLOOR"
+            rejections["below_floor"] += 1
+            rejections["total"] += 1
+            continue
+
+        # Check match count - if agent has <3 confident matches, reject
+        match_count = seg.get("_match_count", 0)
+        if match_count < UNKNOWN_REJECTION_MIN_MATCHES:
+            seg["_unknown_risk"] = True
+            seg["_confidence_gate"] = "REJECTED_LOW_MATCHES"
+            rejections["min_match_fail"] += 1
+            rejections["total"] += 1
+
+    if rejections["total"] > 0:
+        logger.info(f"unknown rejection: {rejections['total']} segments flagged "
+                   f"(floor={rejections['below_floor']}, matches={rejections['min_match_fail']})")
+
+    return rejections
+
+
+def _apply_confidence_gating(segments: List[Dict]) -> int:
+    """
+    Apply confidence-gated classification in the uncertain band.
+    Segments in the [CONFIDENCE_GATE_UNCERTAIN_BAND, CONFIDENCE_GATE_UPPER_BOUND]
+    zone get conservative CUSTOMER label to reduce false positives.
+    """
+    conservative_overrides = 0
+
+    for seg in segments:
+        sim = float(seg.get("_best_sim", 0.0))
+        role = seg.get("identified_speaker", "")
+
+        # Only apply gating to segments that would be labeled AGENT but are in uncertain zone
+        if "AGENT" in role and CONFIDENCE_GATE_UNCERTAIN_BAND <= sim < CONFIDENCE_GATE_UPPER_BOUND:
+            # Check if there's unknown rejection risk
+            if seg.get("_unknown_risk"):
+                # Conservative: don't force AGENT for uncertain segments
+                # Let temporal voting decide
+                seg["_confidence_gate"] = "UNCERTAIN_CONSERVATIVE"
+                conservative_overrides += 1
+
+    if conservative_overrides > 0:
+        logger.info(f"confidence gating: {conservative_overrides} segments flagged as uncertain")
+
+    return conservative_overrides
+
+
+def _apply_temporal_voting(segments: List[Dict], agent_name: str) -> List[Dict]:
+    """
+    Apply 10-second temporal voting window to fix isolated misclassifications.
+    Segments with high-confidence neighbors (sim >= 0.40) get weighted majority vote.
+    """
+    WINDOW_S = 10.0
+    MIN_WINDOW_VOTES = 3
+    OVERRIDE_THRESHOLD = 0.72
+    ANCHOR_SIM_MIN = 0.40
+
+    n = len(segments)
+    corrections = 0
+
+    for i in range(n):
+        seg = segments[i]
+        mid_s = (float(seg.get("start", 0)) + float(seg.get("end", 0))) / 2
+        window_start = mid_s - WINDOW_S / 2
+        window_end = mid_s + WINDOW_S / 2
+
+        # Collect segments in window
+        window_votes = []
+        for j in range(n):
+            other_seg = segments[j]
+            other_mid = (float(other_seg.get("start", 0)) + float(other_seg.get("end", 0))) / 2
+            if window_start <= other_mid <= window_end and j != i:
+                role = other_seg.get("identified_speaker", "")
+                sim = float(other_seg.get("_best_sim", 0.0))
+                if "AGENT" in role:
+                    window_votes.append(("AGENT", sim))
+                else:
+                    window_votes.append(("CUSTOMER", sim))
+
+        if len(window_votes) < MIN_WINDOW_VOTES:
+            continue
+
+        # Weighted vote
+        agent_weight = sum(sim for role, sim in window_votes if role == "AGENT")
+        customer_weight = sum(sim for role, sim in window_votes if role == "CUSTOMER")
+        total_weight = agent_weight + customer_weight
+        if total_weight == 0:
+            continue
+
+        agent_pct = agent_weight / total_weight
+        current_role = seg.get("identified_speaker", "")
+        current_sim = float(seg.get("_best_sim", 0.0))
+
+        # Override if window consensus is strong and segment is weak
+        if (agent_pct >= OVERRIDE_THRESHOLD and "CUSTOMER" in current_role and
+            current_sim < 0.30 and
+            any(sim >= ANCHOR_SIM_MIN for role, sim in window_votes if role == "AGENT")):
+            seg["identified_speaker"] = agent_name
+            seg["_temporal_vote_override"] = True
+            corrections += 1
+        elif (agent_pct <= (1 - OVERRIDE_THRESHOLD) and "AGENT" in current_role and
+              current_sim < 0.30 and
+              any(sim >= ANCHOR_SIM_MIN for role, sim in window_votes if role == "CUSTOMER")):
+            seg["identified_speaker"] = "CUSTOMER"
+            seg["_temporal_vote_override"] = True
+            corrections += 1
+
+    if corrections > 0:
+        logger.info(f"temporal voting: {corrections} segments overridden by neighbor consensus")
+
+    return segments
+
+
 def diarize_multi(
     segments: List[dict],
     norm_wav: str,
@@ -1148,6 +1302,8 @@ def diarize_multi(
             seg.pop("agent_name", None)
             seg["_best_sim"] = float(sims[i, j_agent]) if j_agent >= 0 and valid[i] else 0.0
             seg["_best_match"] = agent_slug
+            if not valid[i]:
+                seg["_emb_failed"] = True
             continue
 
         sim = float(sims[i, j_agent])
@@ -1412,6 +1568,15 @@ def diarize_multi(
         sim = float(seg.get("_best_sim") or 0.0)
         if sim >= 0.10:
             continue
+        # Protect short segments with failed embeddings if anchored by high-confidence AGENT neighbors
+        if seg.get("_emb_failed"):
+            if any(
+                0 <= j < n
+                and segments[j].get("identified_speaker") == "AGENT"
+                and float(segments[j].get("_best_sim") or 0.0) >= 0.30
+                for j in (i - 1, i + 1)
+            ):
+                continue
         # Check if surrounded by customer segments
         prev_cust = any(
             segments[j].get("identified_speaker") == "CUSTOMER"
@@ -1504,6 +1669,52 @@ def diarize_multi(
     if any(text_role_corrections.values()):
         logger.info("text role corrections applied: %s", text_role_corrections)
 
+    # Temporal voting: use neighbor context to fix isolated misclassifications
+    segments = _apply_temporal_voting(segments, agent_name)
+
+    # Phase 3: Confidence gating and unknown rejection
+    unknown_rejection_result = _apply_unknown_rejection(segments)
+    confidence_gate_count = _apply_confidence_gating(segments)
+
+    boundary_refinement: Dict[str, object] = {"enabled": False, "reason": "not run"}
+    try:
+        from src.boundary_refinement import (
+            refine_with_pyannote_boundaries,
+            refine_with_text_cue_boundaries,
+        )
+
+        segments, text_boundary_report = refine_with_text_cue_boundaries(
+            segments,
+            agent_name,
+        )
+        segments, pyannote_boundary_report = refine_with_pyannote_boundaries(
+            segments,
+            norm_wav,
+            agent_name,
+            force_cpu=force_cpu,
+        )
+        boundary_refinement = {
+            "enabled": bool(
+                text_boundary_report.get("enabled")
+                or pyannote_boundary_report.get("enabled")
+            ),
+            "text_cue": text_boundary_report,
+            "pyannote": pyannote_boundary_report,
+        }
+        if boundary_refinement.get("enabled"):
+            role_corrections["text_boundary_split_segments"] = int(
+                text_boundary_report.get("split_segments") or 0
+            )
+            role_corrections["pyannote_boundary_split_segments"] = int(
+                pyannote_boundary_report.get("split_segments") or 0
+            )
+    except Exception as e:
+        boundary_refinement = {
+            "enabled": False,
+            "reason": f"boundary refinement failed: {e}",
+        }
+        logger.warning("boundary refinement skipped: %s", e)
+
     per_speaker: Dict[str, Dict[str, float]] = {}
     for seg in segments:
         lbl = seg.get("display_speaker", "?")
@@ -1531,5 +1742,6 @@ def diarize_multi(
         "speaker_mode": speaker_mode,
         "agent_threshold_used": round(float(agent_threshold), 3) if agent_slug else round(float(threshold), 3),
         "cluster_report": cluster_report,
+        "boundary_refinement": boundary_refinement,
         "speaker_id_warning": warning,
     }

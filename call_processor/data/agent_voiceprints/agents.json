@@ -10,138 +10,35 @@
     "voiceprint_path": "omar_el_harchaoui.npy",
     "voiceprints": [
       {
+        "path": "omar_el_harchaoui__low_0.npy",
+        "bucket": "low",
+        "n_clips": 8,
+        "snr_db": 12.0
+      },
+      {
         "path": "omar_el_harchaoui__mid_0.npy",
         "bucket": "mid",
-        "n_clips": 717,
-        "snr_db": 13.0
+        "n_clips": 8,
+        "snr_db": 12.0
       },
       {
-        "path": "omar_el_harchaoui__mid_1.npy",
-        "bucket": "mid",
-        "n_clips": 717,
-        "snr_db": 13.0
-      },
-      {
-        "path": "omar_el_harchaoui__mid_2.npy",
-        "bucket": "mid",
-        "n_clips": 717,
-        "snr_db": 13.0
+        "path": "omar_el_harchaoui__high_0.npy",
+        "bucket": "high",
+        "n_clips": 8,
+        "snr_db": 12.0
       }
     ],
-    "n_voiceprints": 4,
-    "total_seconds": 1877.1270000000027,
-    "used_calls": 36,
-    "source": "multi_vp_advanced",
+    "n_voiceprints": 3,
+    "total_seconds": 24.160000000000007,
+    "used_calls": 1,
+    "source": "enroll_from_gt_mini_hatch_call",
     "per_call_snr": [
       {
-        "_id": "69efc071f91ac02559f83167"
-      },
-      {
-        "_id": "69efbb58f91ac02559f827f6"
-      },
-      {
-        "_id": "69efb51af91ac02559f8170a"
-      },
-      {
-        "_id": "69efb4a1f91ac02559f8158b"
-      },
-      {
-        "_id": "69efb362f91ac02559f813fe"
-      },
-      {
-        "_id": "69efb158f91ac02559f8108e"
-      },
-      {
-        "_id": "69efa7e7f91ac02559f7f436"
-      },
-      {
-        "_id": "69efa637f91ac02559f7efd6"
-      },
-      {
-        "_id": "69efa32cf91ac02559f7e8cb"
-      },
-      {
-        "_id": "69efa2c6f91ac02559f7e78a"
-      },
-      {
-        "_id": "69efa0a8f91ac02559f7e3cb"
-      },
-      {
-        "_id": "69ef9b69f91ac02559f7d822"
-      },
-      {
-        "_id": "69efc071f91ac02559f83167"
-      },
-      {
-        "_id": "69efbb58f91ac02559f827f6"
-      },
-      {
-        "_id": "69efb51af91ac02559f8170a"
-      },
-      {
-        "_id": "69efb4a1f91ac02559f8158b"
-      },
-      {
-        "_id": "69efb362f91ac02559f813fe"
-      },
-      {
-        "_id": "69efb158f91ac02559f8108e"
-      },
-      {
-        "_id": "69efa7e7f91ac02559f7f436"
-      },
-      {
-        "_id": "69efa637f91ac02559f7efd6"
-      },
-      {
-        "_id": "69efa32cf91ac02559f7e8cb"
-      },
-      {
-        "_id": "69efa2c6f91ac02559f7e78a"
-      },
-      {
-        "_id": "69efa0a8f91ac02559f7e3cb"
-      },
-      {
-        "_id": "69ef9b69f91ac02559f7d822"
-      },
-      {
-        "_id": "69efc071f91ac02559f83167"
-      },
-      {
-        "_id": "69efbb58f91ac02559f827f6"
-      },
-      {
-        "_id": "69efb51af91ac02559f8170a"
-      },
-      {
-        "_id": "69efb4a1f91ac02559f8158b"
-      },
-      {
-        "_id": "69efb362f91ac02559f813fe"
-      },
-      {
-        "_id": "69efb158f91ac02559f8108e"
-      },
-      {
-        "_id": "69efa7e7f91ac02559f7f436"
-      },
-      {
-        "_id": "69efa637f91ac02559f7efd6"
-      },
-      {
-        "_id": "69efa32cf91ac02559f7e8cb"
-      },
-      {
-        "_id": "69efa2c6f91ac02559f7e78a"
-      },
-      {
-        "_id": "69efa0a8f91ac02559f7e3cb"
-      },
-      {
-        "_id": "69ef9b69f91ac02559f7d822"
+        "_id": "20260505T073055769_385036"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.692056730389595,
+    "max_outside_sim": 0.40393033921718596
   },
   "mohammed_al_russell": {
     "agent_name": "Mohammed Al Russell",
@@ -413,7 +310,9 @@
       {
         "_id": "69ef9a7ef91ac02559f7d5cd"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.891,
+    "max_outside_sim": 0.4901
   },
   "sarah_aziz": {
     "agent_name": "Sarah Aziz",
@@ -604,7 +503,9 @@
       {
         "_id": "69efae3bf91ac02559f8071c"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.6889,
+    "max_outside_sim": 0.3789
   },
   "sababa_hossain": {
     "agent_name": "Sababa Hossain",
@@ -720,7 +621,7 @@
     "n_windows_total": 741,
     "total_seconds": 749.7000000000004,
     "used_calls": 3,
-    "mean_inside_sim": 0.71,
+    "mean_inside_sim": 0.8851,
     "max_outside_sim": 0.533,
     "source": "multi_vp_advanced",
     "voiceprints": [
@@ -795,7 +696,7 @@
     "n_windows_total": 1563,
     "total_seconds": 1567.4789999999994,
     "used_calls": 3,
-    "mean_inside_sim": 0.698,
+    "mean_inside_sim": 0.8978,
     "max_outside_sim": 0.543,
     "source": "multi_vp_advanced",
     "voiceprints": [
@@ -912,7 +813,9 @@
       {
         "_id": "69ef9bf1f91ac02559f7d9ed"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.6902,
+    "max_outside_sim": 0.3796
   },
   "harrison_morgan": {
     "agent_name": "Harrison Morgan",
@@ -945,7 +848,9 @@
       {
         "_id": "69ef9d79f91ac02559f7dea1"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.8694,
+    "max_outside_sim": 0.4782
   },
   "adil_al_sammerai": {
     "agent_name": "Adil Al- Sammerai",
@@ -1002,7 +907,9 @@
       {
         "_id": "69ef9d76f91ac02559f7de8e"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.6909,
+    "max_outside_sim": 0.38
   },
   "angeline_packiyaseelan": {
     "agent_name": "Angeline Packiyaseelan",
@@ -1059,7 +966,9 @@
       {
         "_id": "69efb56af91ac02559f81788"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.8032,
+    "max_outside_sim": 0.4418
   },
   "jason_kurti": {
     "agent_name": "Jason Kurti",
@@ -1125,7 +1034,9 @@
       {
         "_id": "69ef9aabf91ac02559f7d65f"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.8817,
+    "max_outside_sim": 0.4849
   },
   "anoush_sefatzadeh": {
     "agent_name": "Anoush Sefatzadeh",
@@ -1191,7 +1102,9 @@
       {
         "_id": "69efa1a8f91ac02559f7e4ee"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.566,
+    "max_outside_sim": 0.3113
   },
   "kowsar_alam": {
     "agent_name": "Kowsar Alam",
@@ -1356,7 +1269,9 @@
       {
         "_id": "69ef99cbf91ac02559f7d3b5"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.9095,
+    "max_outside_sim": 0.5002
   },
   "georgi_angelov": {
     "agent_name": "Georgi Angelov",
@@ -1392,7 +1307,8 @@
       {
         "_id": "69efae51f91ac02559f80769"
       }
-    ]
+    ],
+    "max_outside_sim": 0.22
   },
   "janusaan_jeyachandran": {
     "agent_name": "Janusaan Jeyachandran",
@@ -1449,7 +1365,9 @@
       {
         "_id": "69ef9e2df91ac02559f7e08f"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.5617,
+    "max_outside_sim": 0.3089
   },
   "aftaab_supervisor": {
     "agent_name": "Aftaab Supervisor",
@@ -1515,7 +1433,9 @@
       {
         "_id": "69ef9c15f91ac02559f7da4b"
       }
-    ]
+    ],
+    "mean_inside_sim": 0.902,
+    "max_outside_sim": 0.4961
   },
   "mohamed_yasin_ali": {
     "agent_name": "Mohamed Yasin-ali",
@@ -1560,7 +1480,8 @@
       {
         "_id": "69ef9fe9f91ac02559f7e2d0"
       }
-    ]
+    ],
+    "max_outside_sim": 0.22
   },
   "rayyan_ali_khan": {
     "agent_name": "Rayyan Ali Khan",
@@ -1569,7 +1490,7 @@
     "n_windows_total": 1251,
     "total_seconds": 1262.7719999999995,
     "used_calls": 3,
-    "mean_inside_sim": 0.679,
+    "mean_inside_sim": 0.8726,
     "max_outside_sim": 0.537,
     "source": "multi_vp_advanced",
     "voiceprints": [
@@ -1611,7 +1532,7 @@
     "n_windows_total": 237,
     "total_seconds": 242.00400000000013,
     "used_calls": 3,
-    "mean_inside_sim": 0.619,
+    "mean_inside_sim": 0.5944,
     "max_outside_sim": 0.515,
     "source": "multi_vp_advanced",
     "voiceprints": [
@@ -1647,7 +1568,7 @@
     "n_windows_total": 252,
     "total_seconds": 255.32099999999988,
     "used_calls": 3,
-    "mean_inside_sim": 0.648,
+    "mean_inside_sim": 0.7774,
     "max_outside_sim": 0.577,
     "source": "multi_vp_advanced",
     "voiceprints": [
@@ -1694,7 +1615,7 @@
     "n_windows_total": 2313,
     "total_seconds": 2319.9629999999975,
     "used_calls": 3,
-    "mean_inside_sim": 0.665,
+    "mean_inside_sim": 0.866,
     "max_outside_sim": 0.57,
     "source": "multi_vp_advanced",
     "voiceprints": [
@@ -1736,7 +1657,7 @@
     "n_windows_total": 603,
     "total_seconds": 261.74100000000004,
     "used_calls": 3,
-    "mean_inside_sim": 0.713,
+    "mean_inside_sim": 0.8633,
     "max_outside_sim": 0.523,
     "source": "multi_vp_advanced",
     "voiceprints": [

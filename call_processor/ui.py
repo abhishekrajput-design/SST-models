@@ -817,6 +817,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         ),
         "speaker_id_mode":          diar_result.get("speaker_mode"),
         "speaker_id_cluster_report": diar_result.get("cluster_report", {}),
+        "speaker_boundary_refinement": diar_result.get("boundary_refinement", {}),
         "note": (
             f"Requested {requested_model}; transcribed with {whisper_model}"
             if requested_model != whisper_model
