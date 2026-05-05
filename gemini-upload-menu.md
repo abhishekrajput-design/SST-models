@@ -1,0 +1,92 @@
+- generic [ref=e1]:
+  - 'button "Google Account: Abhishek (autogencodelabs@gmail.com)" [ref=e8] [cursor=pointer]':
+    - img [ref=e10]
+    - img [ref=e16]
+  - main [ref=e18]:
+    - generic:
+      - button "Main menu" [ref=e153] [cursor=pointer]:
+        - img [ref=e156]: menu
+      - button "New chat" [disabled] [ref=e160]:
+        - generic [ref=e162]: Gemini
+    - generic [ref=e167]:
+      - button "Temporary chat" [ref=e170] [cursor=pointer]:
+        - img [ref=e172]
+      - generic [ref=e176]:
+        - button "PRO" [disabled]:
+          - generic: PRO
+    - generic [ref=e20]:
+      - navigation "Open sidebar" [ref=e21]:
+        - generic [ref=e25]:
+          - group [ref=e26]:
+            - link "New chat" [ref=e28] [cursor=pointer]:
+              - /url: /app
+              - generic [ref=e29]: New chat
+              - img [ref=e33]: edit_square
+          - group [ref=e36]:
+            - button "Settings & help" [ref=e38] [cursor=pointer]:
+              - img [ref=e42]: settings_2
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - heading "Conversation with Gemini" [level=1] [ref=e55]
+          - generic [ref=e60]:
+            - generic [ref=e61]:
+              - generic [ref=e67]: Hi Abhishek
+              - heading "See your Personal Intelligence snapshot" [level=1] [ref=e74]:
+                - generic [ref=e75] [cursor=pointer]: See your Personal Intelligence snapshot
+                - button [ref=e76] [cursor=pointer]:
+                  - img [ref=e77]: arrow_forward
+            - generic [ref=e87]:
+              - button "For you, button, tap to use tool" [ref=e89] [cursor=pointer]:
+                - img [ref=e92]
+                - generic [ref=e102]: For you
+              - button "🏏 Explore IPL Fan Zone, button, tap to use tool" [ref=e104] [cursor=pointer]:
+                - generic [ref=e105]: 🏏 Explore IPL Fan Zone
+              - button "🖼️ Create image, button, tap to use tool" [ref=e107] [cursor=pointer]:
+                - generic [ref=e108]: 🖼️ Create image
+              - button "🎸 Create music, button, tap to use tool" [ref=e110] [cursor=pointer]:
+                - generic [ref=e111]: 🎸 Create music
+              - button "Help me learn, button, tap to use tool" [ref=e113] [cursor=pointer]:
+                - generic [ref=e114]: Help me learn
+              - button "Write anything, button, tap to use tool" [ref=e116] [cursor=pointer]:
+                - generic [ref=e117]: Write anything
+        - generic [ref=e118]:
+          - group [ref=e119]:
+            - generic [ref=e122]:
+              - textbox "Enter a prompt for Gemini" [ref=e127]:
+                - text: Ask Gemini
+                - paragraph [ref=e128]
+              - generic [ref=e129]:
+                - button "Close upload file menu" [expanded] [ref=e221] [cursor=pointer]:
+                  - img [ref=e222]: add_2
+                - button "Tools" [ref=e210]:
+                  - img [ref=e211]: page_info
+                  - generic [ref=e214]: Tools
+              - generic [ref=e130]:
+                - button "Open mode picker" [ref=e133]:
+                  - generic [ref=e135]:
+                    - generic [ref=e136]: Pro
+                    - img [ref=e137]: keyboard_arrow_down
+                - generic [ref=e140]:
+                  - button "Microphone" [ref=e143] [cursor=pointer]:
+                    - img [ref=e145]: mic
+                  - generic:
+                    - button "Send message" [disabled]:
+                      - img: send
+          - paragraph [ref=e150]
+  - menu "Upload file options" [active] [ref=e229]:
+    - menuitem "Upload files. Documents, data, code files" [ref=e231] [cursor=pointer]:
+      - img [ref=e232]: attach_file
+      - generic [ref=e237]: Upload files
+    - menuitem "Add from Drive. Sheets, Docs, Slides" [ref=e239] [cursor=pointer]:
+      - img [ref=e240]: drive
+      - generic [ref=e245]: Add from Drive
+    - menuitem "Google Photos" [ref=e248] [cursor=pointer]:
+      - img [ref=e249]: photos
+      - generic [ref=e250]: Photos
+    - menuitem "Import code" [ref=e253] [cursor=pointer]:
+      - img [ref=e254]: code
+      - generic [ref=e255]: Import code
+    - menuitem "NotebookLM" [ref=e258] [cursor=pointer]:
+      - img [ref=e259]:
+        - img [ref=e260]
+      - generic [ref=e265]: NotebookLM

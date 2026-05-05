@@ -1,0 +1,79 @@
+- generic [ref=e1]:
+  - 'button "Google Account: Abhishek (autogencodelabs@gmail.com)" [ref=e8] [cursor=pointer]':
+    - img [ref=e10]
+    - img [ref=e16]
+  - main [ref=e18]:
+    - generic:
+      - button "Main menu" [ref=e153] [cursor=pointer]:
+        - img [ref=e156]: menu
+      - button "New chat" [disabled] [ref=e160]:
+        - generic [ref=e162]: Gemini
+    - generic [ref=e167]:
+      - button "Temporary chat" [ref=e170] [cursor=pointer]:
+        - img [ref=e172]
+      - generic [ref=e176]:
+        - button "PRO" [disabled]:
+          - generic: PRO
+    - generic [ref=e20]:
+      - navigation "Open sidebar" [ref=e21]:
+        - generic [ref=e25]:
+          - group [ref=e26]:
+            - link "New chat" [ref=e28] [cursor=pointer]:
+              - /url: /app
+              - generic [ref=e29]: New chat
+              - img [ref=e33]: edit_square
+          - group [ref=e36]:
+            - button "Settings & help" [ref=e38] [cursor=pointer]:
+              - img [ref=e42]: settings_2
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - heading "Conversation with Gemini" [level=1] [ref=e55]
+          - generic [ref=e60]:
+            - generic [ref=e61]:
+              - generic [ref=e67]: Hi Abhishek
+              - heading "See your Personal Intelligence snapshot" [level=1] [ref=e74]:
+                - generic [ref=e75] [cursor=pointer]: See your Personal Intelligence snapshot
+                - button [ref=e76] [cursor=pointer]:
+                  - img [ref=e77]: arrow_forward
+            - generic [ref=e87]:
+              - button "For you, button, tap to use tool" [ref=e89] [cursor=pointer]:
+                - img [ref=e92]
+                - generic [ref=e102]: For you
+              - button "🏏 Explore IPL Fan Zone, button, tap to use tool" [ref=e104] [cursor=pointer]:
+                - generic [ref=e105]: 🏏 Explore IPL Fan Zone
+              - button "🖼️ Create image, button, tap to use tool" [ref=e107] [cursor=pointer]:
+                - generic [ref=e108]: 🖼️ Create image
+              - button "🎸 Create music, button, tap to use tool" [ref=e110] [cursor=pointer]:
+                - generic [ref=e111]: 🎸 Create music
+              - button "Help me learn, button, tap to use tool" [ref=e113] [cursor=pointer]:
+                - generic [ref=e114]: Help me learn
+              - button "Write anything, button, tap to use tool" [ref=e116] [cursor=pointer]:
+                - generic [ref=e117]: Write anything
+        - generic [ref=e118]:
+          - group [ref=e119]:
+            - generic [ref=e122]:
+              - generic [ref=e272]:
+                - img "MP3 icon" [ref=e273]
+                - generic "20260505T073055769_385036.mp3" [ref=e274]: 20260505T0...769_385036
+                - generic [ref=e275]: MP3
+                - button "Remove file 20260505T073055769_385036.mp3" [ref=e276] [cursor=pointer]: close
+              - textbox "Enter a prompt for Gemini" [active] [ref=e127]:
+                - text: Ask Gemini
+                - paragraph [ref=e128]
+              - generic [ref=e129]:
+                - button "Open upload file menu" [ref=e277] [cursor=pointer]:
+                  - img [ref=e278]: add_2
+                - button "Tools" [ref=e210]:
+                  - img [ref=e211]: page_info
+                  - generic [ref=e214]: Tools
+              - generic [ref=e130]:
+                - button "Open mode picker" [ref=e133]:
+                  - generic [ref=e135]:
+                    - generic [ref=e136]: Pro
+                    - img [ref=e137]: keyboard_arrow_down
+                - generic [ref=e140]:
+                  - button "Microphone" [ref=e143] [cursor=pointer]:
+                    - img [ref=e145]: mic
+                  - button "Send message" [ref=e282] [cursor=pointer]:
+                    - img [ref=e283]: send
+          - paragraph [ref=e150]

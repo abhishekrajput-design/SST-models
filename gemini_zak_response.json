@@ -1,0 +1,7 @@
+{
+  "isGenerating": false,
+  "codeBlockJson": null,
+  "codeBlockLength": 0,
+  "bodyJson": "{    \"call_id\": \"20260503T104319184_615752\",    \"agent_name\": \"Zak Raissi\",    \"source\": \"gemini\",    \"segments\": [      {\"start\": 0.0, \"end\": 1.0, \"speaker\": \"customer\", \"text\": \"...\"},      {\"start\": 1.0, \"end\": 3.0, \"speaker\": \"agent\", \"text\": \"...\"}    ]  }",
+  "bodyJsonLength": 261
+}

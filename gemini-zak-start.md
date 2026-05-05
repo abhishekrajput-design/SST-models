@@ -1,0 +1,84 @@
+- generic [ref=e1]:
+  - 'button "Google Account: Abhishek (autogencodelabs@gmail.com)" [ref=e11] [cursor=pointer]':
+    - img [ref=e13]
+    - img [ref=e19]
+  - main [ref=e21]:
+    - generic [ref=e23]:
+      - navigation "Open sidebar" [ref=e30]:
+        - generic [ref=e34]:
+          - group [ref=e35]:
+            - link "New chat" [ref=e37] [cursor=pointer]:
+              - /url: /app
+              - generic [ref=e38]: New chat
+              - img [ref=e42]: edit_square
+          - generic:
+            - progressbar "Loading Gems and Recent conversations":
+              - generic:
+                - img
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                  - generic:
+                    - img
+                  - generic:
+                    - img
+          - group [ref=e45]:
+            - button "Settings & help" [ref=e47] [cursor=pointer]:
+              - img [ref=e51]: settings_2
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - heading "Conversation with Gemini" [level=1] [ref=e59]
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - generic [ref=e70]:
+                - generic: Hi Abhishek
+              - generic [ref=e74]:
+                - generic:
+                  - generic:
+                    - heading "See your Personal Intelligence snapshot" [level=1]:
+                      - generic: See your Personal Intelligence snapshot
+                      - button:
+                        - img: arrow_forward
+            - generic [ref=e80]:
+              - generic:
+                - generic:
+                  - generic:
+                    - button "For you, button, tap to use tool":
+                      - generic:
+                        - generic:
+                          - img
+                      - generic: For you
+                  - generic:
+                    - button "🏏 Explore IPL Fan Zone, button, tap to use tool":
+                      - generic: 🏏 Explore IPL Fan Zone
+                  - generic:
+                    - button "🖼️ Create image, button, tap to use tool":
+                      - generic: 🖼️ Create image
+                  - generic:
+                    - button "🎸 Create music, button, tap to use tool":
+                      - generic: 🎸 Create music
+                  - generic:
+                    - button "Boost my day, button, tap to use tool":
+                      - generic: Boost my day
+                  - generic:
+                    - button "Write anything, button, tap to use tool":
+                      - generic: Write anything
+        - generic [ref=e81]:
+          - group [ref=e82]:
+            - generic [ref=e85]:
+              - textbox "Enter a prompt for Gemini" [active] [ref=e90]:
+                - text: Ask Gemini
+                - paragraph [ref=e91]
+              - generic [ref=e93]:
+                - button "Open mode picker" [ref=e96]:
+                  - generic [ref=e98]:
+                    - generic [ref=e99]: Fast
+                    - img [ref=e100]: keyboard_arrow_down
+                - generic [ref=e103]:
+                  - button "Microphone" [ref=e106] [cursor=pointer]:
+                    - img [ref=e108]: mic
+                  - generic:
+                    - button "Send message" [disabled]:
+                      - img: send
+          - paragraph [ref=e113]

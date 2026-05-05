@@ -42,9 +42,9 @@ MERGE_TO_AGENT_SIM = 0.28
 SHORT_REPLY_MAX_DUR = 0.95
 SHORT_REPLY_MAX_SIM = 0.30
 FAREWELL_AGENT_MIN_SIM = 0.18
-CLUSTER_FIRST_MIN_DUR = 60.0           # was 180 — short phone calls benefit too
-CLUSTER_FIRST_MIN_SEGMENTS = 15        # was 30
-CLUSTER_FIRST_AGENT_RATIO = 0.55       # was 0.68 — allow more even agent/customer splits
+CLUSTER_FIRST_MIN_DUR = 30.0           # Lowered for shorter calls
+CLUSTER_FIRST_MIN_SEGMENTS = 10        # Lowered to engage on more calls
+CLUSTER_FIRST_AGENT_RATIO = 0.10       # Force cluster_first when voiceprints are weak (similar voices)
 
 # Filler / back-channel handling
 FILLER_MAX_DUR         = 0.80   # segments ≤ this duration with filler-only text are down-weighted
