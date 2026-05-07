@@ -1166,6 +1166,11 @@
                     <option value="cohere-transcribe-03-2026">Cohere 03-2026 · 5.42% WER</option>
                 </optgroup>
             </select>
+            <select id="agentSelect" class="model-select">
+                <option value="auto" selected>Auto agent</option>
+                <option value="zak_raissi_barnet">Zak Raissi Barnet</option>
+                <option value="hussein_mohamed">Hussein Mohamed</option>
+            </select>
             <div class="upload-btn" id="uploadBtn">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1988,7 +1993,13 @@
             document.getElementById('audioUpload').disabled = true;
             try {
                 const model = document.getElementById('modelSelect').value;
-                const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}&model=${encodeURIComponent(model)}`, { method: 'POST', body: file });
+                const agent = document.getElementById('agentSelect').value || 'auto';
+                const params = new URLSearchParams({
+                    filename: file.name,
+                    model,
+                    agent_slug: agent
+                });
+                const res = await fetch(`/api/upload?${params.toString()}`, { method: 'POST', body: file });
                 if (res.status === 409) { alert('A transcription is already running.'); startPolling(); }
                 else if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 else { showProgress(); startPolling(); }

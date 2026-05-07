@@ -101,6 +101,56 @@ _enroll_lock   = threading.Lock()
 # Directory of known-agent recordings used for voice enrollment
 AGENT_RECORDINGS_DIR = r"C:\Users\abhis\Desktop\SST-models\Agents-recoding\zak_recodings"
 
+_TARGET_AGENT_ALIASES = {
+    "zak": "zak_raissi_barnet",
+    "zakraissi": "zak_raissi_barnet",
+    "zakraissibarnet": "zak_raissi_barnet",
+    "zak_raissi": "zak_raissi_barnet",
+    "zak_raissi_barnet": "zak_raissi_barnet",
+    "hussein": "hussein_mohamed",
+    "hussien": "hussein_mohamed",
+    "husseinmohamed": "hussein_mohamed",
+    "hussienmohamed": "hussein_mohamed",
+    "hussein_mohamed": "hussein_mohamed",
+}
+
+
+def _agent_slug_from_hint(*hints: str) -> str | None:
+    for raw in hints:
+        if not raw:
+            continue
+        text = str(raw).lower()
+        compact = re.sub(r"[^a-z0-9]+", "", text)
+        underscored = re.sub(r"[^a-z0-9]+", "_", text).strip("_")
+        for key in (underscored, compact):
+            if key in _TARGET_AGENT_ALIASES:
+                return _TARGET_AGENT_ALIASES[key]
+        if "zak" in compact and "raissi" in compact:
+            return "zak_raissi_barnet"
+        if "hussein" in compact or "hussien" in compact:
+            return "hussein_mohamed"
+    return None
+
+
+def _resolve_target_agent_slug(requested: str | None, *hints: str) -> str | None:
+    requested = (requested or "").strip()
+    if requested and requested.lower() not in {"auto", "none", "all"}:
+        resolved = _agent_slug_from_hint(requested)
+        if resolved:
+            return resolved
+        candidate = re.sub(r"[^a-z0-9_]+", "_", requested.lower()).strip("_")
+        return candidate or None
+    return _agent_slug_from_hint(*hints)
+
+
+def _target_presence_floor(target_agent_slug: str | None) -> float:
+    env_name = "SST_TARGET_AGENT_PRESENCE_FLOOR" if target_agent_slug else "SST_AGENT_PRESENCE_FLOOR"
+    default = "0.24" if target_agent_slug else "0.35"
+    try:
+        return float(os.getenv(env_name, default))
+    except (TypeError, ValueError):
+        return float(default)
+
 
 def _set_status(stage_num: int, stage: str, message: str):
     now = time.time()
@@ -540,7 +590,7 @@ def _trim_to_speech(audio_path: str, segments: list, out_path: str,
 # ══════════════════════════════════════════════════════════════════════════════
 
 def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-turbo",
-                       original_path: str = "") -> str:
+                       original_path: str = "", target_agent_slug: str | None = None) -> str:
     """
     Run any registered transcriber in-process (Whisper, Cohere, Parakeet, Qwen3, VibeVoice).
     Returns result_id (basename of FFmpeg-enhanced file).
@@ -574,6 +624,12 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             return 0.0
 
     dur_s = _audio_duration_s(audio_path)
+    target_agent_slug = _resolve_target_agent_slug(
+        target_agent_slug,
+        original_path,
+        audio_path,
+    )
+    presence_floor = _target_presence_floor(target_agent_slug)
 
     base     = os.path.splitext(os.path.basename(audio_path))[0]
     # Use a per-model directory so each model run is stored separately
@@ -677,10 +733,14 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         max_speakers = int(os.getenv("SST_MAX_SPEAKERS", "4") or "4")
         backend = os.getenv("SST_SPEAKER_DIAR_BACKEND", "sortformer").strip() or "sortformer"
         sortformer_streaming = os.getenv("SST_SORTFORMER_STREAMING", "0").strip() == "1"
-        target_agent_slug = os.getenv("SST_TARGET_AGENT_SLUG", "").strip() or None
+        env_target_slug = os.getenv("SST_TARGET_AGENT_SLUG", "").strip() or None
+        if env_target_slug:
+            target_agent_slug = _resolve_target_agent_slug(env_target_slug)
+            presence_floor = _target_presence_floor(target_agent_slug)
         print(
             f"[UI] Running speaker-first diarization ({backend}, max_speakers={max_speakers}, "
-            f"streaming={sortformer_streaming})...",
+            f"streaming={sortformer_streaming}, target={target_agent_slug or 'auto'}, "
+            f"floor={presence_floor:.2f})...",
             flush=True,
         )
         diar_result = diarize_clean(
@@ -690,6 +750,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             max_speakers=max_speakers,
             sortformer_streaming=sortformer_streaming,
             target_agent_slug=target_agent_slug,
+            presence_floor=presence_floor,
             hf_token=os.getenv("HF_TOKEN"),
         )
         segments     = diar_result["segments"]
@@ -835,6 +896,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             diar_result.get("speaker_id_warning") or diar_result.get("warning")
         ),
         "speaker_id_mode":          diar_result.get("speaker_mode"),
+        "target_agent_slug":        target_agent_slug,
+        "speaker_id_presence_floor": presence_floor,
         "speaker_id_cluster_report": diar_result.get("cluster_report", {}),
         "speaker_boundary_refinement": diar_result.get("boundary_refinement", {}),
         "note": (
@@ -873,7 +936,12 @@ def _flush_result(path: str, audio_path: str, segments: list, elapsed: float):
 #  Main pipeline thread
 # ══════════════════════════════════════════════════════════════════════════════
 
-def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v3"):
+def _run_pipeline(
+    upload_path: str,
+    filename: str,
+    whisper_model: str = "large-v3",
+    target_agent_slug: str | None = None,
+):
     """
     Stage 0a — FFmpeg enhancement  (full audio, used by AI pipeline)
     Stage 0b — noisereduce          (first 5 min)
@@ -960,8 +1028,12 @@ def _run_pipeline(upload_path: str, filename: str, whisper_model: str = "large-v
             label = whisper_model if whisper_model in _WHISPER_MODELS else whisper_model
             _set_status(1, "Transcription", f"Transcribing with {label}...")
             print(f"[UI] Inline transcription mode ({label}).")
-            result_id = _transcribe_inline(pipeline_audio, whisper_model,
-                                           original_path=upload_path)
+            result_id = _transcribe_inline(
+                pipeline_audio,
+                whisper_model,
+                original_path=upload_path,
+                target_agent_slug=target_agent_slug,
+            )
         else:
             # Full pipeline via run_e2e.py subprocess (Whisper + pyannote diarization)
             _set_status(1, "Speaker Diarization", "Loading pyannote · detecting who speaks when...")
@@ -1579,6 +1651,10 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             query    = parse_qs(parsed.query)
             filename = query.get("filename", ["upload.mp3"])[0]
             model    = query.get("model",    ["parakeet-tdt-0.6b-v3"])[0]
+            target_agent_slug = _resolve_target_agent_slug(
+                query.get("agent_slug", ["auto"])[0],
+                filename,
+            )
             os.makedirs("data/raw_calls", exist_ok=True)
             upload_path = os.path.join("data", "raw_calls", filename)
             n = int(self.headers.get("Content-Length", 0))
@@ -1595,9 +1671,17 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                                processing_time_seconds=None)
             # Send the response BEFORE starting the pipeline thread so the client
             # gets its confirmation even when the server becomes CPU/GPU-bound.
-            self._json({"status": "started", "filename": filename, "model": model})
-            threading.Thread(target=_run_pipeline, args=(upload_path, filename, model),
-                             daemon=True).start()
+            self._json({
+                "status": "started",
+                "filename": filename,
+                "model": model,
+                "target_agent_slug": target_agent_slug,
+            })
+            threading.Thread(
+                target=_run_pipeline,
+                args=(upload_path, filename, model, target_agent_slug),
+                daemon=True,
+            ).start()
             return
         self.send_response(404)
         self.end_headers()

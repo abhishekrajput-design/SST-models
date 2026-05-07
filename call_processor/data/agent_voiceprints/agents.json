@@ -1710,9 +1710,63 @@
         "source": "pure_agent_segments_plus_clean_clips",
         "embedding_model": "cam++",
         "embedding_dim": 512
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v1.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "zak_raissi_barnet_00_audio_03_15_2026_10_08_04_qbpe8e.mp3",
+        "source_speaker": "SPEAKER_01",
+        "source_similarity_to_phone_vp": 1.0
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v2.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "zak_raissi_barnet_01_audio_03_15_2026_10_38_04_j9u7ub.mp3",
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 1.0
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v3.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "zak_raissi_barnet_06_audio_03_15_2026_13_08_04_wshqao.mp3",
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.7622
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v4.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "zak_raissi_barnet_08_audio_03_15_2026_14_08_04_gwimyf.mp3",
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.7491
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v5.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "zak_raissi_barnet_09_audio_03_15_2026_14_38_04_p3lvx4.mp3",
+        "source_speaker": "SPEAKER_02",
+        "source_similarity_to_phone_vp": 0.6279
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v6.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "zak_raissi_barnet_03_audio_03_15_2026_11_38_04_q7msx9.mp3",
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.5765
       }
     ],
-    "n_voiceprints": 4,
+    "n_voiceprints": 10,
     "embedding_model": "cam++",
     "embedding_dim": 512,
     "source": "pure_agent_segments_plus_clean_clips",
@@ -1723,7 +1777,16 @@
     "total_training_seconds": 192.76,
     "mean_inside_sim": 0.7355,
     "max_outside_sim": 0.3482,
-    "updated_at_epoch": 1778096232
+    "updated_at_epoch": 1778096232,
+    "has_desk_voiceprints": true,
+    "desk_voiceprints": [
+      "zak_raissi_barnet_desk_campp_v1.npy",
+      "zak_raissi_barnet_desk_campp_v2.npy",
+      "zak_raissi_barnet_desk_campp_v3.npy",
+      "zak_raissi_barnet_desk_campp_v4.npy",
+      "zak_raissi_barnet_desk_campp_v5.npy",
+      "zak_raissi_barnet_desk_campp_v6.npy"
+    ]
   },
   "hussein_mohamed": {
     "agent_name": "Hussein Mohamed",
@@ -1752,9 +1815,27 @@
         "source": "pure_agent_segments_plus_clean_clips",
         "embedding_model": "cam++",
         "embedding_dim": 512
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v1.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.3358
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v2.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
+        "source_speaker": "SPEAKER_01",
+        "source_similarity_to_phone_vp": 0.3072
       }
     ],
-    "n_voiceprints": 4,
+    "n_voiceprints": 6,
     "embedding_model": "cam++",
     "embedding_dim": 512,
     "source": "pure_agent_segments_plus_clean_clips",
@@ -1765,6 +1846,11 @@
     "total_training_seconds": 69.64,
     "mean_inside_sim": 0.8194,
     "max_outside_sim": 0.2263,
-    "updated_at_epoch": 1778096267
+    "updated_at_epoch": 1778096267,
+    "has_desk_voiceprints": true,
+    "desk_voiceprints": [
+      "hussein_mohamed_desk_campp_v1.npy",
+      "hussein_mohamed_desk_campp_v2.npy"
+    ]
   }
 }

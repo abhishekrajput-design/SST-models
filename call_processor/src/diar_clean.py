@@ -556,6 +556,8 @@ if __name__ == "__main__":
                         help="use streaming Sortformer instead of the full GPU model")
     parser.add_argument("--gt", help="Optional ground truth JSON for accuracy comparison")
     parser.add_argument("--target-agent-slug", help="limit voice matching to one expected agent slug")
+    parser.add_argument("--presence-floor", type=float, default=AGENT_PRESENCE_FLOOR,
+                        help="minimum cosine required to assert the target agent is present")
     parser.add_argument("--gt-auto-offset", action="store_true",
                         help="shift GT segment times by detected leading speech offset")
     parser.add_argument("--out", help="write full JSON result to this path")
@@ -588,6 +590,7 @@ if __name__ == "__main__":
         max_speakers=args.max_speakers,
         sortformer_streaming=args.streaming_sortformer,
         target_agent_slug=args.target_agent_slug,
+        presence_floor=args.presence_floor,
         hf_token=os.environ.get("HF_TOKEN"),
     )
 
