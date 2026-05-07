@@ -1,0 +1,408 @@
+{
+  "labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "offset_mode": "detected",
+  "skipped_calls": [],
+  "label_reports": {
+    "call_01": {
+      "call_id": "20260503T104319184_615752",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_01\\audio_16k.wav",
+      "offset_s": 1.44,
+      "segments": 50,
+      "agent_segments": 25,
+      "customer_segments": 25,
+      "alternation_baseline": {
+        "segments": 50,
+        "accuracy": 100.0,
+        "first_role": "customer",
+        "adjacent_same_role_pairs": 0,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_02": {
+      "call_id": "20260429T085638315_375379",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_02\\audio_16k.wav",
+      "offset_s": 3.45,
+      "segments": 52,
+      "agent_segments": 26,
+      "customer_segments": 26,
+      "alternation_baseline": {
+        "segments": 52,
+        "accuracy": 100.0,
+        "first_role": "customer",
+        "adjacent_same_role_pairs": 0,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_03": {
+      "call_id": "20260423T120114270_510233",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_03\\20260423T120114270_510233.mp3",
+      "offset_s": 0.89,
+      "segments": 52,
+      "agent_segments": 26,
+      "customer_segments": 26,
+      "alternation_baseline": {
+        "segments": 52,
+        "accuracy": 100.0,
+        "first_role": "customer",
+        "adjacent_same_role_pairs": 0,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_04": {
+      "call_id": "20260415T142857417_569154",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_04\\20260415T142857417_569154.mp3",
+      "offset_s": 0.74,
+      "segments": 44,
+      "agent_segments": 22,
+      "customer_segments": 22,
+      "alternation_baseline": {
+        "segments": 44,
+        "accuracy": 100.0,
+        "first_role": "customer",
+        "adjacent_same_role_pairs": 0,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    }
+  },
+  "all_labels_alternation_baseline": {
+    "segments": 198,
+    "accuracy": 100.0,
+    "first_role": "customer",
+    "adjacent_same_role_pairs": 0,
+    "note": "label-structure baseline only; not voice-model accuracy"
+  },
+  "saved_results": {
+    "zak_call02_speaker_first_target_zak_eval.json": {
+      "call_id": "20260429T085638315_375379",
+      "field": "segments",
+      "score": {
+        "segments": 52,
+        "overall_accuracy": 46.15,
+        "agent_accuracy": 53.85,
+        "customer_accuracy": 38.46,
+        "agent_correct": 14,
+        "agent_total": 26,
+        "customer_correct": 10,
+        "customer_total": 26,
+        "duration_weighted": {
+          "agent_accuracy": 49.31,
+          "customer_accuracy": 34.96,
+          "overall_accuracy": 42.7
+        },
+        "no_overlap_segments": 0,
+        "errors": [
+          {
+            "segment": 4,
+            "time": [
+              11.45,
+              17.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 6.0,
+            "text": "Okay, no worries. And that was on uh it was Jason that sold you the car correct? HJ72."
+          },
+          {
+            "segment": 5,
+            "time": [
+              17.45,
+              18.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 1.0,
+            "text": "Yes, please."
+          },
+          {
+            "segment": 7,
+            "time": [
+              21.45,
+              22.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 1.0,
+            "text": "Five."
+          },
+          {
+            "segment": 9,
+            "time": [
+              40.45,
+              42.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 2.0,
+            "text": "Today will be the last day."
+          },
+          {
+            "segment": 11,
+            "time": [
+              45.45,
+              54.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 9.0,
+            "text": "Yes, 'cause I tried to call you yesterday, but for some reason that called it didn't went through, and then my partner tried, so yeah..."
+          },
+          {
+            "segment": 12,
+            "time": [
+              54.45,
+              66.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 12.0,
+            "text": "No stress, no stress, no stress. I'm going to leave a note now. Um, you should receive an email to confirm that your warranty has been refun"
+          },
+          {
+            "segment": 13,
+            "time": [
+              66.45,
+              74.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 8.0,
+            "text": "Okay, one question please, very quick. So this was added on my finance. How this is going to affect my finance?"
+          },
+          {
+            "segment": 14,
+            "time": [
+              74.45,
+              78.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 4.0,
+            "text": "Bear with me, I'm just, give me one second please."
+          },
+          {
+            "segment": 16,
+            "time": [
+              79.45,
+              82.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 3.0,
+            "text": "And was it the full five years you wanted to cancel?"
+          },
+          {
+            "segment": 17,
+            "time": [
+              82.45,
+              84.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 2.0,
+            "text": "Yes, yeah."
+          },
+          {
+            "segment": 20,
+            "time": [
+              99.45,
+              108.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 9.0,
+            "text": "Okay, no worries. Just bear with me. So essentially, what would happen is... what was your deposit?"
+          },
+          {
+            "segment": 21,
+            "time": [
+              108.45,
+              109.45
+            ],
+            "expected": "customer",
+            "predicted": "unknown",
+            "overlap_seconds": 1.0,
+            "text": "Seven."
+          },
+          {
+            "segment": 22,
+            "time": [
+              109.45,
+              111.45
+            ],
+            "expected": "agent",
+            "predicted": "unknown",
+            "overlap_seconds": 2.0,
+            "text": "7,000 pounds?"
+          },
+          {
+            "segment": 23,
+            "time": [
+              111.45,
+              112.45
+            ],
+            "expected": "customer",
+            "predicted": "unknown",
+            "overlap_seconds": 1.0,
+            "text": "Yes."
+          },
+          {
+            "segment": 25,
+            "time": [
+              123.45,
+              127.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 4.0,
+            "text": "Okay, so I'll get it back on the same payment method?"
+          },
+          {
+            "segment": 27,
+            "time": [
+              132.45,
+              139.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 7.0,
+            "text": "Yes, yes, this is what I'm going to do because I'm thinking to pay quicker the..."
+          },
+          {
+            "segment": 29,
+            "time": [
+              142.45,
+              144.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 2.0,
+            "text": "Um, Mariana."
+          },
+          {
+            "segment": 30,
+            "time": [
+              144.45,
+              162.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 18.0,
+            "text": "Mariana, okay. Alright Mariana, just confirm your email for me, that will be the last thing."
+          },
+          {
+            "segment": 31,
+            "time": [
+              162.45,
+              172.45
+            ],
+            "expected": "customer",
+            "predicted": "unknown",
+            "overlap_seconds": 10.0,
+            "text": "Uh, M A R R Y L O Z O V A N U @ gmail.com"
+          },
+          {
+            "segment": 34,
+            "time": [
+              180.45,
+              183.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 3.0,
+            "text": "L O Z O V O... Mary Lovoz?"
+          },
+          {
+            "segment": 37,
+            "time": [
+              188.45,
+              192.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 4.0,
+            "text": "Okay. L O Z O V A N U."
+          },
+          {
+            "segment": 40,
+            "time": [
+              199.45,
+              201.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 2.0,
+            "text": "@gmail.com yeah."
+          },
+          {
+            "segment": 41,
+            "time": [
+              201.45,
+              204.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 3.0,
+            "text": "Yeah, you should have my email because I've got lots of emails from you guys."
+          },
+          {
+            "segment": 43,
+            "time": [
+              209.45,
+              233.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 24.0,
+            "text": "Okay, no worries. So um, this Friday I have an appointment with you guys, I think service with regards with the engine mount. Um, so I'm not"
+          },
+          {
+            "segment": 46,
+            "time": [
+              243.45,
+              247.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 4.0,
+            "text": "Yeah no that that that should be okay, there's no worries with that."
+          },
+          {
+            "segment": 48,
+            "time": [
+              255.45,
+              256.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 1.0,
+            "text": "Okay, no worries."
+          },
+          {
+            "segment": 50,
+            "time": [
+              259.45,
+              268.45
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 9.0,
+            "text": "No, it won't affect your service plan. Um, you're just gonna get a refund for the 5 years, whatever you charged for the 5 years. Okay, take "
+          },
+          {
+            "segment": 51,
+            "time": [
+              268.45,
+              269.45
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 1.0,
+            "text": "Yeah, okay. Okay, yeah, okay. Thank you very much, thank you, have a good day, bye."
+          }
+        ]
+      }
+    }
+  },
+  "note": "Correct model verification must use timestamp overlap and held-out calls. The alternation baseline is reported only to reveal label structure."
+}

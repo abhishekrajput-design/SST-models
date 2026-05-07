@@ -1,0 +1,745 @@
+﻿{
+    "call_id":  "20260506T095332963_533200",
+    "agent_name":  "Zak Raissi",
+    "source":  "gemini",
+    "segments":  [
+                     {
+                         "start":  0.0,
+                         "end":  1.0,
+                         "speaker":  "agent",
+                         "text":  "Hello."
+                     },
+                     {
+                         "start":  1.0,
+                         "end":  2.0,
+                         "speaker":  "customer",
+                         "text":  "Yes, sir."
+                     },
+                     {
+                         "start":  2.0,
+                         "end":  3.0,
+                         "speaker":  "agent",
+                         "text":  "Yes, sir, how are you?"
+                     },
+                     {
+                         "start":  3.0,
+                         "end":  4.5,
+                         "speaker":  "customer",
+                         "text":  "I\u0027m good, thank you."
+                     },
+                     {
+                         "start":  4.5,
+                         "end":  14.5,
+                         "speaker":  "agent",
+                         "text":  "Good, good. You\u0027re through to Zak from the Barnet branch. I\u0027m one of the senior sales execs. Essentially, I\u0027ve been told you left a deposit on a lovely Volvo XC40 two days ago."
+                     },
+                     {
+                         "start":  14.5,
+                         "end":  17.5,
+                         "speaker":  "agent",
+                         "text":  "However, you\u0027re not happy with the insurance prices that you found."
+                     },
+                     {
+                         "start":  17.5,
+                         "end":  20.0,
+                         "speaker":  "customer",
+                         "text":  "It\u0027s 460 pounds a month."
+                     },
+                     {
+                         "start":  20.0,
+                         "end":  21.5,
+                         "speaker":  "agent",
+                         "text":  "460 pounds a month?"
+                     },
+                     {
+                         "start":  21.5,
+                         "end":  22.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  22.5,
+                         "end":  24.5,
+                         "speaker":  "agent",
+                         "text":  "A year? A month."
+                     },
+                     {
+                         "start":  24.5,
+                         "end":  25.5,
+                         "speaker":  "customer",
+                         "text":  "A month."
+                     },
+                     {
+                         "start":  25.5,
+                         "end":  26.5,
+                         "speaker":  "agent",
+                         "text":  "Okay. A year."
+                     },
+                     {
+                         "start":  26.5,
+                         "end":  31.0,
+                         "speaker":  "customer",
+                         "text":  "If it, if it, if it\u0027s a year, I\u0027d pay it three times, ten times."
+                     },
+                     {
+                         "start":  31.0,
+                         "end":  33.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah I was about to say the same thing."
+                     },
+                     {
+                         "start":  33.0,
+                         "end":  44.0,
+                         "speaker":  "agent",
+                         "text":  "Well look Mr Roland, obviously insurance is usually subject to the license more than anything. I know you live in London and probably the postcode you live in is, is like susceptible to..."
+                     },
+                     {
+                         "start":  44.0,
+                         "end":  48.0,
+                         "speaker":  "customer",
+                         "text":  "But what I pay for my car, I have my CLS, I\u0027m paying 260."
+                     },
+                     {
+                         "start":  48.0,
+                         "end":  50.0,
+                         "speaker":  "agent",
+                         "text":  "How much for the CLS? 260."
+                     },
+                     {
+                         "start":  50.0,
+                         "end":  51.5,
+                         "speaker":  "agent",
+                         "text":  "Which year is the CLS?"
+                     },
+                     {
+                         "start":  51.5,
+                         "end":  53.0,
+                         "speaker":  "customer",
+                         "text":  "2015."
+                     },
+                     {
+                         "start":  53.0,
+                         "end":  55.0,
+                         "speaker":  "agent",
+                         "text":  "Which engine? 2.2."
+                     },
+                     {
+                         "start":  55.0,
+                         "end":  58.0,
+                         "speaker":  "agent",
+                         "text":  "And it\u0027s 260 yeah? This one..."
+                     },
+                     {
+                         "start":  58.0,
+                         "end":  64.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah this one I was gonna call my insurance to just to transfer it from my CLS over to the to the Volvo."
+                     },
+                     {
+                         "start":  64.5,
+                         "end":  66.5,
+                         "speaker":  "agent",
+                         "text":  "And they and they quoted you 460 yeah?"
+                     },
+                     {
+                         "start":  66.5,
+                         "end":  67.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  67.5,
+                         "end":  69.5,
+                         "speaker":  "agent",
+                         "text":  "Okay. Do me a favour."
+                     },
+                     {
+                         "start":  69.5,
+                         "end":  71.0,
+                         "speaker":  "customer",
+                         "text":  "Yes."
+                     },
+                     {
+                         "start":  71.0,
+                         "end":  81.0,
+                         "speaker":  "agent",
+                         "text":  "Because look, I can I can try and find you another car that we have that will give you a cheaper insurance, but I I assume that you like the Volvo XC90."
+                     },
+                     {
+                         "start":  81.0,
+                         "end":  85.0,
+                         "speaker":  "customer",
+                         "text":  "Mm, my missus is gonna kill me if I get another car."
+                     },
+                     {
+                         "start":  85.0,
+                         "end":  89.0,
+                         "speaker":  "agent",
+                         "text":  "That\u0027s what I\u0027m saying. So look, I don\u0027t wanna find you another car. I\u0027m just gonna solve your problem."
+                     },
+                     {
+                         "start":  89.0,
+                         "end":  90.0,
+                         "speaker":  "customer",
+                         "text":  "How?"
+                     },
+                     {
+                         "start":  90.0,
+                         "end":  99.5,
+                         "speaker":  "agent",
+                         "text":  "So obviously me personally, I work with a few insurance brokers. But I can\u0027t make you a promise in terms of insurance. What I can tell you is if you look on confused.com without trying to transfer your insurance..."
+                     },
+                     {
+                         "start":  99.5,
+                         "end":  105.0,
+                         "speaker":  "customer",
+                         "text":  "I tried last night. I tried, uh, I tried all the different insurances as well."
+                     },
+                     {
+                         "start":  105.0,
+                         "end":  106.0,
+                         "speaker":  "agent",
+                         "text":  "They gave you the same price."
+                     },
+                     {
+                         "start":  106.0,
+                         "end":  108.0,
+                         "speaker":  "customer",
+                         "text":  "About the same price."
+                     },
+                     {
+                         "start":  108.0,
+                         "end":  115.5,
+                         "speaker":  "agent",
+                         "text":  "But I\u0027m surprised. I think it\u0027s because the XC90 is known for being stolen. But that\u0027s not a big deal. You know when you do the insurance and it says do you have a tracker, an immobiliser..."
+                     },
+                     {
+                         "start":  115.5,
+                         "end":  118.5,
+                         "speaker":  "customer",
+                         "text":  "Every car, every car... If they come to steal every car they can steal it man."
+                     },
+                     {
+                         "start":  118.5,
+                         "end":  126.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah I know, I know Volvo and Range Rover they\u0027re they\u0027re they\u0027re a lot, they\u0027re expensive so when you steal it it\u0027s easy money for them. But uh what was I gonna say Roland?"
+                     },
+                     {
+                         "start":  126.0,
+                         "end":  133.5,
+                         "speaker":  "agent",
+                         "text":  "On the insurance have you put down that you have a Ghost Immobiliser, a tracker?"
+                     },
+                     {
+                         "start":  133.5,
+                         "end":  140.5,
+                         "speaker":  "customer",
+                         "text":  "But that what was yes because of what I\u0027m using in my car and what I put that this one..."
+                     },
+                     {
+                         "start":  140.5,
+                         "end":  148.5,
+                         "speaker":  "customer",
+                         "text":  "They just give me the, they... they just give me the, the... they just said to me just to check how much it\u0027s gonna be."
+                     },
+                     {
+                         "start":  148.5,
+                         "end":  149.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  149.5,
+                         "end":  154.5,
+                         "speaker":  "customer",
+                         "text":  "And they said to me the... 460 and I checked last night..."
+                     },
+                     {
+                         "start":  154.5,
+                         "end":  155.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  155.5,
+                         "end":  158.0,
+                         "speaker":  "customer",
+                         "text":  "And they\u0027re saying same things like 360, 400..."
+                     },
+                     {
+                         "start":  158.0,
+                         "end":  164.5,
+                         "speaker":  "agent",
+                         "text":  "360 is a lot better but it\u0027s not perfect. We need to be under... under that, you know?"
+                     },
+                     {
+                         "start":  164.5,
+                         "end":  168.0,
+                         "speaker":  "customer",
+                         "text":  "At least like the same like my one and I can cancel my my my insurance..."
+                     },
+                     {
+                         "start":  168.0,
+                         "end":  172.5,
+                         "speaker":  "agent",
+                         "text":  "At least, I know, look, like we can\u0027t take the piss, you know."
+                     },
+                     {
+                         "start":  172.5,
+                         "end":  175.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, because it\u0027s too much right there, if it\u0027s you, you\u0027re gonna pay 460 for an insurance?"
+                     },
+                     {
+                         "start":  175.0,
+                         "end":  182.5,
+                         "speaker":  "agent",
+                         "text":  "No, no, not for XC90. I maybe pay that for Lamborghini Urus but not for XC90, do you understand me?"
+                     },
+                     {
+                         "start":  182.5,
+                         "end":  184.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  184.0,
+                         "end":  189.0,
+                         "speaker":  "agent",
+                         "text":  "So I I understand what you\u0027re saying. Um, I\u0027m just trying to think of a way to..."
+                     },
+                     {
+                         "start":  189.0,
+                         "end":  194.0,
+                         "speaker":  "customer",
+                         "text":  "I was speaking with the your manager... your manager I don\u0027t know which one is there... the the the irony guy..."
+                     },
+                     {
+                         "start":  194.0,
+                         "end":  195.0,
+                         "speaker":  "agent",
+                         "text":  "What did he say?"
+                     },
+                     {
+                         "start":  195.0,
+                         "end":  199.0,
+                         "speaker":  "customer",
+                         "text":  "Last night, he said to me if you don\u0027t find anything you can take your deposit back he said."
+                     },
+                     {
+                         "start":  199.0,
+                         "end":  201.0,
+                         "speaker":  "agent",
+                         "text":  "Oh he said to you you can get your deposit back yeah?"
+                     },
+                     {
+                         "start":  201.0,
+                         "end":  206.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah yeah, I said to him let her know the the lady which one she she she was dealing with me."
+                     },
+                     {
+                         "start":  206.5,
+                         "end":  208.0,
+                         "speaker":  "agent",
+                         "text":  "Okay. The Indian one."
+                     },
+                     {
+                         "start":  208.0,
+                         "end":  213.5,
+                         "speaker":  "agent",
+                         "text":  "Okay. I\u0027ll speak to her as well and just double check on all of that, but..."
+                     },
+                     {
+                         "start":  213.5,
+                         "end":  218.0,
+                         "speaker":  "agent",
+                         "text":  "Do you not want to buy the car or is it just the insurance that\u0027s the issue?"
+                     },
+                     {
+                         "start":  218.0,
+                         "end":  222.0,
+                         "speaker":  "customer",
+                         "text":  "The insurance is the the issue man. Because the the car, if the it was cheaper insurance I\u0027ll get it..."
+                     },
+                     {
+                         "start":  222.0,
+                         "end":  224.5,
+                         "speaker":  "agent",
+                         "text":  "Have you tried, have you tried to look at any other XC90s and have a look how much they are?"
+                     },
+                     {
+                         "start":  224.5,
+                         "end":  230.5,
+                         "speaker":  "customer",
+                         "text":  "I try I tried the different one with what do you have, you guys have another one..."
+                     },
+                     {
+                         "start":  230.5,
+                         "end":  232.0,
+                         "speaker":  "agent",
+                         "text":  "In our website, ah let me check the number plate."
+                     },
+                     {
+                         "start":  232.0,
+                         "end":  234.0,
+                         "speaker":  "customer",
+                         "text":  "And they\u0027re saying the same thing."
+                     },
+                     {
+                         "start":  234.0,
+                         "end":  238.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  238.0,
+                         "end":  242.0,
+                         "speaker":  "customer",
+                         "text":  "But it was a hybrid and petrol I think."
+                     },
+                     {
+                         "start":  242.0,
+                         "end":  245.0,
+                         "speaker":  "agent",
+                         "text":  "And was you looking for just petrol?"
+                     },
+                     {
+                         "start":  245.0,
+                         "end":  249.5,
+                         "speaker":  "customer",
+                         "text":  "For this if it\u0027s hybrid is it gonna be same thing, same... same price 460."
+                     },
+                     {
+                         "start":  249.5,
+                         "end":  257.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, the thing is look, I\u0027ll double check just to give you full peace of mind that your money is is refundable and I can transfer you back the deposit, that\u0027s no problem."
+                     },
+                     {
+                         "start":  257.0,
+                         "end":  261.5,
+                         "speaker":  "agent",
+                         "text":  "As long as it\u0027s been, as long as it\u0027s been approved, as long as it\u0027s been approved like you say it is, it\u0027s gonna be no issue at all."
+                     },
+                     {
+                         "start":  261.5,
+                         "end":  266.5,
+                         "speaker":  "agent",
+                         "text":  "And you\u0027ll get the money in 2-3 days, but at the same time, if there is a solution I wanna help you find it."
+                     },
+                     {
+                         "start":  266.5,
+                         "end":  270.5,
+                         "speaker":  "agent",
+                         "text":  "Now was there any other cars on the website of interest?"
+                     },
+                     {
+                         "start":  270.5,
+                         "end":  277.5,
+                         "speaker":  "customer",
+                         "text":  "Uh not to be honest with you because what you guys have there seven seaters you have I didn\u0027t like it."
+                     },
+                     {
+                         "start":  277.5,
+                         "end":  278.5,
+                         "speaker":  "agent",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  278.5,
+                         "end":  284.0,
+                         "speaker":  "customer",
+                         "text":  "Because I\u0027m look I\u0027m looking for any seven seaters. But if anything comes..."
+                     },
+                     {
+                         "start":  284.0,
+                         "end":  285.5,
+                         "speaker":  "customer",
+                         "text":  "Like after."
+                     },
+                     {
+                         "start":  285.5,
+                         "end":  290.0,
+                         "speaker":  "agent",
+                         "text":  "Maybe we can have a look and I will come back to you guys. I know it\u0027s closer for me as well."
+                     },
+                     {
+                         "start":  290.0,
+                         "end":  293.0,
+                         "speaker":  "agent",
+                         "text":  "Alright cool. There\u0027s one last thing I wanna try for you yeah."
+                     },
+                     {
+                         "start":  293.0,
+                         "end":  295.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  295.0,
+                         "end":  302.0,
+                         "speaker":  "agent",
+                         "text":  "So obviously like I said I\u0027ve got networking links with insurance brokerage. Um if I get you a quote that makes sense to you,"
+                     },
+                     {
+                         "start":  302.0,
+                         "end":  305.5,
+                         "speaker":  "agent",
+                         "text":  "Uh would you would you still be happy to proceed?"
+                     },
+                     {
+                         "start":  305.5,
+                         "end":  312.0,
+                         "speaker":  "customer",
+                         "text":  "Look it\u0027s gonna be a same thing I know because I I dealt with insurance, I deal with this..."
+                     },
+                     {
+                         "start":  312.0,
+                         "end":  317.0,
+                         "speaker":  "agent",
+                         "text":  "I promise you. My my Golf GTI insurance would have been 6000 pound, my Golf should have been 6000 pound."
+                     },
+                     {
+                         "start":  317.0,
+                         "end":  321.5,
+                         "speaker":  "agent",
+                         "text":  "I paid 2400. It\u0027s not cheap, but it\u0027s like fast GTI. So..."
+                     },
+                     {
+                         "start":  321.5,
+                         "end":  325.5,
+                         "speaker":  "agent",
+                         "text":  "I understand insurance from a different perspective, from a different angle."
+                     },
+                     {
+                         "start":  325.5,
+                         "end":  331.0,
+                         "speaker":  "agent",
+                         "text":  "So that\u0027s why I\u0027m asking you, if I can get you a quote, would you still be happy..."
+                     },
+                     {
+                         "start":  331.0,
+                         "end":  334.0,
+                         "speaker":  "customer",
+                         "text":  "From a dodgy one, yeah, because a dodgy one I..."
+                     },
+                     {
+                         "start":  334.0,
+                         "end":  341.0,
+                         "speaker":  "agent",
+                         "text":  "No, no, I work, I work at a dealership, man. I can\u0027t do dodgy stuff. It\u0027s, it\u0027s all, it\u0027s all legal, you know."
+                     },
+                     {
+                         "start":  341.0,
+                         "end":  343.0,
+                         "speaker":  "customer",
+                         "text":  "Because if they stop me I\u0027ll get fucked."
+                     },
+                     {
+                         "start":  343.0,
+                         "end":  351.0,
+                         "speaker":  "agent",
+                         "text":  "No, it\u0027s dodgy is not, the dodgy is not even up for debate. It\u0027s gonna be just a normal insurance with like money supermarket."
+                     },
+                     {
+                         "start":  351.0,
+                         "end":  353.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  353.0,
+                         "end":  357.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah so I\u0027m just asking you if, if I get you a quote that makes sense for you, would you still be happy to go ahead or not?"
+                     },
+                     {
+                         "start":  357.5,
+                         "end":  361.5,
+                         "speaker":  "customer",
+                         "text":  "Well just leave it for now and just..."
+                     },
+                     {
+                         "start":  361.5,
+                         "end":  364.5,
+                         "speaker":  "customer",
+                         "text":  "Because I\u0027ll check all the insurances..."
+                     },
+                     {
+                         "start":  364.5,
+                         "end":  372.5,
+                         "speaker":  "agent",
+                         "text":  "Look obviously we can start the deposit and send it back to you if that\u0027s the case. But if you like the XC90 I don\u0027t mind trying to find you a quote."
+                     },
+                     {
+                         "start":  372.5,
+                         "end":  375.0,
+                         "speaker":  "agent",
+                         "text":  "Um, of between 200 to 250 pounds a month for your car."
+                     },
+                     {
+                         "start":  375.0,
+                         "end":  377.5,
+                         "speaker":  "customer",
+                         "text":  "If it\u0027s by month..."
+                     },
+                     {
+                         "start":  377.5,
+                         "end":  381.0,
+                         "speaker":  "agent",
+                         "text":  "200 to 250 pounds a month for your insurance, yeah."
+                     },
+                     {
+                         "start":  381.0,
+                         "end":  384.0,
+                         "speaker":  "customer",
+                         "text":  "Just have a look."
+                     },
+                     {
+                         "start":  384.0,
+                         "end":  388.0,
+                         "speaker":  "agent",
+                         "text":  "I\u0027ll have a look, I\u0027m gonna send you an email. Just reply back to it and then I\u0027ll send you a quote and tell you if it\u0027s, if it\u0027s worse."
+                     },
+                     {
+                         "start":  388.0,
+                         "end":  390.5,
+                         "speaker":  "customer",
+                         "text":  "If you try... What, can I pay that?"
+                     },
+                     {
+                         "start":  390.5,
+                         "end":  396.0,
+                         "speaker":  "agent",
+                         "text":  "I\u0027ll send you an email, and then just fill out the information, and I\u0027ll try and get you a competitive quote."
+                     },
+                     {
+                         "start":  396.0,
+                         "end":  401.0,
+                         "speaker":  "agent",
+                         "text":  "Um, if I can\u0027t it\u0027s okay, you know, but if I can I\u0027ll try, you know?"
+                     },
+                     {
+                         "start":  401.0,
+                         "end":  403.0,
+                         "speaker":  "customer",
+                         "text":  "Alright let me see, yeah."
+                     },
+                     {
+                         "start":  403.0,
+                         "end":  408.0,
+                         "speaker":  "agent",
+                         "text":  "Alright Roland, I\u0027ll speak to you soon, I\u0027m gonna drop you an email. Um and we\u0027ll get in touch."
+                     },
+                     {
+                         "start":  408.0,
+                         "end":  412.5,
+                         "speaker":  "agent",
+                         "text":  "And then if I can\u0027t help you out, at least I tried, and if you\u0027re 100% sure there\u0027s no other 7-seaters on our website..."
+                     },
+                     {
+                         "start":  412.5,
+                         "end":  415.5,
+                         "speaker":  "customer",
+                         "text":  "What, there\u0027s one, there\u0027s another one, but it\u0027s 6 owners man."
+                     },
+                     {
+                         "start":  415.5,
+                         "end":  418.0,
+                         "speaker":  "agent",
+                         "text":  "With what car is it?"
+                     },
+                     {
+                         "start":  418.0,
+                         "end":  421.0,
+                         "speaker":  "customer",
+                         "text":  "The white, uh, white one, XC90."
+                     },
+                     {
+                         "start":  421.0,
+                         "end":  423.0,
+                         "speaker":  "agent",
+                         "text":  "Mmm. Give me a second before you go."
+                     },
+                     {
+                         "start":  423.0,
+                         "end":  428.5,
+                         "speaker":  "agent",
+                         "text":  "Sometimes owners are, are the same family."
+                     },
+                     {
+                         "start":  428.5,
+                         "end":  432.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah yeah yeah yeah."
+                     },
+                     {
+                         "start":  432.0,
+                         "end":  436.5,
+                         "speaker":  "agent",
+                         "text":  "Not, not all the time, but sometimes, and sometimes I can check if that\u0027s the case."
+                     },
+                     {
+                         "start":  436.5,
+                         "end":  439.5,
+                         "speaker":  "agent",
+                         "text":  "SY65. Okay, uh..."
+                     },
+                     {
+                         "start":  439.5,
+                         "end":  444.0,
+                         "speaker":  "customer",
+                         "text":  "But it was expensive as well, I don\u0027t know..."
+                     },
+                     {
+                         "start":  444.0,
+                         "end":  446.5,
+                         "speaker":  "agent",
+                         "text":  "How much was it?"
+                     },
+                     {
+                         "start":  446.5,
+                         "end":  449.0,
+                         "speaker":  "customer",
+                         "text":  "It was 20,650, the car."
+                     },
+                     {
+                         "start":  449.0,
+                         "end":  453.0,
+                         "speaker":  "agent",
+                         "text":  "And the one you\u0027re looking at is 22,000, so this one\u0027s 2000 cheaper."
+                     },
+                     {
+                         "start":  453.0,
+                         "end":  457.0,
+                         "speaker":  "agent",
+                         "text":  "A full main dealer, six previous owners, last one is a female."
+                     },
+                     {
+                         "start":  457.0,
+                         "end":  458.5,
+                         "speaker":  "customer",
+                         "text":  "Ah man, I don\u0027t..."
+                     },
+                     {
+                         "start":  458.5,
+                         "end":  460.5,
+                         "speaker":  "agent",
+                         "text":  "Because it\u0027s 6 owners. Okay, you find it\u0027s hard to sell, yeah."
+                     },
+                     {
+                         "start":  460.5,
+                         "end":  464.5,
+                         "speaker":  "agent",
+                         "text":  "Okay Roland, I leave you to it, and I\u0027ll be in touch with you."
+                     },
+                     {
+                         "start":  464.5,
+                         "end":  466.0,
+                         "speaker":  "customer",
+                         "text":  "Alright man."
+                     }
+                 ]
+}

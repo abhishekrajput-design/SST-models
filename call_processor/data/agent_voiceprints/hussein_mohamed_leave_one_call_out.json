@@ -1,0 +1,343 @@
+{
+  "agent_slug": "hussein_mohamed",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed",
+  "label_source": "folder-data",
+  "offset_mode": "none",
+  "calls": 3,
+  "eval_rows": 38,
+  "clean_rows": 0,
+  "skipped_calls": [],
+  "skipped_segments": [],
+  "folds": [
+    {
+      "heldout_call": "call_03",
+      "train_segments": 9,
+      "train_eval_segments": 22,
+      "test_segments": 16,
+      "customer_p95": 0.1915,
+      "calibrated_threshold": 0.34,
+      "best_train_threshold": {
+        "threshold": 0.24,
+        "segments": 22,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 22,
+        "total": 22,
+        "agent_correct": 13,
+        "agent_total": 13,
+        "customer_correct": 9,
+        "customer_total": 9,
+        "errors": [],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.34,
+        "segments": 16,
+        "overall_accuracy": 93.75,
+        "agent_accuracy": 92.31,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 16,
+        "agent_correct": 12,
+        "agent_total": 13,
+        "customer_correct": 3,
+        "customer_total": 3,
+        "errors": [
+          {
+            "call": "call_03",
+            "segment": 31,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.2064,
+            "text": "Bye bye bye bye"
+          }
+        ]
+      },
+      "train_tuned": {
+        "threshold": 0.24,
+        "segments": 16,
+        "overall_accuracy": 93.75,
+        "agent_accuracy": 92.31,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 16,
+        "agent_correct": 12,
+        "agent_total": 13,
+        "customer_correct": 3,
+        "customer_total": 3,
+        "errors": [
+          {
+            "call": "call_03",
+            "segment": 31,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.2064,
+            "text": "Bye bye bye bye"
+          }
+        ]
+      }
+    },
+    {
+      "heldout_call": "call_04",
+      "train_segments": 15,
+      "train_eval_segments": 33,
+      "test_segments": 5,
+      "customer_p95": 0.1835,
+      "calibrated_threshold": 0.34,
+      "best_train_threshold": {
+        "threshold": 0.19,
+        "segments": 33,
+        "overall_accuracy": 96.97,
+        "agent_accuracy": 95.45,
+        "customer_accuracy": 100.0,
+        "correct": 32,
+        "total": 33,
+        "agent_correct": 21,
+        "agent_total": 22,
+        "customer_correct": 11,
+        "customer_total": 11,
+        "errors": [
+          {
+            "call": "call_03",
+            "segment": 31,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.1787,
+            "text": "Bye bye bye bye"
+          }
+        ],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.34,
+        "segments": 5,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 5,
+        "total": 5,
+        "agent_correct": 4,
+        "agent_total": 4,
+        "customer_correct": 1,
+        "customer_total": 1,
+        "errors": []
+      },
+      "train_tuned": {
+        "threshold": 0.19,
+        "segments": 5,
+        "overall_accuracy": 80.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 0.0,
+        "correct": 4,
+        "total": 5,
+        "agent_correct": 4,
+        "agent_total": 4,
+        "customer_correct": 0,
+        "customer_total": 1,
+        "errors": [
+          {
+            "call": "call_04",
+            "segment": 10,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.2365,
+            "text": "Hi, I'm good, I'm good."
+          }
+        ]
+      }
+    },
+    {
+      "heldout_call": "call_08",
+      "train_segments": 12,
+      "train_eval_segments": 21,
+      "test_segments": 17,
+      "customer_p95": 0.2054,
+      "calibrated_threshold": 0.34,
+      "best_train_threshold": {
+        "threshold": 0.215,
+        "segments": 21,
+        "overall_accuracy": 95.24,
+        "agent_accuracy": 94.12,
+        "customer_accuracy": 100.0,
+        "correct": 20,
+        "total": 21,
+        "agent_correct": 16,
+        "agent_total": 17,
+        "customer_correct": 4,
+        "customer_total": 4,
+        "errors": [
+          {
+            "call": "call_03",
+            "segment": 31,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.1314,
+            "text": "Bye bye bye bye"
+          }
+        ],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.34,
+        "segments": 17,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 17,
+        "total": 17,
+        "agent_correct": 9,
+        "agent_total": 9,
+        "customer_correct": 8,
+        "customer_total": 8,
+        "errors": []
+      },
+      "train_tuned": {
+        "threshold": 0.215,
+        "segments": 17,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 17,
+        "total": 17,
+        "agent_correct": 9,
+        "agent_total": 9,
+        "customer_correct": 8,
+        "customer_total": 8,
+        "errors": []
+      }
+    }
+  ],
+  "calibrated_leave_one_call_out": {
+    "overall_accuracy": 97.37,
+    "agent_accuracy": 96.15,
+    "customer_accuracy": 100.0,
+    "correct": 37,
+    "total": 38,
+    "agent_correct": 25,
+    "agent_total": 26,
+    "customer_correct": 12,
+    "customer_total": 12,
+    "per_call": {
+      "call_03": {
+        "threshold": 0.34,
+        "segments": 16,
+        "overall_accuracy": 93.75,
+        "agent_accuracy": 92.31,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 16,
+        "agent_correct": 12,
+        "agent_total": 13,
+        "customer_correct": 3,
+        "customer_total": 3
+      },
+      "call_04": {
+        "threshold": 0.34,
+        "segments": 5,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 5,
+        "total": 5,
+        "agent_correct": 4,
+        "agent_total": 4,
+        "customer_correct": 1,
+        "customer_total": 1
+      },
+      "call_08": {
+        "threshold": 0.34,
+        "segments": 17,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 17,
+        "total": 17,
+        "agent_correct": 9,
+        "agent_total": 9,
+        "customer_correct": 8,
+        "customer_total": 8
+      }
+    },
+    "errors": [
+      {
+        "call": "call_03",
+        "segment": 31,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.2064,
+        "text": "Bye bye bye bye"
+      }
+    ]
+  },
+  "train_tuned_leave_one_call_out": {
+    "overall_accuracy": 94.74,
+    "agent_accuracy": 96.15,
+    "customer_accuracy": 91.67,
+    "correct": 36,
+    "total": 38,
+    "agent_correct": 25,
+    "agent_total": 26,
+    "customer_correct": 11,
+    "customer_total": 12,
+    "per_call": {
+      "call_03": {
+        "threshold": 0.24,
+        "segments": 16,
+        "overall_accuracy": 93.75,
+        "agent_accuracy": 92.31,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 16,
+        "agent_correct": 12,
+        "agent_total": 13,
+        "customer_correct": 3,
+        "customer_total": 3
+      },
+      "call_04": {
+        "threshold": 0.19,
+        "segments": 5,
+        "overall_accuracy": 80.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 0.0,
+        "correct": 4,
+        "total": 5,
+        "agent_correct": 4,
+        "agent_total": 4,
+        "customer_correct": 0,
+        "customer_total": 1
+      },
+      "call_08": {
+        "threshold": 0.215,
+        "segments": 17,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 17,
+        "total": 17,
+        "agent_correct": 9,
+        "agent_total": 9,
+        "customer_correct": 8,
+        "customer_total": 8
+      }
+    },
+    "errors": [
+      {
+        "call": "call_03",
+        "segment": 31,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.2064,
+        "text": "Bye bye bye bye"
+      },
+      {
+        "call": "call_04",
+        "segment": 10,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.2365,
+        "text": "Hi, I'm good, I'm good."
+      }
+    ]
+  }
+}

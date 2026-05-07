@@ -1,0 +1,583 @@
+﻿{
+    "call_id":  "20260425T114912092_468220",
+    "agent_name":  "Zak Raissi",
+    "source":  "gemini",
+    "segments":  [
+                     {
+                         "start":  0.0,
+                         "end":  2.5,
+                         "speaker":  "agent",
+                         "text":  "Hello, my free to miss Labulu."
+                     },
+                     {
+                         "start":  2.5,
+                         "end":  4.0,
+                         "speaker":  "customer",
+                         "text":  "Yep, that\u0027s me."
+                     },
+                     {
+                         "start":  4.0,
+                         "end":  14.5,
+                         "speaker":  "agent",
+                         "text":  "Hello madam, how are you? My call agent essentially informed me that um you received a virtual viewing on this Kia Sportage and you\u0027re looking to move ahead with the car."
+                     },
+                     {
+                         "start":  14.5,
+                         "end":  15.5,
+                         "speaker":  "customer",
+                         "text":  "Mm-hmm."
+                     },
+                     {
+                         "start":  15.5,
+                         "end":  21.5,
+                         "speaker":  "agent",
+                         "text":  "No worries. Um, out of curiosity uh what was your best case scenario, was you looking to get this car delivered or come and collect it?"
+                     },
+                     {
+                         "start":  21.5,
+                         "end":  29.0,
+                         "speaker":  "customer",
+                         "text":  "I\u0027m looking to get it delivered, but I was speaking to one of your colleagues earlier this morning before the initial viewing,"
+                     },
+                     {
+                         "start":  29.0,
+                         "end":  29.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  29.5,
+                         "end":  32.5,
+                         "speaker":  "customer",
+                         "text":  "And he said that you can include it in the finance price?"
+                     },
+                     {
+                         "start":  32.5,
+                         "end":  35.5,
+                         "speaker":  "agent",
+                         "text":  "We can, that is true. That is true."
+                     },
+                     {
+                         "start":  35.5,
+                         "end":  36.5,
+                         "speaker":  "customer",
+                         "text":  "All right, okay."
+                     },
+                     {
+                         "start":  36.5,
+                         "end":  42.0,
+                         "speaker":  "agent",
+                         "text":  "So essentially look um here\u0027s the steps that we have to take yeah, just to help you out as much as I can yeah."
+                     },
+                     {
+                         "start":  42.0,
+                         "end":  46.0,
+                         "speaker":  "agent",
+                         "text":  "So on the finance was you looking to put a thousand pound deposit down?"
+                     },
+                     {
+                         "start":  46.0,
+                         "end":  47.0,
+                         "speaker":  "customer",
+                         "text":  "Mm."
+                     },
+                     {
+                         "start":  47.0,
+                         "end":  52.0,
+                         "speaker":  "agent",
+                         "text":  "Okay. So that thousand pounds I\u0027ll take off you now and deposit the car so no one sells it."
+                     },
+                     {
+                         "start":  52.0,
+                         "end":  54.0,
+                         "speaker":  "customer",
+                         "text":  "Oh shit."
+                     },
+                     {
+                         "start":  54.0,
+                         "end":  57.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah because genuinely we sell like 40 to 50 cars a day."
+                     },
+                     {
+                         "start":  57.0,
+                         "end":  58.0,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  58.0,
+                         "end":  64.0,
+                         "speaker":  "agent",
+                         "text":  "So just so no one else leaves a deposit before you. Um I will send you out a deposit link now. That will just secure the vehicle."
+                     },
+                     {
+                         "start":  64.0,
+                         "end":  66.0,
+                         "speaker":  "agent",
+                         "text":  "And then, uh, what was your postcode?"
+                     },
+                     {
+                         "start":  66.0,
+                         "end":  69.5,
+                         "speaker":  "customer",
+                         "text":  "BS10 7EG. But before we got through that..."
+                     },
+                     {
+                         "start":  69.5,
+                         "end":  71.5,
+                         "speaker":  "agent",
+                         "text":  "Say that one more time. BS10."
+                     },
+                     {
+                         "start":  71.5,
+                         "end":  73.0,
+                         "speaker":  "customer",
+                         "text":  "Seven Echo Golf."
+                     },
+                     {
+                         "start":  73.0,
+                         "end":  74.0,
+                         "speaker":  "agent",
+                         "text":  "Okay tell me, what was you gonna say?"
+                     },
+                     {
+                         "start":  74.0,
+                         "end":  78.5,
+                         "speaker":  "customer",
+                         "text":  "So before we go through all that I want to know how much it is to finance the proper- the car?"
+                     },
+                     {
+                         "start":  78.5,
+                         "end":  88.0,
+                         "speaker":  "agent",
+                         "text":  "Well I can give you, obviously look, I can give you roughly how much the numbers are gonna be, but until obviously I have a look at your credit uh application and just see what kind of credit score we\u0027re dealing with,"
+                     },
+                     {
+                         "start":  88.0,
+                         "end":  93.0,
+                         "speaker":  "agent",
+                         "text":  "I can\u0027t make you a promise but I can tell you roughly what the figures should be looking like, of course."
+                     },
+                     {
+                         "start":  93.0,
+                         "end":  96.0,
+                         "speaker":  "customer",
+                         "text":  "Yes please. That\u0027d be nice."
+                     },
+                     {
+                         "start":  96.0,
+                         "end":  102.5,
+                         "speaker":  "agent",
+                         "text":  "100%. So if you were to put down um a thousand pound deposit..."
+                     },
+                     {
+                         "start":  102.5,
+                         "end":  103.5,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  103.5,
+                         "end":  108.0,
+                         "speaker":  "agent",
+                         "text":  "My next question is well what is your monthly budget? And was you looking to HP the car or PCP the car?"
+                     },
+                     {
+                         "start":  108.0,
+                         "end":  113.5,
+                         "speaker":  "customer",
+                         "text":  "Uh, just finance. I don\u0027t wanna get the, I wanna keep it at the end of my payments."
+                     },
+                     {
+                         "start":  113.5,
+                         "end":  116.5,
+                         "speaker":  "agent",
+                         "text":  "Okay. I got you. I got you. I got you. Well look with just..."
+                     },
+                     {
+                         "start":  116.5,
+                         "end":  118.0,
+                         "speaker":  "customer",
+                         "text":  "So what is that called?"
+                     },
+                     {
+                         "start":  118.0,
+                         "end":  128.0,
+                         "speaker":  "agent",
+                         "text":  "Well with just, that\u0027s a HP, higher purchase. So just with a thousand pound down um, you\u0027d be looking in the region of 350 to 360."
+                     },
+                     {
+                         "start":  128.0,
+                         "end":  139.5,
+                         "speaker":  "agent",
+                         "text":  "That\u0027s just how much it is. 17 grand car means you\u0027d be financing 17... at 16,700. Um and then yes we can include um the delivery fee on top of that which will only increase your monthly payments by around a pound or two pound."
+                     },
+                     {
+                         "start":  139.5,
+                         "end":  141.5,
+                         "speaker":  "customer",
+                         "text":  "Oh right, okay."
+                     },
+                     {
+                         "start":  141.5,
+                         "end":  152.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah maybe 3 pound max. But the main thing is, letting you know roughly we\u0027ll be working in the region of 360 370 depending on your credit score, if it\u0027s good then it will be lower, if it\u0027s not so good it will be slightly higher by 5 pounds up or down."
+                     },
+                     {
+                         "start":  152.0,
+                         "end":  153.5,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  153.5,
+                         "end":  157.0,
+                         "speaker":  "agent",
+                         "text":  "Um if you\u0027re looking to increase your deposit then of course your monthly payments will be lower."
+                     },
+                     {
+                         "start":  157.0,
+                         "end":  159.5,
+                         "speaker":  "agent",
+                         "text":  "Have you had car finance before?"
+                     },
+                     {
+                         "start":  159.5,
+                         "end":  160.5,
+                         "speaker":  "customer",
+                         "text":  "Yes I have."
+                     },
+                     {
+                         "start":  160.5,
+                         "end":  165.0,
+                         "speaker":  "agent",
+                         "text":  "Okay so then yeah I\u0027m hoping your credit\u0027s gonna be alright and we\u0027ll be able to get you on the on the cheaper side."
+                     },
+                     {
+                         "start":  165.0,
+                         "end":  167.5,
+                         "speaker":  "customer",
+                         "text":  "Oh right. Okay. Yeah."
+                     },
+                     {
+                         "start":  167.5,
+                         "end":  178.5,
+                         "speaker":  "customer",
+                         "text":  "Cuz the initialy it\u0027s it\u0027s a tale of two thingys. Um basically I\u0027m looking to finance it but also my mum\u0027s looking at the same car to finance it as well."
+                     },
+                     {
+                         "start":  178.5,
+                         "end":  181.5,
+                         "speaker":  "customer",
+                         "text":  "So it\u0027s just a case of trying to get in before she does kind of thing."
+                     },
+                     {
+                         "start":  181.5,
+                         "end":  183.0,
+                         "speaker":  "agent",
+                         "text":  "Okay, no worries."
+                     },
+                     {
+                         "start":  183.0,
+                         "end":  186.0,
+                         "speaker":  "customer",
+                         "text":  "Cuz basically I\u0027m on an IVA."
+                     },
+                     {
+                         "start":  186.0,
+                         "end":  188.0,
+                         "speaker":  "agent",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  188.0,
+                         "end":  190.5,
+                         "speaker":  "customer",
+                         "text":  "I don\u0027t know if you take people on an IVA."
+                     },
+                     {
+                         "start":  190.5,
+                         "end":  192.0,
+                         "speaker":  "agent",
+                         "text":  "I\u0027m not sure."
+                     },
+                     {
+                         "start":  192.0,
+                         "end":  194.5,
+                         "speaker":  "agent",
+                         "text":  "I\u0027m not sure is the truth."
+                     },
+                     {
+                         "start":  194.5,
+                         "end":  195.5,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  195.5,
+                         "end":  198.0,
+                         "speaker":  "agent",
+                         "text":  "Uh what is an IVA?"
+                     },
+                     {
+                         "start":  198.0,
+                         "end":  201.0,
+                         "speaker":  "customer",
+                         "text":  "It\u0027s basically like a debt repayment plan."
+                     },
+                     {
+                         "start":  201.0,
+                         "end":  210.0,
+                         "speaker":  "agent",
+                         "text":  "I can look into that for you but obviously we work with our own 40 lenders so with a thousand pound deposit then I\u0027ll call you and ask you some questions and tell you what your monthly payments would be and send you out a"
+                     },
+                     {
+                         "start":  210.0,
+                         "end":  213.5,
+                         "speaker":  "agent",
+                         "text":  "Send you out a document to sign. Uh do you have any CCJs on your name or anything?"
+                     },
+                     {
+                         "start":  213.5,
+                         "end":  215.5,
+                         "speaker":  "customer",
+                         "text":  "What\u0027s a CCJ?"
+                     },
+                     {
+                         "start":  215.5,
+                         "end":  219.0,
+                         "speaker":  "agent",
+                         "text":  "It\u0027s like any any any markers on your credit profile?"
+                     },
+                     {
+                         "start":  219.0,
+                         "end":  223.5,
+                         "speaker":  "customer",
+                         "text":  "Mm, I don\u0027t know. I I just know that my credit is bad. Is that a marker?"
+                     },
+                     {
+                         "start":  223.5,
+                         "end":  226.5,
+                         "speaker":  "agent",
+                         "text":  "Okay. And okay fair enough. Uh well look we have 40 lenders all the way from the best to the worst."
+                     },
+                     {
+                         "start":  226.5,
+                         "end":  227.0,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  227.0,
+                         "end":  234.0,
+                         "speaker":  "agent",
+                         "text":  "Uh so it\u0027s definitely worth trying out even if your monthly payment is slightly higher. Um my second question to you would be, would you be willing to try out your mum\u0027s name as well?"
+                     },
+                     {
+                         "start":  234.0,
+                         "end":  236.0,
+                         "speaker":  "customer",
+                         "text":  "Try it on my mum\u0027s name?"
+                     },
+                     {
+                         "start":  236.0,
+                         "end":  237.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah the finance."
+                     },
+                     {
+                         "start":  237.5,
+                         "end":  240.0,
+                         "speaker":  "customer",
+                         "text":  "Would that be possible, I thought that was like money laundering?"
+                     },
+                     {
+                         "start":  240.0,
+                         "end":  245.5,
+                         "speaker":  "agent",
+                         "text":  "No, no, no. Why would that be money... if if if the car, if that\u0027s your mum and you want her to put the finance application on her name for you,"
+                     },
+                     {
+                         "start":  245.5,
+                         "end":  246.5,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  246.5,
+                         "end":  250.0,
+                         "speaker":  "agent",
+                         "text":  "Uh that\u0027s that\u0027s completely fine, the log book would be in her name and then you can transfer that once the log book arrives."
+                     },
+                     {
+                         "start":  250.0,
+                         "end":  256.0,
+                         "speaker":  "customer",
+                         "text":  "Oh right, so like it\u0027ll be taken out of her account and I just transferred the money to her account every month. Is that what you mean?"
+                     },
+                     {
+                         "start":  256.0,
+                         "end":  262.5,
+                         "speaker":  "agent",
+                         "text":  "Same thing I done with my first car to be completely honest with you because my credit wasn\u0027t good. Um but look I\u0027m gonna send you out..."
+                     },
+                     {
+                         "start":  262.5,
+                         "end":  267.5,
+                         "speaker":  "customer",
+                         "text":  "You broke up there because I was asking a question and then it went silent. My question was"
+                     },
+                     {
+                         "start":  267.5,
+                         "end":  274.5,
+                         "speaker":  "customer",
+                         "text":  "Um, would I, um, would it be, would it be legal to just put the finance in her name and then I trans- then I transfer the money to her account every month."
+                     },
+                     {
+                         "start":  274.5,
+                         "end":  282.5,
+                         "speaker":  "agent",
+                         "text":  "Of course it would be legal. 100%. That\u0027s that\u0027s what I done with my first car is it was on my mum\u0027s name just because my credit wasn\u0027t good so I got a cheaper monthly payment doing it through her. That\u0027s all it is."
+                     },
+                     {
+                         "start":  282.5,
+                         "end":  283.5,
+                         "speaker":  "customer",
+                         "text":  "Mm."
+                     },
+                     {
+                         "start":  283.5,
+                         "end":  288.0,
+                         "speaker":  "agent",
+                         "text":  "There\u0027s nothing there\u0027s nothing dodgy about it. It\u0027s as long as you have her permission then of course it\u0027s normal."
+                     },
+                     {
+                         "start":  288.0,
+                         "end":  288.5,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  288.5,
+                         "end":  300.0,
+                         "speaker":  "agent",
+                         "text":  "Uh but look uh I need to secure the car before it does sell and then I can call you back and do a finance application with you um or uh I can send you the details and you can fill it out uh or get Mum to fill out her side but I think it\u0027s better off we try with you first and tell you what it\u0027s looking like and then if that doesn\u0027t go through then we can do the second option okay?"
+                     },
+                     {
+                         "start":  300.0,
+                         "end":  301.5,
+                         "speaker":  "customer",
+                         "text":  "Alright, okay."
+                     },
+                     {
+                         "start":  301.5,
+                         "end":  310.0,
+                         "speaker":  "customer",
+                         "text":  "Right. Um. Give me 15 minutes, let me call you back. I just need to speak to my mum, tell her what you\u0027ve said."
+                     },
+                     {
+                         "start":  310.0,
+                         "end":  310.5,
+                         "speaker":  "agent",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  310.5,
+                         "end":  312.0,
+                         "speaker":  "customer",
+                         "text":  "And see if she if she wants to go down that route."
+                     },
+                     {
+                         "start":  312.0,
+                         "end":  314.5,
+                         "speaker":  "agent",
+                         "text":  "And do you wanna try it on your name or not?"
+                     },
+                     {
+                         "start":  314.5,
+                         "end":  321.0,
+                         "speaker":  "customer",
+                         "text":  "I already know my credit\u0027s gonna be bad because I um I tried to get finance a couple of months ago and they said I have to wait six months."
+                     },
+                     {
+                         "start":  321.0,
+                         "end":  324.5,
+                         "speaker":  "agent",
+                         "text":  "Fine. And was you looking to secure the car whilst we deal with this or did you, you didn\u0027t mind leaving the car on the market?"
+                     },
+                     {
+                         "start":  324.5,
+                         "end":  326.5,
+                         "speaker":  "customer",
+                         "text":  "Um..."
+                     },
+                     {
+                         "start":  326.5,
+                         "end":  334.5,
+                         "speaker":  "agent",
+                         "text":  "Because rather than taking a thousand pounds I\u0027ll just take 500 just to secure the car, fully refundable up until we can sort of sort out the finance and then if it\u0027s all good then amazing, if not then we\u0027ll refund you your money back."
+                     },
+                     {
+                         "start":  334.5,
+                         "end":  338.5,
+                         "speaker":  "customer",
+                         "text":  "Oh right, okay. And that deposit goes towards like bringing the price of the finance down or is it just to secure the car?"
+                     },
+                     {
+                         "start":  338.5,
+                         "end":  341.0,
+                         "speaker":  "agent",
+                         "text":  "Exactly. Exactly. Well both, both essentially, so..."
+                     },
+                     {
+                         "start":  341.0,
+                         "end":  348.0,
+                         "speaker":  "agent",
+                         "text":  "It could be done with a 500 pound deposit or a thousand pound deposit on the application but the main concern right now is just making sure the car doesn\u0027t sell whilst we sort out all of this."
+                     },
+                     {
+                         "start":  348.0,
+                         "end":  351.0,
+                         "speaker":  "customer",
+                         "text":  "Alright, okay. Alright in that case give me 10 minutes."
+                     },
+                     {
+                         "start":  351.0,
+                         "end":  355.0,
+                         "speaker":  "agent",
+                         "text":  "Alright, I\u0027ll send it over to your phone anyway and then that expires in uh in one hour."
+                     },
+                     {
+                         "start":  355.0,
+                         "end":  357.0,
+                         "speaker":  "customer",
+                         "text":  "Alright, okay."
+                     },
+                     {
+                         "start":  357.0,
+                         "end":  358.5,
+                         "speaker":  "agent",
+                         "text":  "Alright."
+                     },
+                     {
+                         "start":  358.5,
+                         "end":  360.0,
+                         "speaker":  "customer",
+                         "text":  "Thank you."
+                     },
+                     {
+                         "start":  360.0,
+                         "end":  361.0,
+                         "speaker":  "agent",
+                         "text":  "Alright, take care."
+                     },
+                     {
+                         "start":  361.0,
+                         "end":  362.0,
+                         "speaker":  "customer",
+                         "text":  "Take care."
+                     }
+                 ]
+}

@@ -1,0 +1,1051 @@
+{
+  "call_id": "69efb362f91ac02559f813fe",
+  "agent_name": "Omar El Harchaoui",
+  "source": "api",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.6390000000000002,
+      "speaker": "agent",
+      "text": "This is an inbound lead from Carwow."
+    },
+    {
+      "start": 3.3449999999999998,
+      "end": 4.936,
+      "speaker": "agent",
+      "text": "Hello, thank you for calling CarPlanet."
+    },
+    {
+      "start": 4.976,
+      "end": 5.862,
+      "speaker": "agent",
+      "text": "You're switched to OMAHA."
+    },
+    {
+      "start": 5.882,
+      "end": 6.547,
+      "speaker": "agent",
+      "text": "Can I help you, sir?"
+    },
+    {
+      "start": 6.567,
+      "end": 6.889,
+      "speaker": "customer",
+      "text": "Hello, sir."
+    },
+    {
+      "start": 6.909,
+      "end": 7.514,
+      "speaker": "customer",
+      "text": "How are you?"
+    },
+    {
+      "start": 7.634,
+      "end": 7.735,
+      "speaker": "customer",
+      "text": "Okay?"
+    },
+    {
+      "start": 8.593,
+      "end": 13.287,
+      "speaker": "customer",
+      "text": "I saw one of your cars online, it's a Toyota Yaris."
+    },
+    {
+      "start": 14.212,
+      "end": 15.199,
+      "speaker": "agent",
+      "text": "Yeah?"
+    },
+    {
+      "start": 15.219,
+      "end": 16.951,
+      "speaker": "agent",
+      "text": "Can I get the registration for the vehicle?"
+    },
+    {
+      "start": 17.012,
+      "end": 19.227,
+      "speaker": "customer",
+      "text": "I parked my car if you don't mind, give me a second yeah?"
+    },
+    {
+      "start": 19.207,
+      "end": 23.598,
+      "speaker": "customer",
+      "text": "Yeah, of course, of course, take your time."
+    },
+    {
+      "start": 23.578,
+      "end": 27.361,
+      "speaker": "customer",
+      "text": "So, we can reach"
+    },
+    {
+      "start": 28.742,
+      "end": 32.896,
+      "speaker": "customer",
+      "text": "K4 Kilo J4 Jack 21"
+    },
+    {
+      "start": 33.348,
+      "end": 36.878,
+      "speaker": "customer",
+      "text": "F4POP, WG4ZT, M4L"
+    },
+    {
+      "start": 37.871,
+      "end": 38.969,
+      "speaker": "agent",
+      "text": "Yep, and that's the red one?"
+    },
+    {
+      "start": 39.456,
+      "end": 40.574,
+      "speaker": "customer",
+      "text": "That's the one, yeah."
+    },
+    {
+      "start": 40.976,
+      "end": 44.219,
+      "speaker": "agent",
+      "text": "Yep, so I have good news for you, the car is still available."
+    },
+    {
+      "start": 44.418,
+      "end": 46.111,
+      "speaker": "agent",
+      "text": "It is located on my bonnet site."
+    },
+    {
+      "start": 46.252,
+      "end": 48.045,
+      "speaker": "agent",
+      "text": "Where are you located if you don't mind me asking?"
+    },
+    {
+      "start": 48.126,
+      "end": 49.012,
+      "speaker": "customer",
+      "text": "I am in New Church."
+    },
+    {
+      "start": 49.346,
+      "end": 51.728,
+      "speaker": "customer",
+      "text": "It's uh, it's Charlie Romeo 4"
+    },
+    {
+      "start": 53.261,
+      "end": 55.154,
+      "speaker": "agent",
+      "text": "Charlie Romeo 4, give me one second"
+    },
+    {
+      "start": 55.623,
+      "end": 57.946,
+      "speaker": "agent",
+      "text": "Uh, yeah, okay, you've chosen a mean-ass car."
+    },
+    {
+      "start": 58.127,
+      "end": 59.238,
+      "speaker": "agent",
+      "text": "What attracted you to it?"
+    },
+    {
+      "start": 59.218,
+      "end": 60.106,
+      "speaker": "customer",
+      "text": "Where are you at?"
+    },
+    {
+      "start": 60.389,
+      "end": 60.692,
+      "speaker": "customer",
+      "text": "Your place?"
+    },
+    {
+      "start": 61.358,
+      "end": 62.832,
+      "speaker": "agent",
+      "text": "This car's located in Barnet."
+    },
+    {
+      "start": 63.099,
+      "end": 64.335,
+      "speaker": "customer",
+      "text": "Well, it's not far yet."
+    },
+    {
+      "start": 65.394,
+      "end": 66.648,
+      "speaker": "agent",
+      "text": "Yeah, so not that far."
+    },
+    {
+      "start": 66.749,
+      "end": 68.165,
+      "speaker": "agent",
+      "text": "What attracted you to this vehicle?"
+    },
+    {
+      "start": 69.782,
+      "end": 70.466,
+      "speaker": "customer",
+      "text": "Sorry, say again?"
+    },
+    {
+      "start": 71.875,
+      "end": 73.868,
+      "speaker": "agent",
+      "text": "What attracted you to this vehicle?"
+    },
+    {
+      "start": 74.54,
+      "end": 75.288,
+      "speaker": "customer",
+      "text": "What, a threat?"
+    },
+    {
+      "start": 76.561,
+      "end": 77.834,
+      "speaker": "agent",
+      "text": "Yeah, what attracted you to it?"
+    },
+    {
+      "start": 79.063,
+      "end": 83.858,
+      "speaker": "customer",
+      "text": "You asked me what we are going to use here."
+    },
+    {
+      "start": 85.357,
+      "end": 87.695,
+      "speaker": "agent",
+      "text": "No, like, what caught your eye about the car?"
+    },
+    {
+      "start": 87.876,
+      "end": 89.005,
+      "speaker": "customer",
+      "text": "What caught the eye of the car?"
+    },
+    {
+      "start": 89.576,
+      "end": 91.087,
+      "speaker": "agent",
+      "text": "Oh, yeah."
+    },
+    {
+      "start": 91.107,
+      "end": 94.591,
+      "speaker": "customer",
+      "text": "We love your diaries, because most of the friends I have are in your diaries."
+    },
+    {
+      "start": 94.571,
+      "end": 97.527,
+      "speaker": "customer",
+      "text": "And myself, I have it all the time."
+    },
+    {
+      "start": 97.507,
+      "end": 101.273,
+      "speaker": "customer",
+      "text": "One of the sectors will fall."
+    },
+    {
+      "start": 102.232,
+      "end": 107.247,
+      "speaker": "customer",
+      "text": "I got Toyota PDS, now I bought a Toyota RAV4"
+    },
+    {
+      "start": 107.227,
+      "end": 111.753,
+      "speaker": "customer",
+      "text": "252,000"
+    },
+    {
+      "start": 112.762,
+      "end": 114.745,
+      "speaker": "agent",
+      "text": "Yeah, and then you went to RAV4?"
+    },
+    {
+      "start": 115.129,
+      "end": 116.545,
+      "speaker": "customer",
+      "text": "Yeah, RAV4, I just boarded one."
+    },
+    {
+      "start": 116.525,
+      "end": 119.296,
+      "speaker": "customer",
+      "text": "three one week ago sorry"
+    },
+    {
+      "start": 120.288,
+      "end": 121.54,
+      "speaker": "agent",
+      "text": "Yeah, fair enough."
+    },
+    {
+      "start": 122.025,
+      "end": 124.004,
+      "speaker": "agent",
+      "text": "Well, you've chosen a really nice car."
+    },
+    {
+      "start": 124.406,
+      "end": 129.337,
+      "speaker": "agent",
+      "text": "From what I can see this car comes with a full service history done by the dealership which is really good."
+    },
+    {
+      "start": 129.317,
+      "end": 133.538,
+      "speaker": "agent",
+      "text": "MOT does expire next year so you have a full year left in your MOT."
+    },
+    {
+      "start": 133.518,
+      "end": 136.053,
+      "speaker": "agent",
+      "text": "MOT is immaculate, not a single advisory."
+    },
+    {
+      "start": 136.033,
+      "end": 139.293,
+      "speaker": "agent",
+      "text": "Now we are open from 9am to 9pm"
+    },
+    {
+      "start": 139.273,
+      "end": 143.309,
+      "speaker": "agent",
+      "text": "Are you looking to come in and take a look at the vehicle, take it for a little test drive?"
+    },
+    {
+      "start": 143.289,
+      "end": 148.237,
+      "speaker": "customer",
+      "text": "Yeah, but today I'm here in Nechamnaw, so it will take a couple more hours to come there."
+    },
+    {
+      "start": 148.622,
+      "end": 151.443,
+      "speaker": "customer",
+      "text": "Wow, they're pretty beautiful, but I'll check how long it's gonna take."
+    },
+    {
+      "start": 152.283,
+      "end": 152.869,
+      "speaker": "agent",
+      "text": "Yeah, of course."
+    },
+    {
+      "start": 152.97,
+      "end": 156.826,
+      "speaker": "agent",
+      "text": "So the postcode to my Bonner location is November 11."
+    },
+    {
+      "start": 157.565,
+      "end": 160.365,
+      "speaker": "customer",
+      "text": "I got there, I got there hard and I should bring you on there."
+    },
+    {
+      "start": 160.908,
+      "end": 162.58,
+      "speaker": "customer",
+      "text": "November 11th."
+    },
+    {
+      "start": 162.56,
+      "end": 165.01,
+      "speaker": "agent",
+      "text": "11-1-11"
+    },
+    {
+      "start": 166.273,
+      "end": 167.886,
+      "speaker": "customer",
+      "text": "I should bring you from there."
+    },
+    {
+      "start": 167.906,
+      "end": 169.317,
+      "speaker": "customer",
+      "text": "I made a big mistake."
+    },
+    {
+      "start": 169.337,
+      "end": 170.647,
+      "speaker": "customer",
+      "text": "I went to the Rajya until now."
+    },
+    {
+      "start": 171.842,
+      "end": 173.191,
+      "speaker": "agent",
+      "text": "Uh huh."
+    },
+    {
+      "start": 173.211,
+      "end": 174.44,
+      "speaker": "customer",
+      "text": "15 miles away."
+    },
+    {
+      "start": 174.46,
+      "end": 176.131,
+      "speaker": "customer",
+      "text": "Ah, it's in Mill Hill."
+    },
+    {
+      "start": 176.702,
+      "end": 180.181,
+      "speaker": "customer",
+      "text": "Southgate, Southgate, East Bonner."
+    },
+    {
+      "start": 180.161,
+      "end": 184.535,
+      "speaker": "customer",
+      "text": "I will come definitely tomorrow."
+    },
+    {
+      "start": 185.51,
+      "end": 186.678,
+      "speaker": "customer",
+      "text": "tomorrow."
+    },
+    {
+      "start": 187.62,
+      "end": 189.96,
+      "speaker": "agent",
+      "text": "So tomorrow we're open from 9 o'clock to 9 o'clock."
+    },
+    {
+      "start": 190.021,
+      "end": 191.352,
+      "speaker": "agent",
+      "text": "What time tomorrow do you want to come in?"
+    },
+    {
+      "start": 191.332,
+      "end": 196.347,
+      "speaker": "customer",
+      "text": "I can leave from here 9.30 so 10.30"
+    },
+    {
+      "start": 196.327,
+      "end": 199.756,
+      "speaker": "customer",
+      "text": "11 o'clock 11 o'clock tomorrow"
+    },
+    {
+      "start": 200.765,
+      "end": 205.51,
+      "speaker": "agent",
+      "text": "That's perfect, we can get you all booked in for tomorrow at 11 o'clock."
+    },
+    {
+      "start": 206.486,
+      "end": 207.469,
+      "speaker": "agent",
+      "text": "How many keys?"
+    },
+    {
+      "start": 208.359,
+      "end": 212.767,
+      "speaker": "agent",
+      "text": "Yep, I'll get one of my colleagues tomorrow to show you the keys, the service history, everything, okay?"
+    },
+    {
+      "start": 212.747,
+      "end": 213.512,
+      "speaker": "customer",
+      "text": "How many keys?"
+    },
+    {
+      "start": 213.532,
+      "end": 214.257,
+      "speaker": "customer",
+      "text": "One key or two keys?"
+    },
+    {
+      "start": 215.707,
+      "end": 217.036,
+      "speaker": "agent",
+      "text": "I can check for you, okay?"
+    },
+    {
+      "start": 218.096,
+      "end": 218.961,
+      "speaker": "agent",
+      "text": "Okay, give me one."
+    },
+    {
+      "start": 218.981,
+      "end": 219.986,
+      "speaker": "agent",
+      "text": "I'll check for you."
+    },
+    {
+      "start": 220.006,
+      "end": 221.133,
+      "speaker": "agent",
+      "text": "Can I get your first name, please?"
+    },
+    {
+      "start": 221.434,
+      "end": 223.043,
+      "speaker": "customer",
+      "text": "Uh, my first name is A..."
+    },
+    {
+      "start": 223.023,
+      "end": 225.794,
+      "speaker": "customer",
+      "text": "Alfa Romeo Unico"
+    },
+    {
+      "start": 226.061,
+      "end": 228.292,
+      "speaker": "customer",
+      "text": "November, October, Lima, Delta."
+    },
+    {
+      "start": 231.512,
+      "end": 233.324,
+      "speaker": "agent",
+      "text": "and what's your sign name?"
+    },
+    {
+      "start": 233.345,
+      "end": 235.177,
+      "speaker": "customer",
+      "text": "My sign name is G N A N A M"
+    },
+    {
+      "start": 236.388,
+      "end": 240.087,
+      "speaker": "agent",
+      "text": "G-N-A-N-A-R."
+    },
+    {
+      "start": 241.198,
+      "end": 243.678,
+      "speaker": "agent",
+      "text": "So with our cars, they go through scratch?"
+    },
+    {
+      "start": 243.699,
+      "end": 245.453,
+      "speaker": "customer",
+      "text": "Yeah, the front bumper"
+    },
+    {
+      "start": 246.328,
+      "end": 246.954,
+      "speaker": "agent",
+      "text": "on the front."
+    },
+    {
+      "start": 247.015,
+      "end": 249.52,
+      "speaker": "customer",
+      "text": "Let me take a look."
+    },
+    {
+      "start": 250.614,
+      "end": 251.341,
+      "speaker": "agent",
+      "text": "On what side?"
+    },
+    {
+      "start": 251.381,
+      "end": 251.907,
+      "speaker": "agent",
+      "text": "On what side?"
+    },
+    {
+      "start": 252.149,
+      "end": 254.431,
+      "speaker": "customer",
+      "text": "It said passenger side look like, one minute."
+    },
+    {
+      "start": 254.411,
+      "end": 256.625,
+      "speaker": "customer",
+      "text": "Uh..."
+    },
+    {
+      "start": 259.136,
+      "end": 261.113,
+      "speaker": "customer",
+      "text": "Oh, you're both always a fool."
+    },
+    {
+      "start": 264.941,
+      "end": 269.686,
+      "speaker": "customer",
+      "text": "I would say the blow bumper one and the other one, one minute, other one."
+    },
+    {
+      "start": 274.121,
+      "end": 275.07,
+      "speaker": "customer",
+      "text": "Oh la la."
+    },
+    {
+      "start": 278.559,
+      "end": 280.052,
+      "speaker": "customer",
+      "text": "Is it a light or...?"
+    },
+    {
+      "start": 280.072,
+      "end": 280.596,
+      "speaker": "customer",
+      "text": "Wait one minute."
+    },
+    {
+      "start": 280.838,
+      "end": 281.887,
+      "speaker": "customer",
+      "text": "It looks like a light, sort of."
+    },
+    {
+      "start": 283.993,
+      "end": 286.544,
+      "speaker": "agent",
+      "text": "So with our cars, most of our... it is..."
+    },
+    {
+      "start": 286.524,
+      "end": 290.02,
+      "speaker": "agent",
+      "text": "The Lighting"
+    },
+    {
+      "start": 290.523,
+      "end": 293.178,
+      "speaker": "agent",
+      "text": "From what I can see, there doesn't seem to be any scratches."
+    },
+    {
+      "start": 293.741,
+      "end": 294.566,
+      "speaker": "agent",
+      "text": "It's all photos."
+    },
+    {
+      "start": 294.586,
+      "end": 295.471,
+      "speaker": "agent",
+      "text": "What I'll do for you..."
+    },
+    {
+      "start": 295.755,
+      "end": 299.022,
+      "speaker": "agent",
+      "text": "I'll send over a video of the cost so you can take a closer look."
+    },
+    {
+      "start": 299.042,
+      "end": 299.607,
+      "speaker": "agent",
+      "text": "How does that sound?"
+    },
+    {
+      "start": 299.627,
+      "end": 300.635,
+      "speaker": "customer",
+      "text": "If you don't mind, please, yeah."
+    },
+    {
+      "start": 300.615,
+      "end": 301.952,
+      "speaker": "customer",
+      "text": "Yeah, I really need one of those."
+    },
+    {
+      "start": 301.992,
+      "end": 302.66,
+      "speaker": "customer",
+      "text": "I really need to buy it."
+    },
+    {
+      "start": 303.264,
+      "end": 308.077,
+      "speaker": "customer",
+      "text": "I just went to the luxury cars, I don't like it, seriously."
+    },
+    {
+      "start": 308.057,
+      "end": 310.796,
+      "speaker": "agent",
+      "text": "That's why you come to CarPlanet."
+    },
+    {
+      "start": 310.836,
+      "end": 313.072,
+      "speaker": "agent",
+      "text": "CarPlanet is better than CarTag."
+    },
+    {
+      "start": 313.052,
+      "end": 317.223,
+      "speaker": "customer",
+      "text": "Okay, yep."
+    },
+    {
+      "start": 317.203,
+      "end": 319.407,
+      "speaker": "customer",
+      "text": "Any mechanical fault or anything?"
+    },
+    {
+      "start": 319.427,
+      "end": 319.973,
+      "speaker": "customer",
+      "text": "Nothing in it."
+    },
+    {
+      "start": 321.05,
+      "end": 323.453,
+      "speaker": "agent",
+      "text": "All of our cars go through a 150 point check."
+    },
+    {
+      "start": 323.474,
+      "end": 324.968,
+      "speaker": "agent",
+      "text": "We make sure the cars are..."
+    },
+    {
+      "start": 325.083,
+      "end": 327.955,
+      "speaker": "agent",
+      "text": "mechanically and electrically perfect before we put it onto the market."
+    },
+    {
+      "start": 327.935,
+      "end": 331.499,
+      "speaker": "customer",
+      "text": "Okay, we have a patrol 5C2, patrol 5..."
+    },
+    {
+      "start": 331.968,
+      "end": 334.975,
+      "speaker": "customer",
+      "text": "Red KG-21, previous 101."
+    },
+    {
+      "start": 335.681,
+      "end": 340.392,
+      "speaker": "customer",
+      "text": "It's at 06, accelerate 9.7 seconds"
+    },
+    {
+      "start": 341.84,
+      "end": 345.303,
+      "speaker": "customer",
+      "text": "Top speed 109, average 96.0."
+    },
+    {
+      "start": 346.329,
+      "end": 348.998,
+      "speaker": "customer",
+      "text": "I know those two, yes"
+    },
+    {
+      "start": 349.232,
+      "end": 351.73,
+      "speaker": "agent",
+      "text": "I dropped you a little message on WhatsApp."
+    },
+    {
+      "start": 351.75,
+      "end": 353.2,
+      "speaker": "agent",
+      "text": "Please drop me a little reply."
+    },
+    {
+      "start": 353.45,
+      "end": 356.339,
+      "speaker": "agent",
+      "text": "I'm gonna send over a video of the car for you, okay?"
+    },
+    {
+      "start": 356.589,
+      "end": 360.423,
+      "speaker": "agent",
+      "text": "I will upload a video tomorrow."
+    },
+    {
+      "start": 360.403,
+      "end": 361.656,
+      "speaker": "customer",
+      "text": "This is your last try too!"
+    },
+    {
+      "start": 362.384,
+      "end": 362.768,
+      "speaker": "agent",
+      "text": "Pardon?"
+    },
+    {
+      "start": 363.491,
+      "end": 367.156,
+      "speaker": "agent",
+      "text": "Essentially, this would be the last price."
+    },
+    {
+      "start": 367.136,
+      "end": 371.425,
+      "speaker": "agent",
+      "text": "simply because this car we've reduced the price by \u00a3850"
+    },
+    {
+      "start": 371.405,
+      "end": 375.914,
+      "speaker": "agent",
+      "text": "You are getting a full dealership, service history, miraculous..."
+    },
+    {
+      "start": 376.383,
+      "end": 381.145,
+      "speaker": "agent",
+      "text": "Immaculate"
+    },
+    {
+      "start": 381.125,
+      "end": 382.613,
+      "speaker": "agent",
+      "text": "would be the final price."
+    },
+    {
+      "start": 383.184,
+      "end": 386.208,
+      "speaker": "customer",
+      "text": "Do you have any warranty?"
+    },
+    {
+      "start": 386.542,
+      "end": 389.701,
+      "speaker": "agent",
+      "text": "So when you purchase a car from us, you get two things."
+    },
+    {
+      "start": 389.761,
+      "end": 390.747,
+      "speaker": "agent",
+      "text": "The first thing you get..."
+    },
+    {
+      "start": 390.913,
+      "end": 393.38,
+      "speaker": "agent",
+      "text": "is one year free AA breakdown cover."
+    },
+    {
+      "start": 393.562,
+      "end": 398.223,
+      "speaker": "agent",
+      "text": "The second thing you get is 6 months CarVos CarPlanet So if anything goes wrong"
+    },
+    {
+      "start": 398.456,
+      "end": 402.374,
+      "speaker": "agent",
+      "text": "Just give a call to us and we can get everything sorted for you, okay?"
+    },
+    {
+      "start": 402.776,
+      "end": 404.366,
+      "speaker": "customer",
+      "text": "Free of charge, yeah?"
+    },
+    {
+      "start": 405.997,
+      "end": 406.178,
+      "speaker": "agent",
+      "text": "Yeah."
+    },
+    {
+      "start": 406.198,
+      "end": 406.762,
+      "speaker": "customer",
+      "text": "Okay."
+    },
+    {
+      "start": 407.366,
+      "end": 412.128,
+      "speaker": "customer",
+      "text": "So yeah"
+    },
+    {
+      "start": 412.732,
+      "end": 414.674,
+      "speaker": "customer",
+      "text": "I will definitely come and see you tomorrow."
+    },
+    {
+      "start": 415.16,
+      "end": 415.908,
+      "speaker": "agent",
+      "text": "Yep, of course."
+    },
+    {
+      "start": 415.888,
+      "end": 419.654,
+      "speaker": "agent",
+      "text": "I'm going to send you a viewing confirmation to my Barnet site as well as our address."
+    },
+    {
+      "start": 419.634,
+      "end": 424.261,
+      "speaker": "agent",
+      "text": "In the vehicle details there is a link to reserve the vehicle"
+    },
+    {
+      "start": 424.241,
+      "end": 428.969,
+      "speaker": "agent",
+      "text": "and"
+    },
+    {
+      "start": 428.949,
+      "end": 432.766,
+      "speaker": "customer",
+      "text": "I don't do that, my friend."
+    },
+    {
+      "start": 433.286,
+      "end": 434.074,
+      "speaker": "agent",
+      "text": "That's alright."
+    },
+    {
+      "start": 434.195,
+      "end": 437.305,
+      "speaker": "customer",
+      "text": "I had a very bad experience on this one in the last 35 years."
+    },
+    {
+      "start": 437.285,
+      "end": 441.372,
+      "speaker": "customer",
+      "text": "I'd never ever invest any penny in there."
+    },
+    {
+      "start": 441.352,
+      "end": 445.135,
+      "speaker": "customer",
+      "text": "I pay cash or I pay my woman my cash and get it, that's it."
+    },
+    {
+      "start": 445.115,
+      "end": 449.337,
+      "speaker": "agent",
+      "text": "I don't have any other deals"
+    },
+    {
+      "start": 450.161,
+      "end": 452.282,
+      "speaker": "agent",
+      "text": "Yeah, of course, that's perfectly fine."
+    },
+    {
+      "start": 452.303,
+      "end": 453.252,
+      "speaker": "agent",
+      "text": "I'll get everything sorted."
+    },
+    {
+      "start": 453.232,
+      "end": 455.894,
+      "speaker": "agent",
+      "text": "I'm in there, have a look around if I like it."
+    },
+    {
+      "start": 456.277,
+      "end": 457.184,
+      "speaker": "customer",
+      "text": "I'm honest with you."
+    },
+    {
+      "start": 457.164,
+      "end": 461.318,
+      "speaker": "customer",
+      "text": "We go from there, straight away."
+    },
+    {
+      "start": 461.788,
+      "end": 466.6,
+      "speaker": "agent",
+      "text": "I've dropped you a little message on WhatsApp, drop me a reply, I'll send over the video, OK?"
+    },
+    {
+      "start": 467.019,
+      "end": 467.948,
+      "speaker": "customer",
+      "text": "Yeah, please."
+    },
+    {
+      "start": 467.968,
+      "end": 468.251,
+      "speaker": "agent",
+      "text": "Yeah."
+    },
+    {
+      "start": 468.271,
+      "end": 468.716,
+      "speaker": "agent",
+      "text": "Okay."
+    },
+    {
+      "start": 468.877,
+      "end": 469.503,
+      "speaker": "customer",
+      "text": "Thank you very much."
+    },
+    {
+      "start": 469.523,
+      "end": 470.614,
+      "speaker": "customer",
+      "text": "Thanks for answering my phone."
+    },
+    {
+      "start": 470.634,
+      "end": 470.735,
+      "speaker": "customer",
+      "text": "Yeah."
+    },
+    {
+      "start": 470.755,
+      "end": 471.038,
+      "speaker": "customer",
+      "text": "Thank you."
+    },
+    {
+      "start": 471.018,
+      "end": 471.857,
+      "speaker": "agent",
+      "text": "Thank you."
+    },
+    {
+      "start": 471.877,
+      "end": 472.388,
+      "speaker": "agent",
+      "text": "Bye-bye."
+    }
+  ]
+}

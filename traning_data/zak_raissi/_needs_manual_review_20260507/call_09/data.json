@@ -1,0 +1,1525 @@
+﻿{
+    "call_id":  "20260429T091119416_1437271 (1)",
+    "agent_name":  "Zak Raissi",
+    "source":  "gemini",
+    "segments":  [
+                     {
+                         "start":  0.0,
+                         "end":  1.0,
+                         "speaker":  "agent",
+                         "text":  "Hello, next speaking."
+                     },
+                     {
+                         "start":  1.0,
+                         "end":  2.5,
+                         "speaker":  "customer",
+                         "text":  "Hi, how are you?"
+                     },
+                     {
+                         "start":  2.5,
+                         "end":  5.0,
+                         "speaker":  "agent",
+                         "text":  "I\u0027m good thank you. How are you?"
+                     },
+                     {
+                         "start":  5.0,
+                         "end":  11.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, hi, just calling in regards to an inquiry we received about the Volkswagen Sharan."
+                     },
+                     {
+                         "start":  11.0,
+                         "end":  13.0,
+                         "speaker":  "agent",
+                         "text":  "Yes. Talk to me, how can I help you?"
+                     },
+                     {
+                         "start":  13.0,
+                         "end":  23.5,
+                         "speaker":  "customer",
+                         "text":  "So yeah, I just got a video through yesterday to show the car and I had some follow-up questions I sent one of them on the WhatsApp message. Just I don\u0027t know if you\u0027re able to tell me..."
+                     },
+                     {
+                         "start":  23.5,
+                         "end":  24.5,
+                         "speaker":  "agent",
+                         "text":  "Okay cool."
+                     },
+                     {
+                         "start":  24.5,
+                         "end":  26.5,
+                         "speaker":  "customer",
+                         "text":  "if it\u0027s got a full service history."
+                     },
+                     {
+                         "start":  26.5,
+                         "end":  35.0,
+                         "speaker":  "agent",
+                         "text":  "No worries. So essentially this car only has one previous owner and it has been to main dealer. So there\u0027s a service on site."
+                     },
+                     {
+                         "start":  35.0,
+                         "end":  44.5,
+                         "speaker":  "agent",
+                         "text":  "So there\u0027s a pre-delivery inspection at zero miles obviously when the car left VW dealership and his first service was at 14,000 miles."
+                     },
+                     {
+                         "start":  44.5,
+                         "end":  49.5,
+                         "speaker":  "agent",
+                         "text":  "Done at also a main dealer. Let me find out where it went, which main dealer it went to."
+                     },
+                     {
+                         "start":  49.5,
+                         "end":  51.5,
+                         "speaker":  "customer",
+                         "text":  "Cool, nay thank you."
+                     },
+                     {
+                         "start":  51.5,
+                         "end":  64.0,
+                         "speaker":  "agent",
+                         "text":  "Thing is, it\u0027s virtual service history so the two services of pre-delivery inspection as well as the first service at 14,000 miles, because it\u0027s digital I can\u0027t really see too much in regards to where it\u0027s gone."
+                     },
+                     {
+                         "start":  64.0,
+                         "end":  74.0,
+                         "speaker":  "agent",
+                         "text":  "Apart from that we\u0027ve serviced the car, so it\u0027s leaving with a brand new service at 45,000 miles. So we only purchased this car with one main dealer service."
+                     },
+                     {
+                         "start":  74.0,
+                         "end":  84.5,
+                         "speaker":  "agent",
+                         "text":  "Now considering it\u0027s only had one owner, there\u0027s high possibility it\u0027s been to main dealer more than once. It\u0027s very unlikely that the car hasn\u0027t been serviced all this time. I don\u0027t think that would be the case."
+                     },
+                     {
+                         "start":  84.5,
+                         "end":  96.5,
+                         "speaker":  "agent",
+                         "text":  "It\u0027s just that we\u0027ve purchased it with one service. So we\u0027re selling it with one service. Now obviously it\u0027s leaving with a brand new service after the 150-point inspection was completed."
+                     },
+                     {
+                         "start":  96.5,
+                         "end":  105.0,
+                         "speaker":  "agent",
+                         "text":  "Um, but yeah, what I can present to you at this moment in time is the pre-delivery inspection at main dealer, the first service by 14,000 miles at main dealer, and obviously we\u0027ve serviced it at 45,000 miles which is what the mileage is currently on."
+                     },
+                     {
+                         "start":  105.0,
+                         "end":  116.0,
+                         "speaker":  "customer",
+                         "text":  "Gotcha. Yeah, so there\u0027s no, you haven\u0027t got any service book that would say any services between 2021 and 2026. Like the service history up on the website."
+                     },
+                     {
+                         "start":  116.0,
+                         "end":  119.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, thing is..."
+                     },
+                     {
+                         "start":  119.0,
+                         "end":  121.5,
+                         "speaker":  "customer",
+                         "text":  "So obviously at the moment it looks like there\u0027s a big gap."
+                     },
+                     {
+                         "start":  121.5,
+                         "end":  133.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, no there is a gap. Now obviously we price the cars like that. Certain cars we get come with full main dealer. Some cars come with no service history. You can never really be 100%."
+                     },
+                     {
+                         "start":  133.0,
+                         "end":  141.5,
+                         "speaker":  "agent",
+                         "text":  "The only peace of mind I have with this car is that it has gone to main dealer and it\u0027s only got one owner. Which is always good news."
+                     },
+                     {
+                         "start":  141.5,
+                         "end":  150.0,
+                         "speaker":  "agent",
+                         "text":  "In regards to the MOT history I don\u0027t know if you had a chance to check that out, obviously the first three years the car doesn\u0027t get MOT\u0027d, but its first two MOTs has passed with zero advisories."
+                     },
+                     {
+                         "start":  150.0,
+                         "end":  157.0,
+                         "speaker":  "agent",
+                         "text":  "Now this sort of is, goes in line with the fact that it\u0027s been to main dealer and only has one owner. They\u0027ve kept their car in good nick."
+                     },
+                     {
+                         "start":  157.0,
+                         "end":  169.0,
+                         "speaker":  "agent",
+                         "text":  "And that\u0027s obviously it\u0027s good to see when, cause when you see tires, discs, pads, yes it\u0027s wear and tear and they\u0027re common to see, but when you don\u0027t see them at all it usually means that they\u0027ve opted to get this all rectified prior to even going down for an MOT, which is always good peace of mind."
+                     },
+                     {
+                         "start":  169.0,
+                         "end":  178.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah. And in terms of the service that you guys have done on it, the pre-sale one, is there any documentation for it? What work was done on it I suppose?"
+                     },
+                     {
+                         "start":  178.5,
+                         "end":  194.5,
+                         "speaker":  "agent",
+                         "text":  "Okay, so obviously car just went through a 150-point inspection which obviously includes our pre-purchase inspection, a long-distance test drive, mechanical inspection, a smart repair, PDR, PDR and a valet and a clean. Now that\u0027s just the basic that we do to all of our cars."
+                     },
+                     {
+                         "start":  194.5,
+                         "end":  204.0,
+                         "speaker":  "agent",
+                         "text":  "In that 150-point inspection, discs are checked, pads are checked, tire tread is checked, um, mechanical components are checked, like rods, bearings, um, suspension components."
+                     },
+                     {
+                         "start":  204.0,
+                         "end":  211.5,
+                         "speaker":  "agent",
+                         "text":  "Uh, but the actual service is obviously only related to oil, filters, um, and potentially spark plugs."
+                     },
+                     {
+                         "start":  211.5,
+                         "end":  222.0,
+                         "speaker":  "agent",
+                         "text":  "Uh, I\u0027m not sure if this one has had its spark plugs been changed though. So it might have been something that wasn\u0027t required during the 150-point inspection."
+                     },
+                     {
+                         "start":  222.0,
+                         "end":  228.0,
+                         "speaker":  "agent",
+                         "text":  "So if something comes up during an inspection that\u0027s when we sort of change and make an invoice for it."
+                     },
+                     {
+                         "start":  228.0,
+                         "end":  236.0,
+                         "speaker":  "agent",
+                         "text":  "Um, but this one here at the moment just looks like it had a basic oil, oil filter change. Um, and nothing else, if that makes sense."
+                     },
+                     {
+                         "start":  236.0,
+                         "end":  240.0,
+                         "speaker":  "customer",
+                         "text":  "So would it need, do you think it would need another service after purchase then?"
+                     },
+                     {
+                         "start":  240.0,
+                         "end":  248.5,
+                         "speaker":  "agent",
+                         "text":  "The truth is no. It definitely wouldn\u0027t need a service. But if you\u0027re like me, cause um, I buy and sell cars and um, I\u0027m very paranoid."
+                     },
+                     {
+                         "start":  248.5,
+                         "end":  254.0,
+                         "speaker":  "agent",
+                         "text":  "When it comes to buying a car from anywhere, I love to full service the car anyway."
+                     },
+                     {
+                         "start":  254.0,
+                         "end":  261.5,
+                         "speaker":  "agent",
+                         "text":  "So I would never say it\u0027s a bad idea, but yeah you definitely don\u0027t have to do it now, it\u0027s just come out of our inspection, like this car is good to be driven."
+                     },
+                     {
+                         "start":  261.5,
+                         "end":  267.0,
+                         "speaker":  "agent",
+                         "text":  "Um for at least 10,000 miles where that\u0027s tread, discs, or pads. That\u0027s a guarantee we give you."
+                     },
+                     {
+                         "start":  267.0,
+                         "end":  272.5,
+                         "speaker":  "agent",
+                         "text":  "Um but in regards to whether you should, of course you should. I would never say no to a service, let alone a full one."
+                     },
+                     {
+                         "start":  272.5,
+                         "end":  276.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah, no, no, that\u0027s helpful, that\u0027s helpful."
+                     },
+                     {
+                         "start":  276.5,
+                         "end":  280.0,
+                         "speaker":  "agent",
+                         "text":  "To be fair, the car will, the car will overall be healthier once you change the spark plugs."
+                     },
+                     {
+                         "start":  280.0,
+                         "end":  283.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah. Yeah. Fine."
+                     },
+                     {
+                         "start":  283.5,
+                         "end":  287.0,
+                         "speaker":  "agent",
+                         "text":  "Say that again please and then hear what you said sorry."
+                     },
+                     {
+                         "start":  287.0,
+                         "end":  293.0,
+                         "speaker":  "customer",
+                         "text":  "No, I was just gonna say I\u0027m assuming the cam belt or water pump hasn\u0027t been changed before 45,000 miles."
+                     },
+                     {
+                         "start":  293.0,
+                         "end":  302.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, before 45,000 miles I don\u0027t reckon I don\u0027t think it would have been changed, no. I don\u0027t, I don\u0027t, usually closer to 70 is when I sort of see these being changed."
+                     },
+                     {
+                         "start":  302.0,
+                         "end":  308.0,
+                         "speaker":  "agent",
+                         "text":  "So the Volvo last week, it was on 80,000 miles full main dealer service history, and it had been changed at main dealer."
+                     },
+                     {
+                         "start":  308.0,
+                         "end":  313.0,
+                         "speaker":  "agent",
+                         "text":  "But what I can do is, is I can do a like a visual inspection for yourself and just have a look."
+                     },
+                     {
+                         "start":  313.0,
+                         "end":  315.0,
+                         "speaker":  "agent",
+                         "text":  "You know you could a, you can sort of tell..."
+                     },
+                     {
+                         "start":  315.0,
+                         "end":  319.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah, that would be really helpful, that would be really helpful. Yeah if you wouldn\u0027t mind that would definitely be appreciated."
+                     },
+                     {
+                         "start":  319.5,
+                         "end":  331.0,
+                         "speaker":  "customer",
+                         "text":  "Um, got another question which is just looking through the MOT history and stuff, noticeable that only it\u0027s only done like 1700 miles since July."
+                     },
+                     {
+                         "start":  331.0,
+                         "end":  339.0,
+                         "speaker":  "customer",
+                         "text":  "And I guess the concern there could be, has the car just been sitting around not being driven for a very long time. Or do you know the history of it?"
+                     },
+                     {
+                         "start":  339.0,
+                         "end":  351.0,
+                         "speaker":  "agent",
+                         "text":  "No, we\u0027ve got a... unfortunately we\u0027ve got unfortunately we\u0027ve got over 1600 cars. Unfortunately I won\u0027t know exact reasons but what I can tell you is..."
+                     },
+                     {
+                         "start":  351.0,
+                         "end":  361.0,
+                         "speaker":  "agent",
+                         "text":  "there\u0027s genuinely hundreds of reasons. It could be it sat or it could just genuinely be um it was a second car, they didn\u0027t get any need for it to be driven."
+                     },
+                     {
+                         "start":  361.0,
+                         "end":  366.0,
+                         "speaker":  "agent",
+                         "text":  "The amount of part exchanges we take in from elderly customers that genuinely do 1000 miles a year."
+                     },
+                     {
+                         "start":  366.0,
+                         "end":  372.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah it feels like an unusual car for an elderly person to have, I\u0027d think it\u0027d probably be like a family workhorse kind of car."
+                     },
+                     {
+                         "start":  372.5,
+                         "end":  377.0,
+                         "speaker":  "agent",
+                         "text":  "Workhorse, two liter diesel as well, it\u0027s a good engine."
+                     },
+                     {
+                         "start":  377.0,
+                         "end":  381.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah. So, yeah I was just asking you to try and read the proof."
+                     },
+                     {
+                         "start":  381.0,
+                         "end":  388.0,
+                         "speaker":  "agent",
+                         "text":  "I\u0027m not sure. I\u0027d be lying if I said I knew."
+                     },
+                     {
+                         "start":  388.0,
+                         "end":  393.5,
+                         "speaker":  "customer",
+                         "text":  "No, fine, fine. I just thought I\u0027d ask the question, that\u0027s fine if you don\u0027t know, no problem."
+                     },
+                     {
+                         "start":  393.5,
+                         "end":  401.0,
+                         "speaker":  "customer",
+                         "text":  "Can I also check whether, I\u0027m assuming you\u0027re probably not with the car right now but could you confirm whether there\u0027s any warning lights on the dash?"
+                     },
+                     {
+                         "start":  401.0,
+                         "end":  407.5,
+                         "speaker":  "agent",
+                         "text":  "I 100% won\u0027t be. 100% won\u0027t be. I can confirm that without even seeing the car. Genuinely our cars..."
+                     },
+                     {
+                         "start":  407.5,
+                         "end":  415.5,
+                         "speaker":  "agent",
+                         "text":  "They\u0027re very well specs, prepared. Like if you were to come today to view the car, I\u0027m not sure if you\u0027re looking for delivery or viewing,"
+                     },
+                     {
+                         "start":  415.5,
+                         "end":  421.5,
+                         "speaker":  "agent",
+                         "text":  "But if you were to come and view it, the car would be ready to leave on site straight away. Like all of our cars just, they just need a wash."
+                     },
+                     {
+                         "start":  421.5,
+                         "end":  430.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, okay fine. Um, so I\u0027d be looking at delivery, \u0027cause of where we live, being a bit further away. Um, but I will come to that in a moment."
+                     },
+                     {
+                         "start":  430.0,
+                         "end":  433.0,
+                         "speaker":  "customer",
+                         "text":  "Um, but that\u0027s helpful, no warning lights then."
+                     },
+                     {
+                         "start":  433.0,
+                         "end":  441.5,
+                         "speaker":  "customer",
+                         "text":  "Does it come with, has it got two keys for it? Some of the cars we\u0027ve looked at seem to only have one set of keys, and we\u0027re like, well why?"
+                     },
+                     {
+                         "start":  441.5,
+                         "end":  447.0,
+                         "speaker":  "agent",
+                         "text":  "Um, that\u0027s something I can check for you if you like."
+                     },
+                     {
+                         "start":  447.0,
+                         "end":  451.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah. If you wouldn\u0027t mind that would be great."
+                     },
+                     {
+                         "start":  451.0,
+                         "end":  453.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah of course I can pop you on hold and check for you after we..."
+                     },
+                     {
+                         "start":  453.5,
+                         "end":  462.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah, let me just run through anything else I\u0027ve got and then maybe you can do the visual inspection, belt would be helpful and obviously if you\u0027re able to shoot off a video of that... confirming keys..."
+                     },
+                     {
+                         "start":  462.5,
+                         "end":  465.0,
+                         "speaker":  "customer",
+                         "text":  "Um, what\u0027s your warranty policy?"
+                     },
+                     {
+                         "start":  465.0,
+                         "end":  476.0,
+                         "speaker":  "agent",
+                         "text":  "Um, so obviously with a distance sale, which is what you\u0027re opting for, we obviously specialise in distant deliveries, you will get 14 days to reject the car."
+                     },
+                     {
+                         "start":  476.0,
+                         "end":  482.0,
+                         "speaker":  "agent",
+                         "text":  "So you\u0027ll have an option to reject this car for essentially, for any reason."
+                     },
+                     {
+                         "start":  482.0,
+                         "end":  484.0,
+                         "speaker":  "customer",
+                         "text":  "For any reason?"
+                     },
+                     {
+                         "start":  484.0,
+                         "end":  492.0,
+                         "speaker":  "agent",
+                         "text":  "For any reason, whether it be even if the car\u0027s min, like it\u0027s just a visual, you randomly like the visual aspect or the seats not comfortable."
+                     },
+                     {
+                         "start":  492.0,
+                         "end":  497.0,
+                         "speaker":  "agent",
+                         "text":  "Or for any any reason, it doesn\u0027t have to be like a um a fault with the car in any way."
+                     },
+                     {
+                         "start":  497.0,
+                         "end":  505.0,
+                         "speaker":  "agent",
+                         "text":  "Uh we just give that piece of mind to our customers, cause we hope that you fall in love with the car when you see it, rather than want to return it."
+                     },
+                     {
+                         "start":  505.0,
+                         "end":  506.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, sure."
+                     },
+                     {
+                         "start":  506.0,
+                         "end":  515.0,
+                         "speaker":  "agent",
+                         "text":  "Um but yeah and then that\u0027s at no additional cost to yourself, so we come and collect it, you just lose the money that you paid for the delivery to get it to your front door."
+                     },
+                     {
+                         "start":  515.0,
+                         "end":  517.5,
+                         "speaker":  "customer",
+                         "text":  "Sure. Yeah, that\u0027s fine."
+                     },
+                     {
+                         "start":  517.5,
+                         "end":  526.0,
+                         "speaker":  "agent",
+                         "text":  "Um and then we do work with Group 1 Warranty so essentially main dealer warranty to cover our cars through RAC Platinum, which is unlimited mileage, unlimited claims."
+                     },
+                     {
+                         "start":  526.0,
+                         "end":  532.5,
+                         "speaker":  "agent",
+                         "text":  "Uh your claim limit is 15 grand cause the car price is 15 grand. Uh you can take the car to main dealer through the RAC Platinum."
+                     },
+                     {
+                         "start":  532.5,
+                         "end":  537.5,
+                         "speaker":  "agent",
+                         "text":  "It is a Group 1 warranty. It is an additional cost. Um but that\u0027s from 1 to 5 years."
+                     },
+                     {
+                         "start":  537.5,
+                         "end":  546.5,
+                         "speaker":  "agent",
+                         "text":  "Uh as standard, you\u0027re protected by your consumer rights. Just like any other dealership would, um if you\u0027ve been mis-sold in any way, the next three months we\u0027ll be your first point of contact."
+                     },
+                     {
+                         "start":  546.5,
+                         "end":  554.0,
+                         "speaker":  "agent",
+                         "text":  "Mis-sold just meaning if anything major or minor happens to the car that shouldn\u0027t happen, whether it\u0027s noise in the suspension or the engine falls out."
+                     },
+                     {
+                         "start":  554.0,
+                         "end":  560.5,
+                         "speaker":  "agent",
+                         "text":  "Um I\u0027ll be very shocked if that happened to this car in three months time. Um, but yeah."
+                     },
+                     {
+                         "start":  560.5,
+                         "end":  569.0,
+                         "speaker":  "agent",
+                         "text":  "You do have piece of mind buying from Car Planet. We sell over 5-600 cars a month. Uh the main sort of piece of mind you could get is with the, with the RAC Platinum warranty."
+                     },
+                     {
+                         "start":  569.0,
+                         "end":  574.0,
+                         "speaker":  "agent",
+                         "text":  "If you do a lot of mileage, obviously you\u0027d benefit out of it as well."
+                     },
+                     {
+                         "start":  574.0,
+                         "end":  586.0,
+                         "speaker":  "customer",
+                         "text":  "Right, good. And then I had a brief conversation, I think it\u0027s, I don\u0027t know if it\u0027s like one of your colleagues, um, he described himself as a sales agent so I don\u0027t know if that\u0027s like your department or not."
+                     },
+                     {
+                         "start":  586.0,
+                         "end":  595.5,
+                         "speaker":  "customer",
+                         "text":  "Basically it\u0027s, the MOT um on it is due to be renewed in July I think, and he said that because it\u0027s within the"
+                     },
+                     {
+                         "start":  595.5,
+                         "end":  601.0,
+                         "speaker":  "customer",
+                         "text":  "next three months, it would basically, it would come with a fresh MOT. Again, are you able to confirm that?"
+                     },
+                     {
+                         "start":  601.0,
+                         "end":  604.5,
+                         "speaker":  "agent",
+                         "text":  "No, I wouldn\u0027t unfortunately."
+                     },
+                     {
+                         "start":  604.5,
+                         "end":  606.0,
+                         "speaker":  "customer",
+                         "text":  "Okay. Why is that?"
+                     },
+                     {
+                         "start":  606.0,
+                         "end":  613.5,
+                         "speaker":  "agent",
+                         "text":  "I wouldn\u0027t. Um, to be completely honest with you, um, I\u0027m one of the senior sales execs and to the best of my knowledge"
+                     },
+                     {
+                         "start":  613.5,
+                         "end":  622.0,
+                         "speaker":  "agent",
+                         "text":  "If it expires in the next month, then of course, next two months then of course, but three months time, um, it\u0027s a bit of a stretch on our end."
+                     },
+                     {
+                         "start":  622.0,
+                         "end":  629.5,
+                         "speaker":  "agent",
+                         "text":  "I can definitely ask, but I can\u0027t make you a promise because it\u0027s not something we do. Uh we do change the MOT, we can always redo an MOT if it expires"
+                     },
+                     {
+                         "start":  629.5,
+                         "end":  639.5,
+                         "speaker":  "agent",
+                         "text":  "within a due set of time, but um, I\u0027ll be honest with you, we have viewings booked for this car, uh for today, for tomorrow, and for next week."
+                     },
+                     {
+                         "start":  639.5,
+                         "end":  648.5,
+                         "speaker":  "agent",
+                         "text":  "So it wouldn\u0027t be something that we\u0027ll be doing. Like if it was, if expiring in the next month and you were looking to purchase this car then yes, we\u0027d send it for you quickly but at the moment,"
+                     },
+                     {
+                         "start":  648.5,
+                         "end":  653.0,
+                         "speaker":  "agent",
+                         "text":  "uh, there\u0027s a lot of interest in this car so we wouldn\u0027t take it out of sort of"
+                     },
+                     {
+                         "start":  653.0,
+                         "end":  657.0,
+                         "speaker":  "agent",
+                         "text":  "viewing the queue for viewing it, the case. Is like a different"
+                     },
+                     {
+                         "start":  657.0,
+                         "end":  659.0,
+                         "speaker":  "customer",
+                         "text":  "part of your garage just does the MOT."
+                     },
+                     {
+                         "start":  659.0,
+                         "end":  665.0,
+                         "speaker":  "agent",
+                         "text":  "Exactly. No, we don\u0027t, we don\u0027t do it in-house, it would be very biased. So it\u0027s kind of like a two, three-day process."
+                     },
+                     {
+                         "start":  665.0,
+                         "end":  666.0,
+                         "speaker":  "customer",
+                         "text":  "Right, okay."
+                     },
+                     {
+                         "start":  666.0,
+                         "end":  669.5,
+                         "speaker":  "agent",
+                         "text":  "So it\u0027d have to fall in a, in an allocated time slot where there are no viewings on the car."
+                     },
+                     {
+                         "start":  669.0,
+                         "end":  673.5,
+                         "speaker":  "customer",
+                         "text":  "Right, okay. Alright, that makes sense. Um,"
+                     },
+                     {
+                         "start":  673.5,
+                         "end":  679.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah, it\u0027s only because lecturing sales agent said yesterday that that was something you\u0027d do, and quite often garages do, the ones I\u0027ve seen anyway,"
+                     },
+                     {
+                         "start":  679.5,
+                         "end":  686.0,
+                         "speaker":  "customer",
+                         "text":  "on Auto Trader seem, some of them, not all of them, say like \u0027we\u0027ll guarantee an MOT, it won\u0027t need to be done in the next 6 months."
+                     },
+                     {
+                         "start":  686.0,
+                         "end":  692.0,
+                         "speaker":  "agent",
+                         "text":  "Okay, fair enough. Well look, all we can do for you is, it\u0027s just difficult um,"
+                     },
+                     {
+                         "start":  692.0,
+                         "end":  699.0,
+                         "speaker":  "agent",
+                         "text":  "just solely because there\u0027s viewings on this car, is the truth. Uh kind of like different spaces, if there was no viewings on this car in the next like two weeks,"
+                     },
+                     {
+                         "start":  699.0,
+                         "end":  702.5,
+                         "speaker":  "agent",
+                         "text":  "then it might already be in the queue for an MOT."
+                     },
+                     {
+                         "start":  702.5,
+                         "end":  703.5,
+                         "speaker":  "customer",
+                         "text":  "Sure."
+                     },
+                     {
+                         "start":  703.5,
+                         "end":  712.5,
+                         "speaker":  "customer",
+                         "text":  "That makes sense. And uh, another question is just on, um, our current car is in the same, it\u0027s a VW group, a Seat,"
+                     },
+                     {
+                         "start":  712.5,
+                         "end":  718.5,
+                         "speaker":  "customer",
+                         "text":  "um, and I\u0027m kind of assuming that there is that, but I couldn\u0027t see it kind of confirmed in the description, um,"
+                     },
+                     {
+                         "start":  718.5,
+                         "end":  723.0,
+                         "speaker":  "customer",
+                         "text":  "are you able to check, check that, whether that\u0027s um, built into the car\u0027s infotainment?"
+                     },
+                     {
+                         "start":  723.0,
+                         "end":  725.5,
+                         "speaker":  "agent",
+                         "text":  "Was it on the listing?"
+                     },
+                     {
+                         "start":  725.5,
+                         "end":  732.0,
+                         "speaker":  "customer",
+                         "text":  "Don\u0027t think it\u0027s on the list, I don\u0027t think it\u0027s on the listing. Um, and it seemed like..."
+                     },
+                     {
+                         "start":  732.0,
+                         "end":  738.0,
+                         "speaker":  "agent",
+                         "text":  "If it\u0027s not on the listing, um, I hate to be the bearer of bad news, it wouldn\u0027t have it."
+                     },
+                     {
+                         "start":  738.0,
+                         "end":  739.0,
+                         "speaker":  "customer",
+                         "text":  "It probably not. Yeah."
+                     },
+                     {
+                         "start":  739.0,
+                         "end":  743.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah it\u0027s, it says App Connect actually. Um,"
+                     },
+                     {
+                         "start":  743.0,
+                         "end":  747.0,
+                         "speaker":  "agent",
+                         "text":  "It does say App Connect but usually if it\u0027s"
+                     },
+                     {
+                         "start":  747.0,
+                         "end":  751.5,
+                         "speaker":  "agent",
+                         "text":  "available they\u0027d, they\u0027d mention it cause it\u0027s a big spec."
+                     },
+                     {
+                         "start":  751.5,
+                         "end":  759.0,
+                         "speaker":  "agent",
+                         "text":  "It\u0027s a very valuable spec for someone to have. It looks like the screen is compatible for Apple CarPlay, it just doesn\u0027t look like it was spec\u0027d with it."
+                     },
+                     {
+                         "start":  759.0,
+                         "end":  761.5,
+                         "speaker":  "customer",
+                         "text":  "Right. Yeah."
+                     },
+                     {
+                         "start":  761.5,
+                         "end":  769.5,
+                         "speaker":  "agent",
+                         "text":  "Um, yeah. So the previous owners probably didn\u0027t opt for the Apple CarPlay on this specific car, but it is compatible. So that just means"
+                     },
+                     {
+                         "start":  769.5,
+                         "end":  774.5,
+                         "speaker":  "agent",
+                         "text":  "rather than you needing a whole new module, uh, you could get it coded in, which is a lot more"
+                     },
+                     {
+                         "start":  774.5,
+                         "end":  777.0,
+                         "speaker":  "agent",
+                         "text":  "It\u0027s a lot cheaper than changing the whole screen."
+                     },
+                     {
+                         "start":  777.0,
+                         "end":  780.0,
+                         "speaker":  "customer",
+                         "text":  "How do you get that done? Do you have to go to like a..."
+                     },
+                     {
+                         "start":  780.0,
+                         "end":  789.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah so there are, it\u0027s not an electric uh shop, it\u0027s more of a, um, a coding shop more than anything. Uh there\u0027s some people that do mobile services, they come to your house and code it for you on the spot, costs between 150,"
+                     },
+                     {
+                         "start":  789.0,
+                         "end":  798.5,
+                         "speaker":  "agent",
+                         "text":  "uh sometimes cheaper, depending on on sort of the screen compatibility, but this one here it looks like it has it, it just wasn\u0027t spec\u0027d with it. Uh cause it has app connect on the screen, which is a good sign."
+                     },
+                     {
+                         "start":  798.5,
+                         "end":  802.0,
+                         "speaker":  "agent",
+                         "text":  "I\u0027m very familiar with this infotainment system, I\u0027ve got a few Golfs."
+                     },
+                     {
+                         "start":  802.0,
+                         "end":  804.5,
+                         "speaker":  "customer",
+                         "text":  "Right, yeah."
+                     },
+                     {
+                         "start":  804.5,
+                         "end":  806.0,
+                         "speaker":  "agent",
+                         "text":  "Um, Mk 7.5s, all the same year as well."
+                     },
+                     {
+                         "start":  806.0,
+                         "end":  810.0,
+                         "speaker":  "agent",
+                         "text":  "Uh, yeah. It doesn\u0027t have it though, no."
+                     },
+                     {
+                         "start":  810.0,
+                         "end":  812.5,
+                         "speaker":  "customer",
+                         "text":  "No, it doesn\u0027t have it. What is App Connect then?"
+                     },
+                     {
+                         "start":  812.5,
+                         "end":  819.0,
+                         "speaker":  "agent",
+                         "text":  "To the best of my knowledge, that\u0027s where you press to go to Apple CarPlay. That\u0027s, that\u0027s what, that\u0027s"
+                     },
+                     {
+                         "start":  819.0,
+                         "end":  823.0,
+                         "speaker":  "customer",
+                         "text":  "Okay. So basically if it was spec\u0027d that is how you would access it, but it doesn\u0027t, it\u0027s not like some way that it will connect to the phone otherwise."
+                     },
+                     {
+                         "start":  823.0,
+                         "end":  830.0,
+                         "speaker":  "agent",
+                         "text":  "Mm, you\u0027ll obviously have Bluetooth and and um..."
+                     },
+                     {
+                         "start":  830.0,
+                         "end":  834.0,
+                         "speaker":  "agent",
+                         "text":  "It might have CarPlay, you know, and they might have just missed it out as a spec. Just genuinely, it might actually have it."
+                     },
+                     {
+                         "start":  834.0,
+                         "end":  839.0,
+                         "speaker":  "customer",
+                         "text":  "Well if you\u0027re going down to check the cam belt, maybe you could check that. If you wouldn\u0027t mind."
+                     },
+                     {
+                         "start":  839.0,
+                         "end":  842.0,
+                         "speaker":  "agent",
+                         "text":  "Of course not, of course not, of course not."
+                     },
+                     {
+                         "start":  842.0,
+                         "end":  849.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, that would be, that would be good to know certainly. It\u0027s just like, yeah it\u0027s obviously built into."
+                     },
+                     {
+                         "start":  849.0,
+                         "end":  856.0,
+                         "speaker":  "agent",
+                         "text":  "At the moment, obviously I will check on all those stuff, but at the moment my answer for you would be no. Yeah. Um so proceed as if it didn\u0027t have it, is what I\u0027d, is what I\u0027d say to you mentally."
+                     },
+                     {
+                         "start":  856.0,
+                         "end":  861.5,
+                         "speaker":  "agent",
+                         "text":  "Uh but I will double check both those items for you 100%. Uh as well as the keys of course."
+                     },
+                     {
+                         "start":  861.5,
+                         "end":  868.5,
+                         "speaker":  "customer",
+                         "text":  "Great. Okay, I think that\u0027s, you basically answered all my questions. Um, I think in terms of, yeah, if you don\u0027t mind checking about cam belt and just double checking about Android Auto,"
+                     },
+                     {
+                         "start":  868.5,
+                         "end":  870.0,
+                         "speaker":  "agent",
+                         "text":  "Yep."
+                     },
+                     {
+                         "start":  870.0,
+                         "end":  873.5,
+                         "speaker":  "customer",
+                         "text":  "No worries. And then the only, yeah the only things would be whether the MOT\u0027s not been done, I wonder if there if there would be any negotiation on the on the on the kind of price to take some of that price down, I know it\u0027s obviously been with you guys for a while. Um but also appreciate you\u0027ve got bookings in. So that\u0027s an interest."
+                     },
+                     {
+                         "start":  873.5,
+                         "end":  876.0,
+                         "speaker":  "customer",
+                         "text":  "(...)"
+                     },
+                     {
+                         "start":  876.0,
+                         "end":  878.0,
+                         "speaker":  "customer",
+                         "text":  "(...)"
+                     },
+                     {
+                         "start":  878.0,
+                         "end":  880.0,
+                         "speaker":  "customer",
+                         "text":  "(...)"
+                     },
+                     {
+                         "start":  880.0,
+                         "end":  882.0,
+                         "speaker":  "customer",
+                         "text":  "(...)"
+                     },
+                     {
+                         "start":  882.0,
+                         "end":  884.0,
+                         "speaker":  "customer",
+                         "text":  "(...)"
+                     },
+                     {
+                         "start":  884.0,
+                         "end":  887.5,
+                         "speaker":  "customer",
+                         "text":  "(...)"
+                     },
+                     {
+                         "start":  887.5,
+                         "end":  894.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah. You know what is Nick, if you don\u0027t ask you don\u0027t get. Uh is the principle of life. However, I\u0027m pretty sure you know."
+                     },
+                     {
+                         "start":  894.0,
+                         "end":  900.5,
+                         "speaker":  "agent",
+                         "text":  "This car is currently 600 quid below retail valuation. Um and we\u0027re the cheapest in a 100-mile radius on Auto Trader that is."
+                     },
+                     {
+                         "start":  900.5,
+                         "end":  906.5,
+                         "speaker":  "agent",
+                         "text":  "Uh we give that promise for a reason. We have an AI scanner that scans the market three times a week."
+                     },
+                     {
+                         "start":  906.5,
+                         "end":  913.0,
+                         "speaker":  "agent",
+                         "text":  "So if you wanted to find me one cheaper, I\u0027d be more than happy to match, match the car price for you."
+                     },
+                     {
+                         "start":  913.0,
+                         "end":  921.0,
+                         "speaker":  "agent",
+                         "text":  "Um but if not, uh yeah we are a used car supermarket, so we\u0027re the cheapest, so we don\u0027t really negotiate on car price, is the truth."
+                     },
+                     {
+                         "start":  921.0,
+                         "end":  922.5,
+                         "speaker":  "customer",
+                         "text":  "Okay. Fair enough."
+                     },
+                     {
+                         "start":  922.5,
+                         "end":  925.0,
+                         "speaker":  "agent",
+                         "text":  "Um..."
+                     },
+                     {
+                         "start":  925.0,
+                         "end":  932.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, yeah, no, it\u0027s only \u0027cause the kinda like, yeah, if if, you know, if it was coming with the MOT and it was coming with Android Auto, that would be, I\u0027d be like, okay, I think 15 is..."
+                     },
+                     {
+                         "start":  932.0,
+                         "end":  938.0,
+                         "speaker":  "agent",
+                         "text":  "No, I appreciate it. The thing is, I think..."
+                     },
+                     {
+                         "start":  938.0,
+                         "end":  940.5,
+                         "speaker":  "customer",
+                         "text":  "is a good price. But because it might not come with the auto Android Auto and that\u0027s an extra cost and the MOT or an MOT..."
+                     },
+                     {
+                         "start":  940.5,
+                         "end":  945.0,
+                         "speaker":  "agent",
+                         "text":  "No I hear that, I do hear that, I do hear that."
+                     },
+                     {
+                         "start":  945.0,
+                         "end":  951.0,
+                         "speaker":  "customer",
+                         "text":  "Or the MRT, I appreciate it\u0027s not a lot."
+                     },
+                     {
+                         "start":  951.0,
+                         "end":  958.0,
+                         "speaker":  "agent",
+                         "text":  "No, no I get you though, I get you, I get where you\u0027re coming from. It\u0027s just that look, if it had it, it might have been 300 pound more expensive."
+                     },
+                     {
+                         "start":  958.0,
+                         "end":  963.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  963.0,
+                         "end":  971.0,
+                         "speaker":  "agent",
+                         "text":  "If it had the Android Auto, because everything is sort of priced quite accurately. Uh yes we\u0027ve had it for a little bit of time, you\u0027re not wrong with that, but it\u0027s sort of a niche car. It\u0027s not the easiest car to sell."
+                     },
+                     {
+                         "start":  971.0,
+                         "end":  981.5,
+                         "speaker":  "agent",
+                         "text":  "Uh we have a lot of, we have E-Classes that fly off our shelf. We\u0027ve got A1s, all these 1 liters, 1.2s. We live in London, this is a 2-liter TDI. People don\u0027t understand that diesel is actually better than petrol."
+                     },
+                     {
+                         "start":  981.5,
+                         "end":  993.0,
+                         "speaker":  "agent",
+                         "text":  "Uh but if you live outside London then you do get the benefit from that. So it\u0027s probably why it\u0027s a sat in stock for a lot, a little bit longer than, than the average car. But uh, I think I saw my colleague Casper doing a virtual on this car yesterday."
+                     },
+                     {
+                         "start":  993.0,
+                         "end":  998.0,
+                         "speaker":  "customer",
+                         "text":  "Um, does it have a pan roof, if I\u0027m not mistaken?"
+                     },
+                     {
+                         "start":  998.0,
+                         "end":  1000.5,
+                         "speaker":  "agent",
+                         "text":  "No it doesn\u0027t, it doesn\u0027t, I\u0027ve got..."
+                     },
+                     {
+                         "start":  1000.5,
+                         "end":  1002.5,
+                         "speaker":  "customer",
+                         "text":  "It doesn\u0027t? Okay, then it might have been another one."
+                     },
+                     {
+                         "start":  1002.5,
+                         "end":  1007.5,
+                         "speaker":  "agent",
+                         "text":  "I don\u0027t think it does anyway. Confirm that."
+                     },
+                     {
+                         "start":  1007.5,
+                         "end":  1012.0,
+                         "speaker":  "customer",
+                         "text":  "It\u0027s certainly not in the spec. And I didn\u0027t see it on the, in the video."
+                     },
+                     {
+                         "start":  1012.0,
+                         "end":  1016.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah no, it doesn\u0027t, it doesn\u0027t, it doesn\u0027t, it doesn\u0027t, it doesn\u0027t."
+                     },
+                     {
+                         "start":  1016.5,
+                         "end":  1022.0,
+                         "speaker":  "customer",
+                         "text":  "But there you go, you could knock another 200 off for that. Maybe a grand for the pan roof."
+                     },
+                     {
+                         "start":  1022.0,
+                         "end":  1029.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, no that\u0027s fine, that\u0027s fine. I\u0027m not interested particularly in like a really high spec version of this car, I\u0027m very happy with just the basics, but it does need to have Android Auto."
+                     },
+                     {
+                         "start":  1029.0,
+                         "end":  1032.0,
+                         "speaker":  "customer",
+                         "text":  "And uh just it\u0027s the kinda thing, so..."
+                     },
+                     {
+                         "start":  1032.0,
+                         "end":  1036.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah if you get used to it now, so I\u0027d definitely wanna get that in."
+                     },
+                     {
+                         "start":  1036.0,
+                         "end":  1046.0,
+                         "speaker":  "agent",
+                         "text":  "Well I can check on those for you. Um and give you an answer obviously in the next 20 minutes to half an hour where I get a colleague to go and check. Um in regards to moving forward, what was your best case scenario with the motor if you\u0027re happy with all the responses you receive?"
+                     },
+                     {
+                         "start":  1046.0,
+                         "end":  1056.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, so the scenario would be, I thought again, talking to this sales agent, who I\u0027m now not trusting because of the 3-month MOT thing, but we were talking about it, and ideally I wanted to do a part-exchange. He did explain that because it\u0027s a delivery situation it wouldn\u0027t be a part-exchange."
+                     },
+                     {
+                         "start":  1056.0,
+                         "end":  1058.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah. Where do you live? What\u0027s your postcode?"
+                     },
+                     {
+                         "start":  1058.0,
+                         "end":  1065.0,
+                         "speaker":  "customer",
+                         "text":  "Um, BN25 2XD."
+                     },
+                     {
+                         "start":  1065.0,
+                         "end":  1070.0,
+                         "speaker":  "agent",
+                         "text":  "It\u0027s probably like a two and a half hours drive. That\u0027s why."
+                     },
+                     {
+                         "start":  1070.0,
+                         "end":  1072.0,
+                         "speaker":  "customer",
+                         "text":  "Alright let\u0027s hear the big..."
+                     },
+                     {
+                         "start":  1072.0,
+                         "end":  1078.0,
+                         "speaker":  "agent",
+                         "text":  "Okay, so you\u0027re a hundred miles on the dot. Yeah, you would be around 199 pounds to take across to you, yeah."
+                     },
+                     {
+                         "start":  1078.0,
+                         "end":  1083.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah. Um, that\u0027s fine. Just thinking about selling the car that we\u0027ve got at the moment to Seat Ateca."
+                     },
+                     {
+                         "start":  1083.0,
+                         "end":  1088.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, I\u0027m thinking about it, I\u0027m thinking about that. It\u0027s on my mind right now as we speak."
+                     },
+                     {
+                         "start":  1088.0,
+                         "end":  1092.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  1092.5,
+                         "end":  1099.0,
+                         "speaker":  "agent",
+                         "text":  "Uh, \u0027cause yes, it\u0027s true we do not collect, um, part exchange on distant sales."
+                     },
+                     {
+                         "start":  1099.0,
+                         "end":  1102.5,
+                         "speaker":  "agent",
+                         "text":  "That is true. Um..."
+                     },
+                     {
+                         "start":  1102.5,
+                         "end":  1108.5,
+                         "speaker":  "customer",
+                         "text":  "He was saying that there is a situation that it could be done as two transactions, \u0027cause you guys obviously buy cars, you wanna sell them."
+                     },
+                     {
+                         "start":  1108.5,
+                         "end":  1114.5,
+                         "speaker":  "customer",
+                         "text":  "Um, so it\u0027s whether that\u0027s something that you\u0027d be able to do at the same time as delivering the vehicle, could you collect ours."
+                     },
+                     {
+                         "start":  1114.5,
+                         "end":  1122.5,
+                         "speaker":  "agent",
+                         "text":  "The actual answer, the actual answer is no. However, there might be something that can be done. I just can\u0027t make you a promise \u0027cause it\u0027s not something we do."
+                     },
+                     {
+                         "start":  1122.5,
+                         "end":  1128.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah, you could do it separately, but then that might take, uh, a course of three weeks, in between one being collected, one being delivered. Like it\u0027s two separate departments."
+                     },
+                     {
+                         "start":  1128.5,
+                         "end":  1133.0,
+                         "speaker":  "agent",
+                         "text":  "In regards to collecting it and incorporating it into the deal, so the same driver that went collecting drops it back to us."
+                     },
+                     {
+                         "start":  1133.0,
+                         "end":  1139.0,
+                         "speaker":  "agent",
+                         "text":  "Um, I\u0027ll be able to give you an answer, uh I just can\u0027t, can\u0027t give you a guarantee at the moment until we look at the car. So it\u0027s a bit of an issue."
+                     },
+                     {
+                         "start":  1139.0,
+                         "end":  1146.0,
+                         "speaker":  "agent",
+                         "text":  "If you had the car come down, and we valued it on site, then it would be a lot easier collecting it at some point."
+                     },
+                     {
+                         "start":  1146.0,
+                         "end":  1152.0,
+                         "speaker":  "agent",
+                         "text":  "Um, but cause we haven\u0027t actually seen it on site, giving you a price over the phone based off pictures."
+                     },
+                     {
+                         "start":  1152.0,
+                         "end":  1155.0,
+                         "speaker":  "agent",
+                         "text":  "Uh, I believe you, you sound like an honest guy."
+                     },
+                     {
+                         "start":  1155.0,
+                         "end":  1157.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  1157.0,
+                         "end":  1162.0,
+                         "speaker":  "agent",
+                         "text":  "But it could have an engine problem that we don\u0027t know about, and then we\u0027d only find out once it gets it, which obviously causes a headache."
+                     },
+                     {
+                         "start":  1162.0,
+                         "end":  1165.0,
+                         "speaker":  "customer",
+                         "text":  "I\u0027ll take a video of me driving it."
+                     },
+                     {
+                         "start":  1165.0,
+                         "end":  1169.5,
+                         "speaker":  "agent",
+                         "text":  "Uh, let me see, let me see, let me see what can be done."
+                     },
+                     {
+                         "start":  1169.5,
+                         "end":  1173.0,
+                         "speaker":  "agent",
+                         "text":  "What, was you, was you looking for a trade purchase price for your car, yeah? You, like, on a trade value?"
+                     },
+                     {
+                         "start":  1173.0,
+                         "end":  1178.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, what does that mean?"
+                     },
+                     {
+                         "start":  1178.0,
+                         "end":  1184.0,
+                         "speaker":  "agent",
+                         "text":  "So obviously we buy cars at a trade price. Same as we buy any car on Motorway. Uh we give very competitive pricing, but considering we haven\u0027t even seen the car."
+                     },
+                     {
+                         "start":  1184.0,
+                         "end":  1188.0,
+                         "speaker":  "agent",
+                         "text":  "Um, yeah, it might be on the lower side rather than the higher side."
+                     },
+                     {
+                         "start":  1188.0,
+                         "end":  1195.0,
+                         "speaker":  "agent",
+                         "text":  "Whereas if you were to come down and we could have peace of mind that the car was mint, then we might be able to give you a little bit more. Um, that\u0027s if we can incorporate that into the deal."
+                     },
+                     {
+                         "start":  1195.0,
+                         "end":  1202.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah. I mean definitely be worth getting a price for that. Um, I mean worst comes to worst I could possibly look at coming up."
+                     },
+                     {
+                         "start":  1202.5,
+                         "end":  1205.5,
+                         "speaker":  "customer",
+                         "text":  "Um, it\u0027s just the faff of the time it takes to do that."
+                     },
+                     {
+                         "start":  1205.5,
+                         "end":  1210.0,
+                         "speaker":  "agent",
+                         "text":  "Might as well come up tomorrow, we close at 9pm."
+                     },
+                     {
+                         "start":  1210.0,
+                         "end":  1213.5,
+                         "speaker":  "customer",
+                         "text":  "Uh, I know but, I suppose I could come up in the evening after work, just effort."
+                     },
+                     {
+                         "start":  1213.5,
+                         "end":  1222.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, I hear you, I\u0027m just as lazy as you, it\u0027s the truth mate. Uh 7:25 at 6pm, I don\u0027t fancy that."
+                     },
+                     {
+                         "start":  1222.0,
+                         "end":  1226.5,
+                         "speaker":  "agent",
+                         "text":  "Um, well I\u0027ll also try and do it tomorrow anyway, I know I can\u0027t do it tomorrow, but I will definitely bear that in mind."
+                     },
+                     {
+                         "start":  1226.5,
+                         "end":  1234.0,
+                         "speaker":  "customer",
+                         "text":  "If you give me the trade price, that could be good. And then I can take it from there."
+                     },
+                     {
+                         "start":  1234.0,
+                         "end":  1243.0,
+                         "speaker":  "customer",
+                         "text":  "Think on it. And then if that\u0027s obviously too low, I can, we can call back and see."
+                     },
+                     {
+                         "start":  1243.0,
+                         "end":  1247.5,
+                         "speaker":  "agent",
+                         "text":  "Alright, cool. What\u0027s your registration of your vehicle?"
+                     },
+                     {
+                         "start":  1247.5,
+                         "end":  1251.0,
+                         "speaker":  "customer",
+                         "text":  "Uh, BK67"
+                     },
+                     {
+                         "start":  1251.0,
+                         "end":  1254.5,
+                         "speaker":  "agent",
+                         "text":  "Yep."
+                     },
+                     {
+                         "start":  1254.5,
+                         "end":  1256.0,
+                         "speaker":  "customer",
+                         "text":  "ZKM."
+                     },
+                     {
+                         "start":  1256.0,
+                         "end":  1259.0,
+                         "speaker":  "agent",
+                         "text":  "Mileage?"
+                     },
+                     {
+                         "start":  1259.0,
+                         "end":  1262.5,
+                         "speaker":  "customer",
+                         "text":  "75,200."
+                     },
+                     {
+                         "start":  1262.5,
+                         "end":  1266.0,
+                         "speaker":  "agent",
+                         "text":  "75,200."
+                     },
+                     {
+                         "start":  1266.0,
+                         "end":  1268.0,
+                         "speaker":  "agent",
+                         "text":  "Service history full, partial?"
+                     },
+                     {
+                         "start":  1268.0,
+                         "end":  1272.5,
+                         "speaker":  "customer",
+                         "text":  "Um, good question. I think it\u0027s"
+                     },
+                     {
+                         "start":  1272.5,
+                         "end":  1277.0,
+                         "speaker":  "customer",
+                         "text":  "let\u0027s say partial, it might be full, but I just."
+                     },
+                     {
+                         "start":  1277.0,
+                         "end":  1280.0,
+                         "speaker":  "agent",
+                         "text":  "Do you know if it\u0027s been to main dealer or you reckon it\u0027s just private servicing?"
+                     },
+                     {
+                         "start":  1280.0,
+                         "end":  1284.5,
+                         "speaker":  "customer",
+                         "text":  "It\u0027s been private servicing."
+                     },
+                     {
+                         "start":  1284.5,
+                         "end":  1288.5,
+                         "speaker":  "agent",
+                         "text":  "Two keys, one key?"
+                     },
+                     {
+                         "start":  1288.5,
+                         "end":  1290.0,
+                         "speaker":  "customer",
+                         "text":  "Two keys."
+                     },
+                     {
+                         "start":  1290.0,
+                         "end":  1293.0,
+                         "speaker":  "agent",
+                         "text":  "Any outstanding finance on the motor? Nope."
+                     },
+                     {
+                         "start":  1293.0,
+                         "end":  1295.5,
+                         "speaker":  "customer",
+                         "text":  "Nope."
+                     },
+                     {
+                         "start":  1295.5,
+                         "end":  1301.0,
+                         "speaker":  "agent",
+                         "text":  "Bear with me."
+                     },
+                     {
+                         "start":  1301.0,
+                         "end":  1307.0,
+                         "speaker":  "agent",
+                         "text":  "Uh, bodywork good?"
+                     },
+                     {
+                         "start":  1307.0,
+                         "end":  1313.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, bodywork\u0027s good, I mean paint it has, it\u0027s got a couple of blemishes on the paint work definitely."
+                     },
+                     {
+                         "start":  1313.0,
+                         "end":  1316.0,
+                         "speaker":  "customer",
+                         "text":  "I\u0027d wanna be honest about that, so definitely had some scratches."
+                     },
+                     {
+                         "start":  1316.0,
+                         "end":  1317.0,
+                         "speaker":  "agent",
+                         "text":  "Any dents?"
+                     },
+                     {
+                         "start":  1317.0,
+                         "end":  1320.0,
+                         "speaker":  "customer",
+                         "text":  "No dents as far as I\u0027m aware."
+                     },
+                     {
+                         "start":  1320.0,
+                         "end":  1322.0,
+                         "speaker":  "customer",
+                         "text":  "I will double check that."
+                     },
+                     {
+                         "start":  1322.0,
+                         "end":  1325.5,
+                         "speaker":  "agent",
+                         "text":  "Alloys need a refurb I assume?"
+                     },
+                     {
+                         "start":  1325.5,
+                         "end":  1330.0,
+                         "speaker":  "customer",
+                         "text":  "Um, if that\u0027s what you do when you sell a car then yeah."
+                     },
+                     {
+                         "start":  1330.0,
+                         "end":  1333.0,
+                         "speaker":  "agent",
+                         "text":  "Cool. Um, mechanically?"
+                     },
+                     {
+                         "start":  1333.0,
+                         "end":  1342.0,
+                         "speaker":  "customer",
+                         "text":  "Fine, no problems. I mean it\u0027s got, it needs an oil service, because I\u0027ve got a, that\u0027s the one thing that\u0027s on the dash at the moment."
+                     },
+                     {
+                         "start":  1342.0,
+                         "end":  1345.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah, but apart from that car runs good."
+                     },
+                     {
+                         "start":  1345.5,
+                         "end":  1347.0,
+                         "speaker":  "customer",
+                         "text":  "Car runs very well, yeah."
+                     },
+                     {
+                         "start":  1347.0,
+                         "end":  1349.5,
+                         "speaker":  "agent",
+                         "text":  "Is it an auto or manual?"
+                     },
+                     {
+                         "start":  1349.5,
+                         "end":  1352.0,
+                         "speaker":  "customer",
+                         "text":  "It\u0027s a manual."
+                     },
+                     {
+                         "start":  1352.0,
+                         "end":  1354.0,
+                         "speaker":  "agent",
+                         "text":  "Okay. No worries. Uh when we speak on the phone in 20 minutes, I\u0027ll have these answers for you, okay?"
+                     },
+                     {
+                         "start":  1354.0,
+                         "end":  1360.5,
+                         "speaker":  "customer",
+                         "text":  "Okay, that\u0027s great."
+                     },
+                     {
+                         "start":  1360.5,
+                         "end":  1367.0,
+                         "speaker":  "agent",
+                         "text":  "Alright, take care. My name is Zak, um from the Barnet branch. Uh I\u0027ll call you very very shortly, and we\u0027ll take it from there."
+                     },
+                     {
+                         "start":  1367.0,
+                         "end":  1369.0,
+                         "speaker":  "customer",
+                         "text":  "Alright, thanks Zak. Speak to you later."
+                     },
+                     {
+                         "start":  1369.0,
+                         "end":  1370.0,
+                         "speaker":  "agent",
+                         "text":  "Alright, take care, bye-bye."
+                     },
+                     {
+                         "start":  1370.0,
+                         "end":  1371.0,
+                         "speaker":  "customer",
+                         "text":  "Bye."
+                     }
+                 ]
+}

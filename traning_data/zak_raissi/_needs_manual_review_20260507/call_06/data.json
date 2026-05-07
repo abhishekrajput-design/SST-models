@@ -1,0 +1,529 @@
+﻿{
+    "call_id":  "20260418T162400911_477551 (2)",
+    "agent_name":  "Zak Raissi",
+    "source":  "gemini",
+    "segments":  [
+                     {
+                         "start":  0.0,
+                         "end":  2.5,
+                         "speaker":  "agent",
+                         "text":  "Hello Jay, apologies..."
+                     },
+                     {
+                         "start":  2.5,
+                         "end":  6.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, I mean the line just started cutting off, I couldn\u0027t hear you."
+                     },
+                     {
+                         "start":  6.0,
+                         "end":  8.0,
+                         "speaker":  "agent",
+                         "text":  "It was my service, not yours."
+                     },
+                     {
+                         "start":  8.0,
+                         "end":  9.5,
+                         "speaker":  "customer",
+                         "text":  "Okay, okay."
+                     },
+                     {
+                         "start":  9.5,
+                         "end":  25.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, I was literally just saying to yourself, um, so both the CLAs are here, they\u0027re in Barnet. Um, they\u0027re both available for viewing tomorrow. Um, obviously as mentioned one of them has two owners, one of them has one owner, but they\u0027ve both been to main dealer, so they\u0027ve only been serviced ever at Mercedes."
+                     },
+                     {
+                         "start":  25.0,
+                         "end":  32.5,
+                         "speaker":  "customer",
+                         "text":  "Mm. Um, and, and you were telling me that you, you get quoted two and a half grand for a, for a, for a gearbox change?"
+                     },
+                     {
+                         "start":  32.5,
+                         "end":  36.0,
+                         "speaker":  "agent",
+                         "text":  "No, it\u0027s not even a complete gearbox. It is the mechatronic unit."
+                     },
+                     {
+                         "start":  36.0,
+                         "end":  42.0,
+                         "speaker":  "customer",
+                         "text":  "That sounds like a headache man. And I have called about three different people, yeah, and yes, that is the price."
+                     },
+                     {
+                         "start":  42.0,
+                         "end":  44.0,
+                         "speaker":  "agent",
+                         "text":  "Does the car run and drive?"
+                     },
+                     {
+                         "start":  44.0,
+                         "end":  46.5,
+                         "speaker":  "customer",
+                         "text":  "No, it don\u0027t drive. It\u0027s stopped."
+                     },
+                     {
+                         "start":  46.5,
+                         "end":  52.0,
+                         "speaker":  "agent",
+                         "text":  "Mm. I was gonna say bring it part exchange, but if the car doesn\u0027t drive there\u0027s not even anything we can do with it."
+                     },
+                     {
+                         "start":  52.0,
+                         "end":  53.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah I know."
+                     },
+                     {
+                         "start":  53.5,
+                         "end":  59.0,
+                         "speaker":  "agent",
+                         "text":  "I\u0027ll be honest with you, I spent four and a half grand on a Golf GTI engine re- gearbox recondition."
+                     },
+                     {
+                         "start":  59.0,
+                         "end":  61.0,
+                         "speaker":  "customer",
+                         "text":  "Four and a half, yeah?"
+                     },
+                     {
+                         "start":  61.0,
+                         "end":  72.0,
+                         "speaker":  "agent",
+                         "text":  "Four and a half for a whole gearbox. I know, I know. Which is why I\u0027d be honest with you... I only have warranty now. I\u0027m not... I don\u0027t buy old cars anymore. I don\u0027t like dealing with these headaches anymore, it\u0027s done."
+                     },
+                     {
+                         "start":  72.0,
+                         "end":  75.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, yeah, I know, I know. You know you\u0027re..."
+                     },
+                     {
+                         "start":  75.0,
+                         "end":  84.0,
+                         "speaker":  "agent",
+                         "text":  "At least it\u0027s me and you, like, we\u0027re men, we\u0027re adults, we can fix it, we can go over here, we\u0027ll find a solution. But when it happens to your sister, to your daughter, it\u0027s a headache. Like, it just..."
+                     },
+                     {
+                         "start":  84.0,
+                         "end":  96.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, yeah. So that, now the problem is, um, the gearbox place I was gonna book it in heavy, they\u0027re saying we can\u0027t look at it till Thursday. And then, I thought let me hire out a car. No one wants to hire..."
+                     },
+                     {
+                         "start":  96.0,
+                         "end":  115.0,
+                         "speaker":  "agent",
+                         "text":  "If I, if I\u0027d be honest with you, yeah. I\u0027m gonna give you advice that I\u0027d give like a family friend, yeah. Yes, you can get a higher car. Yes, you can spend two and a half grand, three grand getting that, getting that fixed. But your best case scenario is not spending any additional money on that car, because even if you fix it, it\u0027s inevitable in one year later you spend more money, more money, more money."
+                     },
+                     {
+                         "start":  115.0,
+                         "end":  120.0,
+                         "speaker":  "customer",
+                         "text":  "I\u0027ve already, man, I put three brand new tyres, I put front brake pads..."
+                     },
+                     {
+                         "start":  120.0,
+                         "end":  122.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah, that\u0027s what happens with these old cars."
+                     },
+                     {
+                         "start":  122.5,
+                         "end":  126.0,
+                         "speaker":  "customer",
+                         "text":  "I changed the front bonnet because of some mechanic messed up..."
+                     },
+                     {
+                         "start":  126.0,
+                         "end":  127.0,
+                         "speaker":  "agent",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  127.0,
+                         "end":  131.0,
+                         "speaker":  "customer",
+                         "text":  "But I don\u0027t do the... I don\u0027t do like gearbox, automatic gearboxes."
+                     },
+                     {
+                         "start":  131.0,
+                         "end":  134.0,
+                         "speaker":  "agent",
+                         "text":  "Takes jobs, just you do basic like the normal stuff."
+                     },
+                     {
+                         "start":  134.0,
+                         "end":  136.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, yeah, yeah, yeah."
+                     },
+                     {
+                         "start":  136.0,
+                         "end":  146.0,
+                         "speaker":  "agent",
+                         "text":  "Look, you can fix it but I\u0027ll highly recommend yeah, just as advice, do not throw two and a half grand... because eventually I think just sell it as is and get rid of the car. What year is it?"
+                     },
+                     {
+                         "start":  146.0,
+                         "end":  147.5,
+                         "speaker":  "customer",
+                         "text":  "It\u0027s 15."
+                     },
+                     {
+                         "start":  147.5,
+                         "end":  149.0,
+                         "speaker":  "agent",
+                         "text":  "15 and what\u0027s the mileage?"
+                     },
+                     {
+                         "start":  149.0,
+                         "end":  150.5,
+                         "speaker":  "customer",
+                         "text":  "84,000."
+                     },
+                     {
+                         "start":  150.5,
+                         "end":  152.0,
+                         "speaker":  "agent",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  152.0,
+                         "end":  156.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, I\u0027m gonna just sell it like that because somebody can pop a new..."
+                     },
+                     {
+                         "start":  156.0,
+                         "end":  169.0,
+                         "speaker":  "agent",
+                         "text":  "I personally would recommend... Cause if you spend two and a half thousand pounds here, then tomorrow, or the day after... an extra thousand pounds. The only reason why I\u0027m saying that is because I personally went through this with my Golf GTI."
+                     },
+                     {
+                         "start":  169.0,
+                         "end":  172.5,
+                         "speaker":  "customer",
+                         "text":  "Yeah, yeah, yeah, that\u0027s what I thought let me get out something decent."
+                     },
+                     {
+                         "start":  172.5,
+                         "end":  190.0,
+                         "speaker":  "agent",
+                         "text":  "And then my car was, engine, gearbox went on 60,000 miles, I fixed it. I drove it to 80,000 miles and then I had an issue with the suspension. So I sold the car now and I only, my next car I have now is a 72, 2022, I don\u0027t buy any more old... I have warranty, if I have a problem it goes back to the dealership, deal with it, done."
+                     },
+                     {
+                         "start":  190.0,
+                         "end":  193.5,
+                         "speaker":  "customer",
+                         "text":  "Oh, so you\u0027re just buying like three, four years old, yeah?"
+                     },
+                     {
+                         "start":  193.5,
+                         "end":  198.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, maximum four, five. Maximum four, five, like. It\u0027s the best."
+                     },
+                     {
+                         "start":  198.0,
+                         "end":  201.0,
+                         "speaker":  "customer",
+                         "text":  "And then what, drive it for two years and then sell it?"
+                     },
+                     {
+                         "start":  201.0,
+                         "end":  215.0,
+                         "speaker":  "agent",
+                         "text":  "No, no it\u0027s not even driving it for two years, I keep the car sometimes five years, if I, if I feel like selling it, you never know what God plans, but my, I don\u0027t plan to sell it, it\u0027s just that when I buy an old car, the problems land with me. Always yeah, I have bad luck with cars."
+                     },
+                     {
+                         "start":  215.0,
+                         "end":  216.5,
+                         "speaker":  "customer",
+                         "text":  "Got ya."
+                     },
+                     {
+                         "start":  216.5,
+                         "end":  222.0,
+                         "speaker":  "agent",
+                         "text":  "So to avoid that I buy the car between 20, 30,000 miles, drive it until 60, 70..."
+                     },
+                     {
+                         "start":  222.0,
+                         "end":  228.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, that\u0027s why you know, okay, another thing I was gonna ask you, I know the A-Class, you know Mercedes A-Class..."
+                     },
+                     {
+                         "start":  228.0,
+                         "end":  229.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  229.0,
+                         "end":  231.0,
+                         "speaker":  "customer",
+                         "text":  "It\u0027s too low, yeah?"
+                     },
+                     {
+                         "start":  231.0,
+                         "end":  234.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, it does, it scrapes the speed humps man."
+                     },
+                     {
+                         "start":  234.0,
+                         "end":  236.5,
+                         "speaker":  "customer",
+                         "text":  "Now, the CLA is lower as well?"
+                     },
+                     {
+                         "start":  236.5,
+                         "end":  248.0,
+                         "speaker":  "agent",
+                         "text":  "No, no, my sister, I, my sister came to Car Planet last month and I sold her a CLA. She part exchanged her One Series. And, uh, I drive, I drove the CLA home. It\u0027s got plenty of ride height clearance."
+                     },
+                     {
+                         "start":  248.0,
+                         "end":  250.0,
+                         "speaker":  "customer",
+                         "text":  "Is it better, yeah?"
+                     },
+                     {
+                         "start":  250.0,
+                         "end":  254.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, yeah. It\u0027s not, it\u0027s not as low as the, it\u0027s not as low as the A-Class."
+                     },
+                     {
+                         "start":  254.0,
+                         "end":  255.0,
+                         "speaker":  "customer",
+                         "text":  "Mm."
+                     },
+                     {
+                         "start":  255.0,
+                         "end":  263.0,
+                         "speaker":  "customer",
+                         "text":  "So Zak, give me a good deal, cause I\u0027ve dropped the price... Cause I\u0027ve, I\u0027m gonna go to, what\u0027s its name, uh, the other branch..."
+                     },
+                     {
+                         "start":  263.0,
+                         "end":  264.5,
+                         "speaker":  "agent",
+                         "text":  "Watford?"
+                     },
+                     {
+                         "start":  264.5,
+                         "end":  267.0,
+                         "speaker":  "customer",
+                         "text":  "Watford, because I spoke to Zakaria..."
+                     },
+                     {
+                         "start":  267.0,
+                         "end":  269.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah, that\u0027s the call agent Zakaria, yeah."
+                     },
+                     {
+                         "start":  269.5,
+                         "end":  274.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, so he said come, come look at the car first and then we\u0027ll see what we can do."
+                     },
+                     {
+                         "start":  274.0,
+                         "end":  289.0,
+                         "speaker":  "agent",
+                         "text":  "The thing is, I\u0027ll be honest with you yeah, our prices are the cheapest in a 100-mile radius. So when you come down, we will definitely take care of you, and I\u0027ll show you how I take care of you. I\u0027ll give you a good deal with the warranty, I make sure your car is fully protected. Um, but was you looking to pay cash or finance?"
+                     },
+                     {
+                         "start":  289.0,
+                         "end":  290.5,
+                         "speaker":  "customer",
+                         "text":  "Cash it."
+                     },
+                     {
+                         "start":  290.5,
+                         "end":  315.0,
+                         "speaker":  "agent",
+                         "text":  "On a cash deal, the thing is we don\u0027t actually negotiate on car price, but the reason why we don\u0027t is because we are the cheapest. If we negotiated then the car price wouldn\u0027t be right. So have a look at the rest of Auto Trader, and you will see that we\u0027re actually the cheapest in a 100-mile radius. Car Planet gives you a promise. If you can find me one cheaper I\u0027ll match the price. Same mileage, same specs and same service history I\u0027ll match the price. And you won\u0027t, you won\u0027t find, but I promise you when you come you\u0027re in good hands."
+                     },
+                     {
+                         "start":  315.0,
+                         "end":  318.0,
+                         "speaker":  "customer",
+                         "text":  "Is, is the hybrid better or the other one?"
+                     },
+                     {
+                         "start":  318.0,
+                         "end":  329.0,
+                         "speaker":  "agent",
+                         "text":  "It depends what you need the car for. So obviously, I\u0027ll, I\u0027ll give you, when you guys come I\u0027ll be very informative and explain to you the benefits and drawbacks of each one. Um, but it also depends what you really want to use the car for."
+                     },
+                     {
+                         "start":  329.0,
+                         "end":  334.0,
+                         "speaker":  "customer",
+                         "text":  "Well, there\u0027s my daughter in it, she comes to peri well daily and then she cruises in Hounslow."
+                     },
+                     {
+                         "start":  334.0,
+                         "end":  338.0,
+                         "speaker":  "agent",
+                         "text":  "It\u0027s gonna be better for her to go for the one that\u0027s not a hybrid."
+                     },
+                     {
+                         "start":  338.0,
+                         "end":  339.5,
+                         "speaker":  "customer",
+                         "text":  "Is it?"
+                     },
+                     {
+                         "start":  339.5,
+                         "end":  344.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, I think so. I\u0027ll be honest with you. But when you come here I\u0027ll explain to you why though."
+                     },
+                     {
+                         "start":  344.0,
+                         "end":  348.0,
+                         "speaker":  "customer",
+                         "text":  "No, the hybrid, what was putting me off, you said it\u0027s got two owners."
+                     },
+                     {
+                         "start":  348.0,
+                         "end":  369.0,
+                         "speaker":  "agent",
+                         "text":  "Hybrid two owners, but the other one only has one owner it\u0027s... With these cars, when, a lot of these cars, people buy them PCP, it\u0027s a type of finance. So they keep the car for one year, two years, three years, they give it back. So that\u0027s the only reason why these newer cars have higher owners. Both these cars have been to main dealer religiously, so they, they have very good history behind them. So I would, that\u0027s why I wouldn\u0027t say that\u0027s a concern."
+                     },
+                     {
+                         "start":  369.0,
+                         "end":  373.0,
+                         "speaker":  "customer",
+                         "text":  "Okay, okay. And you got more choices or no, it\u0027s only these two?"
+                     },
+                     {
+                         "start":  373.0,
+                         "end":  376.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, we generally, we have 1,700 cars."
+                     },
+                     {
+                         "start":  376.0,
+                         "end":  378.0,
+                         "speaker":  "customer",
+                         "text":  "No, like in this GLA..."
+                     },
+                     {
+                         "start":  378.0,
+                         "end":  381.0,
+                         "speaker":  "agent",
+                         "text":  "Let me see. I check for you very quickly one second."
+                     },
+                     {
+                         "start":  381.0,
+                         "end":  384.0,
+                         "speaker":  "customer",
+                         "text":  "Thank you. What time are you closing today?"
+                     },
+                     {
+                         "start":  384.0,
+                         "end":  386.0,
+                         "speaker":  "agent",
+                         "text":  "Today we close at 9pm."
+                     },
+                     {
+                         "start":  386.0,
+                         "end":  388.0,
+                         "speaker":  "customer",
+                         "text":  "Oh, on a Saturday?"
+                     },
+                     {
+                         "start":  388.0,
+                         "end":  391.0,
+                         "speaker":  "agent",
+                         "text":  "On a Saturday. And tomorrow we close at 5."
+                     },
+                     {
+                         "start":  391.0,
+                         "end":  404.0,
+                         "speaker":  "agent",
+                         "text":  "So there is one, two, three, I\u0027d say there\u0027s four cars, uh, that are, some of them are lower than your budget, a little bit higher mileage, but we have, the truth is, we have 11 CLAs, but there\u0027s like three or four that sort of fit into your box."
+                     },
+                     {
+                         "start":  404.0,
+                         "end":  408.0,
+                         "speaker":  "customer",
+                         "text":  "Mm. With a low mileage, I don\u0027t wanna do anything 20 something."
+                     },
+                     {
+                         "start":  408.0,
+                         "end":  412.0,
+                         "speaker":  "agent",
+                         "text":  "Low mileage, exactly, low mileage exactly exactly."
+                     },
+                     {
+                         "start":  412.0,
+                         "end":  417.0,
+                         "speaker":  "customer",
+                         "text":  "And Zak, do you think this guy\u0027s playing with the mileage? You know there\u0027s so many trimming jobs."
+                     },
+                     {
+                         "start":  417.0,
+                         "end":  420.0,
+                         "speaker":  "agent",
+                         "text":  "No, no, no, no, no, no, no, no, no, no, no."
+                     },
+                     {
+                         "start":  420.0,
+                         "end":  423.0,
+                         "speaker":  "customer",
+                         "text":  "You plug in this computer, three minute job."
+                     },
+                     {
+                         "start":  423.0,
+                         "end":  426.0,
+                         "speaker":  "agent",
+                         "text":  "When you come tomorrow Jay, you\u0027ll understand why that\u0027s not the case."
+                     },
+                     {
+                         "start":  426.0,
+                         "end":  429.0,
+                         "speaker":  "customer",
+                         "text":  "Okay. Alright. I\u0027ll see you tomorrow then yeah."
+                     },
+                     {
+                         "start":  429.0,
+                         "end":  439.0,
+                         "speaker":  "agent",
+                         "text":  "We sell 600 cars a month and you know we\u0027re a very reputable dealership. We have Lamborghinis, we have Bentaygas, we have hundred thousand pound cars, we don\u0027t do dodgy stuff like that."
+                     },
+                     {
+                         "start":  439.0,
+                         "end":  443.0,
+                         "speaker":  "customer",
+                         "text":  "Okay, okay. No worries Zak, I\u0027ll see you tomorrow then."
+                     },
+                     {
+                         "start":  443.0,
+                         "end":  447.0,
+                         "speaker":  "agent",
+                         "text":  "Alright I\u0027m gonna send you a confirmation just so you have the postcode alright?"
+                     },
+                     {
+                         "start":  447.0,
+                         "end":  449.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, yeah, please."
+                     },
+                     {
+                         "start":  449.0,
+                         "end":  452.0,
+                         "speaker":  "agent",
+                         "text":  "Alright, take care Jay, have a lovely evening."
+                     }
+                 ]
+}

@@ -1,0 +1,213 @@
+{
+  "call_id": "20260425T154443969_91232",
+  "agent_name": "Hussein Mohamed",
+  "source": "local_parakeet_textcue_candidate",
+  "source_result_id": "enhanced_20260425T154443969_91232__parakeet-tdt-0.6b-v3",
+  "agent_speaker": "SPEAKER_00",
+  "speaker_scores": {
+    "SPEAKER_00": {
+      "agent": 15.6,
+      "customer": 0.0,
+      "duration": 62.31999999999998
+    },
+    "SPEAKER_01": {
+      "agent": 0.0,
+      "customer": 0.0,
+      "duration": 0.3200000000000003
+    },
+    "SPEAKER_02": {
+      "agent": 0.0,
+      "customer": 0.0,
+      "duration": 5.919999999999986
+    }
+  },
+  "training_warning": "Candidate labels inferred from local ASR text cues; verify before treating as human/Gemini truth.",
+  "segments": [
+    {
+      "start": 1.44,
+      "end": 2.56,
+      "speaker": "agent",
+      "text": "Hello, good afternoon."
+    },
+    {
+      "start": 2.64,
+      "end": 3.44,
+      "speaker": "agent",
+      "text": "My name is Hussein."
+    },
+    {
+      "start": 3.52,
+      "end": 4.72,
+      "speaker": "agent",
+      "text": "I'm calling from PowerPlanet."
+    },
+    {
+      "start": 6.88,
+      "end": 7.2,
+      "speaker": "customer",
+      "text": "Hello?"
+    },
+    {
+      "start": 7.6,
+      "end": 10.16,
+      "speaker": "agent",
+      "text": "Hi, uh, I'm calling from it."
+    },
+    {
+      "start": 10.56,
+      "end": 11.36,
+      "speaker": "customer",
+      "text": "I'm okay and you?"
+    },
+    {
+      "start": 11.6,
+      "end": 12.24,
+      "speaker": "agent",
+      "text": "Uh all good."
+    },
+    {
+      "start": 12.32,
+      "end": 13.04,
+      "speaker": "agent",
+      "text": "My name's Hussein."
+    },
+    {
+      "start": 13.12,
+      "end": 16.16,
+      "speaker": "agent",
+      "text": "I was just giving you a quick courtesy call ahead of your appointment tomorrow."
+    },
+    {
+      "start": 16.56,
+      "end": 17.04,
+      "speaker": "agent",
+      "text": "That's all right."
+    },
+    {
+      "start": 18.32,
+      "end": 18.48,
+      "speaker": "agent",
+      "text": "Okay."
+    },
+    {
+      "start": 18.96,
+      "end": 22.72,
+      "speaker": "agent",
+      "text": "I I know you spoke to my colleague Chulai from the finance department."
+    },
+    {
+      "start": 22.96,
+      "end": 23.44,
+      "speaker": "customer",
+      "text": "That's right."
+    },
+    {
+      "start": 23.68,
+      "end": 24.4,
+      "speaker": "agent",
+      "text": "Sorry, Sara."
+    },
+    {
+      "start": 25.2,
+      "end": 28.16,
+      "speaker": "agent",
+      "text": "Umra."
+    },
+    {
+      "start": 28.32,
+      "end": 32.56,
+      "speaker": "agent",
+      "text": "So yeah, um in regards to obviously the car, I know you've come down before."
+    },
+    {
+      "start": 32.8,
+      "end": 36.24,
+      "speaker": "agent",
+      "text": "We want to obviously make sure that you have a smooth process when you come down."
+    },
+    {
+      "start": 36.48,
+      "end": 40.0,
+      "speaker": "agent",
+      "text": "Um so we always advise our customers to reserve the vehicle."
+    },
+    {
+      "start": 40.24,
+      "end": 42.48,
+      "speaker": "agent",
+      "text": "The registration will hold the car until tomorrow."
+    },
+    {
+      "start": 42.64,
+      "end": 43.04,
+      "speaker": "agent",
+      "text": "It's fully."
+    },
+    {
+      "start": 46.24,
+      "end": 46.72,
+      "speaker": "customer",
+      "text": "To do that."
+    },
+    {
+      "start": 46.88,
+      "end": 48.64,
+      "speaker": "customer",
+      "text": "So that takes it off the market, isn't it?"
+    },
+    {
+      "start": 49.04,
+      "end": 52.4,
+      "speaker": "agent",
+      "text": "Yeah, so basically it takes off the market until you see it."
+    },
+    {
+      "start": 52.56,
+      "end": 54.48,
+      "speaker": "agent",
+      "text": "If you see a car and you're happy with it, fantastic."
+    },
+    {
+      "start": 54.56,
+      "end": 54.8,
+      "speaker": "agent",
+      "text": "We go"
+    },
+    {
+      "start": 55.24,
+      "end": 75.72,
+      "speaker": "agent",
+      "text": "ahead if you don't like the car we you get a full refund automatically that's right yeah so um if you uh uh was you speaking tomorrow on whats up yes okay I'm gonna send you the reservation link on WhatsApp okay money so you'll be seeing me tomorrow at eleven o'clock and make sure you bring your driving license with you."
+    },
+    {
+      "start": 76.36,
+      "end": 77.72,
+      "speaker": "customer",
+      "text": "Okay that's okay I'll do that."
+    },
+    {
+      "start": 77.88,
+      "end": 78.36,
+      "speaker": "agent",
+      "text": "Fantastic."
+    },
+    {
+      "start": 78.44,
+      "end": 80.36,
+      "speaker": "agent",
+      "text": "Alright have a lovely day and I'll see you tomorrow."
+    },
+    {
+      "start": 80.76,
+      "end": 81.8,
+      "speaker": "customer",
+      "text": "I you too thank you."
+    },
+    {
+      "start": 82.04,
+      "end": 83.96,
+      "speaker": "agent",
+      "text": "Bye bye bye bye"
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+﻿{
+    "call_id":  "20260425T175023849_113343",
+    "agent_name":  "Zak Raissi",
+    "source":  "local_parakeet_voice_id_candidate",
+    "source_result_id":  "enhanced_20260425T175023849_113343__parakeet-tdt-0.6b-v3",
+    "training_warning":  "Candidate labels from local ASR/speaker-ID; verify before treating as human/Gemini ground truth.",
+    "segments":  [
+                     {
+                         "start":  2.16,
+                         "end":  2.88,
+                         "speaker":  "agent",
+                         "text":  "Hello, Mrs."
+                     },
+                     {
+                         "start":  2.96,
+                         "end":  3.76,
+                         "speaker":  "agent",
+                         "text":  "Lebulu."
+                     },
+                     {
+                         "start":  4.32,
+                         "end":  4.72,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  4.96,
+                         "end":  6.32,
+                         "speaker":  "agent",
+                         "text":  "How are you doing today?"
+                     },
+                     {
+                         "start":  6.64,
+                         "end":  7.92,
+                         "speaker":  "customer",
+                         "text":  "I\u0027m okay, thank you."
+                     },
+                     {
+                         "start":  8.16,
+                         "end":  8.88,
+                         "speaker":  "agent",
+                         "text":  "Good, good, good."
+                     },
+                     {
+                         "start":  9.04,
+                         "end":  11.28,
+                         "speaker":  "agent",
+                         "text":  "We spoke earlier just in regards to your finance."
+                     },
+                     {
+                         "start":  11.36,
+                         "end":  13.84,
+                         "speaker":  "agent",
+                         "text":  "So I have some good news and bad news."
+                     },
+                     {
+                         "start":  14.16,
+                         "end":  14.4,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  15.04,
+                         "end":  18.4,
+                         "speaker":  "agent",
+                         "text":  "So you have a provisional acceptance, which is a good news."
+                     },
+                     {
+                         "start":  18.56,
+                         "end":  22.72,
+                         "speaker":  "agent",
+                         "text":  "Um the bad news is it\u0027s not with our prime lender, so the APR is slightly high."
+                     },
+                     {
+                         "start":  23.68,
+                         "end":  23.76,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  24,
+                         "end":  27.6,
+                         "speaker":  "agent",
+                         "text":  "Which just means your monthly payment will also be slightly higher than it should be."
+                     },
+                     {
+                         "start":  32.08,
+                         "end":  32.88,
+                         "speaker":  "customer",
+                         "text":  "Okay, okay."
+                     },
+                     {
+                         "start":  33.04,
+                         "end":  34.88,
+                         "speaker":  "customer",
+                         "text":  "How much would the monthly payment be?"
+                     },
+                     {
+                         "start":  35.12,
+                         "end":  36.96,
+                         "speaker":  "agent",
+                         "text":  "So it was a thousand pound deposit."
+                     },
+                     {
+                         "start":  37.28,
+                         "end":  40.08,
+                         "speaker":  "agent",
+                         "text":  "Um did you want to go ahead of the thousand pounds just to confirm?"
+                     },
+                     {
+                         "start":  41.6,
+                         "end":  44.4,
+                         "speaker":  "customer",
+                         "text":  "Uh ideally I\u0027d like to go with five hundred."
+                     },
+                     {
+                         "start":  44.72,
+                         "end":  51.44,
+                         "speaker":  "agent",
+                         "text":  "Okay, so five hundred pounds on the finance, meaning you\u0027re gonna be financing the remaining seventeen thousand two hundred pounds."
+                     },
+                     {
+                         "start":  52.24,
+                         "end":  53.92,
+                         "speaker":  "agent",
+                         "text":  "Uh so it\u0027s obviously a big lend."
+                     },
+                     {
+                         "start":  54,
+                         "end":  54.72,
+                         "speaker":  "agent",
+                         "text":  "You\u0027ll be looking at around"
+                     },
+                     {
+                         "start":  55.16,
+                         "end":  57.16,
+                         "speaker":  "agent",
+                         "text":  "Four hundred and twenty pounds a month."
+                     },
+                     {
+                         "start":  57.48,
+                         "end":  58.28,
+                         "speaker":  "customer",
+                         "text":  "That is too much."
+                     },
+                     {
+                         "start":  58.6,
+                         "end":  59.32,
+                         "speaker":  "agent",
+                         "text":  "That\u0027s what I\u0027m saying."
+                     },
+                     {
+                         "start":  59.4,
+                         "end":  64.68,
+                         "speaker":  "agent",
+                         "text":  "So if you think it\u0027s worth um doing uh application on mum\u0027s name, I don\u0027t mind helping you with that."
+                     },
+                     {
+                         "start":  64.84,
+                         "end":  67.88,
+                         "speaker":  "agent",
+                         "text":  "Uh just sort of let me know what you want to do and uh how we can help you."
+                     },
+                     {
+                         "start":  67.96,
+                         "end":  69.88,
+                         "speaker":  "agent",
+                         "text":  "But I just want to give you all the numbers."
+                     },
+                     {
+                         "start":  70.44,
+                         "end":  72.84,
+                         "speaker":  "customer",
+                         "text":  "Oh, so you did the application in my name."
+                     },
+                     {
+                         "start":  73,
+                         "end":  76.12,
+                         "speaker":  "agent",
+                         "text":  "So the initial one that was done, was that not done in your name?"
+                     },
+                     {
+                         "start":  76.92,
+                         "end":  79.4,
+                         "speaker":  "customer",
+                         "text":  "The Teddy Ilkunda, that\u0027s that\u0027s my mom."
+                     },
+                     {
+                         "start":  79.8,
+                         "end":  82.04,
+                         "speaker":  "agent",
+                         "text":  "Okay, so that was on mum\u0027s name, yeah."
+                     },
+                     {
+                         "start":  82.36,
+                         "end":  82.68,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  83.08,
+                         "end":  84.6,
+                         "speaker":  "agent",
+                         "text":  "That\u0027s a bit too high then, yeah."
+                     },
+                     {
+                         "start":  85.48,
+                         "end":  87.32,
+                         "speaker":  "customer",
+                         "text":  "That is very high, yeah."
+                     },
+                     {
+                         "start":  87.96,
+                         "end":  88.92,
+                         "speaker":  "customer",
+                         "text":  "Look but thank you."
+                     },
+                     {
+                         "start":  89.8,
+                         "end":  90.84,
+                         "speaker":  "agent",
+                         "text":  "I saw drop the try."
+                     },
+                     {
+                         "start":  90.92,
+                         "end":  97.24,
+                         "speaker":  "agent",
+                         "text":  "Um if anything comes back from the finance lenders in the morning after a few more companies have look looked into it, we\u0027ll definitely let you know."
+                     },
+                     {
+                         "start":  97.48,
+                         "end":  97.88,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  98.44,
+                         "end":  99.8,
+                         "speaker":  "customer",
+                         "text":  "Alright, okay, thank you."
+                     },
+                     {
+                         "start":  100.04,
+                         "end":  101.56,
+                         "speaker":  "agent",
+                         "text":  "Alright, take care of yourself."
+                     },
+                     {
+                         "start":  101.96,
+                         "end":  102.52,
+                         "speaker":  "customer",
+                         "text":  "You stay."
+                     }
+                 ]
+}

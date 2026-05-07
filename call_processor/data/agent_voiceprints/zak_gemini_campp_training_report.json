@@ -1,0 +1,1303 @@
+{
+  "agent_slug": "zak_local_20260423",
+  "agent_name": "Zak Raissi",
+  "data_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "embedding_model": "cam++",
+  "embedding_dim": 512,
+  "calls": [
+    {
+      "call": "call_01",
+      "call_id": "20260503T104319184_615752",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_01\\audio_16k.wav",
+      "audio_duration_s": 608.62,
+      "label_offset_s": 1.44,
+      "segments": 50
+    },
+    {
+      "call": "call_02",
+      "call_id": "zak_e2e_test_20260423",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_02\\audio_16k.wav",
+      "audio_duration_s": 297.7,
+      "label_offset_s": 3.45,
+      "segments": 52
+    },
+    {
+      "call": "call_04",
+      "call_id": "20260415T142857417_569154",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_04\\20260415T142857417_569154.mp3",
+      "audio_duration_s": 547.06,
+      "label_offset_s": 0.74,
+      "segments": 48
+    }
+  ],
+  "same_data_accuracy": {
+    "segments": 146,
+    "overall_accuracy": 53.42,
+    "agent_accuracy": 91.78,
+    "customer_accuracy": 15.07,
+    "agent_correct": 67,
+    "agent_total": 73,
+    "customer_correct": 11,
+    "customer_total": 73,
+    "errors": [
+      {
+        "call": "call_01",
+        "segment": 3,
+        "time": [
+          5.74,
+          6.94
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.4747,
+        "text": "Yes, Samuel speaking."
+      },
+      {
+        "call": "call_01",
+        "segment": 7,
+        "time": [
+          21.64,
+          24.94
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.5826,
+        "text": "It's Eugenia, Jessica and Niwa Jackson."
+      },
+      {
+        "call": "call_01",
+        "segment": 11,
+        "time": [
+          86.64,
+          88.94
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.7037,
+        "text": "Okay. So with the Close Brothers like..."
+      },
+      {
+        "call": "call_01",
+        "segment": 12,
+        "time": [
+          89.14,
+          89.94
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.2707,
+        "text": "Yeah."
+      },
+      {
+        "call": "call_01",
+        "segment": 13,
+        "time": [
+          90.14,
+          91.94
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.6231,
+        "text": "Down 12 pounds a month, right?"
+      },
+      {
+        "call": "call_01",
+        "segment": 15,
+        "time": [
+          109.94,
+          119.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.807,
+        "text": "Did they, I mean obviously when we were looking at your website yesterday she did say that she kinda"
+      },
+      {
+        "call": "call_01",
+        "segment": 17,
+        "time": [
+          131.64,
+          133.94
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.653,
+        "text": "Okay, can you have a quick look?"
+      },
+      {
+        "call": "call_01",
+        "segment": 19,
+        "time": [
+          166.64,
+          167.94
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.5045,
+        "text": "No worries."
+      },
+      {
+        "call": "call_01",
+        "segment": 23,
+        "time": [
+          249.94,
+          256.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.9462,
+        "text": "480 pounds a month. No that's fine. Um no we'll just leave it as the one that we've done so."
+      },
+      {
+        "call": "call_01",
+        "segment": 25,
+        "time": [
+          264.94,
+          273.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.9455,
+        "text": "100% I've told her she just wanted to kinda like have an idea of what it would be so I'm just gonna "
+      },
+      {
+        "call": "call_01",
+        "segment": 27,
+        "time": [
+          289.94,
+          297.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.9407,
+        "text": "Yeah. It won't come down much. It won't come down that much. Cos it's 2000, almost 2000, almost 3000"
+      },
+      {
+        "call": "call_01",
+        "segment": 29,
+        "time": [
+          301.64,
+          304.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.927,
+        "text": "Yeah please can I just check what that is?"
+      },
+      {
+        "call": "call_01",
+        "segment": 31,
+        "time": [
+          307.64,
+          308.94
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.925,
+        "text": "No worries."
+      },
+      {
+        "call": "call_01",
+        "segment": 33,
+        "time": [
+          311.44,
+          314.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.9063,
+        "text": "No, no take it, just just have a check for me and let me know."
+      },
+      {
+        "call": "call_01",
+        "segment": 35,
+        "time": [
+          326.94,
+          329.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.86,
+        "text": "Yeah we'll just fix the original SR one then."
+      },
+      {
+        "call": "call_01",
+        "segment": 37,
+        "time": [
+          337.94,
+          340.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.584,
+        "text": "Um, when, when would you get it to Barnet?"
+      },
+      {
+        "call": "call_01",
+        "segment": 39,
+        "time": [
+          349.94,
+          354.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.7694,
+        "text": "Right. But time roughly cos I don't finish work till like 4 basically 4 o'clock."
+      },
+      {
+        "call": "call_01",
+        "segment": 41,
+        "time": [
+          356.44,
+          358.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.6352,
+        "text": "So I don't think we'll make it today."
+      },
+      {
+        "call": "call_01",
+        "segment": 43,
+        "time": [
+          367.94,
+          371.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.7087,
+        "text": "So when you say let's put everything through do you mean you want me to send you the documents?"
+      },
+      {
+        "call": "call_01",
+        "segment": 45,
+        "time": [
+          402.94,
+          406.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.7186,
+        "text": "Yeah it is. Yeah I put hers so it should come through that email."
+      }
+    ],
+    "threshold": 0.36,
+    "max_outside_sim": 0.9258,
+    "training_agent_segments": 53,
+    "voiceprint_count": 5
+  },
+  "best_same_data_threshold": {
+    "segments": 146,
+    "overall_accuracy": 63.7,
+    "agent_accuracy": 56.16,
+    "customer_accuracy": 71.23,
+    "agent_correct": 41,
+    "agent_total": 73,
+    "customer_correct": 52,
+    "customer_total": 73,
+    "errors": [
+      {
+        "call": "call_01",
+        "segment": 2,
+        "time": [
+          2.94,
+          5.54
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.5624,
+        "text": "Hello, good afternoon, my friend Samuel."
+      },
+      {
+        "call": "call_01",
+        "segment": 4,
+        "time": [
+          7.14,
+          9.44
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.6051,
+        "text": "Calling you from Car Planet, I hope you're doing well."
+      },
+      {
+        "call": "call_01",
+        "segment": 12,
+        "time": [
+          89.14,
+          89.94
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.2707,
+        "text": "Yeah."
+      },
+      {
+        "call": "call_01",
+        "segment": 15,
+        "time": [
+          109.94,
+          119.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.807,
+        "text": "Did they, I mean obviously when we were looking at your website yesterday she did say that she kinda"
+      },
+      {
+        "call": "call_01",
+        "segment": 20,
+        "time": [
+          227.44,
+          228.44
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.5431,
+        "text": "Hello Samuel."
+      },
+      {
+        "call": "call_01",
+        "segment": 23,
+        "time": [
+          249.94,
+          256.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.9462,
+        "text": "480 pounds a month. No that's fine. Um no we'll just leave it as the one that we've done so."
+      },
+      {
+        "call": "call_01",
+        "segment": 25,
+        "time": [
+          264.94,
+          273.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.9455,
+        "text": "100% I've told her she just wanted to kinda like have an idea of what it would be so I'm just gonna "
+      },
+      {
+        "call": "call_01",
+        "segment": 27,
+        "time": [
+          289.94,
+          297.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.9407,
+        "text": "Yeah. It won't come down much. It won't come down that much. Cos it's 2000, almost 2000, almost 3000"
+      },
+      {
+        "call": "call_01",
+        "segment": 29,
+        "time": [
+          301.64,
+          304.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.927,
+        "text": "Yeah please can I just check what that is?"
+      },
+      {
+        "call": "call_01",
+        "segment": 31,
+        "time": [
+          307.64,
+          308.94
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.925,
+        "text": "No worries."
+      },
+      {
+        "call": "call_01",
+        "segment": 33,
+        "time": [
+          311.44,
+          314.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.9063,
+        "text": "No, no take it, just just have a check for me and let me know."
+      },
+      {
+        "call": "call_01",
+        "segment": 35,
+        "time": [
+          326.94,
+          329.44
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.86,
+        "text": "Yeah we'll just fix the original SR one then."
+      },
+      {
+        "call": "call_01",
+        "segment": 40,
+        "time": [
+          354.94,
+          355.94
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.5887,
+        "text": "Okay seen."
+      },
+      {
+        "call": "call_01",
+        "segment": 48,
+        "time": [
+          419.94,
+          432.44
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.748,
+        "text": "Cool no worries I'm gonna send you over an email from myself directly. And if you have any questions"
+      },
+      {
+        "call": "call_01",
+        "segment": 50,
+        "time": [
+          435.94,
+          436.94
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.5264,
+        "text": "Take care."
+      },
+      {
+        "call": "call_02",
+        "segment": 2,
+        "time": [
+          4.45,
+          5.45
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.2993,
+        "text": "Hello."
+      },
+      {
+        "call": "call_02",
+        "segment": 3,
+        "time": [
+          5.45,
+          11.45
+        ],
+        "gemini": "customer",
+        "predicted": "agent",
+        "similarity": 0.7845,
+        "text": "Hello, good morning. Um, I just been transfer to you. I spoke with one of your um colleagues. I'm ca"
+      },
+      {
+        "call": "call_02",
+        "segment": 4,
+        "time": [
+          11.45,
+          17.45
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.7347,
+        "text": "Okay, no worries. And that was on uh it was Jason that sold you the car correct? HJ72."
+      },
+      {
+        "call": "call_02",
+        "segment": 6,
+        "time": [
+          18.45,
+          21.45
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.6572,
+        "text": "And how many years warranty did you go for?"
+      },
+      {
+        "call": "call_02",
+        "segment": 10,
+        "time": [
+          42.45,
+          45.45
+        ],
+        "gemini": "agent",
+        "predicted": "customer",
+        "similarity": 0.6869,
+        "text": "Okay, so that means we have to solve it today."
+      }
+    ],
+    "threshold": 0.77
+  },
+  "leave_one_call_out": [
+    {
+      "segments": 50,
+      "overall_accuracy": 56.0,
+      "agent_accuracy": 96.0,
+      "customer_accuracy": 16.0,
+      "agent_correct": 24,
+      "agent_total": 25,
+      "customer_correct": 4,
+      "customer_total": 25,
+      "errors": [
+        {
+          "call": "call_01",
+          "segment": 3,
+          "time": [
+            5.74,
+            6.94
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5005,
+          "text": "Yes, Samuel speaking."
+        },
+        {
+          "call": "call_01",
+          "segment": 7,
+          "time": [
+            21.64,
+            24.94
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4907,
+          "text": "It's Eugenia, Jessica and Niwa Jackson."
+        },
+        {
+          "call": "call_01",
+          "segment": 11,
+          "time": [
+            86.64,
+            88.94
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6621,
+          "text": "Okay. So with the Close Brothers like..."
+        },
+        {
+          "call": "call_01",
+          "segment": 12,
+          "time": [
+            89.14,
+            89.94
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.2775,
+          "text": "Yeah."
+        },
+        {
+          "call": "call_01",
+          "segment": 13,
+          "time": [
+            90.14,
+            91.94
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5505,
+          "text": "Down 12 pounds a month, right?"
+        },
+        {
+          "call": "call_01",
+          "segment": 15,
+          "time": [
+            109.94,
+            119.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.7281,
+          "text": "Did they, I mean obviously when we were looking at your website yesterday she did say that she kinda"
+        },
+        {
+          "call": "call_01",
+          "segment": 17,
+          "time": [
+            131.64,
+            133.94
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5993,
+          "text": "Okay, can you have a quick look?"
+        },
+        {
+          "call": "call_01",
+          "segment": 19,
+          "time": [
+            166.64,
+            167.94
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4593,
+          "text": "No worries."
+        },
+        {
+          "call": "call_01",
+          "segment": 23,
+          "time": [
+            249.94,
+            256.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6078,
+          "text": "480 pounds a month. No that's fine. Um no we'll just leave it as the one that we've done so."
+        },
+        {
+          "call": "call_01",
+          "segment": 25,
+          "time": [
+            264.94,
+            273.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5949,
+          "text": "100% I've told her she just wanted to kinda like have an idea of what it would be so I'm just gonna "
+        },
+        {
+          "call": "call_01",
+          "segment": 27,
+          "time": [
+            289.94,
+            297.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.601,
+          "text": "Yeah. It won't come down much. It won't come down that much. Cos it's 2000, almost 2000, almost 3000"
+        },
+        {
+          "call": "call_01",
+          "segment": 29,
+          "time": [
+            301.64,
+            304.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5939,
+          "text": "Yeah please can I just check what that is?"
+        },
+        {
+          "call": "call_01",
+          "segment": 31,
+          "time": [
+            307.64,
+            308.94
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5761,
+          "text": "No worries."
+        },
+        {
+          "call": "call_01",
+          "segment": 33,
+          "time": [
+            311.44,
+            314.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6098,
+          "text": "No, no take it, just just have a check for me and let me know."
+        },
+        {
+          "call": "call_01",
+          "segment": 35,
+          "time": [
+            326.94,
+            329.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5699,
+          "text": "Yeah we'll just fix the original SR one then."
+        },
+        {
+          "call": "call_01",
+          "segment": 37,
+          "time": [
+            337.94,
+            340.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5521,
+          "text": "Um, when, when would you get it to Barnet?"
+        },
+        {
+          "call": "call_01",
+          "segment": 39,
+          "time": [
+            349.94,
+            354.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6786,
+          "text": "Right. But time roughly cos I don't finish work till like 4 basically 4 o'clock."
+        },
+        {
+          "call": "call_01",
+          "segment": 41,
+          "time": [
+            356.44,
+            358.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5837,
+          "text": "So I don't think we'll make it today."
+        },
+        {
+          "call": "call_01",
+          "segment": 43,
+          "time": [
+            367.94,
+            371.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6149,
+          "text": "So when you say let's put everything through do you mean you want me to send you the documents?"
+        },
+        {
+          "call": "call_01",
+          "segment": 45,
+          "time": [
+            402.94,
+            406.44
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6703,
+          "text": "Yeah it is. Yeah I put hers so it should come through that email."
+        }
+      ],
+      "call": "call_01",
+      "training_agent_segments": 35,
+      "threshold": 0.36,
+      "max_outside_sim": 0.833
+    },
+    {
+      "segments": 52,
+      "overall_accuracy": 55.77,
+      "agent_accuracy": 65.38,
+      "customer_accuracy": 46.15,
+      "agent_correct": 17,
+      "agent_total": 26,
+      "customer_correct": 12,
+      "customer_total": 26,
+      "errors": [
+        {
+          "call": "call_02",
+          "segment": 2,
+          "time": [
+            4.45,
+            5.45
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.2062,
+          "text": "Hello."
+        },
+        {
+          "call": "call_02",
+          "segment": 9,
+          "time": [
+            40.45,
+            42.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6676,
+          "text": "Today will be the last day."
+        },
+        {
+          "call": "call_02",
+          "segment": 11,
+          "time": [
+            45.45,
+            54.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6362,
+          "text": "Yes, 'cause I tried to call you yesterday, but for some reason that called it didn't went through, a"
+        },
+        {
+          "call": "call_02",
+          "segment": 13,
+          "time": [
+            66.45,
+            74.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.7961,
+          "text": "Okay, one question please, very quick. So this was added on my finance. How this is going to affect "
+        },
+        {
+          "call": "call_02",
+          "segment": 14,
+          "time": [
+            74.45,
+            78.45
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.1835,
+          "text": "Bear with me, I'm just, give me one second please."
+        },
+        {
+          "call": "call_02",
+          "segment": 17,
+          "time": [
+            82.45,
+            84.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4983,
+          "text": "Yes, yeah."
+        },
+        {
+          "call": "call_02",
+          "segment": 19,
+          "time": [
+            88.45,
+            99.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4842,
+          "text": "Uh, no it's fine, I have very bad experience with this kind of warranties, and we want to pay quicke"
+        },
+        {
+          "call": "call_02",
+          "segment": 20,
+          "time": [
+            99.45,
+            108.45
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.3025,
+          "text": "Okay, no worries. Just bear with me. So essentially, what would happen is... what was your deposit?"
+        },
+        {
+          "call": "call_02",
+          "segment": 21,
+          "time": [
+            108.45,
+            109.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4807,
+          "text": "Seven."
+        },
+        {
+          "call": "call_02",
+          "segment": 23,
+          "time": [
+            111.45,
+            112.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5907,
+          "text": "Yes."
+        },
+        {
+          "call": "call_02",
+          "segment": 25,
+          "time": [
+            123.45,
+            127.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.7391,
+          "text": "Okay, so I'll get it back on the same payment method?"
+        },
+        {
+          "call": "call_02",
+          "segment": 27,
+          "time": [
+            132.45,
+            139.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6073,
+          "text": "Yes, yes, this is what I'm going to do because I'm thinking to pay quicker the..."
+        },
+        {
+          "call": "call_02",
+          "segment": 29,
+          "time": [
+            142.45,
+            144.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6642,
+          "text": "Um, Mariana."
+        },
+        {
+          "call": "call_02",
+          "segment": 31,
+          "time": [
+            162.45,
+            172.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.5369,
+          "text": "Uh, M A R R Y L O Z O V A N U @ gmail.com"
+        },
+        {
+          "call": "call_02",
+          "segment": 34,
+          "time": [
+            180.45,
+            183.45
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.1821,
+          "text": "L O Z O V O... Mary Lovoz?"
+        },
+        {
+          "call": "call_02",
+          "segment": 37,
+          "time": [
+            188.45,
+            192.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4478,
+          "text": "Okay. L O Z O V A N U."
+        },
+        {
+          "call": "call_02",
+          "segment": 40,
+          "time": [
+            199.45,
+            201.45
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.1315,
+          "text": "@gmail.com yeah."
+        },
+        {
+          "call": "call_02",
+          "segment": 41,
+          "time": [
+            201.45,
+            204.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.3701,
+          "text": "Yeah, you should have my email because I've got lots of emails from you guys."
+        },
+        {
+          "call": "call_02",
+          "segment": 42,
+          "time": [
+            204.45,
+            209.45
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.3175,
+          "text": "No, I do have it, I just have to confirm, I just have to confirm. No worries, you're going to receiv"
+        },
+        {
+          "call": "call_02",
+          "segment": 43,
+          "time": [
+            209.45,
+            233.45
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.783,
+          "text": "Okay, no worries. So um, this Friday I have an appointment with you guys, I think service with regar"
+        }
+      ],
+      "call": "call_02",
+      "training_agent_segments": 31,
+      "threshold": 0.36,
+      "max_outside_sim": 0.9779
+    },
+    {
+      "segments": 44,
+      "overall_accuracy": 59.09,
+      "agent_accuracy": 68.18,
+      "customer_accuracy": 50.0,
+      "agent_correct": 15,
+      "agent_total": 22,
+      "customer_correct": 11,
+      "customer_total": 22,
+      "errors": [
+        {
+          "call": "call_04",
+          "segment": 2,
+          "time": [
+            1.74,
+            3.74
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.3005,
+          "text": "Hello, is my user Cerise?"
+        },
+        {
+          "call": "call_04",
+          "segment": 5,
+          "time": [
+            11.74,
+            18.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4136,
+          "text": "Yeah, I was, but now I have some... I'm a bit uh, skeptical now."
+        },
+        {
+          "call": "call_04",
+          "segment": 6,
+          "time": [
+            18.74,
+            20.74
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.2869,
+          "text": "No worries."
+        },
+        {
+          "call": "call_04",
+          "segment": 17,
+          "time": [
+            180.74,
+            182.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4808,
+          "text": "And how long have you had the car for?"
+        },
+        {
+          "call": "call_04",
+          "segment": 19,
+          "time": [
+            225.74,
+            235.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4587,
+          "text": "Okay. Um, okay, so yeah, can you send me over the services? Actually, basically I'm good to go. I've"
+        },
+        {
+          "call": "call_04",
+          "segment": 20,
+          "time": [
+            235.74,
+            239.74
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.1482,
+          "text": "Okay. You just want some peace of mind before you make your jump, yeah?"
+        },
+        {
+          "call": "call_04",
+          "segment": 22,
+          "time": [
+            246.74,
+            249.74
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.151,
+          "text": "Yes, of course. Of course, of course, of course."
+        },
+        {
+          "call": "call_04",
+          "segment": 23,
+          "time": [
+            249.74,
+            269.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6993,
+          "text": "And she's obviously gonna be driving in the car a lot with me. And like I said before, I had a... I,"
+        },
+        {
+          "call": "call_04",
+          "segment": 25,
+          "time": [
+            393.74,
+            397.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.7218,
+          "text": "Okay. And um, how long will I have to get back to you to let you know?"
+        },
+        {
+          "call": "call_04",
+          "segment": 28,
+          "time": [
+            431.74,
+            432.74
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.1679,
+          "text": "And then..."
+        },
+        {
+          "call": "call_04",
+          "segment": 32,
+          "time": [
+            453.74,
+            454.74
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.1754,
+          "text": "Yeah."
+        },
+        {
+          "call": "call_04",
+          "segment": 33,
+          "time": [
+            454.74,
+            467.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.7219,
+          "text": "Alright then. Let me do some inquiries... pass to that wet belt. And um, like I said, I have the mon"
+        },
+        {
+          "call": "call_04",
+          "segment": 35,
+          "time": [
+            471.74,
+            476.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6847,
+          "text": "Yeah. If it was, if he had called me back straight away, I would have probably been there already."
+        },
+        {
+          "call": "call_04",
+          "segment": 37,
+          "time": [
+            478.74,
+            484.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6574,
+          "text": "Obviously I've had time to... value it more, and, you know, stuff like that. So..."
+        },
+        {
+          "call": "call_04",
+          "segment": 39,
+          "time": [
+            524.74,
+            525.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.4409,
+          "text": "Okay."
+        },
+        {
+          "call": "call_04",
+          "segment": 41,
+          "time": [
+            526.74,
+            528.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6201,
+          "text": "Okay. No problem."
+        },
+        {
+          "call": "call_04",
+          "segment": 42,
+          "time": [
+            528.74,
+            529.74
+          ],
+          "gemini": "agent",
+          "predicted": "customer",
+          "similarity": 0.3294,
+          "text": "I'm just sending that to you now."
+        },
+        {
+          "call": "call_04",
+          "segment": 43,
+          "time": [
+            529.74,
+            533.74
+          ],
+          "gemini": "customer",
+          "predicted": "agent",
+          "similarity": 0.6728,
+          "text": "Is this a direct... It's a direct number to call you back on, or is this just the main number, do yo"
+        }
+      ],
+      "call": "call_04",
+      "training_agent_segments": 40,
+      "threshold": 0.36,
+      "max_outside_sim": 0.951
+    }
+  ],
+  "whole_call_agent_training": [],
+  "note": "Voiceprints trained from Gemini speaker=agent segments plus any CLI whole-call Zak enrollment sources; customer segments used only for evaluation and threshold statistics.",
+  "artifacts": {
+    "agents_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.json",
+    "backup": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.backup.zak_local_20260423.gemini_campp.1778016015.json",
+    "voiceprints": [
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_local_20260423_gemini_campp_v1.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_local_20260423_gemini_campp_v2.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_local_20260423_gemini_campp_v3.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_local_20260423_gemini_campp_v4.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_local_20260423_gemini_campp_v5.npy"
+    ],
+    "legacy_enrolled_agent": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\enrolled_agent.npy",
+    "legacy_enrolled_name": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\enrolled_agent_name.txt"
+  }
+}

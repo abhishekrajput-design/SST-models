@@ -1,0 +1,253 @@
+﻿{
+    "call_id": "20260426T145012391_992121",
+    "agent_name": "Zak Raissi",
+    "source": "gemini",
+    "segments": [
+        {
+            "start": 0.0,
+            "end": 1.5,
+            "speaker": "customer",
+            "text": "Hello."
+        },
+        {
+            "start": 1.5,
+            "end": 3.5,
+            "speaker": "agent",
+            "text": "Hello, how are you Mrs Labulu?"
+        },
+        {
+            "start": 3.5,
+            "end": 5.5,
+            "speaker": "customer",
+            "text": "I'm very well thank you, how are you?"
+        },
+        {
+            "start": 5.5,
+            "end": 7.0,
+            "speaker": "agent",
+            "text": "Very good, very good."
+        },
+        {
+            "start": 7.0,
+            "end": 14.0,
+            "speaker": "agent",
+            "text": "Essentially just calling up from Car Planet in regards to the Kia Sportage I know you requested to call me to call you later. So wanted to know sort of how you've been getting on."
+        },
+        {
+            "start": 14.0,
+            "end": 16.5,
+            "speaker": "customer",
+            "text": "All right, okay. I spoke to Dorian."
+        },
+        {
+            "start": 16.5,
+            "end": 17.5,
+            "speaker": "agent",
+            "text": "Okay."
+        },
+        {
+            "start": 17.5,
+            "end": 24.0,
+            "speaker": "customer",
+            "text": "And I'm waiting on him to return my call because I said he was going to do like a provisional kind of like finance thing."
+        },
+        {
+            "start": 24.0,
+            "end": 26.5,
+            "speaker": "agent",
+            "text": "Okay, yeah, yeah, yeah, 100%."
+        },
+        {
+            "start": 26.5,
+            "end": 35.0,
+            "speaker": "customer",
+            "text": "Yeah. So um I missed the call and I think it had the results of the finance thing. I missed the call so I'm waiting for today or tomorrow for him to call me back."
+        },
+        {
+            "start": 35.0,
+            "end": 39.0,
+            "speaker": "agent",
+            "text": "Alright, did he run you through an application and get your details?"
+        },
+        {
+            "start": 39.0,
+            "end": 40.0,
+            "speaker": "customer",
+            "text": "Yes."
+        },
+        {
+            "start": 40.0,
+            "end": 44.0,
+            "speaker": "agent",
+            "text": "Alright, bear with me let me just pop you on hold and check for you then."
+        },
+        {
+            "start": 44.0,
+            "end": 45.0,
+            "speaker": "customer",
+            "text": "Okay."
+        },
+        {
+            "start": 45.0,
+            "end": 46.0,
+            "speaker": "agent",
+            "text": "Bear with."
+        },
+        {
+            "start": 46.0,
+            "end": 47.5,
+            "speaker": "customer",
+            "text": "Thank you."
+        },
+        {
+            "start": 47.5,
+            "end": 49.5,
+            "speaker": "customer",
+            "text": "Mummy go outside."
+        },
+        {
+            "start": 49.5,
+            "end": 52.0,
+            "speaker": "customer",
+            "text": "I don't want to cause I'm about to sleep."
+        },
+        {
+            "start": 52.0,
+            "end": 54.0,
+            "speaker": "customer",
+            "text": "Just sleep in the bedroom."
+        },
+        {
+            "start": 54.0,
+            "end": 56.0,
+            "speaker": "customer",
+            "text": "Mummy, go outside."
+        },
+        {
+            "start": 56.0,
+            "end": 57.5,
+            "speaker": "customer",
+            "text": "Mommy go outside."
+        },
+        {
+            "start": 57.5,
+            "end": 60.0,
+            "speaker": "customer",
+            "text": "Mommy go outside and close the door from here."
+        },
+        {
+            "start": 60.0,
+            "end": 62.0,
+            "speaker": "customer",
+            "text": "Mommy, go outside."
+        },
+        {
+            "start": 62.0,
+            "end": 65.0,
+            "speaker": "customer",
+            "text": "Mummy, go outside and close the door from here."
+        },
+        {
+            "start": 65.0,
+            "end": 68.0,
+            "speaker": "customer",
+            "text": "Mommy go outside and close the door from here."
+        },
+        {
+            "start": 68.0,
+            "end": 74.0,
+            "speaker": "customer",
+            "text": "Leave I... I was just taking a token so I'm gonna hit you in the head. Stop talking to me like that and say please and thank you."
+        },
+        {
+            "start": 74.0,
+            "end": 76.0,
+            "speaker": "customer",
+            "text": "At least say please."
+        },
+        {
+            "start": 76.0,
+            "end": 77.0,
+            "speaker": "customer",
+            "text": "Please."
+        },
+        {
+            "start": 77.0,
+            "end": 78.0,
+            "speaker": "customer",
+            "text": "Yeah."
+        },
+        {
+            "start": 78.0,
+            "end": 81.5,
+            "speaker": "customer",
+            "text": "But I'm sure that it's already filled. Is that straw empty? No."
+        },
+        {
+            "start": 81.5,
+            "end": 85.0,
+            "speaker": "customer",
+            "text": "The second straw fits. One end in the full cup. The other in the empty cup."
+        },
+        {
+            "start": 85.0,
+            "end": 90.0,
+            "speaker": "customer",
+            "text": "But just like this, nothing's happening. Oh nothing's happening? Oh that's right. I got to fill the second straw with liquid."
+        },
+        {
+            "start": 90.0,
+            "end": 94.0,
+            "speaker": "customer",
+            "text": "Now if the full second straw... fill both ends with your fingers."
+        },
+        {
+            "start": 94.0,
+            "end": 99.0,
+            "speaker": "customer",
+            "text": "Mummy go outside and close the door. Leave I... I just think you're talking so I'm gonna hit you in the head."
+        },
+        {
+            "start": 99.0,
+            "end": 102.0,
+            "speaker": "customer",
+            "text": "Stop talking to me like that. Say please and thank you."
+        },
+        {
+            "start": 102.0,
+            "end": 104.0,
+            "speaker": "customer",
+            "text": "At least say please."
+        },
+        {
+            "start": 104.0,
+            "end": 105.0,
+            "speaker": "customer",
+            "text": "Please."
+        },
+        {
+            "start": 105.0,
+            "end": 106.0,
+            "speaker": "customer",
+            "text": "Yeah."
+        },
+        {
+            "start": 106.0,
+            "end": 107.5,
+            "speaker": "customer",
+            "text": "Coca cola light."
+        },
+        {
+            "start": 107.5,
+            "end": 109.0,
+            "speaker": "customer",
+            "text": "Coca cola normal."
+        },
+        {
+            "start": 109.0,
+            "end": 111.0,
+            "speaker": "customer",
+            "text": "Coca cola..."
+        }
+    ]
+}

@@ -1,0 +1,89 @@
+{
+  "agent_name": "Zak",
+  "train_files": [
+    "C:\\Users\\abhis\\Desktop\\SST-models\\Agents-recoding\\zak_recodings\\20260418T162400911_477551.mp3",
+    "C:\\Users\\abhis\\Desktop\\SST-models\\Agents-recoding\\zak_recodings\\20260422T102527360_26078.mp3"
+  ],
+  "clean_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_local_train_20260423",
+  "recordings": [
+    {
+      "source": "C:\\Users\\abhis\\Desktop\\SST-models\\Agents-recoding\\zak_recodings\\20260418T162400911_477551.mp3",
+      "segments_detected": 116,
+      "speaker_durations_s": {
+        "SPEAKER_01": 292.243,
+        "SPEAKER_00": 128.215
+      },
+      "dominant_speaker": "SPEAKER_01",
+      "clips_saved": [
+        {
+          "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_local_train_20260423\\zak_rec00_clip00_297.5_313.5.wav",
+          "start": 297.453,
+          "end": 313.484,
+          "duration_s": 16.031,
+          "rms": 0.249302
+        },
+        {
+          "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_local_train_20260423\\zak_rec00_clip01_185.6_200.6.wav",
+          "start": 185.555,
+          "end": 200.557,
+          "duration_s": 15.002,
+          "rms": 0.178832
+        },
+        {
+          "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_local_train_20260423\\zak_rec00_clip02_324.0_337.7.wav",
+          "start": 324.014,
+          "end": 337.7,
+          "duration_s": 13.686,
+          "rms": 0.224092
+        },
+        {
+          "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_local_train_20260423\\zak_rec00_clip03_82.7_94.4.wav",
+          "start": 82.718,
+          "end": 94.379,
+          "duration_s": 11.661,
+          "rms": 0.303552
+        },
+        {
+          "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_local_train_20260423\\zak_rec00_clip04_456.7_467.7.wav",
+          "start": 456.652,
+          "end": 467.654,
+          "duration_s": 11.002,
+          "rms": 0.285554
+        }
+      ]
+    },
+    {
+      "source": "C:\\Users\\abhis\\Desktop\\SST-models\\Agents-recoding\\zak_recodings\\20260422T102527360_26078.mp3",
+      "segments_detected": 7,
+      "speaker_durations_s": {
+        "SPEAKER_01": 12.183,
+        "SPEAKER_00": 4.505
+      },
+      "dominant_speaker": "SPEAKER_01",
+      "clips_saved": [
+        {
+          "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_local_train_20260423\\zak_rec01_clip00_5.1_10.9.wav",
+          "start": 5.06,
+          "end": 10.882,
+          "duration_s": 5.822,
+          "rms": 0.140613
+        },
+        {
+          "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_local_train_20260423\\zak_rec01_clip01_12.6_15.5.wav",
+          "start": 12.637,
+          "end": 15.488,
+          "duration_s": 2.851,
+          "rms": 0.288285
+        },
+        {
+          "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_local_train_20260423\\zak_rec01_clip02_1.6_3.9.wav",
+          "start": 1.55,
+          "end": 3.929,
+          "duration_s": 2.379,
+          "rms": 0.271087
+        }
+      ]
+    }
+  ],
+  "total_clean_clips": 8
+}

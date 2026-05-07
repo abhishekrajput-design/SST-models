@@ -1,0 +1,75 @@
+﻿{
+    "call_id":  "20260426T122156209_33629",
+    "agent_name":  "Zak Raissi",
+    "source":  "local_parakeet_voice_id_candidate",
+    "source_result_id":  "enhanced_20260426T122156209_33629__parakeet-tdt-0.6b-v3",
+    "training_warning":  "Candidate labels from local ASR/speaker-ID; verify before treating as human/Gemini ground truth.",
+    "segments":  [
+                     {
+                         "start":  6.32,
+                         "end":  6.96,
+                         "speaker":  "agent",
+                         "text":  "Alhamdulillah."
+                     },
+                     {
+                         "start":  7.12,
+                         "end":  7.76,
+                         "speaker":  "agent",
+                         "text":  "Alhamdulillah."
+                     },
+                     {
+                         "start":  7.84,
+                         "end":  11.04,
+                         "speaker":  "agent",
+                         "text":  "I\u0027m just calling you to let you know that Yosa Prius is up Barnet."
+                     },
+                     {
+                         "start":  12,
+                         "end":  12.16,
+                         "speaker":  "overlap",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  12.4,
+                         "end":  15.44,
+                         "speaker":  "customer",
+                         "text":  "Uh uh, we\u0027re coming now, we are on my uh way."
+                     },
+                     {
+                         "start":  15.76,
+                         "end":  16.64,
+                         "speaker":  "agent",
+                         "text":  "Okay, no worries."
+                     },
+                     {
+                         "start":  16.72,
+                         "end":  17.04,
+                         "speaker":  "agent",
+                         "text":  "No worries."
+                     },
+                     {
+                         "start":  19.84,
+                         "end":  20,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  20.24,
+                         "end":  24.24,
+                         "speaker":  "agent",
+                         "text":  "Uh so hopefully when when uh when you\u0027re here, uh I\u0027ll come and meet you, okay?"
+                     },
+                     {
+                         "start":  24.48,
+                         "end":  25.6,
+                         "speaker":  "customer",
+                         "text":  "Alright, okay, Sarah, thanks."
+                     },
+                     {
+                         "start":  25.84,
+                         "end":  26.4,
+                         "speaker":  "agent",
+                         "text":  "Alright, take care."
+                     }
+                 ]
+}

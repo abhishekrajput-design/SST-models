@@ -1,0 +1,3159 @@
+{
+  "segments": [
+    {
+      "start": 2.4,
+      "end": 3.005,
+      "text": "Hello?",
+      "speaker": "SPEAKER_99",
+      "identified_speaker": "UNKNOWN",
+      "display_speaker": "UNKNOWN"
+    },
+    {
+      "start": 5.344,
+      "end": 5.727,
+      "text": "Hello?",
+      "speaker": "SPEAKER_99",
+      "identified_speaker": "UNKNOWN",
+      "display_speaker": "UNKNOWN"
+    },
+    {
+      "start": 8.475,
+      "end": 9.947,
+      "text": "Hello, I'm off to Sao Paulo.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 10.391,
+      "end": 11.903,
+      "text": "Speaking.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 12.086,
+      "end": 15.278,
+      "text": "Oh, I'm good, thank you.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 16.929,
+      "end": 17.222,
+      "text": "Yeah.",
+      "speaker": "SPEAKER_99",
+      "identified_speaker": "UNKNOWN",
+      "display_speaker": "UNKNOWN"
+    },
+    {
+      "start": 17.452,
+      "end": 21.661,
+      "text": "I'm just giving you a quick call regarding the Peugeot 5008 you need an enquiry on.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 21.903,
+      "end": 22.467,
+      "text": "Yes.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 22.447,
+      "end": 25.379,
+      "text": "Sorry, I need to find it again.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 25.419,
+      "end": 26.551,
+      "text": "CarPlanet",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 26.784,
+      "end": 30.01,
+      "text": "You have my number, are you able to send it to me on WhatsApp?",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 30.615,
+      "end": 33.132,
+      "text": "Yeah of course, I'll turn it over to you now.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 33.112,
+      "end": 38.127,
+      "text": "I'm not sure which one.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 38.107,
+      "end": 42.211,
+      "text": "I've got good news for you, with the vehicle, it is still available.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 42.191,
+      "end": 44.27,
+      "text": "It is located in my bonded site.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 44.604,
+      "end": 47.678,
+      "text": "If you don't mind me asking, where are you located, Sir?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 49.869,
+      "end": 54.648,
+      "text": "I'm in Bedfordshire Bedfordshire",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 54.628,
+      "end": 57.213,
+      "text": "Oh, shit.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 57.547,
+      "end": 59.244,
+      "text": "Okay, so you're not too far, which is good.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 59.325,
+      "end": 60.395,
+      "text": "Just above Luton, right?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 60.517,
+      "end": 61.769,
+      "text": "Yeah, just above Luton, yeah, that's correct.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 62.036,
+      "end": 63.446,
+      "text": "Okay, perfect.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 63.487,
+      "end": 63.997,
+      "text": "Shut up, Paul.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 64.162,
+      "end": 69.11,
+      "text": "I've dropped you a little message on WhatsApp, please drop me a little reply and I can send over the link to the vehicle.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 69.09,
+      "end": 72.755,
+      "text": "I got in the vehicle which was in a really nice car",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 72.87,
+      "end": 75.608,
+      "text": "What attracted you to his vehicle?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 77.198,
+      "end": 77.48,
+      "text": "Hello?",
+      "speaker": "SPEAKER_99",
+      "identified_speaker": "UNKNOWN",
+      "display_speaker": "UNKNOWN"
+    },
+    {
+      "start": 78.523,
+      "end": 80.458,
+      "text": "What attracted you to the vehicle?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 80.539,
+      "end": 83.099,
+      "text": "I'm looking for a 7-seater",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 83.079,
+      "end": 85.748,
+      "text": "I'm hoping you're flexible on the price.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 85.728,
+      "end": 90.355,
+      "text": "I've not done a history check yet so I'm still due to do that but I wanted to",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 90.335,
+      "end": 94.726,
+      "text": "First of all, the MOT is going to be expiring soon",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 95.482,
+      "end": 98.962,
+      "text": "and you said the maintenance, I don't know what you mean by maintenance.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 98.942,
+      "end": 103.18,
+      "text": "I'm not sure what you mean by that anyway.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 104.426,
+      "end": 107.838,
+      "text": "maintenance and service history.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 108.088,
+      "end": 111.365,
+      "text": "Service",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 111.345,
+      "end": 112.534,
+      "text": "when you acquire the car.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 113.038,
+      "end": 115.718,
+      "text": "So regarding the vehicle...",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 115.698,
+      "end": 119.836,
+      "text": "27 that that would expire post service.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 120.238,
+      "end": 125.236,
+      "text": "So with a service you do every 10,000 miles or every year, it's called a full service history.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 125.216,
+      "end": 127.392,
+      "text": "Taking a look at it, which is really nice.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 127.412,
+      "end": 129.185,
+      "text": "Now the MOT does expire.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 129.367,
+      "end": 133.505,
+      "text": "end of November so you still have a bit of time left in your MOT.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 133.485,
+      "end": 138.078,
+      "text": "if I'm not mistaken it's about 7 months which is a decent amount of time",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 138.058,
+      "end": 142.145,
+      "text": "Um, and yeah, we're going to... No, I'm not doing this, there's a monster in that, what are we...",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 143.492,
+      "end": 147.899,
+      "text": "Yep, so the MOT does expand at 26 November 2016.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 147.879,
+      "end": 151.662,
+      "text": "I feel like a murderer at the end of the year.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 151.642,
+      "end": 154.21,
+      "text": "It feels like that sometimes, it does, it does.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 154.19,
+      "end": 158.598,
+      "text": "The car is in a molecular condition, taking a look at it.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 158.578,
+      "end": 162.142,
+      "text": "I've been in an accident in the past.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 162.982,
+      "end": 167.356,
+      "text": "No, so all of our vehicles are HP Agilent, so we make sure that we don't purchase a car.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 167.336,
+      "end": 170.697,
+      "text": "if it's ever been written off, we make sure of that, okay?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 171.133,
+      "end": 174.477,
+      "text": "Now this vehicle is located in my barn up front.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 174.457,
+      "end": 177.7,
+      "text": "So are you looking to come in and take a look at a vehicle or take it for a test drive?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 177.68,
+      "end": 180.248,
+      "text": "Yeah, I think we might have to.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 180.228,
+      "end": 184.788,
+      "text": "We'll have to anyway because obviously I don't want to...",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 185.274,
+      "end": 189.8,
+      "text": "I mixed something that I haven't tested to make sure it's okay.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 190.337,
+      "end": 191.885,
+      "text": "Yeah, of course.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 191.905,
+      "end": 195.183,
+      "text": "Yeah, so definitely want to just drive in.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 196.007,
+      "end": 196.977,
+      "text": "That's perfect now.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 197.361,
+      "end": 199.098,
+      "text": "We are open from 9am.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 199.078,
+      "end": 202.287,
+      "text": "to 9pm every single day, Sundays 10-5.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 202.723,
+      "end": 205.78,
+      "text": "What time and day are you looking to come in and test drive the car?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 205.76,
+      "end": 207.492,
+      "text": "Let me see where Brian is.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 207.512,
+      "end": 207.94,
+      "text": "There he is.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 211.076,
+      "end": 213.796,
+      "text": "I think Sunday might be...",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 215.379,
+      "end": 216.564,
+      "text": "Possible",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 218.619,
+      "end": 223.516,
+      "text": "because there should be weekly groups of church in North London",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 224.036,
+      "end": 227.195,
+      "text": "I think Barnet might be close to Ruffalo.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 229.031,
+      "end": 231.81,
+      "text": "Yeah, where did you go to church?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 231.831,
+      "end": 234.046,
+      "text": "Was it called Jesus House?",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 234.026,
+      "end": 235.338,
+      "text": "in what do you call it?",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 235.358,
+      "end": 235.924,
+      "text": "North London.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 235.944,
+      "end": 237.841,
+      "text": "That would be... Brent Cross.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 237.862,
+      "end": 238.467,
+      "text": "Brent Cross.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 239.291,
+      "end": 240.375,
+      "text": "Very close.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 240.692,
+      "end": 242.746,
+      "text": "Yes, that's not far from us at all.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 242.766,
+      "end": 244.88,
+      "text": "It's literally on the A406, maybe...",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 244.86,
+      "end": 248.339,
+      "text": "I think it's maybe a 15 minute drive away.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 248.319,
+      "end": 251.697,
+      "text": "I think maybe with time they would work better for us.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 252.437,
+      "end": 255.055,
+      "text": "Yeah, we can get that all booked in for you for Sunday.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 255.035,
+      "end": 259.021,
+      "text": "come and take a look and take a little test drive you can get also at sea.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 259.001,
+      "end": 262.092,
+      "text": "Let me get that potentiometer now.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 262.072,
+      "end": 266.53,
+      "text": "You might need to be flexible with us a little bit in terms of the exact...",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 266.51,
+      "end": 270.53,
+      "text": "time, because we have to finish the list and then hit clean.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 271.218,
+      "end": 276.233,
+      "text": "What time do you normally finish service?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 276.213,
+      "end": 277.6,
+      "text": "Supremes.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 278.93,
+      "end": 283.658,
+      "text": "Sometimes longer sometimes shorter",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 283.638,
+      "end": 287.472,
+      "text": "I think usually maximum 12, 12.30 is it?",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 287.452,
+      "end": 289.649,
+      "text": "of America.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 289.933,
+      "end": 292.737,
+      "text": "It's double possibility.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 292.717,
+      "end": 297.732,
+      "text": "Yeah, so it's the first one, yeah.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 297.712,
+      "end": 300.483,
+      "text": "Yeah I think so.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 301.273,
+      "end": 302.925,
+      "text": "Okay so it's also fairly finished.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 302.985,
+      "end": 306.288,
+      "text": "What I'll do for you, just to give you a bit of extra time, I booked you in for 1.30.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 306.268,
+      "end": 310.945,
+      "text": "so you can",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 310.925,
+      "end": 312.599,
+      "text": "test drive and take a look at the vehicle.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 312.765,
+      "end": 316.16,
+      "text": "Now the good news is you are coming to my Barnet's right, it's our flagship store.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 316.325,
+      "end": 319.501,
+      "text": "so if we do have around a thousand cars on site",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 319.481,
+      "end": 324.496,
+      "text": "So if you do want to take a look at some other cars that we do have there, you're more than welcome to Sayo, okay?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 325.337,
+      "end": 326.49,
+      "text": "That's perfect, that's perfect.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 326.551,
+      "end": 328.411,
+      "text": "Now I've got everything booked in.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 328.391,
+      "end": 330.925,
+      "text": "Just make sure you do bring your driver's license with you, okay?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 330.905,
+      "end": 334.267,
+      "text": "Can I check what warranty you have on your car?",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 334.922,
+      "end": 337.783,
+      "text": "Yeah, so when you purchase a car from us, you get two things.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 337.904,
+      "end": 339.093,
+      "text": "The first thing is optional.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 339.309,
+      "end": 342.468,
+      "text": "The first thing you get is 1 year free AA breakdown cover",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 342.448,
+      "end": 346.99,
+      "text": "Second thing you get is 6 months cover with CarPlanet so if anything goes wrong",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 346.97,
+      "end": 350.213,
+      "text": "Just give us a call, we'll get everything sorted for you.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 350.531,
+      "end": 354.854,
+      "text": "and the first thing you get is our extended warranty.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 355.323,
+      "end": 360.035,
+      "text": "that covers you on everything on the vehicle from bumper to bumper anything mechanical or electrical",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 360.015,
+      "end": 361.52,
+      "text": "up to the price of the call.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 361.837,
+      "end": 366.093,
+      "text": "If you're happy with that, I can get one of my colleagues on arrival on Sunday to...",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 366.073,
+      "end": 367.229,
+      "text": "walkthrough the details with you.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 367.25,
+      "end": 368.0,
+      "text": "How does that sound?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 368.756,
+      "end": 371.375,
+      "text": "Yeah, I mean, if you send me all the details, it'd be helpful.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 371.355,
+      "end": 374.21,
+      "text": "I always feel like six months is quite short.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 374.325,
+      "end": 377.821,
+      "text": "but for one to notice an issue with the car",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 377.801,
+      "end": 382.445,
+      "text": "Do you go up to a year at all?",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 382.425,
+      "end": 385.313,
+      "text": "Our activity is also the manufacturer's warranty.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 385.445,
+      "end": 388.317,
+      "text": "Yeah, so with our vehicles, whenever we purchase one",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 388.297,
+      "end": 390.832,
+      "text": "We put it through a 150 point check.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 390.812,
+      "end": 394.24,
+      "text": "makers of the cars mechanically and electrically sound.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 394.423,
+      "end": 399.185,
+      "text": "so you have nothing to worry about in that aspect because the car would have been checked",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 399.384,
+      "end": 400.418,
+      "text": "very very thoroughly.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 400.582,
+      "end": 405.26,
+      "text": "Now with the warranty again 6 months of cover you get from us it covers you on anything",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 405.408,
+      "end": 408.01,
+      "text": "If you do want to extend it, you're more than welcome to.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 408.294,
+      "end": 408.999,
+      "text": "with this vehicle.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 409.059,
+      "end": 411.577,
+      "text": "I'm not exactly too sure if it has the manufacturer warranty.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 411.719,
+      "end": 412.786,
+      "text": "Again,",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 412.766,
+      "end": 414.94,
+      "text": "We would need to search that for you.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 414.961,
+      "end": 417.477,
+      "text": "Ok, if you check that for me that would be helpful.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 417.457,
+      "end": 418.409,
+      "text": "Yep, that's perfect.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 418.429,
+      "end": 420.008,
+      "text": "Now, I've got that all booked in for you.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 419.988,
+      "end": 424.447,
+      "text": "If anything comes up, just give a call up to CarPlanet and we can get everything sorted for you, okay?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 424.427,
+      "end": 428.986,
+      "text": "Sure, and my last question I asked before, I mean I'll check with my cousin, I'm there as well but...",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 429.287,
+      "end": 431.306,
+      "text": "are you flexible on the price?",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 431.79,
+      "end": 433.93,
+      "text": "so with our prices they are fixed",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 434.231,
+      "end": 436.951,
+      "text": "Simply because we are the cheapest in a 100 mile radius.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 436.931,
+      "end": 440.242,
+      "text": "We do price match, so if you do find a cheaper car anywhere else",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 440.525,
+      "end": 442.385,
+      "text": "will be bought at a high price, my tribute.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 442.635,
+      "end": 447.413,
+      "text": "Now with this vehicle, like I said, you are getting a full service, you are getting almost several amounts of MOT.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 447.63,
+      "end": 452.189,
+      "text": "and you're getting the reliability factor because like I said it goes through that 150 point check.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 452.625,
+      "end": 457.454,
+      "text": "The reason why other cars are priced so low is because they don't go through all these things, probably breaking down on you.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 457.67,
+      "end": 462.618,
+      "text": "with our cars because it's been thoroughly checked it does give you the peace of mind that the car is going to be secure.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 462.783,
+      "end": 464.828,
+      "text": "two years, three years down the line.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 465.129,
+      "end": 467.815,
+      "text": "That's the reason why our cars' prices are fixed.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 467.795,
+      "end": 471.713,
+      "text": "Well, I'm hoping it will be good 10 years down the line, not just 3 years.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 471.693,
+      "end": 474.447,
+      "text": "Not 2-3 years of course, much more.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 474.427,
+      "end": 477.417,
+      "text": "I'm going to have to do it again in the next three years.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 477.397,
+      "end": 478.804,
+      "text": "That sounds like a marriage.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 479.628,
+      "end": 482.362,
+      "text": "Of course I understand.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 482.342,
+      "end": 484.844,
+      "text": "No, but I am going to be buying cash.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 484.865,
+      "end": 486.378,
+      "text": "I'm not going to be using your...",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 486.358,
+      "end": 490.563,
+      "text": "PCPO and all of that so I would be looking to negotiate when I'm there.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 490.543,
+      "end": 492.335,
+      "text": "Yeah, of course, I completely understand.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 492.534,
+      "end": 493.947,
+      "text": "Like I said, the prices are fixed.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 493.967,
+      "end": 496.975,
+      "text": "Now, if you do want to take a look at other cars we have on site, like I said, we have a thousand.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 497.225,
+      "end": 500.789,
+      "text": "So you can take a look at some other cars that we do have, you're not committed to one, okay?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 501.056,
+      "end": 502.068,
+      "text": "Okay.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 502.088,
+      "end": 504.738,
+      "text": "Do you have any that is similar to, again...",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 504.718,
+      "end": 507.353,
+      "text": "Well, we're actually similar to this, along...",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 508.025,
+      "end": 511.589,
+      "text": "I'm looking for a seven-seater that",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 511.569,
+      "end": 515.572,
+      "text": "fold flat because I noticed some of them don't fold flat properly",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 515.552,
+      "end": 520.567,
+      "text": "and obviously because of the kids, it would be good to have it fixed.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 520.547,
+      "end": 523.047,
+      "text": "I don't want something too old.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 523.263,
+      "end": 526.017,
+      "text": "and I want a fantastic price.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 525.997,
+      "end": 526.827,
+      "text": "Yeah, of course.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 526.989,
+      "end": 528.124,
+      "text": "Why would you say that?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 528.61,
+      "end": 529.055,
+      "text": "Yeah.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 529.237,
+      "end": 534.151,
+      "text": "What I'll do for you then, on arrival, I'll get my colleagues to get this car ready for you.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 534.3,
+      "end": 538.015,
+      "text": "as well as some other 7-seater cars that tick those boxes as well.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 537.995,
+      "end": 540.53,
+      "text": "So when you do come in you can take a look at the Peugeot",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 540.51,
+      "end": 544.175,
+      "text": "as well as the other cars we do have on site at Flickr as well.",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 544.155,
+      "end": 547.432,
+      "text": "Yeah, OK, we can do that.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 547.412,
+      "end": 548.724,
+      "text": "So I'm guessing I'll get...",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 548.866,
+      "end": 551.026,
+      "text": "I'm guessing on WhatsApp I'll get the... just...",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 551.006,
+      "end": 552.546,
+      "text": "for my tech demo.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 553.065,
+      "end": 557.084,
+      "text": "the appointment and all the stuff.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 557.064,
+      "end": 560.78,
+      "text": "I'll send over the confirmation and everything to you, okay?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 561.485,
+      "end": 564.037,
+      "text": "Thank you for your time.",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 564.017,
+      "end": 568.137,
+      "text": "Oma, O-M-A-R Oma, let me just write it on that, what's that?",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 568.117,
+      "end": 572.052,
+      "text": "are you going to be there on Sunday?",
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 572.032,
+      "end": 575.613,
+      "text": "just because I am only a call agent, but no worries, I'll give you the best one we have, okay?",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    },
+    {
+      "start": 575.863,
+      "end": 580.27,
+      "text": "Bye Bye",
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "display_speaker": "Omar El Harchaoui",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui"
+    }
+  ],
+  "speaker_segments": [
+    {
+      "start": 3.04,
+      "end": 3.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 5.84,
+      "end": 6.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 8.8,
+      "end": 10.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 9.28,
+      "end": 9.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 10.08,
+      "end": 11.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 12.72,
+      "end": 13.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 13.68,
+      "end": 13.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 13.76,
+      "end": 14.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 14.32,
+      "end": 15.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 18.16,
+      "end": 22.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 22.32,
+      "end": 23.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 23.68,
+      "end": 30.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 28.0,
+      "end": 28.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 31.28,
+      "end": 33.6,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 32.16,
+      "end": 32.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 33.68,
+      "end": 37.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 34.0,
+      "end": 35.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 36.08,
+      "end": 36.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 37.36,
+      "end": 47.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 47.12,
+      "end": 48.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 50.96,
+      "end": 52.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 51.68,
+      "end": 53.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 54.0,
+      "end": 54.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 54.16,
+      "end": 54.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 57.28,
+      "end": 57.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 58.16,
+      "end": 60.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 60.48,
+      "end": 62.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 62.8,
+      "end": 70.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 67.28,
+      "end": 67.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 68.64,
+      "end": 69.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 70.4,
+      "end": 76.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 77.68,
+      "end": 77.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 78.96,
+      "end": 80.56,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 80.64,
+      "end": 85.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 83.76,
+      "end": 84.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 86.48,
+      "end": 95.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 87.2,
+      "end": 87.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 94.4,
+      "end": 94.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 96.08,
+      "end": 101.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 96.4,
+      "end": 96.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 102.08,
+      "end": 103.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 104.96,
+      "end": 114.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 107.2,
+      "end": 107.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 112.88,
+      "end": 113.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 114.32,
+      "end": 116.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 114.72,
+      "end": 115.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 116.32,
+      "end": 117.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 117.36,
+      "end": 117.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 117.52,
+      "end": 119.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 120.08,
+      "end": 141.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 125.28,
+      "end": 125.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 130.56,
+      "end": 131.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 140.0,
+      "end": 142.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 144.08,
+      "end": 147.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 146.72,
+      "end": 150.72,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 149.12,
+      "end": 149.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 150.96,
+      "end": 151.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 151.28,
+      "end": 152.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 152.08,
+      "end": 153.04,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 152.8,
+      "end": 153.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 153.12,
+      "end": 159.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 153.92,
+      "end": 154.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 155.36,
+      "end": 156.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 160.4,
+      "end": 162.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 160.96,
+      "end": 161.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 163.52,
+      "end": 171.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 170.32,
+      "end": 170.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 171.76,
+      "end": 178.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 171.84,
+      "end": 172.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 173.28,
+      "end": 173.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 178.16,
+      "end": 184.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 181.36,
+      "end": 182.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 184.64,
+      "end": 185.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 185.92,
+      "end": 190.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 190.96,
+      "end": 191.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 191.2,
+      "end": 192.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 192.08,
+      "end": 195.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 193.28,
+      "end": 193.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 195.52,
+      "end": 195.6,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 196.56,
+      "end": 206.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 201.04,
+      "end": 201.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 206.32,
+      "end": 208.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 211.68,
+      "end": 214.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 215.84,
+      "end": 217.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 219.2,
+      "end": 227.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 225.12,
+      "end": 225.6,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 229.76,
+      "end": 231.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 232.0,
+      "end": 238.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 239.92,
+      "end": 240.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 240.0,
+      "end": 240.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 241.36,
+      "end": 247.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 247.28,
+      "end": 248.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 248.88,
+      "end": 249.36,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 249.2,
+      "end": 252.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 250.16,
+      "end": 250.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 252.96,
+      "end": 259.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 259.04,
+      "end": 259.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 259.36,
+      "end": 263.6,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 262.8,
+      "end": 270.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 264.0,
+      "end": 264.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 268.88,
+      "end": 269.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 271.76,
+      "end": 276.56,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 276.32,
+      "end": 280.72,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 279.92,
+      "end": 281.2,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 281.2,
+      "end": 290.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 281.52,
+      "end": 282.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 290.56,
+      "end": 294.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 293.2,
+      "end": 294.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 294.32,
+      "end": 298.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 298.8,
+      "end": 300.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 300.0,
+      "end": 300.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 301.84,
+      "end": 324.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 306.48,
+      "end": 306.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 308.24,
+      "end": 308.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 322.8,
+      "end": 323.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 324.16,
+      "end": 324.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 325.92,
+      "end": 331.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 326.8,
+      "end": 327.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 328.24,
+      "end": 328.72,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 330.96,
+      "end": 334.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 335.36,
+      "end": 368.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 342.56,
+      "end": 342.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 369.36,
+      "end": 378.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 374.96,
+      "end": 375.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 378.4,
+      "end": 378.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 378.72,
+      "end": 385.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 385.92,
+      "end": 416.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 391.68,
+      "end": 392.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 395.12,
+      "end": 395.36,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 415.36,
+      "end": 417.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 417.92,
+      "end": 425.04,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 420.72,
+      "end": 420.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 423.76,
+      "end": 424.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 425.2,
+      "end": 429.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 425.76,
+      "end": 426.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 429.76,
+      "end": 431.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 431.92,
+      "end": 468.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 468.48,
+      "end": 472.48,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 470.24,
+      "end": 470.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 471.68,
+      "end": 475.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 472.96,
+      "end": 481.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 476.48,
+      "end": 477.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 478.16,
+      "end": 479.04,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 479.68,
+      "end": 483.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 481.92,
+      "end": 482.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 482.96,
+      "end": 490.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 488.8,
+      "end": 489.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 490.8,
+      "end": 501.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 501.68,
+      "end": 502.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 502.24,
+      "end": 503.04,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 502.48,
+      "end": 507.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 508.64,
+      "end": 515.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 515.12,
+      "end": 515.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 516.32,
+      "end": 516.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 516.64,
+      "end": 521.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 521.44,
+      "end": 522.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 521.76,
+      "end": 523.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 523.84,
+      "end": 524.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 523.92,
+      "end": 526.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 526.72,
+      "end": 528.56,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 528.0,
+      "end": 529.36,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 529.12,
+      "end": 544.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 543.44,
+      "end": 543.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 544.8,
+      "end": 547.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 545.68,
+      "end": 547.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 547.44,
+      "end": 558.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 557.84,
+      "end": 561.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 561.84,
+      "end": 564.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 562.48,
+      "end": 564.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 564.64,
+      "end": 566.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 566.16,
+      "end": 570.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 570.64,
+      "end": 576.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 574.64,
+      "end": 575.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 576.48,
+      "end": 577.36,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 577.44,
+      "end": 579.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    },
+    {
+      "start": 577.6,
+      "end": 578.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 578.64,
+      "end": 578.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 579.92,
+      "end": 580.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer"
+    },
+    {
+      "start": 580.08,
+      "end": 580.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Omar El Harchaoui",
+      "agent_slug": "omar_el_harchaoui",
+      "display_speaker": "Omar El Harchaoui"
+    }
+  ],
+  "speaker_count": 2,
+  "agent_speaker_id": "SPEAKER_01",
+  "agent_name": "Omar El Harchaoui",
+  "agent_slug": "omar_el_harchaoui",
+  "agent_similarity": 0.9408460855484009,
+  "target_agent_slug": "omar_el_harchaoui",
+  "cluster_match_table": {
+    "SPEAKER_00": {
+      "omar_el_harchaoui": {
+        "name": "Omar El Harchaoui",
+        "similarity": 0.3765508234500885
+      }
+    },
+    "SPEAKER_01": {
+      "omar_el_harchaoui": {
+        "name": "Omar El Harchaoui",
+        "similarity": 0.9408460855484009
+      }
+    }
+  },
+  "cluster_segment_counts": {
+    "SPEAKER_00": 65,
+    "SPEAKER_01": 64
+  },
+  "per_speaker": {
+    "Customer": {
+      "turns": 97,
+      "seconds": 233.52000000000004
+    },
+    "Omar El Harchaoui": {
+      "turns": 82,
+      "seconds": 343.7599999999997
+    }
+  },
+  "speaker_mode": "speaker_first_voiceprint",
+  "speaker_id_backend": "sortformer",
+  "matched_backend_dim": 512,
+  "voiceprint_dims": {
+    "192": 1,
+    "512": 1
+  },
+  "backend": "sortformer"
+}

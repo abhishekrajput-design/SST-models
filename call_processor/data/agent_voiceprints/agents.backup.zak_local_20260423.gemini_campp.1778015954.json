@@ -1,0 +1,2228 @@
+{
+  "zak_local_20260423": {
+    "agent_name": "Zak Raissi",
+    "voiceprint_path": "zak_local_20260423_gemini_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "zak_local_20260423_gemini_campp_v1.npy",
+        "source": "gemini_agent_segments",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "zak_local_20260423_gemini_campp_v2.npy",
+        "source": "gemini_agent_segments",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "zak_local_20260423_gemini_campp_v3.npy",
+        "source": "gemini_agent_segments",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "zak_local_20260423_gemini_campp_v4.npy",
+        "source": "gemini_agent_segments",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "zak_local_20260423_gemini_campp_v5.npy",
+        "source": "gemini_agent_segments",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 5,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "gemini_agent_only_segments",
+    "source_data_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+    "used_calls": [
+      "call_01",
+      "call_02",
+      "call_03",
+      "call_04"
+    ],
+    "whole_call_agent_training": [
+      {
+        "call": "call_03",
+        "call_id": "20260429T085638315_375379",
+        "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_03\\20260423T120114270_510233.mp3",
+        "windows": 200,
+        "window_seconds_total": 1000.0
+      }
+    ],
+    "n_training_segments": 253,
+    "total_training_seconds": 1431.96,
+    "mean_inside_sim": 0.7838493995515725,
+    "max_outside_sim": 0.5,
+    "updated_at_epoch": 1778015738
+  },
+  "omar_el_harchaoui": {
+    "mean_inside_sim": 0.5516132712364197,
+    "max_outside_sim": 0.3,
+    "n_voiceprints": 1,
+    "source": "gemini_labels_27segs",
+    "voiceprints": [
+      [
+        0.038423191756010056,
+        0.01627204194664955,
+        -0.0042867884039878845,
+        0.008977577090263367,
+        -0.04658016189932823,
+        -0.02168591134250164,
+        -0.014504361897706985,
+        0.11331495642662048,
+        -0.03561324626207352,
+        0.04523270204663277,
+        0.06410124897956848,
+        0.012395840138196945,
+        -0.0496588796377182,
+        -0.06515831500291824,
+        0.0060182358138263226,
+        -0.02299749106168747,
+        0.00468081422150135,
+        0.03736338019371033,
+        -0.026606403291225433,
+        -0.004512665327638388,
+        0.029415922239422798,
+        0.010865267366170883,
+        0.0066505251452326775,
+        -0.001095107989385724,
+        -0.04428257420659065,
+        0.058350615203380585,
+        0.05644155293703079,
+        0.09992948174476624,
+        -0.030103467404842377,
+        0.008325322531163692,
+        0.014012387953698635,
+        -0.03458256274461746,
+        -0.0702080950140953,
+        0.032594576478004456,
+        -0.00855617318302393,
+        0.010965041816234589,
+        0.09969326108694077,
+        -0.037772037088871,
+        0.0063009620644152164,
+        -0.0025688721798360348,
+        0.02893940918147564,
+        -0.006943828891962767,
+        -0.015126636251807213,
+        0.07149375230073929,
+        0.043686069548130035,
+        0.021009376272559166,
+        0.01548551581799984,
+        0.003187872003763914,
+        0.035310886800289154,
+        -0.0350966677069664,
+        0.02215789631009102,
+        -0.035381875932216644,
+        0.0061460197903215885,
+        0.0026069264858961105,
+        0.019922316074371338,
+        0.04622012749314308,
+        -0.030060334131121635,
+        -0.0013585994020104408,
+        0.05349631980061531,
+        0.021971367299556732,
+        0.053799085319042206,
+        0.005608056206256151,
+        -0.10959257930517197,
+        0.014595170505344868,
+        -0.0512126199901104,
+        -0.06457206606864929,
+        -0.0007054227171465755,
+        -0.02848168835043907,
+        0.00716452905908227,
+        0.008805758319795132,
+        -0.017457803711295128,
+        0.016597431153059006,
+        0.017999157309532166,
+        -0.037807151675224304,
+        0.028351491317152977,
+        0.03157169371843338,
+        0.022020526230335236,
+        -0.09524612128734589,
+        -0.04537073150277138,
+        -0.010103853419423103,
+        -0.03253072872757912,
+        0.10238572210073471,
+        0.0003724485286511481,
+        -0.046201303601264954,
+        -0.026566484943032265,
+        -0.023563282564282417,
+        0.0046636443585157394,
+        0.021171271800994873,
+        -0.020043035969138145,
+        -0.004028887487947941,
+        -0.03355971351265907,
+        0.022496704012155533,
+        0.05609731748700142,
+        -0.05030490830540657,
+        -0.033721018582582474,
+        0.02782302163541317,
+        0.007408730685710907,
+        -0.06370629370212555,
+        -0.028386292979121208,
+        0.00987577997148037,
+        0.09945402294397354,
+        0.07032038271427155,
+        0.1203119307756424,
+        -0.03168831393122673,
+        0.05457845330238342,
+        -0.027378924190998077,
+        0.05430832505226135,
+        0.07116945832967758,
+        0.02986816316843033,
+        0.007545002736151218,
+        0.010789177380502224,
+        -0.027661891654133797,
+        -0.06647050380706787,
+        0.040849339216947556,
+        0.035028815269470215,
+        0.008771288208663464,
+        0.06845055520534515,
+        -0.0346367247402668,
+        -0.0017007802380248904,
+        0.007738913409411907,
+        -0.019834375008940697,
+        0.0522443912923336,
+        0.002229096135124564,
+        -0.06333471834659576,
+        0.08099088072776794,
+        0.0638110563158989,
+        0.020111754536628723,
+        -0.06824283301830292,
+        1.3226560440671165e-05,
+        0.051239073276519775,
+        -0.06918363273143768,
+        0.008101049810647964,
+        0.04650665074586868,
+        0.009091172367334366,
+        0.07665076851844788,
+        0.05812392383813858,
+        -0.006292196922004223,
+        0.057917024940252304,
+        -0.06615070253610611,
+        -0.013607279397547245,
+        -0.005363032687455416,
+        0.042281415313482285,
+        -0.037556398659944534,
+        0.02880488708615303,
+        0.07734797149896622,
+        0.09518393874168396,
+        0.010511749424040318,
+        0.017637504264712334,
+        0.057156071066856384,
+        0.04745941609144211,
+        0.06306606531143188,
+        0.028156690299510956,
+        -0.03760392218828201,
+        -0.0314439982175827,
+        -0.0019198701484128833,
+        0.031387340277433395,
+        -0.0015106558566913009,
+        0.001975532853975892,
+        0.020788026973605156,
+        0.08943939208984375,
+        -0.05335637554526329,
+        0.013704800978302956,
+        -0.01998117007315159,
+        0.05532310903072357,
+        0.016969870775938034,
+        0.02223425731062889,
+        0.03486591950058937,
+        -0.026981661096215248,
+        -0.0641900897026062,
+        -0.022615421563386917,
+        0.049006976187229156,
+        -0.07479999959468842,
+        -0.008324028924107552,
+        -0.010561609640717506,
+        0.014267444610595703,
+        0.029848039150238037,
+        0.026849856600165367,
+        0.022281382232904434,
+        0.04594240337610245,
+        -0.0666937306523323,
+        -0.053055327385663986,
+        0.011598271317780018,
+        -0.06394001841545105,
+        -0.005241680424660444,
+        -0.011153711937367916,
+        0.04331560432910919,
+        0.005478656385093927,
+        -0.05592382699251175,
+        -0.04308804124593735,
+        -0.05528680235147476,
+        -0.06373913586139679,
+        -0.01135165523737669,
+        -0.004275359679013491,
+        -0.039691247045993805,
+        0.01103561744093895,
+        0.03660651668906212,
+        -0.037452735006809235,
+        0.013543717563152313,
+        -0.04144274815917015,
+        -0.04472377523779869,
+        -0.04009450972080231,
+        -0.031370192766189575,
+        -0.020122220739722252,
+        0.02007271721959114,
+        -0.021619033068418503,
+        -0.025134069845080376,
+        -0.021911242976784706,
+        -0.012690490111708641,
+        -0.046802885830402374,
+        0.04498293250799179,
+        -0.052677493542432785,
+        -0.049425408244132996,
+        0.030761070549488068,
+        -0.04590066149830818,
+        -0.02987499162554741,
+        -0.033903568983078,
+        -0.001620959141291678,
+        0.019246956333518028,
+        -0.004804463125765324,
+        -0.03595994412899017,
+        0.0797080397605896,
+        -0.028606582432985306,
+        0.01923041231930256,
+        0.0401354543864727,
+        0.011678126640617847,
+        0.009507091715931892,
+        0.052619341760873795,
+        0.05468636378645897,
+        0.017675962299108505,
+        0.013861912302672863,
+        0.07067956775426865,
+        -0.05154947191476822,
+        0.04421715438365936,
+        0.11619723588228226,
+        0.10404274612665176,
+        -0.013488654047250748,
+        -0.004240452777594328,
+        0.0008655036217533052,
+        -0.05225834995508194,
+        0.027188966050744057,
+        0.09563935548067093,
+        0.11441031098365784,
+        0.03232300281524658,
+        0.0048688421957194805,
+        -0.01356411725282669,
+        -0.09582807123661041,
+        0.0013183088740333915,
+        -0.04462457820773125,
+        0.026419591158628464,
+        0.025582678616046906,
+        0.019565287977457047,
+        -0.06016349047422409,
+        0.03703372925519943,
+        0.033539559692144394,
+        0.039503131061792374,
+        0.10705239325761795,
+        -0.023279305547475815,
+        0.019638970494270325,
+        0.018470361828804016,
+        -0.05016132444143295,
+        0.052723754197359085,
+        -0.016401169821619987,
+        -0.004010733217000961,
+        0.028873398900032043,
+        0.07982762157917023,
+        -0.12135781347751617,
+        0.008854974061250687,
+        0.02509821392595768,
+        0.09887390583753586,
+        0.0640508309006691,
+        -0.013194065541028976,
+        0.021817093715071678,
+        -0.022712524980306625,
+        0.04607570543885231,
+        -0.018075309693813324,
+        0.03978457674384117,
+        -0.010233042761683464,
+        0.05443394184112549,
+        -0.013020351529121399,
+        -0.010428961366415024,
+        0.07385022938251495,
+        -0.026769012212753296,
+        -0.06579618901014328,
+        0.006960109807550907,
+        -0.06178729608654976,
+        0.008963855914771557,
+        0.013310062699019909,
+        -0.001656817621551454,
+        -0.07229015231132507,
+        -0.08172459155321121,
+        0.10147298127412796,
+        -0.0329536572098732,
+        -0.050804007798433304,
+        0.0008174803224392235,
+        -0.047496695071458817,
+        0.003580851713195443,
+        0.01656942442059517,
+        -0.02379913441836834,
+        0.013102289289236069,
+        -0.03128845989704132,
+        -0.040760431438684464,
+        -0.050432026386260986,
+        0.045485373586416245,
+        -0.04958457872271538,
+        -0.017220083624124527,
+        0.025051183998584747,
+        0.04221507906913757,
+        -0.0034182744566351175,
+        0.019434701651334763,
+        0.09795677661895752,
+        0.010203982703387737,
+        -0.006734452210366726,
+        0.05812453106045723,
+        0.02523927204310894,
+        -0.01859540119767189,
+        0.025236444547772408,
+        -0.02501683495938778,
+        0.04441056400537491,
+        -0.03350215405225754,
+        0.03603053465485573,
+        0.024638377130031586,
+        -0.06391055136919022,
+        0.011861433275043964,
+        0.039531197398900986,
+        0.06295157223939896,
+        0.08367634564638138,
+        -0.009679270908236504,
+        -0.08077313005924225,
+        0.029631996527314186,
+        0.040462926030159,
+        0.011395936831831932,
+        0.03456313908100128,
+        0.05275832489132881,
+        0.07104402780532837,
+        0.034914154559373856,
+        0.02081029862165451,
+        -0.02113211713731289,
+        -0.09887973219156265,
+        0.07748275995254517,
+        -0.061546824872493744,
+        0.041202228516340256,
+        -0.018325699493288994,
+        -0.05652303621172905,
+        -0.053708724677562714,
+        -0.016971439123153687,
+        0.0016372945392504334,
+        -0.039762984961271286,
+        -0.002105264225974679,
+        0.008371884934604168,
+        -0.002405928447842598,
+        0.07103409618139267,
+        0.004725939594209194,
+        -0.052432265132665634,
+        -0.044962719082832336,
+        -0.006426874548196793,
+        0.007111446000635624,
+        0.01685231365263462,
+        0.025006748735904694,
+        -0.03483366221189499,
+        0.0838090181350708,
+        0.012604528106749058,
+        0.001875542220659554,
+        -0.0007590774912387133,
+        0.05418355017900467,
+        0.0472407191991806,
+        0.051053486764431,
+        0.01931375078856945,
+        -0.03795343264937401,
+        -0.00879821926355362,
+        -0.03295540809631348,
+        0.008361809886991978,
+        0.019975978881120682,
+        0.021369557827711105,
+        0.06161456182599068,
+        -0.05263787508010864,
+        0.0039868103340268135,
+        -0.027914753183722496,
+        0.039496928453445435,
+        0.014861149713397026,
+        0.0085731977596879,
+        0.056767966598272324,
+        -0.013290619477629662,
+        -0.018630141392350197,
+        -0.019452687352895737,
+        0.01791474036872387,
+        0.00332115706987679,
+        -0.002622604137286544,
+        0.035582035779953,
+        0.014929266646504402,
+        0.05201030895113945,
+        0.003445280948653817,
+        0.03286503255367279,
+        -0.025156455114483833,
+        0.021779829636216164,
+        -0.007365237921476364,
+        0.02277783863246441,
+        0.034706342965364456,
+        0.06051242724061012,
+        -0.04553714767098427,
+        0.05770101398229599,
+        0.06485800445079803,
+        -0.07358827441930771,
+        -0.02227127179503441,
+        0.0654887706041336,
+        0.02230345457792282,
+        -0.04908294603228569,
+        0.030901474878191948,
+        -0.004642883315682411,
+        0.00531085254624486,
+        0.01807115413248539,
+        -0.021533582359552383,
+        -0.029751336202025414,
+        -0.00533340685069561,
+        0.011877169832587242,
+        0.04638694226741791,
+        0.04997684434056282,
+        -0.015548979863524437,
+        -0.02121582068502903,
+        0.023150157183408737,
+        0.06918276101350784,
+        0.03642946109175682,
+        0.06238885968923569,
+        0.06758096069097519,
+        -0.05035916343331337,
+        0.05998212471604347,
+        -0.007348319515585899,
+        -0.008984622545540333,
+        0.04838988557457924,
+        -0.04527270421385765,
+        -0.03371759131550789,
+        0.00962817668914795,
+        -0.08777153491973877,
+        0.019229808822274208,
+        -0.027323946356773376,
+        0.019105007871985435,
+        -0.06152098625898361,
+        -0.0002120246790582314,
+        0.06757203489542007,
+        0.11750712990760803,
+        -0.09364829957485199,
+        -0.014100599102675915,
+        -0.022975806146860123,
+        -0.008602390065789223,
+        -0.008031140081584454,
+        -0.043373219668865204,
+        0.057834185659885406,
+        0.027143986895680428,
+        -0.028942864388227463,
+        0.01778343692421913,
+        -0.05441758409142494,
+        0.0644138753414154,
+        -0.017772510647773743,
+        -0.012285375036299229,
+        0.07559220492839813,
+        -0.012678250670433044,
+        0.05093519389629364,
+        0.07608518749475479,
+        0.004134085960686207,
+        -0.025694750249385834,
+        -0.005181984044611454,
+        -0.05303411930799484,
+        -0.10534019023180008,
+        0.019534172490239143,
+        0.037793271243572235,
+        -0.0019263125723227859,
+        -0.10133236646652222,
+        0.04039299115538597,
+        0.02921360731124878,
+        -0.04344819486141205,
+        0.006448377389460802,
+        -0.04670118913054466,
+        -0.05152817815542221,
+        0.028025135397911072,
+        -0.02608569525182247,
+        -0.06546222418546677,
+        0.014283581636846066,
+        -0.02441747859120369,
+        -0.056483201682567596,
+        0.01627548784017563,
+        -0.0006100548780523241,
+        0.03202711045742035,
+        0.03679869323968887,
+        -0.023315440863370895,
+        0.011378119699656963,
+        -0.008913136087357998,
+        0.002414452377706766,
+        0.009501139633357525,
+        -0.061882782727479935,
+        -0.08940963447093964,
+        -0.04011204093694687,
+        0.09484350681304932,
+        0.04640079662203789,
+        -0.017714517191052437,
+        0.0547771081328392,
+        0.0002443324192427099,
+        -0.04034174233675003,
+        0.04431554302573204,
+        0.019478891044855118,
+        -0.05402247980237007,
+        0.05943683162331581,
+        -0.0015153874410316348,
+        -0.0575580969452858,
+        -0.02421307936310768,
+        -0.0030627476517111063,
+        0.11332865804433823,
+        -0.027206961065530777,
+        -0.00613082991912961,
+        0.028431199491024017,
+        -0.08195759356021881,
+        -0.039331793785095215,
+        0.06083172187209129,
+        -0.013985585421323776
+      ]
+    ]
+  },
+  "mohammed_al_russell": {
+    "agent_name": "Mohammed Al Russell",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohammed_al_russell.npy",
+    "n_clips": 175,
+    "total_seconds": 182.7,
+    "used_calls": 6,
+    "source": "audiofy_api_bulk_20260424"
+  },
+  "haris_bajwa": {
+    "agent_name": "Haris Bajwa",
+    "voiceprint_path": "haris_bajwa.npy",
+    "voiceprints": [
+      {
+        "path": "haris_bajwa__low_0.npy",
+        "bucket": "low",
+        "n_clips": 966,
+        "snr_db": 6.0
+      },
+      {
+        "path": "haris_bajwa__low_1.npy",
+        "bucket": "low",
+        "n_clips": 966,
+        "snr_db": 6.0
+      },
+      {
+        "path": "haris_bajwa__low_2.npy",
+        "bucket": "low",
+        "n_clips": 966,
+        "snr_db": 6.0
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 2468.604000000004,
+    "used_calls": 78,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efbb12f91ac02559f82756"
+      },
+      {
+        "_id": "69efbaaef91ac02559f8267b"
+      },
+      {
+        "_id": "69efb7b2f91ac02559f81b41"
+      },
+      {
+        "_id": "69efb764f91ac02559f81ab7"
+      },
+      {
+        "_id": "69efb684f91ac02559f81999"
+      },
+      {
+        "_id": "69efb296f91ac02559f81252"
+      },
+      {
+        "_id": "69efb1edf91ac02559f8117b"
+      },
+      {
+        "_id": "69efb181f91ac02559f810d7"
+      },
+      {
+        "_id": "69efaf2bf91ac02559f80ad9"
+      },
+      {
+        "_id": "69efaee4f91ac02559f80972"
+      },
+      {
+        "_id": "69efae88f91ac02559f80800"
+      },
+      {
+        "_id": "69efae31f91ac02559f806ec"
+      },
+      {
+        "_id": "69efabbff91ac02559f7fe9b"
+      },
+      {
+        "_id": "69efab8af91ac02559f7fdb9"
+      },
+      {
+        "_id": "69efab6af91ac02559f7fd48"
+      },
+      {
+        "_id": "69efab33f91ac02559f7fc64"
+      },
+      {
+        "_id": "69efaa99f91ac02559f7fa28"
+      },
+      {
+        "_id": "69efa923f91ac02559f7f817"
+      },
+      {
+        "_id": "69efa889f91ac02559f7f640"
+      },
+      {
+        "_id": "69efa20df91ac02559f7e600"
+      },
+      {
+        "_id": "69efa196f91ac02559f7e4bd"
+      },
+      {
+        "_id": "69ef9fbbf91ac02559f7e28f"
+      },
+      {
+        "_id": "69ef9c65f91ac02559f7db33"
+      },
+      {
+        "_id": "69ef9b94f91ac02559f7d893"
+      },
+      {
+        "_id": "69ef9b79f91ac02559f7d854"
+      },
+      {
+        "_id": "69ef9a7ef91ac02559f7d5cd"
+      },
+      {
+        "_id": "69efbb12f91ac02559f82756"
+      },
+      {
+        "_id": "69efbaaef91ac02559f8267b"
+      },
+      {
+        "_id": "69efb7b2f91ac02559f81b41"
+      },
+      {
+        "_id": "69efb764f91ac02559f81ab7"
+      },
+      {
+        "_id": "69efb684f91ac02559f81999"
+      },
+      {
+        "_id": "69efb296f91ac02559f81252"
+      },
+      {
+        "_id": "69efb1edf91ac02559f8117b"
+      },
+      {
+        "_id": "69efb181f91ac02559f810d7"
+      },
+      {
+        "_id": "69efaf2bf91ac02559f80ad9"
+      },
+      {
+        "_id": "69efaee4f91ac02559f80972"
+      },
+      {
+        "_id": "69efae88f91ac02559f80800"
+      },
+      {
+        "_id": "69efae31f91ac02559f806ec"
+      },
+      {
+        "_id": "69efabbff91ac02559f7fe9b"
+      },
+      {
+        "_id": "69efab8af91ac02559f7fdb9"
+      },
+      {
+        "_id": "69efab6af91ac02559f7fd48"
+      },
+      {
+        "_id": "69efab33f91ac02559f7fc64"
+      },
+      {
+        "_id": "69efaa99f91ac02559f7fa28"
+      },
+      {
+        "_id": "69efa923f91ac02559f7f817"
+      },
+      {
+        "_id": "69efa889f91ac02559f7f640"
+      },
+      {
+        "_id": "69efa20df91ac02559f7e600"
+      },
+      {
+        "_id": "69efa196f91ac02559f7e4bd"
+      },
+      {
+        "_id": "69ef9fbbf91ac02559f7e28f"
+      },
+      {
+        "_id": "69ef9c65f91ac02559f7db33"
+      },
+      {
+        "_id": "69ef9b94f91ac02559f7d893"
+      },
+      {
+        "_id": "69ef9b79f91ac02559f7d854"
+      },
+      {
+        "_id": "69ef9a7ef91ac02559f7d5cd"
+      },
+      {
+        "_id": "69efbb12f91ac02559f82756"
+      },
+      {
+        "_id": "69efbaaef91ac02559f8267b"
+      },
+      {
+        "_id": "69efb7b2f91ac02559f81b41"
+      },
+      {
+        "_id": "69efb764f91ac02559f81ab7"
+      },
+      {
+        "_id": "69efb684f91ac02559f81999"
+      },
+      {
+        "_id": "69efb296f91ac02559f81252"
+      },
+      {
+        "_id": "69efb1edf91ac02559f8117b"
+      },
+      {
+        "_id": "69efb181f91ac02559f810d7"
+      },
+      {
+        "_id": "69efaf2bf91ac02559f80ad9"
+      },
+      {
+        "_id": "69efaee4f91ac02559f80972"
+      },
+      {
+        "_id": "69efae88f91ac02559f80800"
+      },
+      {
+        "_id": "69efae31f91ac02559f806ec"
+      },
+      {
+        "_id": "69efabbff91ac02559f7fe9b"
+      },
+      {
+        "_id": "69efab8af91ac02559f7fdb9"
+      },
+      {
+        "_id": "69efab6af91ac02559f7fd48"
+      },
+      {
+        "_id": "69efab33f91ac02559f7fc64"
+      },
+      {
+        "_id": "69efaa99f91ac02559f7fa28"
+      },
+      {
+        "_id": "69efa923f91ac02559f7f817"
+      },
+      {
+        "_id": "69efa889f91ac02559f7f640"
+      },
+      {
+        "_id": "69efa20df91ac02559f7e600"
+      },
+      {
+        "_id": "69efa196f91ac02559f7e4bd"
+      },
+      {
+        "_id": "69ef9fbbf91ac02559f7e28f"
+      },
+      {
+        "_id": "69ef9c65f91ac02559f7db33"
+      },
+      {
+        "_id": "69ef9b94f91ac02559f7d893"
+      },
+      {
+        "_id": "69ef9b79f91ac02559f7d854"
+      },
+      {
+        "_id": "69ef9a7ef91ac02559f7d5cd"
+      }
+    ],
+    "mean_inside_sim": 0.891,
+    "max_outside_sim": 0.4901
+  },
+  "sarah_aziz": {
+    "agent_name": "Sarah Aziz",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\sarah_aziz.npy",
+    "n_clips": 74,
+    "n_windows_total": 219,
+    "total_seconds": 225.6,
+    "used_calls": 4,
+    "mean_inside_sim": 0.657,
+    "max_outside_sim": 0.625,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "rebeca_cazan": {
+    "agent_name": "Rebeca Cazan",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rebeca_cazan.npy",
+    "n_clips": 70,
+    "n_windows_total": 164,
+    "total_seconds": 169.8,
+    "used_calls": 4,
+    "mean_inside_sim": 0.65,
+    "max_outside_sim": 0.513,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "rajan_singh": {
+    "agent_name": "Rajan Singh",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rajan_singh.npy",
+    "n_clips": 110,
+    "n_windows_total": 142,
+    "total_seconds": 149.1,
+    "used_calls": 4,
+    "mean_inside_sim": 0.649,
+    "max_outside_sim": 0.533,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "rebecca_murphy": {
+    "agent_name": "Rebecca Murphy",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rebecca_murphy.npy",
+    "n_clips": 62,
+    "n_windows_total": 126,
+    "total_seconds": 132.5,
+    "used_calls": 4,
+    "mean_inside_sim": 0.607,
+    "max_outside_sim": 0.576,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "nevethan_krishnamohan": {
+    "agent_name": "Nevethan Krishnamohan",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\nevethan_krishnamohan.npy",
+    "n_clips": 73,
+    "n_windows_total": 115,
+    "total_seconds": 119.8,
+    "used_calls": 4,
+    "mean_inside_sim": 0.684,
+    "max_outside_sim": 0.515,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "shuahib_miah": {
+    "agent_name": "Shuahib Miah",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\shuahib_miah.npy",
+    "n_clips": 110,
+    "n_windows_total": 122,
+    "total_seconds": 123.3,
+    "used_calls": 1,
+    "mean_inside_sim": 0.712,
+    "max_outside_sim": 0.543,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "albjon_vokshi": {
+    "agent_name": "Albjon Vokshi",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\albjon_vokshi.npy",
+    "n_clips": 58,
+    "n_windows_total": 162,
+    "total_seconds": 168.7,
+    "used_calls": 4,
+    "mean_inside_sim": 0.633,
+    "max_outside_sim": 0.551,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "qaim_ravji": {
+    "agent_name": "Qaim Ravji",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\qaim_ravji.npy",
+    "n_clips": 44,
+    "n_windows_total": 130,
+    "total_seconds": 136.3,
+    "used_calls": 4,
+    "mean_inside_sim": 0.87,
+    "max_outside_sim": 0.243,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "amandeep_nandra": {
+    "agent_name": "Amandeep Nandra",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\amandeep_nandra.npy",
+    "n_clips": 153,
+    "n_windows_total": 664,
+    "total_seconds": 670.9,
+    "used_calls": 4,
+    "mean_inside_sim": 0.65,
+    "max_outside_sim": 0.669,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "tulay_finance_consultant": {
+    "agent_name": "Tulay Finance Consultant",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\tulay_finance_consultant.npy",
+    "n_clips": 278,
+    "n_windows_total": 379,
+    "total_seconds": 384.8,
+    "used_calls": 4,
+    "mean_inside_sim": 0.696,
+    "max_outside_sim": 0.54,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "mashrur_rahman": {
+    "agent_name": "Mashrur Rahman",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mashrur_rahman.npy",
+    "n_clips": 217,
+    "n_windows_total": 244,
+    "total_seconds": 250.3,
+    "used_calls": 4,
+    "mean_inside_sim": 0.708,
+    "max_outside_sim": 0.542,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "mohammed_malik": {
+    "agent_name": "Mohammed Malik",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohammed_malik.npy",
+    "n_clips": 83,
+    "n_windows_total": 91,
+    "total_seconds": 92.6,
+    "used_calls": 1,
+    "mean_inside_sim": 0.702,
+    "max_outside_sim": 0.522,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "mohammed_hussein_al_khwildi": {
+    "agent_name": "Mohammed-Hussein  Al-Khwildi",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohammed_hussein_al_khwildi.npy",
+    "n_clips": 244,
+    "n_windows_total": 303,
+    "total_seconds": 304.5,
+    "used_calls": 1,
+    "mean_inside_sim": 0.691,
+    "max_outside_sim": 0.545,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "allan_johnson": {
+    "agent_name": "Allan Johnson",
+    "voiceprint_path": "allan_johnson.npy",
+    "voiceprints": [
+      {
+        "path": "allan_johnson__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 963,
+        "snr_db": 15.7
+      },
+      {
+        "path": "allan_johnson__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 963,
+        "snr_db": 15.7
+      },
+      {
+        "path": "allan_johnson__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 963,
+        "snr_db": 15.7
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 2158.6470000000027,
+    "used_calls": 6,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efb162f91ac02559f810af"
+      },
+      {
+        "_id": "69efae3bf91ac02559f8071c"
+      },
+      {
+        "_id": "69efb162f91ac02559f810af"
+      },
+      {
+        "_id": "69efae3bf91ac02559f8071c"
+      },
+      {
+        "_id": "69efb162f91ac02559f810af"
+      },
+      {
+        "_id": "69efae3bf91ac02559f8071c"
+      }
+    ],
+    "mean_inside_sim": 0.6889,
+    "max_outside_sim": 0.3789
+  },
+  "sababa_hossain": {
+    "agent_name": "Sababa Hossain",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\sababa_hossain.npy",
+    "n_clips": 72,
+    "n_windows_total": 98,
+    "total_seconds": 99.7,
+    "used_calls": 1,
+    "mean_inside_sim": 0.666,
+    "max_outside_sim": 0.507,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "liza_mae_esguerra": {
+    "agent_name": "Liza Mae Esguerra",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\liza_mae_esguerra.npy",
+    "n_clips": 63,
+    "n_windows_total": 120,
+    "total_seconds": 123.9,
+    "used_calls": 3,
+    "mean_inside_sim": 0.693,
+    "max_outside_sim": 0.553,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "benjamin_ahmadi": {
+    "agent_name": "Benjamin Ahmadi",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\benjamin_ahmadi.npy",
+    "n_clips": 90,
+    "n_windows_total": 145,
+    "total_seconds": 146.1,
+    "used_calls": 1,
+    "mean_inside_sim": 0.648,
+    "max_outside_sim": 0.536,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "niloufar_dastbaz": {
+    "agent_name": "Niloufar Dastbaz",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\niloufar_dastbaz.npy",
+    "n_clips": 27,
+    "n_windows_total": 99,
+    "total_seconds": 100.2,
+    "used_calls": 1,
+    "mean_inside_sim": 0.606,
+    "max_outside_sim": 0.569,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "rafik_saleh": {
+    "agent_name": "Rafik Saleh",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rafik_saleh.npy",
+    "n_clips": 130,
+    "n_windows_total": 142,
+    "total_seconds": 143.6,
+    "used_calls": 1,
+    "mean_inside_sim": 0.719,
+    "max_outside_sim": 0.543,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "talha_azam": {
+    "agent_name": "Talha Azam",
+    "voiceprint_path": "talha_azam.npy",
+    "n_clips": 90,
+    "n_windows_total": 106,
+    "total_seconds": 58.93199999999998,
+    "used_calls": 3,
+    "mean_inside_sim": 0.711,
+    "max_outside_sim": 0.523,
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "talha_azam__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 24,
+        "snr_db": 14.4
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efabe2f91ac02559f7ff60"
+      },
+      {
+        "_id": "69efabe2f91ac02559f7ff60"
+      },
+      {
+        "_id": "69efabe2f91ac02559f7ff60"
+      }
+    ]
+  },
+  "gabriel_bighiu": {
+    "agent_name": "Gabriel Bighiu",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\gabriel_bighiu.npy",
+    "n_clips": 165,
+    "n_windows_total": 253,
+    "total_seconds": 254.7,
+    "used_calls": 1,
+    "mean_inside_sim": 0.707,
+    "max_outside_sim": 0.538,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "nirvan_nagra": {
+    "agent_name": "Nirvan Nagra",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\nirvan_nagra.npy",
+    "n_clips": 31,
+    "n_windows_total": 79,
+    "total_seconds": 80.7,
+    "used_calls": 1,
+    "mean_inside_sim": 0.734,
+    "max_outside_sim": 0.597,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "mohammad_malki": {
+    "agent_name": "Mohammad Malki",
+    "voiceprint_path": "mohammad_malki.npy",
+    "n_clips": 378,
+    "n_windows_total": 741,
+    "total_seconds": 749.7000000000004,
+    "used_calls": 3,
+    "mean_inside_sim": 0.8851,
+    "max_outside_sim": 0.533,
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "mohammad_malki__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 306,
+        "snr_db": 12.2
+      },
+      {
+        "path": "mohammad_malki__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 306,
+        "snr_db": 12.2
+      },
+      {
+        "path": "mohammad_malki__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 306,
+        "snr_db": 12.2
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efb3a1f91ac02559f81468"
+      },
+      {
+        "_id": "69efb3a1f91ac02559f81468"
+      },
+      {
+        "_id": "69efb3a1f91ac02559f81468"
+      }
+    ]
+  },
+  "arfat_barnet": {
+    "agent_name": "Arfat Barnet",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\arfat_barnet.npy",
+    "n_clips": 397,
+    "n_windows_total": 837,
+    "total_seconds": 838.4,
+    "used_calls": 1,
+    "mean_inside_sim": 0.664,
+    "max_outside_sim": 0.563,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "dilayda_barnet": {
+    "agent_name": "Dilayda Barnet",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\dilayda_barnet.npy",
+    "n_clips": 239,
+    "n_windows_total": 631,
+    "total_seconds": 632.2,
+    "used_calls": 1,
+    "mean_inside_sim": 0.683,
+    "max_outside_sim": 0.553,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "kleo_gurra": {
+    "agent_name": "Kleo Gurra",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kleo_gurra.npy",
+    "n_clips": 90,
+    "n_windows_total": 109,
+    "total_seconds": 110.2,
+    "used_calls": 1,
+    "mean_inside_sim": 0.739,
+    "max_outside_sim": 0.521,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "sylwia_recruitment": {
+    "agent_name": "Sylwia Recruitment",
+    "voiceprint_path": "sylwia_recruitment.npy",
+    "n_clips": 1113,
+    "n_windows_total": 1563,
+    "total_seconds": 1567.4789999999994,
+    "used_calls": 3,
+    "mean_inside_sim": 0.8978,
+    "max_outside_sim": 0.543,
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "sylwia_recruitment__low_0.npy",
+        "bucket": "low",
+        "n_clips": 534,
+        "snr_db": 11.3
+      },
+      {
+        "path": "sylwia_recruitment__low_1.npy",
+        "bucket": "low",
+        "n_clips": 534,
+        "snr_db": 11.3
+      },
+      {
+        "path": "sylwia_recruitment__low_2.npy",
+        "bucket": "low",
+        "n_clips": 534,
+        "snr_db": 11.3
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efa265f91ac02559f7e699"
+      },
+      {
+        "_id": "69efa265f91ac02559f7e699"
+      },
+      {
+        "_id": "69efa265f91ac02559f7e699"
+      }
+    ]
+  },
+  "ideal_dacaj": {
+    "agent_name": "Ideal Dacaj",
+    "voiceprint_path": "ideal_dacaj.npy",
+    "voiceprints": [
+      {
+        "path": "ideal_dacaj__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 2298,
+        "snr_db": 13.6
+      },
+      {
+        "path": "ideal_dacaj__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 2298,
+        "snr_db": 13.6
+      },
+      {
+        "path": "ideal_dacaj__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 2298,
+        "snr_db": 13.6
+      }
+    ],
+    "n_voiceprints": 3,
+    "total_seconds": 5977.215000000008,
+    "used_calls": 15,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efc3acf91ac02559f83a89"
+      },
+      {
+        "_id": "69efb9b2f91ac02559f821c7"
+      },
+      {
+        "_id": "69efa1ecf91ac02559f7e56d"
+      },
+      {
+        "_id": "69ef9c53f91ac02559f7dafa"
+      },
+      {
+        "_id": "69ef9bf1f91ac02559f7d9ed"
+      },
+      {
+        "_id": "69efc3acf91ac02559f83a89"
+      },
+      {
+        "_id": "69efb9b2f91ac02559f821c7"
+      },
+      {
+        "_id": "69efa1ecf91ac02559f7e56d"
+      },
+      {
+        "_id": "69ef9c53f91ac02559f7dafa"
+      },
+      {
+        "_id": "69ef9bf1f91ac02559f7d9ed"
+      },
+      {
+        "_id": "69efc3acf91ac02559f83a89"
+      },
+      {
+        "_id": "69efb9b2f91ac02559f821c7"
+      },
+      {
+        "_id": "69efa1ecf91ac02559f7e56d"
+      },
+      {
+        "_id": "69ef9c53f91ac02559f7dafa"
+      },
+      {
+        "_id": "69ef9bf1f91ac02559f7d9ed"
+      }
+    ],
+    "mean_inside_sim": 0.6902,
+    "max_outside_sim": 0.3796
+  },
+  "harrison_morgan": {
+    "agent_name": "Harrison Morgan",
+    "voiceprint_path": "harrison_morgan.npy",
+    "voiceprints": [
+      {
+        "path": "harrison_morgan__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 36,
+        "snr_db": 13.8
+      },
+      {
+        "path": "harrison_morgan__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 36,
+        "snr_db": 13.8
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 104.44800000000009,
+    "used_calls": 3,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69ef9d79f91ac02559f7dea1"
+      },
+      {
+        "_id": "69ef9d79f91ac02559f7dea1"
+      },
+      {
+        "_id": "69ef9d79f91ac02559f7dea1"
+      }
+    ],
+    "mean_inside_sim": 0.8694,
+    "max_outside_sim": 0.4782
+  },
+  "adil_al_sammerai": {
+    "agent_name": "Adil Al- Sammerai",
+    "voiceprint_path": "adil_al_sammerai.npy",
+    "voiceprints": [
+      {
+        "path": "adil_al_sammerai__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 612,
+        "snr_db": 13.3
+      },
+      {
+        "path": "adil_al_sammerai__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 612,
+        "snr_db": 13.3
+      },
+      {
+        "path": "adil_al_sammerai__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 612,
+        "snr_db": 13.3
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 1832.5739999999987,
+    "used_calls": 9,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efbe5df91ac02559f82c99"
+      },
+      {
+        "_id": "69efa455f91ac02559f7eaf3"
+      },
+      {
+        "_id": "69ef9d76f91ac02559f7de8e"
+      },
+      {
+        "_id": "69efbe5df91ac02559f82c99"
+      },
+      {
+        "_id": "69efa455f91ac02559f7eaf3"
+      },
+      {
+        "_id": "69ef9d76f91ac02559f7de8e"
+      },
+      {
+        "_id": "69efbe5df91ac02559f82c99"
+      },
+      {
+        "_id": "69efa455f91ac02559f7eaf3"
+      },
+      {
+        "_id": "69ef9d76f91ac02559f7de8e"
+      }
+    ],
+    "mean_inside_sim": 0.6909,
+    "max_outside_sim": 0.38
+  },
+  "angeline_packiyaseelan": {
+    "agent_name": "Angeline Packiyaseelan",
+    "voiceprint_path": "angeline_packiyaseelan.npy",
+    "voiceprints": [
+      {
+        "path": "angeline_packiyaseelan__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 48,
+        "snr_db": 12.2
+      },
+      {
+        "path": "angeline_packiyaseelan__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 48,
+        "snr_db": 12.2
+      },
+      {
+        "path": "angeline_packiyaseelan__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 48,
+        "snr_db": 12.2
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 143.8079999999999,
+    "used_calls": 9,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efbacff91ac02559f826d8"
+      },
+      {
+        "_id": "69efb9aff91ac02559f821b8"
+      },
+      {
+        "_id": "69efb56af91ac02559f81788"
+      },
+      {
+        "_id": "69efbacff91ac02559f826d8"
+      },
+      {
+        "_id": "69efb9aff91ac02559f821b8"
+      },
+      {
+        "_id": "69efb56af91ac02559f81788"
+      },
+      {
+        "_id": "69efbacff91ac02559f826d8"
+      },
+      {
+        "_id": "69efb9aff91ac02559f821b8"
+      },
+      {
+        "_id": "69efb56af91ac02559f81788"
+      }
+    ],
+    "mean_inside_sim": 0.8032,
+    "max_outside_sim": 0.4418
+  },
+  "jason_kurti": {
+    "agent_name": "Jason Kurti",
+    "voiceprint_path": "jason_kurti.npy",
+    "voiceprints": [
+      {
+        "path": "jason_kurti__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 420,
+        "snr_db": 15.3
+      },
+      {
+        "path": "jason_kurti__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 420,
+        "snr_db": 15.3
+      },
+      {
+        "path": "jason_kurti__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 420,
+        "snr_db": 15.3
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 1054.386,
+    "used_calls": 12,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efb7fcf91ac02559f81c45"
+      },
+      {
+        "_id": "69efaad9f91ac02559f7fafe"
+      },
+      {
+        "_id": "69ef9bbff91ac02559f7d918"
+      },
+      {
+        "_id": "69ef9aabf91ac02559f7d65f"
+      },
+      {
+        "_id": "69efb7fcf91ac02559f81c45"
+      },
+      {
+        "_id": "69efaad9f91ac02559f7fafe"
+      },
+      {
+        "_id": "69ef9bbff91ac02559f7d918"
+      },
+      {
+        "_id": "69ef9aabf91ac02559f7d65f"
+      },
+      {
+        "_id": "69efb7fcf91ac02559f81c45"
+      },
+      {
+        "_id": "69efaad9f91ac02559f7fafe"
+      },
+      {
+        "_id": "69ef9bbff91ac02559f7d918"
+      },
+      {
+        "_id": "69ef9aabf91ac02559f7d65f"
+      }
+    ],
+    "mean_inside_sim": 0.8817,
+    "max_outside_sim": 0.4849
+  },
+  "anoush_sefatzadeh": {
+    "agent_name": "Anoush Sefatzadeh",
+    "voiceprint_path": "anoush_sefatzadeh.npy",
+    "voiceprints": [
+      {
+        "path": "anoush_sefatzadeh__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 1308,
+        "snr_db": 12.1
+      },
+      {
+        "path": "anoush_sefatzadeh__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 1308,
+        "snr_db": 12.1
+      },
+      {
+        "path": "anoush_sefatzadeh__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 1308,
+        "snr_db": 12.1
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 3674.4209999999953,
+    "used_calls": 12,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efb57ff91ac02559f817b4"
+      },
+      {
+        "_id": "69efa8a0f91ac02559f7f67d"
+      },
+      {
+        "_id": "69efa6ecf91ac02559f7f13f"
+      },
+      {
+        "_id": "69efa1a8f91ac02559f7e4ee"
+      },
+      {
+        "_id": "69efb57ff91ac02559f817b4"
+      },
+      {
+        "_id": "69efa8a0f91ac02559f7f67d"
+      },
+      {
+        "_id": "69efa6ecf91ac02559f7f13f"
+      },
+      {
+        "_id": "69efa1a8f91ac02559f7e4ee"
+      },
+      {
+        "_id": "69efb57ff91ac02559f817b4"
+      },
+      {
+        "_id": "69efa8a0f91ac02559f7f67d"
+      },
+      {
+        "_id": "69efa6ecf91ac02559f7f13f"
+      },
+      {
+        "_id": "69efa1a8f91ac02559f7e4ee"
+      }
+    ],
+    "mean_inside_sim": 0.566,
+    "max_outside_sim": 0.3113
+  },
+  "kowsar_alam": {
+    "agent_name": "Kowsar Alam",
+    "voiceprint_path": "kowsar_alam.npy",
+    "voiceprints": [
+      {
+        "path": "kowsar_alam__low_0.npy",
+        "bucket": "low",
+        "n_clips": 843,
+        "snr_db": 11.9
+      },
+      {
+        "path": "kowsar_alam__low_1.npy",
+        "bucket": "low",
+        "n_clips": 843,
+        "snr_db": 11.9
+      },
+      {
+        "path": "kowsar_alam__low_2.npy",
+        "bucket": "low",
+        "n_clips": 843,
+        "snr_db": 11.9
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 2416.835999999999,
+    "used_calls": 45,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efb237f91ac02559f811e2"
+      },
+      {
+        "_id": "69efad9ef91ac02559f80533"
+      },
+      {
+        "_id": "69efa9d2f91ac02559f7f906"
+      },
+      {
+        "_id": "69efa860f91ac02559f7f5de"
+      },
+      {
+        "_id": "69efa7f6f91ac02559f7f4a7"
+      },
+      {
+        "_id": "69efa6a4f91ac02559f7f0a0"
+      },
+      {
+        "_id": "69efa590f91ac02559f7eed4"
+      },
+      {
+        "_id": "69efa187f91ac02559f7e4a1"
+      },
+      {
+        "_id": "69efa0ccf91ac02559f7e3f1"
+      },
+      {
+        "_id": "69efa013f91ac02559f7e30f"
+      },
+      {
+        "_id": "69ef9fb1f91ac02559f7e26e"
+      },
+      {
+        "_id": "69ef9f57f91ac02559f7e1f3"
+      },
+      {
+        "_id": "69ef9d59f91ac02559f7de2b"
+      },
+      {
+        "_id": "69ef9aa4f91ac02559f7d640"
+      },
+      {
+        "_id": "69ef99cbf91ac02559f7d3b5"
+      },
+      {
+        "_id": "69efb237f91ac02559f811e2"
+      },
+      {
+        "_id": "69efad9ef91ac02559f80533"
+      },
+      {
+        "_id": "69efa9d2f91ac02559f7f906"
+      },
+      {
+        "_id": "69efa860f91ac02559f7f5de"
+      },
+      {
+        "_id": "69efa7f6f91ac02559f7f4a7"
+      },
+      {
+        "_id": "69efa6a4f91ac02559f7f0a0"
+      },
+      {
+        "_id": "69efa590f91ac02559f7eed4"
+      },
+      {
+        "_id": "69efa187f91ac02559f7e4a1"
+      },
+      {
+        "_id": "69efa0ccf91ac02559f7e3f1"
+      },
+      {
+        "_id": "69efa013f91ac02559f7e30f"
+      },
+      {
+        "_id": "69ef9fb1f91ac02559f7e26e"
+      },
+      {
+        "_id": "69ef9f57f91ac02559f7e1f3"
+      },
+      {
+        "_id": "69ef9d59f91ac02559f7de2b"
+      },
+      {
+        "_id": "69ef9aa4f91ac02559f7d640"
+      },
+      {
+        "_id": "69ef99cbf91ac02559f7d3b5"
+      },
+      {
+        "_id": "69efb237f91ac02559f811e2"
+      },
+      {
+        "_id": "69efad9ef91ac02559f80533"
+      },
+      {
+        "_id": "69efa9d2f91ac02559f7f906"
+      },
+      {
+        "_id": "69efa860f91ac02559f7f5de"
+      },
+      {
+        "_id": "69efa7f6f91ac02559f7f4a7"
+      },
+      {
+        "_id": "69efa6a4f91ac02559f7f0a0"
+      },
+      {
+        "_id": "69efa590f91ac02559f7eed4"
+      },
+      {
+        "_id": "69efa187f91ac02559f7e4a1"
+      },
+      {
+        "_id": "69efa0ccf91ac02559f7e3f1"
+      },
+      {
+        "_id": "69efa013f91ac02559f7e30f"
+      },
+      {
+        "_id": "69ef9fb1f91ac02559f7e26e"
+      },
+      {
+        "_id": "69ef9f57f91ac02559f7e1f3"
+      },
+      {
+        "_id": "69ef9d59f91ac02559f7de2b"
+      },
+      {
+        "_id": "69ef9aa4f91ac02559f7d640"
+      },
+      {
+        "_id": "69ef99cbf91ac02559f7d3b5"
+      }
+    ],
+    "mean_inside_sim": 0.9095,
+    "max_outside_sim": 0.5002
+  },
+  "georgi_angelov": {
+    "agent_name": "Georgi Angelov",
+    "voiceprint_path": "georgi_angelov.npy",
+    "voiceprints": [
+      {
+        "path": "georgi_angelov__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 165,
+        "snr_db": 17.4
+      }
+    ],
+    "n_voiceprints": 1,
+    "total_seconds": 479.3219999999999,
+    "used_calls": 6,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efaf83f91ac02559f80c19"
+      },
+      {
+        "_id": "69efae51f91ac02559f80769"
+      },
+      {
+        "_id": "69efaf83f91ac02559f80c19"
+      },
+      {
+        "_id": "69efae51f91ac02559f80769"
+      },
+      {
+        "_id": "69efaf83f91ac02559f80c19"
+      },
+      {
+        "_id": "69efae51f91ac02559f80769"
+      }
+    ],
+    "max_outside_sim": 0.22
+  },
+  "janusaan_jeyachandran": {
+    "agent_name": "Janusaan Jeyachandran",
+    "voiceprint_path": "janusaan_jeyachandran.npy",
+    "voiceprints": [
+      {
+        "path": "janusaan_jeyachandran__low_0.npy",
+        "bucket": "low",
+        "n_clips": 813,
+        "snr_db": 11.7
+      },
+      {
+        "path": "janusaan_jeyachandran__low_1.npy",
+        "bucket": "low",
+        "n_clips": 813,
+        "snr_db": 11.7
+      },
+      {
+        "path": "janusaan_jeyachandran__low_2.npy",
+        "bucket": "low",
+        "n_clips": 813,
+        "snr_db": 11.7
+      }
+    ],
+    "n_voiceprints": 5,
+    "total_seconds": 2152.043999999999,
+    "used_calls": 9,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efad47f91ac02559f80437"
+      },
+      {
+        "_id": "69efa4bbf91ac02559f7ec3c"
+      },
+      {
+        "_id": "69ef9e2df91ac02559f7e08f"
+      },
+      {
+        "_id": "69efad47f91ac02559f80437"
+      },
+      {
+        "_id": "69efa4bbf91ac02559f7ec3c"
+      },
+      {
+        "_id": "69ef9e2df91ac02559f7e08f"
+      },
+      {
+        "_id": "69efad47f91ac02559f80437"
+      },
+      {
+        "_id": "69efa4bbf91ac02559f7ec3c"
+      },
+      {
+        "_id": "69ef9e2df91ac02559f7e08f"
+      }
+    ],
+    "mean_inside_sim": 0.5617,
+    "max_outside_sim": 0.3089
+  },
+  "aftaab_supervisor": {
+    "agent_name": "Aftaab Supervisor",
+    "voiceprint_path": "aftaab_supervisor.npy",
+    "voiceprints": [
+      {
+        "path": "aftaab_supervisor__low_0.npy",
+        "bucket": "low",
+        "n_clips": 441,
+        "snr_db": 11.3
+      },
+      {
+        "path": "aftaab_supervisor__low_1.npy",
+        "bucket": "low",
+        "n_clips": 441,
+        "snr_db": 11.3
+      },
+      {
+        "path": "aftaab_supervisor__low_2.npy",
+        "bucket": "low",
+        "n_clips": 441,
+        "snr_db": 11.3
+      }
+    ],
+    "n_voiceprints": 3,
+    "total_seconds": 1276.3199999999997,
+    "used_calls": 12,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efac50f91ac02559f8012b"
+      },
+      {
+        "_id": "69ef9f46f91ac02559f7e1cf"
+      },
+      {
+        "_id": "69ef9cacf91ac02559f7dc34"
+      },
+      {
+        "_id": "69ef9c15f91ac02559f7da4b"
+      },
+      {
+        "_id": "69efac50f91ac02559f8012b"
+      },
+      {
+        "_id": "69ef9f46f91ac02559f7e1cf"
+      },
+      {
+        "_id": "69ef9cacf91ac02559f7dc34"
+      },
+      {
+        "_id": "69ef9c15f91ac02559f7da4b"
+      },
+      {
+        "_id": "69efac50f91ac02559f8012b"
+      },
+      {
+        "_id": "69ef9f46f91ac02559f7e1cf"
+      },
+      {
+        "_id": "69ef9cacf91ac02559f7dc34"
+      },
+      {
+        "_id": "69ef9c15f91ac02559f7da4b"
+      }
+    ],
+    "mean_inside_sim": 0.902,
+    "max_outside_sim": 0.4961
+  },
+  "mohamed_yasin_ali": {
+    "agent_name": "Mohamed Yasin-ali",
+    "voiceprint_path": "mohamed_yasin_ali.npy",
+    "voiceprints": [
+      {
+        "path": "mohamed_yasin_ali__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 18,
+        "snr_db": 19.1
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 57.23100000000004,
+    "used_calls": 9,
+    "source": "multi_vp_advanced",
+    "per_call_snr": [
+      {
+        "_id": "69efa53ff91ac02559f7ede6"
+      },
+      {
+        "_id": "69efa30af91ac02559f7e860"
+      },
+      {
+        "_id": "69ef9fe9f91ac02559f7e2d0"
+      },
+      {
+        "_id": "69efa53ff91ac02559f7ede6"
+      },
+      {
+        "_id": "69efa30af91ac02559f7e860"
+      },
+      {
+        "_id": "69ef9fe9f91ac02559f7e2d0"
+      },
+      {
+        "_id": "69efa53ff91ac02559f7ede6"
+      },
+      {
+        "_id": "69efa30af91ac02559f7e860"
+      },
+      {
+        "_id": "69ef9fe9f91ac02559f7e2d0"
+      }
+    ],
+    "max_outside_sim": 0.22
+  },
+  "rayyan_ali_khan": {
+    "agent_name": "Rayyan Ali Khan",
+    "voiceprint_path": "rayyan_ali_khan.npy",
+    "n_clips": 537,
+    "n_windows_total": 1251,
+    "total_seconds": 1262.7719999999995,
+    "used_calls": 3,
+    "mean_inside_sim": 0.8726,
+    "max_outside_sim": 0.537,
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "rayyan_ali_khan__high_0.npy",
+        "bucket": "high",
+        "n_clips": 528,
+        "snr_db": 20.1
+      },
+      {
+        "path": "rayyan_ali_khan__high_1.npy",
+        "bucket": "high",
+        "n_clips": 528,
+        "snr_db": 20.1
+      },
+      {
+        "path": "rayyan_ali_khan__high_2.npy",
+        "bucket": "high",
+        "n_clips": 528,
+        "snr_db": 20.1
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efb80ef91ac02559f81c62"
+      },
+      {
+        "_id": "69efb80ef91ac02559f81c62"
+      },
+      {
+        "_id": "69efb80ef91ac02559f81c62"
+      }
+    ]
+  },
+  "adorena_ishtar_hossain": {
+    "agent_name": "Adorena Ishtar Hossain",
+    "voiceprint_path": "adorena_ishtar_hossain.npy",
+    "n_clips": 117,
+    "n_windows_total": 237,
+    "total_seconds": 242.00400000000013,
+    "used_calls": 3,
+    "mean_inside_sim": 0.5944,
+    "max_outside_sim": 0.515,
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "adorena_ishtar_hossain__low_0.npy",
+        "bucket": "low",
+        "n_clips": 93,
+        "snr_db": 11.1
+      },
+      {
+        "path": "adorena_ishtar_hossain__low_1.npy",
+        "bucket": "low",
+        "n_clips": 93,
+        "snr_db": 11.1
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efa774f91ac02559f7f2c4"
+      },
+      {
+        "_id": "69efa774f91ac02559f7f2c4"
+      },
+      {
+        "_id": "69efa774f91ac02559f7f2c4"
+      }
+    ]
+  },
+  "waris_sales_controllers": {
+    "agent_name": "Waris Sales Controllers",
+    "voiceprint_path": "waris_sales_controllers.npy",
+    "n_clips": 93,
+    "n_windows_total": 252,
+    "total_seconds": 255.32099999999988,
+    "used_calls": 3,
+    "mean_inside_sim": 0.7774,
+    "max_outside_sim": 0.577,
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "waris_sales_controllers__high_0.npy",
+        "bucket": "high",
+        "n_clips": 117,
+        "snr_db": 26.7
+      },
+      {
+        "path": "waris_sales_controllers__high_1.npy",
+        "bucket": "high",
+        "n_clips": 117,
+        "snr_db": 26.7
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69efa645f91ac02559f7f004"
+      },
+      {
+        "_id": "69efa645f91ac02559f7f004"
+      },
+      {
+        "_id": "69efa645f91ac02559f7f004"
+      }
+    ]
+  },
+  "jenifer_bajrami": {
+    "agent_name": "Jenifer Bajrami",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\jenifer_bajrami.npy",
+    "n_clips": 66,
+    "n_windows_total": 75,
+    "total_seconds": 78.5,
+    "used_calls": 3,
+    "mean_inside_sim": 0.693,
+    "max_outside_sim": 0.338,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "kacper_barnet": {
+    "agent_name": "Kacper Barnet",
+    "voiceprint_path": "kacper_barnet.npy",
+    "n_clips": 828,
+    "n_windows_total": 2313,
+    "total_seconds": 2319.9629999999975,
+    "used_calls": 3,
+    "mean_inside_sim": 0.866,
+    "max_outside_sim": 0.57,
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "kacper_barnet__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 912,
+        "snr_db": 13.4
+      },
+      {
+        "path": "kacper_barnet__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 912,
+        "snr_db": 13.4
+      },
+      {
+        "path": "kacper_barnet__mid_2.npy",
+        "bucket": "mid",
+        "n_clips": 912,
+        "snr_db": 13.4
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69ef9f5ef91ac02559f7e204"
+      },
+      {
+        "_id": "69ef9f5ef91ac02559f7e204"
+      },
+      {
+        "_id": "69ef9f5ef91ac02559f7e204"
+      }
+    ]
+  },
+  "dinosh_sinnathamby": {
+    "agent_name": "Dinosh Sinnathamby",
+    "voiceprint_path": "dinosh_sinnathamby.npy",
+    "n_clips": 561,
+    "n_windows_total": 603,
+    "total_seconds": 261.74100000000004,
+    "used_calls": 3,
+    "mean_inside_sim": 0.8633,
+    "max_outside_sim": 0.523,
+    "source": "multi_vp_advanced",
+    "voiceprints": [
+      {
+        "path": "dinosh_sinnathamby__low_0.npy",
+        "bucket": "low",
+        "n_clips": 108,
+        "snr_db": 11.4
+      },
+      {
+        "path": "dinosh_sinnathamby__low_1.npy",
+        "bucket": "low",
+        "n_clips": 108,
+        "snr_db": 11.4
+      },
+      {
+        "path": "dinosh_sinnathamby__low_2.npy",
+        "bucket": "low",
+        "n_clips": 108,
+        "snr_db": 11.4
+      }
+    ],
+    "per_call_snr": [
+      {
+        "_id": "69ef99e5f91ac02559f7d422"
+      },
+      {
+        "_id": "69ef99e5f91ac02559f7d422"
+      },
+      {
+        "_id": "69ef99e5f91ac02559f7d422"
+      }
+    ]
+  }
+}

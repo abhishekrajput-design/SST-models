@@ -1,0 +1,285 @@
+{
+  "agent_slug": "omar_el_harchaoui",
+  "agent_name": "Omar El Harchaoui",
+  "calls": [
+    {
+      "call": "call_01",
+      "call_id": "69efc071f91ac02559f83167",
+      "report": "call_processor\\data\\agent_voiceprints\\omar_call_01_speaker_first_eval.json",
+      "speaker_count": 2,
+      "agent_speaker_id": "SPEAKER_01",
+      "agent_similarity": 0.9408,
+      "segments": 185,
+      "correct": 176,
+      "overall_accuracy": 95.14,
+      "agent_accuracy": 96.33,
+      "customer_accuracy": 93.42,
+      "agent_correct": 105,
+      "agent_total": 109,
+      "customer_correct": 71,
+      "customer_total": 76,
+      "errors": [
+        {
+          "segment": 1,
+          "gt": "CUSTOMER",
+          "pred": "UNKNOWN",
+          "speaker": "SPEAKER_99",
+          "text": "Hello?"
+        },
+        {
+          "segment": 2,
+          "gt": "CUSTOMER",
+          "pred": "UNKNOWN",
+          "speaker": "SPEAKER_99",
+          "text": "Hello?"
+        },
+        {
+          "segment": 6,
+          "gt": "AGENT",
+          "pred": "UNKNOWN",
+          "speaker": "SPEAKER_99",
+          "text": "Yeah."
+        },
+        {
+          "segment": 8,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_01",
+          "text": "Yes."
+        },
+        {
+          "segment": 27,
+          "gt": "CUSTOMER",
+          "pred": "UNKNOWN",
+          "speaker": "SPEAKER_99",
+          "text": "Hello?"
+        },
+        {
+          "segment": 45,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_01",
+          "text": "Um, and yeah, we're going to... No, I'm not doing this, there's a monster in that, what are we..."
+        },
+        {
+          "segment": 58,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_00",
+          "text": "Yeah, of course."
+        },
+        {
+          "segment": 168,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_00",
+          "text": "Yeah, of course."
+        },
+        {
+          "segment": 181,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_00",
+          "text": "Thank you for your time."
+        }
+      ]
+    },
+    {
+      "call": "call_02",
+      "call_id": "69efbb58f91ac02559f827f6",
+      "report": "call_processor\\data\\agent_voiceprints\\omar_call_02_speaker_first_eval.json",
+      "speaker_count": 2,
+      "agent_speaker_id": "SPEAKER_01",
+      "agent_similarity": 0.8625,
+      "segments": 156,
+      "correct": 151,
+      "overall_accuracy": 96.79,
+      "agent_accuracy": 96.97,
+      "customer_accuracy": 96.67,
+      "agent_correct": 64,
+      "agent_total": 66,
+      "customer_correct": 87,
+      "customer_total": 90,
+      "errors": [
+        {
+          "segment": 69,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_01",
+          "text": "That sounds cool to me."
+        },
+        {
+          "segment": 84,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_00",
+          "text": "Yeah, of course."
+        },
+        {
+          "segment": 105,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_01",
+          "text": "Yeah, that's right."
+        },
+        {
+          "segment": 109,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_00",
+          "text": "Yep."
+        },
+        {
+          "segment": 143,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_01",
+          "text": "Yeah that's brilliant."
+        }
+      ]
+    },
+    {
+      "call": "call_03",
+      "call_id": "69efb362f91ac02559f813fe",
+      "report": "call_processor\\data\\agent_voiceprints\\omar_call_03_speaker_first_eval.json",
+      "speaker_count": 2,
+      "agent_speaker_id": "SPEAKER_00",
+      "agent_similarity": 0.9583,
+      "segments": 174,
+      "correct": 158,
+      "overall_accuracy": 90.8,
+      "agent_accuracy": 92.13,
+      "customer_accuracy": 89.41,
+      "agent_correct": 82,
+      "agent_total": 89,
+      "customer_correct": 76,
+      "customer_total": 85,
+      "errors": [
+        {
+          "segment": 5,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_00",
+          "text": "Hello, sir."
+        },
+        {
+          "segment": 26,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_00",
+          "text": "Where are you at?"
+        },
+        {
+          "segment": 57,
+          "gt": "AGENT",
+          "pred": "UNKNOWN",
+          "speaker": "SPEAKER_99",
+          "text": "Yeah, of course."
+        },
+        {
+          "segment": 70,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_00",
+          "text": "tomorrow."
+        },
+        {
+          "segment": 78,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_00",
+          "text": "How many keys?"
+        },
+        {
+          "segment": 111,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_00",
+          "text": "If you don't mind, please, yeah."
+        },
+        {
+          "segment": 127,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_00",
+          "text": "I know those two, yes"
+        },
+        {
+          "segment": 131,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_01",
+          "text": "I will upload a video tomorrow."
+        },
+        {
+          "segment": 133,
+          "gt": "AGENT",
+          "pred": "UNKNOWN",
+          "speaker": "SPEAKER_99",
+          "text": "Pardon?"
+        },
+        {
+          "segment": 134,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_01",
+          "text": "Essentially, this would be the last price."
+        },
+        {
+          "segment": 146,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_01",
+          "text": "Yeah."
+        },
+        {
+          "segment": 147,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_00",
+          "text": "Okay."
+        },
+        {
+          "segment": 154,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_00",
+          "text": "I don't do that, my friend."
+        },
+        {
+          "segment": 167,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_01",
+          "text": "Yeah."
+        },
+        {
+          "segment": 169,
+          "gt": "CUSTOMER",
+          "pred": "AGENT",
+          "speaker": "SPEAKER_00",
+          "text": "Thank you very much."
+        },
+        {
+          "segment": 173,
+          "gt": "AGENT",
+          "pred": "CUSTOMER",
+          "speaker": "SPEAKER_01",
+          "text": "Thank you."
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "segments": 515,
+    "correct": 485,
+    "agent_total": 264,
+    "agent_correct": 251,
+    "customer_total": 251,
+    "customer_correct": 234,
+    "overall_accuracy": 94.17,
+    "agent_accuracy": 95.08,
+    "customer_accuracy": 93.23
+  },
+  "note": "Speaker-first Sortformer GPU diarization, target_agent_slug=omar_el_harchaoui, pure CAM++ Omar voiceprints."
+}

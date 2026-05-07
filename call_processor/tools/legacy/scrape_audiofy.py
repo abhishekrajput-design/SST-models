@@ -133,6 +133,13 @@ class AudiofyClient:
         print(f"[Auth] Logged in as {username}")
         return token
 
+    def use_token(self, token: str) -> None:
+        token = (token or "").strip()
+        if not token:
+            raise ValueError("empty token")
+        self.session.headers["Authorization"] = f"Bearer {token}"
+        print("[Auth] Using provided bearer token")
+
     def get_all_users(self) -> list[dict]:
         r = self.session.get(f"{BASE_URL}/api/user/get-all-users", timeout=15)
         r.raise_for_status()
@@ -568,17 +575,25 @@ def main():
         default=DEFAULT_PASS,
         help="Audiofy password. Defaults to AUDIOFY_PASSWORD.",
     )
+    parser.add_argument(
+        "--token",
+        default=os.getenv("AUDIOFY_ACCESS_TOKEN", ""),
+        help="Audiofy bearer token. Defaults to AUDIOFY_ACCESS_TOKEN.",
+    )
     parser.add_argument("--no-audio",  action="store_true", help="Skip audio download")
     parser.add_argument("--debug-response", action="store_true", help="Print first recordings API response shape")
     args = parser.parse_args()
-    if not args.username:
+    if not args.token and not args.username:
         parser.error("Audiofy username is required: pass --username or set AUDIOFY_USERNAME")
-    if not args.password:
+    if not args.token and not args.password:
         parser.error("Audiofy password is required: pass --password or set AUDIOFY_PASSWORD")
 
     client = AudiofyClient()
     try:
-        client.login(args.username, args.password)
+        if args.token:
+            client.use_token(args.token)
+        else:
+            client.login(args.username, args.password)
     except Exception as e:
         print(f"[Auth] Login failed: {e}")
         sys.exit(1)

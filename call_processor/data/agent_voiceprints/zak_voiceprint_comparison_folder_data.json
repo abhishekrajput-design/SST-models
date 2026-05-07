@@ -1,0 +1,1299 @@
+{
+  "labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "label_source": "folder-data",
+  "calls": [
+    {
+      "call": "call_01",
+      "call_id": "20260503T104319184_615752",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_01\\20260503T104319184_615752.mp3",
+      "offset_s": 1.44,
+      "segments": 50
+    },
+    {
+      "call": "call_02",
+      "call_id": "20260429T085638315_375379",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_02\\20260429T085638315_375379.mp3",
+      "offset_s": 3.45,
+      "segments": 52
+    },
+    {
+      "call": "call_03",
+      "call_id": "20260423T120114270_510233",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_03\\20260423T120114270_510233.mp3",
+      "offset_s": 0.89,
+      "segments": 52
+    },
+    {
+      "call": "call_04",
+      "call_id": "20260415T142857417_569154",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_04\\20260415T142857417_569154.mp3",
+      "offset_s": 0.74,
+      "segments": 48
+    },
+    {
+      "call": "call_05",
+      "call_id": "20260415T164609656_434771",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_05\\20260415T164609656_434771.mp3",
+      "offset_s": 1.45,
+      "segments": 61
+    },
+    {
+      "call": "call_06",
+      "call_id": "20260418T162400911_477551 (2)",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_06\\20260418T162400911_477551 (2).mp3",
+      "offset_s": 1.25,
+      "segments": 87
+    },
+    {
+      "call": "call_07",
+      "call_id": "20260425T114912092_468220",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_07\\20260425T114912092_468220.mp3",
+      "offset_s": 2.45,
+      "segments": 96
+    },
+    {
+      "call": "call_09",
+      "call_id": "20260429T091119416_1437271 (1)",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_09\\20260429T091119416_1437271 (1).mp3",
+      "offset_s": 2.0,
+      "segments": 253
+    },
+    {
+      "call": "call_12",
+      "call_id": "20260506T095332963_533200",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_12\\20260506T095332963_533200.mp3",
+      "offset_s": 2.97,
+      "segments": 123
+    }
+  ],
+  "skipped_calls": [],
+  "skipped_segments": [
+    {
+      "call": "call_04",
+      "segment": 44,
+      "reason": "outside audio",
+      "start": 533.74,
+      "end": 569.74,
+      "audio_end": 547.06
+    },
+    {
+      "call": "call_04",
+      "segment": 45,
+      "reason": "outside audio",
+      "start": 569.74,
+      "end": 570.74,
+      "audio_end": 547.06
+    },
+    {
+      "call": "call_04",
+      "segment": 46,
+      "reason": "outside audio",
+      "start": 570.74,
+      "end": 573.74,
+      "audio_end": 547.06
+    },
+    {
+      "call": "call_04",
+      "segment": 47,
+      "reason": "outside audio",
+      "start": 573.74,
+      "end": 575.74,
+      "audio_end": 547.06
+    },
+    {
+      "call": "call_04",
+      "segment": 48,
+      "reason": "outside audio",
+      "start": 575.74,
+      "end": 577.74,
+      "audio_end": 547.06
+    }
+  ],
+  "eval_rows": 746,
+  "agent_rows": 392,
+  "customer_rows": 354,
+  "winner": "restored_phone_campp",
+  "winner_basis": "highest operating overall accuracy, then customer accuracy, then agent accuracy",
+  "results": {
+    "restored_phone_campp": {
+      "agent_name": "Zak Raissi Barnet",
+      "source": "phone_calls_kmeans_campp_restored_for_random_calls",
+      "paths": [
+        "zak_raissi_barnet.npy"
+      ],
+      "n_voiceprints": 1,
+      "threshold_mode": "max_outside_plus_margin",
+      "max_outside_sim": 0.541,
+      "operating": {
+        "threshold": 0.601,
+        "segments": 746,
+        "overall_accuracy": 50.8,
+        "agent_accuracy": 32.91,
+        "customer_accuracy": 70.62,
+        "agent_correct": 129,
+        "agent_total": 392,
+        "customer_correct": 250,
+        "customer_total": 354,
+        "per_call": {
+          "call_01": {
+            "total": 31,
+            "correct": 23,
+            "agent_total": 15,
+            "agent_correct": 10,
+            "customer_total": 16,
+            "customer_correct": 13,
+            "overall_accuracy": 74.19,
+            "agent_accuracy": 66.67,
+            "customer_accuracy": 81.25
+          },
+          "call_02": {
+            "total": 45,
+            "correct": 23,
+            "agent_total": 21,
+            "agent_correct": 1,
+            "customer_total": 24,
+            "customer_correct": 22,
+            "overall_accuracy": 51.11,
+            "agent_accuracy": 4.76,
+            "customer_accuracy": 91.67
+          },
+          "call_03": {
+            "total": 51,
+            "correct": 24,
+            "agent_total": 25,
+            "agent_correct": 10,
+            "customer_total": 26,
+            "customer_correct": 14,
+            "overall_accuracy": 47.06,
+            "agent_accuracy": 40.0,
+            "customer_accuracy": 53.85
+          },
+          "call_04": {
+            "total": 39,
+            "correct": 25,
+            "agent_total": 17,
+            "agent_correct": 8,
+            "customer_total": 22,
+            "customer_correct": 17,
+            "overall_accuracy": 64.1,
+            "agent_accuracy": 47.06,
+            "customer_accuracy": 77.27
+          },
+          "call_05": {
+            "total": 55,
+            "correct": 32,
+            "agent_total": 27,
+            "agent_correct": 11,
+            "customer_total": 28,
+            "customer_correct": 21,
+            "overall_accuracy": 58.18,
+            "agent_accuracy": 40.74,
+            "customer_accuracy": 75.0
+          },
+          "call_06": {
+            "total": 80,
+            "correct": 37,
+            "agent_total": 39,
+            "agent_correct": 21,
+            "customer_total": 41,
+            "customer_correct": 16,
+            "overall_accuracy": 46.25,
+            "agent_accuracy": 53.85,
+            "customer_accuracy": 39.02
+          },
+          "call_07": {
+            "total": 88,
+            "correct": 46,
+            "agent_total": 44,
+            "agent_correct": 17,
+            "customer_total": 44,
+            "customer_correct": 29,
+            "overall_accuracy": 52.27,
+            "agent_accuracy": 38.64,
+            "customer_accuracy": 65.91
+          },
+          "call_09": {
+            "total": 246,
+            "correct": 110,
+            "agent_total": 144,
+            "agent_correct": 29,
+            "customer_total": 102,
+            "customer_correct": 81,
+            "overall_accuracy": 44.72,
+            "agent_accuracy": 20.14,
+            "customer_accuracy": 79.41
+          },
+          "call_12": {
+            "total": 111,
+            "correct": 59,
+            "agent_total": 60,
+            "agent_correct": 22,
+            "customer_total": 51,
+            "customer_correct": 37,
+            "overall_accuracy": 53.15,
+            "agent_accuracy": 36.67,
+            "customer_accuracy": 72.55
+          }
+        },
+        "errors": [
+          {
+            "call": "call_01",
+            "segment": 2,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.3772,
+            "text": "Hello, good afternoon, my friend Samuel."
+          },
+          {
+            "call": "call_01",
+            "segment": 4,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.43,
+            "text": "Calling you from Car Planet, I hope you're doing well."
+          },
+          {
+            "call": "call_01",
+            "segment": 11,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6181,
+            "text": "Okay. So with the Close Brothers like..."
+          },
+          {
+            "call": "call_01",
+            "segment": 15,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6521,
+            "text": "Did they, I mean obviously when we were looking at your website yesterday she did say that she kinda prefers the LV 22 o"
+          },
+          {
+            "call": "call_01",
+            "segment": 36,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.061,
+            "text": "Obviously when you come down I'll make sure you actually get a chance to look at the car and tell me what you think in r"
+          },
+          {
+            "call": "call_01",
+            "segment": 44,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.521,
+            "text": "Yes. I'd be more than happy to send over documents, read over the numbers as mentioned with SR72 which is technically a "
+          },
+          {
+            "call": "call_01",
+            "segment": 45,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6936,
+            "text": "Yeah it is. Yeah I put hers so it should come through that email."
+          },
+          {
+            "call": "call_01",
+            "segment": 48,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.4607,
+            "text": "Cool no worries I'm gonna send you over an email from myself directly. And if you have any questions or inquiries or any"
+          },
+          {
+            "call": "call_02",
+            "segment": 4,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.3171,
+            "text": "Okay, no worries. And that was on uh it was Jason that sold you the car correct? HJ72."
+          },
+          {
+            "call": "call_02",
+            "segment": 8,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.5385,
+            "text": "Five years. Alright, and uh, give me one second, I'll sort this out for you. So I'm just gonna check that you're still w"
+          },
+          {
+            "call": "call_02",
+            "segment": 10,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.3264,
+            "text": "Okay, so that means we have to solve it today."
+          },
+          {
+            "call": "call_02",
+            "segment": 12,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.333,
+            "text": "No stress, no stress, no stress. I'm going to leave a note now. Um, you should receive an email to confirm that your war"
+          },
+          {
+            "call": "call_02",
+            "segment": 13,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6551,
+            "text": "Okay, one question please, very quick. So this was added on my finance. How this is going to affect my finance?"
+          },
+          {
+            "call": "call_02",
+            "segment": 14,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.0784,
+            "text": "Bear with me, I'm just, give me one second please."
+          },
+          {
+            "call": "call_02",
+            "segment": 16,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.0428,
+            "text": "And was it the full five years you wanted to cancel?"
+          },
+          {
+            "call": "call_02",
+            "segment": 18,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.4773,
+            "text": "So you don't want no protection on your car?"
+          },
+          {
+            "call": "call_02",
+            "segment": 20,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.0221,
+            "text": "Okay, no worries. Just bear with me. So essentially, what would happen is... what was your deposit?"
+          },
+          {
+            "call": "call_02",
+            "segment": 22,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.0654,
+            "text": "7,000 pounds?"
+          },
+          {
+            "call": "call_02",
+            "segment": 24,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.5989,
+            "text": "Okay, then you'll get a direct refund. Um, so it won't affect the finance in any way, but you'll get a direct refund as "
+          },
+          {
+            "call": "call_02",
+            "segment": 26,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.4034,
+            "text": "Correct, correct. And then you'll have an option to make an overpayment with your finance company."
+          },
+          {
+            "call": "call_02",
+            "segment": 28,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.2733,
+            "text": "No worries. What was your first name again?"
+          },
+          {
+            "call": "call_02",
+            "segment": 30,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.2096,
+            "text": "Mariana, okay. Alright Mariana, just confirm your email for me, that will be the last thing."
+          },
+          {
+            "call": "call_02",
+            "segment": 32,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.4743,
+            "text": "Mary, M A R R Y L O Z O..."
+          },
+          {
+            "call": "call_02",
+            "segment": 38,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.4819,
+            "text": "V A N U. Marylozovanu."
+          },
+          {
+            "call": "call_02",
+            "segment": 40,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.0955,
+            "text": "@gmail.com yeah."
+          }
+        ]
+      },
+      "best_threshold": {
+        "threshold": 0.275,
+        "segments": 746,
+        "overall_accuracy": 57.37,
+        "agent_accuracy": 79.34,
+        "customer_accuracy": 33.05,
+        "agent_correct": 311,
+        "agent_total": 392,
+        "customer_correct": 117,
+        "customer_total": 354,
+        "errors": [
+          {
+            "call": "call_01",
+            "segment": 7,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.4672,
+            "text": "It's Eugenia, Jessica and Niwa Jackson."
+          },
+          {
+            "call": "call_01",
+            "segment": 11,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6181,
+            "text": "Okay. So with the Close Brothers like..."
+          },
+          {
+            "call": "call_01",
+            "segment": 13,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.5069,
+            "text": "Down 12 pounds a month, right?"
+          },
+          {
+            "call": "call_01",
+            "segment": 15,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6521,
+            "text": "Did they, I mean obviously when we were looking at your website yesterday she did say that she kinda prefers the LV 22 o"
+          },
+          {
+            "call": "call_01",
+            "segment": 17,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.5859,
+            "text": "Okay, can you have a quick look?"
+          },
+          {
+            "call": "call_01",
+            "segment": 19,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.3622,
+            "text": "No worries."
+          },
+          {
+            "call": "call_01",
+            "segment": 36,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.061,
+            "text": "Obviously when you come down I'll make sure you actually get a chance to look at the car and tell me what you think in r"
+          },
+          {
+            "call": "call_01",
+            "segment": 37,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.4824,
+            "text": "Um, when, when would you get it to Barnet?"
+          },
+          {
+            "call": "call_01",
+            "segment": 39,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.592,
+            "text": "Right. But time roughly cos I don't finish work till like 4 basically 4 o'clock."
+          },
+          {
+            "call": "call_01",
+            "segment": 41,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.495,
+            "text": "So I don't think we'll make it today."
+          },
+          {
+            "call": "call_01",
+            "segment": 43,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.5473,
+            "text": "So when you say let's put everything through do you mean you want me to send you the documents?"
+          },
+          {
+            "call": "call_01",
+            "segment": 45,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6936,
+            "text": "Yeah it is. Yeah I put hers so it should come through that email."
+          },
+          {
+            "call": "call_01",
+            "segment": 47,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.5162,
+            "text": "Yeah so it's samuel so S A M U E L K for Kilo N for November 1 0 @hotmail.com."
+          },
+          {
+            "call": "call_02",
+            "segment": 9,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.4963,
+            "text": "Today will be the last day."
+          },
+          {
+            "call": "call_02",
+            "segment": 11,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.336,
+            "text": "Yes, 'cause I tried to call you yesterday, but for some reason that called it didn't went through, and then my partner t"
+          },
+          {
+            "call": "call_02",
+            "segment": 13,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6551,
+            "text": "Okay, one question please, very quick. So this was added on my finance. How this is going to affect my finance?"
+          },
+          {
+            "call": "call_02",
+            "segment": 14,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.0784,
+            "text": "Bear with me, I'm just, give me one second please."
+          },
+          {
+            "call": "call_02",
+            "segment": 16,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.0428,
+            "text": "And was it the full five years you wanted to cancel?"
+          },
+          {
+            "call": "call_02",
+            "segment": 17,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.3766,
+            "text": "Yes, yeah."
+          },
+          {
+            "call": "call_02",
+            "segment": 19,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.4168,
+            "text": "Uh, no it's fine, I have very bad experience with this kind of warranties, and we want to pay quicker the car, and yeah."
+          },
+          {
+            "call": "call_02",
+            "segment": 20,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.0221,
+            "text": "Okay, no worries. Just bear with me. So essentially, what would happen is... what was your deposit?"
+          },
+          {
+            "call": "call_02",
+            "segment": 22,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.0654,
+            "text": "7,000 pounds?"
+          },
+          {
+            "call": "call_02",
+            "segment": 25,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.5796,
+            "text": "Okay, so I'll get it back on the same payment method?"
+          },
+          {
+            "call": "call_02",
+            "segment": 27,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.43,
+            "text": "Yes, yes, this is what I'm going to do because I'm thinking to pay quicker the..."
+          },
+          {
+            "call": "call_02",
+            "segment": 28,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.2733,
+            "text": "No worries. What was your first name again?"
+          },
+          {
+            "call": "call_02",
+            "segment": 29,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.4704,
+            "text": "Um, Mariana."
+          },
+          {
+            "call": "call_02",
+            "segment": 30,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.2096,
+            "text": "Mariana, okay. Alright Mariana, just confirm your email for me, that will be the last thing."
+          },
+          {
+            "call": "call_02",
+            "segment": 37,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.3365,
+            "text": "Okay. L O Z O V A N U."
+          },
+          {
+            "call": "call_02",
+            "segment": 40,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": -0.0955,
+            "text": "@gmail.com yeah."
+          },
+          {
+            "call": "call_02",
+            "segment": 42,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.2135,
+            "text": "No, I do have it, I just have to confirm, I just have to confirm. No worries, you're going to receive an email just to g"
+          }
+        ]
+      }
+    },
+    "pure_gemini_campp": {
+      "agent_name": "Zak Raissi Barnet",
+      "source": "pure_gemini_agent_segments_plus_clean_clips",
+      "paths": [
+        "zak_raissi_barnet_pure_campp_v1.npy",
+        "zak_raissi_barnet_pure_campp_v10.npy",
+        "zak_raissi_barnet_pure_campp_v11.npy",
+        "zak_raissi_barnet_pure_campp_v12.npy",
+        "zak_raissi_barnet_pure_campp_v13.npy",
+        "zak_raissi_barnet_pure_campp_v14.npy",
+        "zak_raissi_barnet_pure_campp_v15.npy",
+        "zak_raissi_barnet_pure_campp_v16.npy",
+        "zak_raissi_barnet_pure_campp_v2.npy",
+        "zak_raissi_barnet_pure_campp_v3.npy",
+        "zak_raissi_barnet_pure_campp_v4.npy",
+        "zak_raissi_barnet_pure_campp_v5.npy",
+        "zak_raissi_barnet_pure_campp_v6.npy",
+        "zak_raissi_barnet_pure_campp_v7.npy",
+        "zak_raissi_barnet_pure_campp_v8.npy",
+        "zak_raissi_barnet_pure_campp_v9.npy"
+      ],
+      "n_voiceprints": 16,
+      "threshold_mode": "max_outside_plus_margin",
+      "max_outside_sim": 0.87,
+      "operating": {
+        "threshold": 0.92,
+        "segments": 746,
+        "overall_accuracy": 47.59,
+        "agent_accuracy": 0.26,
+        "customer_accuracy": 100.0,
+        "agent_correct": 1,
+        "agent_total": 392,
+        "customer_correct": 354,
+        "customer_total": 354,
+        "per_call": {
+          "call_01": {
+            "total": 31,
+            "correct": 16,
+            "agent_total": 15,
+            "agent_correct": 0,
+            "customer_total": 16,
+            "customer_correct": 16,
+            "overall_accuracy": 51.61,
+            "agent_accuracy": 0.0,
+            "customer_accuracy": 100.0
+          },
+          "call_02": {
+            "total": 45,
+            "correct": 24,
+            "agent_total": 21,
+            "agent_correct": 0,
+            "customer_total": 24,
+            "customer_correct": 24,
+            "overall_accuracy": 53.33,
+            "agent_accuracy": 0.0,
+            "customer_accuracy": 100.0
+          },
+          "call_03": {
+            "total": 51,
+            "correct": 26,
+            "agent_total": 25,
+            "agent_correct": 0,
+            "customer_total": 26,
+            "customer_correct": 26,
+            "overall_accuracy": 50.98,
+            "agent_accuracy": 0.0,
+            "customer_accuracy": 100.0
+          },
+          "call_04": {
+            "total": 39,
+            "correct": 23,
+            "agent_total": 17,
+            "agent_correct": 1,
+            "customer_total": 22,
+            "customer_correct": 22,
+            "overall_accuracy": 58.97,
+            "agent_accuracy": 5.88,
+            "customer_accuracy": 100.0
+          },
+          "call_05": {
+            "total": 55,
+            "correct": 28,
+            "agent_total": 27,
+            "agent_correct": 0,
+            "customer_total": 28,
+            "customer_correct": 28,
+            "overall_accuracy": 50.91,
+            "agent_accuracy": 0.0,
+            "customer_accuracy": 100.0
+          },
+          "call_06": {
+            "total": 80,
+            "correct": 41,
+            "agent_total": 39,
+            "agent_correct": 0,
+            "customer_total": 41,
+            "customer_correct": 41,
+            "overall_accuracy": 51.25,
+            "agent_accuracy": 0.0,
+            "customer_accuracy": 100.0
+          },
+          "call_07": {
+            "total": 88,
+            "correct": 44,
+            "agent_total": 44,
+            "agent_correct": 0,
+            "customer_total": 44,
+            "customer_correct": 44,
+            "overall_accuracy": 50.0,
+            "agent_accuracy": 0.0,
+            "customer_accuracy": 100.0
+          },
+          "call_09": {
+            "total": 246,
+            "correct": 102,
+            "agent_total": 144,
+            "agent_correct": 0,
+            "customer_total": 102,
+            "customer_correct": 102,
+            "overall_accuracy": 41.46,
+            "agent_accuracy": 0.0,
+            "customer_accuracy": 100.0
+          },
+          "call_12": {
+            "total": 111,
+            "correct": 51,
+            "agent_total": 60,
+            "agent_correct": 0,
+            "customer_total": 51,
+            "customer_correct": 51,
+            "overall_accuracy": 45.95,
+            "agent_accuracy": 0.0,
+            "customer_accuracy": 100.0
+          }
+        },
+        "errors": [
+          {
+            "call": "call_01",
+            "segment": 2,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.5353,
+            "text": "Hello, good afternoon, my friend Samuel."
+          },
+          {
+            "call": "call_01",
+            "segment": 4,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.4863,
+            "text": "Calling you from Car Planet, I hope you're doing well."
+          },
+          {
+            "call": "call_01",
+            "segment": 6,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.845,
+            "text": "Just calling you to let you know we did receive your 250 yesterday and I did go ahead and mark the car and deposit and b"
+          },
+          {
+            "call": "call_01",
+            "segment": 8,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.8891,
+            "text": "Alright perfect. Yeah, so I did a hard search with our prime lenders yesterday and obviously I didn't have a response fo"
+          },
+          {
+            "call": "call_01",
+            "segment": 10,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.8977,
+            "text": "Which means there is no balloon payment at the end. And if you give me one second I'll tell you something else. So yeah,"
+          },
+          {
+            "call": "call_01",
+            "segment": 14,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.8365,
+            "text": "Close brothers have accepted you at 411 pounds a month at 90 pence with only a 500 pound deposit. But yeah they are one "
+          },
+          {
+            "call": "call_01",
+            "segment": 16,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.8827,
+            "text": "Yeah, I hear it. But bear in mind, you just gotta take into consideration, numbers go up, that's all it is really. I can"
+          },
+          {
+            "call": "call_01",
+            "segment": 18,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.9063,
+            "text": "Yeah bear with me right now I'll tell you but bear in mind SR72 considering it's a little bit cheaper it still has, let "
+          },
+          {
+            "call": "call_01",
+            "segment": 22,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.8033,
+            "text": "Yes obviously LV22 is around 2,900 pounds more than the other one which equates to around every thousand pounds usually "
+          },
+          {
+            "call": "call_01",
+            "segment": 36,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.8177,
+            "text": "Obviously when you come down I'll make sure you actually get a chance to look at the car and tell me what you think in r"
+          },
+          {
+            "call": "call_01",
+            "segment": 38,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.8326,
+            "text": "Uh I don't see any reason why I can't bring it down today so it's already on its way to Barnet since I received your 250"
+          },
+          {
+            "call": "call_01",
+            "segment": 42,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.8237,
+            "text": "Okay that's no stress. That's no stress at all. That's no stress at all. Let's just put everything, if we could put ever"
+          },
+          {
+            "call": "call_01",
+            "segment": 44,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.7306,
+            "text": "Yes. I'd be more than happy to send over documents, read over the numbers as mentioned with SR72 which is technically a "
+          },
+          {
+            "call": "call_01",
+            "segment": 46,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.7769,
+            "text": "Okay it will go straight to hers and Samuel what I'm gonna do is just give me your email very quickly."
+          },
+          {
+            "call": "call_01",
+            "segment": 48,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6833,
+            "text": "Cool no worries I'm gonna send you over an email from myself directly. And if you have any questions or inquiries or any"
+          },
+          {
+            "call": "call_02",
+            "segment": 4,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6209,
+            "text": "Okay, no worries. And that was on uh it was Jason that sold you the car correct? HJ72."
+          },
+          {
+            "call": "call_02",
+            "segment": 6,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.7288,
+            "text": "And how many years warranty did you go for?"
+          },
+          {
+            "call": "call_02",
+            "segment": 8,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.7943,
+            "text": "Five years. Alright, and uh, give me one second, I'll sort this out for you. So I'm just gonna check that you're still w"
+          },
+          {
+            "call": "call_02",
+            "segment": 10,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.627,
+            "text": "Okay, so that means we have to solve it today."
+          },
+          {
+            "call": "call_02",
+            "segment": 12,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6578,
+            "text": "No stress, no stress, no stress. I'm going to leave a note now. Um, you should receive an email to confirm that your war"
+          },
+          {
+            "call": "call_02",
+            "segment": 14,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.3611,
+            "text": "Bear with me, I'm just, give me one second please."
+          },
+          {
+            "call": "call_02",
+            "segment": 16,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.7803,
+            "text": "And was it the full five years you wanted to cancel?"
+          },
+          {
+            "call": "call_02",
+            "segment": 18,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6662,
+            "text": "So you don't want no protection on your car?"
+          },
+          {
+            "call": "call_02",
+            "segment": 20,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.5169,
+            "text": "Okay, no worries. Just bear with me. So essentially, what would happen is... what was your deposit?"
+          },
+          {
+            "call": "call_02",
+            "segment": 22,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6235,
+            "text": "7,000 pounds?"
+          }
+        ]
+      },
+      "best_threshold": {
+        "threshold": 0.68,
+        "segments": 746,
+        "overall_accuracy": 60.86,
+        "agent_accuracy": 70.92,
+        "customer_accuracy": 49.72,
+        "agent_correct": 278,
+        "agent_total": 392,
+        "customer_correct": 176,
+        "customer_total": 354,
+        "errors": [
+          {
+            "call": "call_01",
+            "segment": 2,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.5353,
+            "text": "Hello, good afternoon, my friend Samuel."
+          },
+          {
+            "call": "call_01",
+            "segment": 4,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.4863,
+            "text": "Calling you from Car Planet, I hope you're doing well."
+          },
+          {
+            "call": "call_01",
+            "segment": 15,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.8132,
+            "text": "Did they, I mean obviously when we were looking at your website yesterday she did say that she kinda prefers the LV 22 o"
+          },
+          {
+            "call": "call_01",
+            "segment": 17,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.7085,
+            "text": "Okay, can you have a quick look?"
+          },
+          {
+            "call": "call_01",
+            "segment": 39,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.7372,
+            "text": "Right. But time roughly cos I don't finish work till like 4 basically 4 o'clock."
+          },
+          {
+            "call": "call_01",
+            "segment": 41,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6899,
+            "text": "So I don't think we'll make it today."
+          },
+          {
+            "call": "call_01",
+            "segment": 43,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.7007,
+            "text": "So when you say let's put everything through do you mean you want me to send you the documents?"
+          },
+          {
+            "call": "call_01",
+            "segment": 45,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.7123,
+            "text": "Yeah it is. Yeah I put hers so it should come through that email."
+          },
+          {
+            "call": "call_01",
+            "segment": 47,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.7232,
+            "text": "Yeah so it's samuel so S A M U E L K for Kilo N for November 1 0 @hotmail.com."
+          },
+          {
+            "call": "call_02",
+            "segment": 4,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6209,
+            "text": "Okay, no worries. And that was on uh it was Jason that sold you the car correct? HJ72."
+          },
+          {
+            "call": "call_02",
+            "segment": 9,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.6806,
+            "text": "Today will be the last day."
+          },
+          {
+            "call": "call_02",
+            "segment": 10,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.627,
+            "text": "Okay, so that means we have to solve it today."
+          },
+          {
+            "call": "call_02",
+            "segment": 11,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.7144,
+            "text": "Yes, 'cause I tried to call you yesterday, but for some reason that called it didn't went through, and then my partner t"
+          },
+          {
+            "call": "call_02",
+            "segment": 12,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6578,
+            "text": "No stress, no stress, no stress. I'm going to leave a note now. Um, you should receive an email to confirm that your war"
+          },
+          {
+            "call": "call_02",
+            "segment": 13,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.8473,
+            "text": "Okay, one question please, very quick. So this was added on my finance. How this is going to affect my finance?"
+          },
+          {
+            "call": "call_02",
+            "segment": 14,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.3611,
+            "text": "Bear with me, I'm just, give me one second please."
+          },
+          {
+            "call": "call_02",
+            "segment": 18,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6662,
+            "text": "So you don't want no protection on your car?"
+          },
+          {
+            "call": "call_02",
+            "segment": 19,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.7385,
+            "text": "Uh, no it's fine, I have very bad experience with this kind of warranties, and we want to pay quicker the car, and yeah."
+          },
+          {
+            "call": "call_02",
+            "segment": 20,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.5169,
+            "text": "Okay, no worries. Just bear with me. So essentially, what would happen is... what was your deposit?"
+          },
+          {
+            "call": "call_02",
+            "segment": 22,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6235,
+            "text": "7,000 pounds?"
+          },
+          {
+            "call": "call_02",
+            "segment": 25,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.7755,
+            "text": "Okay, so I'll get it back on the same payment method?"
+          },
+          {
+            "call": "call_02",
+            "segment": 27,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.73,
+            "text": "Yes, yes, this is what I'm going to do because I'm thinking to pay quicker the..."
+          },
+          {
+            "call": "call_02",
+            "segment": 30,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6491,
+            "text": "Mariana, okay. Alright Mariana, just confirm your email for me, that will be the last thing."
+          },
+          {
+            "call": "call_02",
+            "segment": 38,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6146,
+            "text": "V A N U. Marylozovanu."
+          },
+          {
+            "call": "call_02",
+            "segment": 40,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.2691,
+            "text": "@gmail.com yeah."
+          },
+          {
+            "call": "call_02",
+            "segment": 42,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.4655,
+            "text": "No, I do have it, I just have to confirm, I just have to confirm. No worries, you're going to receive an email just to g"
+          },
+          {
+            "call": "call_02",
+            "segment": 43,
+            "speaker": "customer",
+            "predicted": "agent",
+            "similarity": 0.8533,
+            "text": "Okay, no worries. So um, this Friday I have an appointment with you guys, I think service with regards with the engine m"
+          },
+          {
+            "call": "call_02",
+            "segment": 46,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.3499,
+            "text": "Yeah no that that that should be okay, there's no worries with that."
+          },
+          {
+            "call": "call_03",
+            "segment": 6,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.3875,
+            "text": "And how many years warranty did you go for?"
+          },
+          {
+            "call": "call_03",
+            "segment": 8,
+            "speaker": "agent",
+            "predicted": "customer",
+            "similarity": 0.6442,
+            "text": "Five years. Alright, and uh... give me one second. I'll sort this out for you. So I'm just gonna check that you're still"
+          }
+        ]
+      }
+    },
+    "local_clean_campp": {
+      "agent_name": "Zak Raissi",
+      "source": "local_clean_clips_restored_for_random_calls",
+      "paths": [
+        "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_local_20260423.npy"
+      ],
+      "n_voiceprints": 1,
+      "skipped": true,
+      "reason": "embedding dimension 192 != eval dimension 512"
+    }
+  }
+}

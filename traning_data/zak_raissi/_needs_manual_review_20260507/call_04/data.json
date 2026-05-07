@@ -1,0 +1,295 @@
+﻿{
+    "call_id":  "20260415T142857417_569154",
+    "agent_name":  "zak_local_20260423",
+    "source":  "gemini",
+    "segments":  [
+                     {
+                         "start":  0.0,
+                         "end":  1.0,
+                         "speaker":  "customer",
+                         "text":  "Hello."
+                     },
+                     {
+                         "start":  1.0,
+                         "end":  3.0,
+                         "speaker":  "agent",
+                         "text":  "Hello, is my user Cerise?"
+                     },
+                     {
+                         "start":  3.0,
+                         "end":  5.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, you are."
+                     },
+                     {
+                         "start":  5.0,
+                         "end":  11.0,
+                         "speaker":  "agent",
+                         "text":  "Hi Cerise. My colleague just essentially told me I missed a call from yourself, um, about the Vauxhall Grandland X. You was looking to come down?"
+                     },
+                     {
+                         "start":  11.0,
+                         "end":  18.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah, I was, but now I have some... I\u0027m a bit uh, skeptical now."
+                     },
+                     {
+                         "start":  18.0,
+                         "end":  20.0,
+                         "speaker":  "agent",
+                         "text":  "No worries."
+                     },
+                     {
+                         "start":  20.0,
+                         "end":  34.0,
+                         "speaker":  "customer",
+                         "text":  "Okay. So the car, I was told that it was, it\u0027s part of an auction, or it was taken from an auction. And obviously, it doesn\u0027t come with a fresh MOT."
+                     },
+                     {
+                         "start":  34.0,
+                         "end":  39.0,
+                         "speaker":  "agent",
+                         "text":  "The MOT expires on the 4th of October 2026."
+                     },
+                     {
+                         "start":  39.0,
+                         "end":  41.0,
+                         "speaker":  "customer",
+                         "text":  "So that\u0027s back in five months."
+                     },
+                     {
+                         "start":  41.0,
+                         "end":  48.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah. But obviously look, if he has any problems you have or you want us to do a fresh MOT on the car, all you have to do is ask."
+                     },
+                     {
+                         "start":  48.0,
+                         "end":  54.0,
+                         "speaker":  "customer",
+                         "text":  "Well, I did, and the person kind of said that\u0027s not something that you guys would do."
+                     },
+                     {
+                         "start":  54.0,
+                         "end":  81.0,
+                         "speaker":  "agent",
+                         "text":  "You have to ask me specifically. Cause look, our cars, if the MOT expires in three months, we don\u0027t really do it. Because it means essentially it\u0027s eligible to be on the road, and it\u0027s safe for X, Y, and Z. Now it expires in five months, but if for any specific reason the customer had a concern and, and wanted us to look into this, it\u0027s definitely something that we can look into and give them that piece of mind. All of our cars, they\u0027re good to go for more than twelve months."
+                     },
+                     {
+                         "start":  81.0,
+                         "end":  89.0,
+                         "speaker":  "customer",
+                         "text":  "That\u0027s one thing that, yeah, I would like to obviously get a, a fresh MOT on the... on the car."
+                     },
+                     {
+                         "start":  89.0,
+                         "end":  94.0,
+                         "speaker":  "agent",
+                         "text":  "Okay. Do you want me to send you over the service history?"
+                     },
+                     {
+                         "start":  94.0,
+                         "end":  110.0,
+                         "speaker":  "customer",
+                         "text":  "I would like for you to send me over the service history, and also, yeah, I would like an MOT to be done on the car. And you guys can\u0027t tell me now what was the reason the last owner got rid of the car, can you?"
+                     },
+                     {
+                         "start":  110.0,
+                         "end":  180.0,
+                         "speaker":  "agent",
+                         "text":  "We wouldn\u0027t know the reason. You to bear in mind, obviously we buy 4-500 cars a month. So it could be a million reasons is the truth. They were... they could be they were upgrading, it could be so much, like genuinely. It\u0027s only had two owners, so it\u0027s not like it\u0027s had four or five owners where ownership is passed on numerous times. And in the space of six, seven, eight years, it\u0027s only had two owners, so... Also, when I send you the service history, we\u0027ll be able to look at the fact that the car has gone to a main dealer. So it\u0027s been serviced at, at Vauxhall. To be fair, the, the history of the car is quite clean. Um, we buy our cars from plenty of places. It could be BCA, it could be private, it could be part-exchange, but all of our cars do go through a multiple point inspection, so if it means it\u0027s gonna cause us a headache when we sell the car, we won\u0027t buy the car. If that makes sense. So we don\u0027t buy any cars that have been through any damages. Obviously the HPI clear, standard procedure, but even like minor damages we tend to avoid."
+                     },
+                     {
+                         "start":  180.0,
+                         "end":  182.0,
+                         "speaker":  "customer",
+                         "text":  "And how long have you had the car for?"
+                     },
+                     {
+                         "start":  182.0,
+                         "end":  225.0,
+                         "speaker":  "agent",
+                         "text":  "We\u0027ve had this car for... it\u0027s been, it\u0027s been on-site for eighteen days, and it\u0027s been advertised for seventeen. So this is one of our new cars, if anything. In comparison to some cars that, that have been here for months plus. So obviously, this is the kind of car that will go quickly, with it being a Grandland X 1.2. They\u0027re just sort of mass market cars. They\u0027re not the most expensive car. Um, so with these kind of cheap... cheaper cars, they don\u0027t last too long on our stock. Everyone, no one can say no to an automatic for 7800. For full service history and two owners from a dealership. So it will... we will sell it eventually."
+                     },
+                     {
+                         "start":  225.0,
+                         "end":  235.0,
+                         "speaker":  "customer",
+                         "text":  "Okay. Um, okay, so yeah, can you send me over the services? Actually, basically I\u0027m good to go. I\u0027ve got the cash for the car."
+                     },
+                     {
+                         "start":  235.0,
+                         "end":  239.0,
+                         "speaker":  "agent",
+                         "text":  "Okay. You just want some peace of mind before you make your jump, yeah?"
+                     },
+                     {
+                         "start":  239.0,
+                         "end":  246.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah. And obviously I\u0027m travelling from quite far, you know, I got my daughter, and all of that, so..."
+                     },
+                     {
+                         "start":  246.0,
+                         "end":  249.0,
+                         "speaker":  "agent",
+                         "text":  "Yes, of course. Of course, of course, of course."
+                     },
+                     {
+                         "start":  249.0,
+                         "end":  269.0,
+                         "speaker":  "customer",
+                         "text":  "And she\u0027s obviously gonna be driving in the car a lot with me. And like I said before, I had a... I, I just, um, gave a car back last month... last month, because I was having some issues with a car. So I don\u0027t want to go through the headache again, and also if there was issues with the car, I will be bringing it back."
+                     },
+                     {
+                         "start":  269.0,
+                         "end":  393.0,
+                         "speaker":  "agent",
+                         "text":  "To be completely honest with you, I don\u0027t know where you bought the last car from. But if you were to buy this car from us, and you had any issues, we would ask for it back. You know, we would tell you, bring it back. I would give you a courtesy car. You\u0027re within... you\u0027re within six months to reject the car. If anything goes wrong in the first six months, you\u0027re entitled to reject the car and get your money back. So there is a lot of peace of mind you do get buying with us. The only reason why we give this much peace of mind is due to the fact our cars are in very good condition, and, we try to... Just try to be less problems than more problems. We hope that never is the case, but on the worst case scenario, you obviously you got peace of mind. What I\u0027m sending you now as well is actually very, very, very, very good news. So, I\u0027m just looking at the service history now, and I can see that 600 plus pounds was spent on this car for a new engine wet belt. So if you know any people around you that are mechanics, if you told them this car has just had a wet belt changed, they will tell you to buy this car with your eyes closed. This is the biggest concern with these cars, is whether the wet belt has been changed or not. So um, this is actually very good news, for you and obviously for us as well. So even if you don\u0027t buy it, next customer they\u0027ll know that the car, that... I hadn\u0027t disclosed this to you because we weren\u0027t really 100% sure. It was more of a, \"can we see what can be done with the finance\". But um, this car\u0027s had a new wet belt. So yeah, it\u0027s had 700 pounds spent on it. One, I think it was last year. I\u0027m gonna send you over the service history now anyway so you can look at it in your own time in detail. But yeah, if you do ask any mechanics, if you told them that this car had a wet belt change a year ago, they\u0027ll tell you to buy the car with your eyes closed. It\u0027s the biggest concern with these engines, is whether the wet belt\u0027s been changed or not. So yeah, I\u0027m sending you a few service histories. Some of them are 600 pound invoices. Some of them are only 175, just a normal service. But there are a few full services as well."
+                     },
+                     {
+                         "start":  393.0,
+                         "end":  397.0,
+                         "speaker":  "customer",
+                         "text":  "Okay. And um, how long will I have to get back to you to let you know?"
+                     },
+                     {
+                         "start":  397.0,
+                         "end":  425.0,
+                         "speaker":  "agent",
+                         "text":  "Look, preferably ASAP. So we don\u0027t want to... Yeah, we\u0027ve left a hundred pounds to protect the car, but obviously our minimum deposit is usually a bit more. So I don\u0027t want to like... What I would say to you is, preferably by the end of the day or early tomorrow if you could let us know what you wanted to do. Just because I\u0027d have to put the car back on the website. And I think that\u0027s fair."
+                     },
+                     {
+                         "start":  425.0,
+                         "end":  431.0,
+                         "speaker":  "customer",
+                         "text":  "Cool. So what I will do then is I\u0027ll take a look at the service..."
+                     },
+                     {
+                         "start":  431.0,
+                         "end":  432.0,
+                         "speaker":  "agent",
+                         "text":  "And then..."
+                     },
+                     {
+                         "start":  432.0,
+                         "end":  434.0,
+                         "speaker":  "customer",
+                         "text":  "And then how soon can I get the car?"
+                     },
+                     {
+                         "start":  434.0,
+                         "end":  451.0,
+                         "speaker":  "agent",
+                         "text":  "So if you want, if you\u0027re 100% you want to go ahead with it, I\u0027ll send this car for an MOT today, and it will be done tomorrow, or it will be done the day after latest. So, the car will be ready a Tuesday... a Thursday/Friday... Thursday on an optimistic one, Friday latest."
+                     },
+                     {
+                         "start":  451.0,
+                         "end":  453.0,
+                         "speaker":  "customer",
+                         "text":  "Okay. Cool."
+                     },
+                     {
+                         "start":  453.0,
+                         "end":  454.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  454.0,
+                         "end":  467.0,
+                         "speaker":  "customer",
+                         "text":  "Alright then. Let me do some inquiries... pass to that wet belt. And um, like I said, I have the money and I, I... I call from 10 o\u0027clock this morning. I probably call about three times..."
+                     },
+                     {
+                         "start":  467.0,
+                         "end":  471.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah no my colleagues did tell me man, they told me get back to... they kept saying Cerise, I told them, is Cerise saying right?"
+                     },
+                     {
+                         "start":  471.0,
+                         "end":  476.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah. If it was, if he had called me back straight away, I would have probably been there already."
+                     },
+                     {
+                         "start":  476.0,
+                         "end":  478.0,
+                         "speaker":  "agent",
+                         "text":  "Okay. I hear you."
+                     },
+                     {
+                         "start":  478.0,
+                         "end":  484.0,
+                         "speaker":  "customer",
+                         "text":  "Obviously I\u0027ve had time to... value it more, and, you know, stuff like that. So..."
+                     },
+                     {
+                         "start":  484.0,
+                         "end":  524.0,
+                         "speaker":  "agent",
+                         "text":  "No worries, well look obviously I wanna make sure you\u0027re happy with the car and whatnot and you\u0027re satisfied with the deal you\u0027re getting. After looking at this service history, it\u0027s actually giving me more peace of mind than it should\u0027ve. I genuinely... if you do some research, find out how important a wet belt is when it\u0027s changed. Cause it\u0027s not a cheap job, this guy spent 6-700 quid on it. And the fact that it\u0027s already been done means it\u0027s an extra thing that you don\u0027t need to do when you\u0027re owning the car. So that\u0027s... that\u0027s what I mean. And you have to do wet belts on these cars. Like if you go on ChatGPT and ask them, \u0027what\u0027s the biggest concern when buying this car?\u0027, they would always say to you, \u0027has the wet belt been changed?\u0027"
+                     },
+                     {
+                         "start":  524.0,
+                         "end":  525.0,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  525.0,
+                         "end":  526.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah?"
+                     },
+                     {
+                         "start":  526.0,
+                         "end":  528.0,
+                         "speaker":  "customer",
+                         "text":  "Okay. No problem."
+                     },
+                     {
+                         "start":  528.0,
+                         "end":  529.0,
+                         "speaker":  "agent",
+                         "text":  "I\u0027m just sending that to you now."
+                     },
+                     {
+                         "start":  529.0,
+                         "end":  533.0,
+                         "speaker":  "customer",
+                         "text":  "Is this a direct... It\u0027s a direct number to call you back on, or is this just the main number, do you have an extension?"
+                     },
+                     {
+                         "start":  533.0,
+                         "end":  569.0,
+                         "speaker":  "agent",
+                         "text":  "Look so, I don\u0027t have a direct extension, but I\u0027m dropping you an email. And this is my, my best contact, and I\u0027m always active on this email. Sometimes even if I\u0027m with a customer, I\u0027ll still reply to your email. So it won\u0027t actually... there shouldn\u0027t be any delays. The only problem... apologies for not getting back to you, I just had... was with a few customers. That\u0027s, that\u0027s why. But on this email any, any questions you have, just drop me an email. I\u0027ll either give you a call right back, or I\u0027ll just reply to you on the email, yeah? And if you are happy to go ahead then obviously I\u0027ll take the next steps to sending this car for an MOT for yourself, yeah?"
+                     },
+                     {
+                         "start":  569.0,
+                         "end":  570.0,
+                         "speaker":  "customer",
+                         "text":  "Okay. No problem."
+                     },
+                     {
+                         "start":  570.0,
+                         "end":  573.0,
+                         "speaker":  "agent",
+                         "text":  "Alright. Take care Cerise, I\u0027ll speak to you later."
+                     },
+                     {
+                         "start":  573.0,
+                         "end":  575.0,
+                         "speaker":  "customer",
+                         "text":  "Thank you, alright then, take care, bye."
+                     },
+                     {
+                         "start":  575.0,
+                         "end":  577.0,
+                         "speaker":  "agent",
+                         "text":  "Bye-bye."
+                     }
+                 ]
+}

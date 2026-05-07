@@ -671,11 +671,27 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception:
         pass
 
-    _set_status(3, "Transcription", "Identifying speakers (voiceprint matching)...")
+    _set_status(3, "Transcription", "Identifying speakers (speaker-first voice matching)...")
     try:
-        from src.diar_multi import diarize_multi
-        print("[UI] Running voiceprint-first multi-speaker diarization...", flush=True)
-        diar_result = diarize_multi(segments, norm_wav, force_cpu=False)
+        from src.diar_clean import diarize_clean
+        max_speakers = int(os.getenv("SST_MAX_SPEAKERS", "4") or "4")
+        backend = os.getenv("SST_SPEAKER_DIAR_BACKEND", "sortformer").strip() or "sortformer"
+        sortformer_streaming = os.getenv("SST_SORTFORMER_STREAMING", "0").strip() == "1"
+        target_agent_slug = os.getenv("SST_TARGET_AGENT_SLUG", "").strip() or None
+        print(
+            f"[UI] Running speaker-first diarization ({backend}, max_speakers={max_speakers}, "
+            f"streaming={sortformer_streaming})...",
+            flush=True,
+        )
+        diar_result = diarize_clean(
+            audio_path=norm_wav,
+            transcribed_segments=segments,
+            backend=backend,
+            max_speakers=max_speakers,
+            sortformer_streaming=sortformer_streaming,
+            target_agent_slug=target_agent_slug,
+            hf_token=os.getenv("HF_TOKEN"),
+        )
         segments     = diar_result["segments"]
         agent_name_id = diar_result.get("agent_name", "Unknown Agent")
         agent_sim     = diar_result.get("agent_similarity", 0.0)
@@ -686,7 +702,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             flush=True,
         )
         print(
-            f"[UI] Speaker mode: {diar_result.get('speaker_mode', 'unknown')}",
+            f"[UI] Speaker mode: {diar_result.get('speaker_mode', 'unknown')} "
+            f"speaker_count={diar_result.get('speaker_count', 'n/a')} "
+            f"agent_speaker_id={diar_result.get('agent_speaker_id', 'n/a')}",
             flush=True,
         )
         print(f"[UI] Speakers: {list(diar_result.get('per_speaker', {}).keys())}", flush=True)
@@ -700,7 +718,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
 
         diarization_applied = True
     except Exception as _diar_err:
-        print(f"[UI] Diarization skipped ({repr(_diar_err)}) — single-speaker mode", flush=True)
+        print(f"[UI] Speaker-first diarization failed ({repr(_diar_err)})", flush=True)
+        import traceback; traceback.print_exc()
         for seg in segments:
             seg["speaker"] = seg.get("speaker") or "SPEAKER_99"
             seg["identified_speaker"] = "CUSTOMER"

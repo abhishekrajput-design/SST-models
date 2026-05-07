@@ -1,0 +1,1211 @@
+{
+  "zak_local_20260423": {
+    "agent_name": "Zak",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_local_20260423.npy",
+    "n_clips": 8,
+    "source": "local_clean_clips"
+  },
+  "omar_el_harchaoui": {
+    "agent_name": "Omar El Harchaoui",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 221,
+        "snr_db": 16.8
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 221,
+        "snr_db": 16.8
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui__low_0.npy",
+        "bucket": "low",
+        "n_clips": 76,
+        "snr_db": 10.2
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui__low_1.npy",
+        "bucket": "low",
+        "n_clips": 76,
+        "snr_db": 10.2
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 735.1,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efc071f91ac02559f83167",
+        "snr_db": 13.0,
+        "bucket": "mid",
+        "embs": 309
+      },
+      {
+        "_id": "69efbb58f91ac02559f827f6",
+        "snr_db": 10.2,
+        "bucket": "low",
+        "embs": 178
+      },
+      {
+        "_id": "69efb51af91ac02559f8170a",
+        "snr_db": 18.9,
+        "bucket": "mid",
+        "embs": 14
+      },
+      {
+        "_id": "69efb4a1f91ac02559f8158b",
+        "snr_db": 17.9,
+        "bucket": "mid",
+        "embs": 33
+      },
+      {
+        "_id": "69efb362f91ac02559f813fe",
+        "snr_db": 15.7,
+        "bucket": "mid",
+        "embs": 193
+      }
+    ]
+  },
+  "mohammed_al_russell": {
+    "agent_name": "Mohammed Al Russell",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohammed_al_russell.npy",
+    "n_clips": 175,
+    "total_seconds": 182.7,
+    "used_calls": 6,
+    "source": "audiofy_api_bulk_20260424"
+  },
+  "haris_bajwa": {
+    "agent_name": "Haris Bajwa",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\haris_bajwa.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\haris_bajwa__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 93,
+        "snr_db": 14.2
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\haris_bajwa__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 93,
+        "snr_db": 14.2
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\haris_bajwa__low_0.npy",
+        "bucket": "low",
+        "n_clips": 148,
+        "snr_db": 10.7
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\haris_bajwa__low_1.npy",
+        "bucket": "low",
+        "n_clips": 148,
+        "snr_db": 10.7
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 728.3,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efbb12f91ac02559f82756",
+        "snr_db": 6.0,
+        "bucket": "low",
+        "embs": 5
+      },
+      {
+        "_id": "69efbaaef91ac02559f8267b",
+        "snr_db": 14.2,
+        "bucket": "mid",
+        "embs": 332
+      },
+      {
+        "_id": "69efb7b2f91ac02559f81b41",
+        "snr_db": 11.1,
+        "bucket": "low",
+        "embs": 17
+      },
+      {
+        "_id": "69efb764f91ac02559f81ab7",
+        "snr_db": 10.3,
+        "bucket": "low",
+        "embs": 30
+      },
+      {
+        "_id": "69efb684f91ac02559f81999",
+        "snr_db": 11.4,
+        "bucket": "low",
+        "embs": 337
+      }
+    ]
+  },
+  "sarah_aziz": {
+    "agent_name": "Sarah Aziz",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\sarah_aziz.npy",
+    "n_clips": 74,
+    "n_windows_total": 219,
+    "total_seconds": 225.6,
+    "used_calls": 4,
+    "mean_inside_sim": 0.657,
+    "max_outside_sim": 0.625,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "rebeca_cazan": {
+    "agent_name": "Rebeca Cazan",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rebeca_cazan.npy",
+    "n_clips": 70,
+    "n_windows_total": 164,
+    "total_seconds": 169.8,
+    "used_calls": 4,
+    "mean_inside_sim": 0.65,
+    "max_outside_sim": 0.513,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "rajan_singh": {
+    "agent_name": "Rajan Singh",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rajan_singh.npy",
+    "n_clips": 110,
+    "n_windows_total": 142,
+    "total_seconds": 149.1,
+    "used_calls": 4,
+    "mean_inside_sim": 0.649,
+    "max_outside_sim": 0.533,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "rebecca_murphy": {
+    "agent_name": "Rebecca Murphy",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rebecca_murphy.npy",
+    "n_clips": 62,
+    "n_windows_total": 126,
+    "total_seconds": 132.5,
+    "used_calls": 4,
+    "mean_inside_sim": 0.607,
+    "max_outside_sim": 0.576,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "nevethan_krishnamohan": {
+    "agent_name": "Nevethan Krishnamohan",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\nevethan_krishnamohan.npy",
+    "n_clips": 73,
+    "n_windows_total": 115,
+    "total_seconds": 119.8,
+    "used_calls": 4,
+    "mean_inside_sim": 0.684,
+    "max_outside_sim": 0.515,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "shuahib_miah": {
+    "agent_name": "Shuahib Miah",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\shuahib_miah.npy",
+    "n_clips": 110,
+    "n_windows_total": 122,
+    "total_seconds": 123.3,
+    "used_calls": 1,
+    "mean_inside_sim": 0.712,
+    "max_outside_sim": 0.543,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "albjon_vokshi": {
+    "agent_name": "Albjon Vokshi",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\albjon_vokshi.npy",
+    "n_clips": 58,
+    "n_windows_total": 162,
+    "total_seconds": 168.7,
+    "used_calls": 4,
+    "mean_inside_sim": 0.633,
+    "max_outside_sim": 0.551,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "qaim_ravji": {
+    "agent_name": "Qaim Ravji",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\qaim_ravji.npy",
+    "n_clips": 44,
+    "n_windows_total": 130,
+    "total_seconds": 136.3,
+    "used_calls": 4,
+    "mean_inside_sim": 0.87,
+    "max_outside_sim": 0.243,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "amandeep_nandra": {
+    "agent_name": "Amandeep Nandra",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\amandeep_nandra.npy",
+    "n_clips": 153,
+    "n_windows_total": 664,
+    "total_seconds": 670.9,
+    "used_calls": 4,
+    "mean_inside_sim": 0.65,
+    "max_outside_sim": 0.669,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "tulay_finance_consultant": {
+    "agent_name": "Tulay Finance Consultant",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\tulay_finance_consultant.npy",
+    "n_clips": 278,
+    "n_windows_total": 379,
+    "total_seconds": 384.8,
+    "used_calls": 4,
+    "mean_inside_sim": 0.696,
+    "max_outside_sim": 0.54,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "mashrur_rahman": {
+    "agent_name": "Mashrur Rahman",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mashrur_rahman.npy",
+    "n_clips": 217,
+    "n_windows_total": 244,
+    "total_seconds": 250.3,
+    "used_calls": 4,
+    "mean_inside_sim": 0.708,
+    "max_outside_sim": 0.542,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "mohammed_malik": {
+    "agent_name": "Mohammed Malik",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohammed_malik.npy",
+    "n_clips": 83,
+    "n_windows_total": 91,
+    "total_seconds": 92.6,
+    "used_calls": 1,
+    "mean_inside_sim": 0.702,
+    "max_outside_sim": 0.522,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "mohammed_hussein_al_khwildi": {
+    "agent_name": "Mohammed-Hussein  Al-Khwildi",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohammed_hussein_al_khwildi.npy",
+    "n_clips": 244,
+    "n_windows_total": 303,
+    "total_seconds": 304.5,
+    "used_calls": 1,
+    "mean_inside_sim": 0.691,
+    "max_outside_sim": 0.545,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "allan_johnson": {
+    "agent_name": "Allan Johnson",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\allan_johnson.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\allan_johnson__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 271,
+        "snr_db": 15.7
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\allan_johnson__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 271,
+        "snr_db": 15.7
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 2003.7,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efb162f91ac02559f810af",
+        "snr_db": 15.7,
+        "bucket": "mid",
+        "embs": 579
+      },
+      {
+        "_id": "69efae3bf91ac02559f8071c",
+        "snr_db": 12.5,
+        "bucket": "mid",
+        "embs": 130
+      },
+      {
+        "_id": "69efb162f91ac02559f810af",
+        "snr_db": 15.7,
+        "bucket": "mid",
+        "embs": 579
+      },
+      {
+        "_id": "69efae3bf91ac02559f8071c",
+        "snr_db": 12.5,
+        "bucket": "mid",
+        "embs": 130
+      },
+      {
+        "_id": "69efb162f91ac02559f810af",
+        "snr_db": 15.7,
+        "bucket": "mid",
+        "embs": 579
+      }
+    ]
+  },
+  "sababa_hossain": {
+    "agent_name": "Sababa Hossain",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\sababa_hossain.npy",
+    "n_clips": 72,
+    "n_windows_total": 98,
+    "total_seconds": 99.7,
+    "used_calls": 1,
+    "mean_inside_sim": 0.666,
+    "max_outside_sim": 0.507,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "liza_mae_esguerra": {
+    "agent_name": "Liza Mae Esguerra",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\liza_mae_esguerra.npy",
+    "n_clips": 63,
+    "n_windows_total": 120,
+    "total_seconds": 123.9,
+    "used_calls": 3,
+    "mean_inside_sim": 0.693,
+    "max_outside_sim": 0.553,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "benjamin_ahmadi": {
+    "agent_name": "Benjamin Ahmadi",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\benjamin_ahmadi.npy",
+    "n_clips": 90,
+    "n_windows_total": 145,
+    "total_seconds": 146.1,
+    "used_calls": 1,
+    "mean_inside_sim": 0.648,
+    "max_outside_sim": 0.536,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "niloufar_dastbaz": {
+    "agent_name": "Niloufar Dastbaz",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\niloufar_dastbaz.npy",
+    "n_clips": 27,
+    "n_windows_total": 99,
+    "total_seconds": 100.2,
+    "used_calls": 1,
+    "mean_inside_sim": 0.606,
+    "max_outside_sim": 0.569,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "rafik_saleh": {
+    "agent_name": "Rafik Saleh",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rafik_saleh.npy",
+    "n_clips": 130,
+    "n_windows_total": 142,
+    "total_seconds": 143.6,
+    "used_calls": 1,
+    "mean_inside_sim": 0.719,
+    "max_outside_sim": 0.543,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "talha_azam": {
+    "agent_name": "Talha Azam",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\talha_azam.npy",
+    "n_clips": 90,
+    "n_windows_total": 106,
+    "total_seconds": 107.0,
+    "used_calls": 1,
+    "mean_inside_sim": 0.711,
+    "max_outside_sim": 0.523,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "gabriel_bighiu": {
+    "agent_name": "Gabriel Bighiu",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\gabriel_bighiu.npy",
+    "n_clips": 165,
+    "n_windows_total": 253,
+    "total_seconds": 254.7,
+    "used_calls": 1,
+    "mean_inside_sim": 0.707,
+    "max_outside_sim": 0.538,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "nirvan_nagra": {
+    "agent_name": "Nirvan Nagra",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\nirvan_nagra.npy",
+    "n_clips": 31,
+    "n_windows_total": 79,
+    "total_seconds": 80.7,
+    "used_calls": 1,
+    "mean_inside_sim": 0.734,
+    "max_outside_sim": 0.597,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "mohammad_malki": {
+    "agent_name": "Mohammad Malki",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohammad_malki.npy",
+    "n_clips": 378,
+    "n_windows_total": 741,
+    "total_seconds": 746.0,
+    "used_calls": 3,
+    "mean_inside_sim": 0.71,
+    "max_outside_sim": 0.533,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "arfat_barnet": {
+    "agent_name": "Arfat Barnet",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\arfat_barnet.npy",
+    "n_clips": 397,
+    "n_windows_total": 837,
+    "total_seconds": 838.4,
+    "used_calls": 1,
+    "mean_inside_sim": 0.664,
+    "max_outside_sim": 0.563,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "dilayda_barnet": {
+    "agent_name": "Dilayda Barnet",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\dilayda_barnet.npy",
+    "n_clips": 239,
+    "n_windows_total": 631,
+    "total_seconds": 632.2,
+    "used_calls": 1,
+    "mean_inside_sim": 0.683,
+    "max_outside_sim": 0.553,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "kleo_gurra": {
+    "agent_name": "Kleo Gurra",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kleo_gurra.npy",
+    "n_clips": 90,
+    "n_windows_total": 109,
+    "total_seconds": 110.2,
+    "used_calls": 1,
+    "mean_inside_sim": 0.739,
+    "max_outside_sim": 0.521,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "sylwia_recruitment": {
+    "agent_name": "Sylwia Recruitment",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\sylwia_recruitment.npy",
+    "n_clips": 1113,
+    "n_windows_total": 1563,
+    "total_seconds": 1566.2,
+    "used_calls": 3,
+    "mean_inside_sim": 0.698,
+    "max_outside_sim": 0.543,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "zak_raissi_barnet": {
+    "agent_name": "Zak Raissi Barnet",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_raissi_barnet.npy",
+    "n_clips": 351,
+    "n_windows_total": 422,
+    "source": "phone_calls_kmeans_campp",
+    "mean_inside_sim": 0.691,
+    "max_outside_sim": 0.541
+  },
+  "ideal_dacaj": {
+    "agent_name": "Ideal Dacaj",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\ideal_dacaj.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\ideal_dacaj__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 440,
+        "snr_db": 14.4
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\ideal_dacaj__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 440,
+        "snr_db": 14.4
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\ideal_dacaj__low_0.npy",
+        "bucket": "low",
+        "n_clips": 59,
+        "snr_db": 10.0
+      }
+    ],
+    "n_voiceprints": 3,
+    "total_seconds": 2039.0,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efc3acf91ac02559f83a89",
+        "snr_db": 13.6,
+        "bucket": "mid",
+        "embs": 397
+      },
+      {
+        "_id": "69efb9b2f91ac02559f821c7",
+        "snr_db": 18.1,
+        "bucket": "mid",
+        "embs": 955
+      },
+      {
+        "_id": "69efa1ecf91ac02559f7e56d",
+        "snr_db": 14.4,
+        "bucket": "mid",
+        "embs": 610
+      },
+      {
+        "_id": "69ef9c53f91ac02559f7dafa",
+        "snr_db": 9.4,
+        "bucket": "low",
+        "embs": 11
+      },
+      {
+        "_id": "69ef9bf1f91ac02559f7d9ed",
+        "snr_db": 10.6,
+        "bucket": "low",
+        "embs": 58
+      }
+    ]
+  },
+  "harrison_morgan": {
+    "agent_name": "Harrison Morgan",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\harrison_morgan.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\harrison_morgan__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 90,
+        "snr_db": 13.8
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\harrison_morgan__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 90,
+        "snr_db": 13.8
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 238.5,
+    "used_calls": 2,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69ef9d79f91ac02559f7dea1",
+        "snr_db": 13.8,
+        "bucket": "mid",
+        "embs": 118
+      },
+      {
+        "_id": "69ef9d79f91ac02559f7dea1",
+        "snr_db": 13.8,
+        "bucket": "mid",
+        "embs": 118
+      }
+    ]
+  },
+  "adil_al_sammerai": {
+    "agent_name": "Adil Al- Sammerai",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\adil_al_sammerai.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\adil_al_sammerai__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 335,
+        "snr_db": 14.5
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\adil_al_sammerai__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 335,
+        "snr_db": 14.5
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\adil_al_sammerai__low_0.npy",
+        "bucket": "low",
+        "n_clips": 71,
+        "snr_db": 11.3
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\adil_al_sammerai__low_1.npy",
+        "bucket": "low",
+        "n_clips": 71,
+        "snr_db": 11.3
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 1260.9,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efbe5df91ac02559f82c99",
+        "snr_db": 13.3,
+        "bucket": "mid",
+        "embs": 515
+      },
+      {
+        "_id": "69efa455f91ac02559f7eaf3",
+        "snr_db": 15.7,
+        "bucket": "mid",
+        "embs": 24
+      },
+      {
+        "_id": "69ef9d76f91ac02559f7de8e",
+        "snr_db": 11.3,
+        "bucket": "low",
+        "embs": 175
+      },
+      {
+        "_id": "69efbe5df91ac02559f82c99",
+        "snr_db": 13.3,
+        "bucket": "mid",
+        "embs": 515
+      },
+      {
+        "_id": "69efa455f91ac02559f7eaf3",
+        "snr_db": 15.7,
+        "bucket": "mid",
+        "embs": 24
+      }
+    ]
+  },
+  "angeline_packiyaseelan": {
+    "agent_name": "Angeline Packiyaseelan",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\angeline_packiyaseelan.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\angeline_packiyaseelan__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 61,
+        "snr_db": 12.2
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\angeline_packiyaseelan__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 61,
+        "snr_db": 12.2
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\angeline_packiyaseelan__low_0.npy",
+        "bucket": "low",
+        "n_clips": 35,
+        "snr_db": 11.3
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\angeline_packiyaseelan__low_1.npy",
+        "bucket": "low",
+        "n_clips": 35,
+        "snr_db": 11.3
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 259.1,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efbacff91ac02559f826d8",
+        "snr_db": 12.2,
+        "bucket": "mid",
+        "embs": 69
+      },
+      {
+        "_id": "69efb9aff91ac02559f821b8",
+        "snr_db": 11.3,
+        "bucket": "low",
+        "embs": 40
+      },
+      {
+        "_id": "69efb56af91ac02559f81788",
+        "snr_db": 12.1,
+        "bucket": "mid",
+        "embs": 33
+      },
+      {
+        "_id": "69efbacff91ac02559f826d8",
+        "snr_db": 12.2,
+        "bucket": "mid",
+        "embs": 69
+      },
+      {
+        "_id": "69efb9aff91ac02559f821b8",
+        "snr_db": 11.3,
+        "bucket": "low",
+        "embs": 40
+      }
+    ]
+  },
+  "jason_kurti": {
+    "agent_name": "Jason Kurti",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\jason_kurti.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\jason_kurti__high_0.npy",
+        "bucket": "high",
+        "n_clips": 18,
+        "snr_db": 39.8
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\jason_kurti__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 165,
+        "snr_db": 15.3
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\jason_kurti__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 165,
+        "snr_db": 15.3
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\jason_kurti__low_0.npy",
+        "bucket": "low",
+        "n_clips": 36,
+        "snr_db": 9.7
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 763.0,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efb7fcf91ac02559f81c45",
+        "snr_db": 15.3,
+        "bucket": "mid",
+        "embs": 343
+      },
+      {
+        "_id": "69efaad9f91ac02559f7fafe",
+        "snr_db": 45.9,
+        "bucket": "high",
+        "embs": 14
+      },
+      {
+        "_id": "69ef9bbff91ac02559f7d918",
+        "snr_db": 33.6,
+        "bucket": "high",
+        "embs": 10
+      },
+      {
+        "_id": "69ef9aabf91ac02559f7d65f",
+        "snr_db": 9.7,
+        "bucket": "low",
+        "embs": 45
+      },
+      {
+        "_id": "69efb7fcf91ac02559f81c45",
+        "snr_db": 15.3,
+        "bucket": "mid",
+        "embs": 343
+      }
+    ]
+  },
+  "anoush_sefatzadeh": {
+    "agent_name": "Anoush Sefatzadeh",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\anoush_sefatzadeh.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\anoush_sefatzadeh__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 249,
+        "snr_db": 13.1
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\anoush_sefatzadeh__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 249,
+        "snr_db": 13.1
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 1409.6,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efb57ff91ac02559f817b4",
+        "snr_db": 12.1,
+        "bucket": "mid",
+        "embs": 100
+      },
+      {
+        "_id": "69efa8a0f91ac02559f7f67d",
+        "snr_db": 21.4,
+        "bucket": "high",
+        "embs": 11
+      },
+      {
+        "_id": "69efa6ecf91ac02559f7f13f",
+        "snr_db": 18.3,
+        "bucket": "mid",
+        "embs": 722
+      },
+      {
+        "_id": "69efa1a8f91ac02559f7e4ee",
+        "snr_db": 14.1,
+        "bucket": "mid",
+        "embs": 470
+      },
+      {
+        "_id": "69efb57ff91ac02559f817b4",
+        "snr_db": 12.1,
+        "bucket": "mid",
+        "embs": 100
+      }
+    ]
+  },
+  "kowsar_alam": {
+    "agent_name": "Kowsar Alam",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kowsar_alam.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kowsar_alam__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 87,
+        "snr_db": 12.6
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kowsar_alam__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 87,
+        "snr_db": 12.6
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kowsar_alam__low_0.npy",
+        "bucket": "low",
+        "n_clips": 135,
+        "snr_db": 11.6
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kowsar_alam__low_1.npy",
+        "bucket": "low",
+        "n_clips": 135,
+        "snr_db": 11.6
+      }
+    ],
+    "n_voiceprints": 4,
+    "total_seconds": 548.5,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efb237f91ac02559f811e2",
+        "snr_db": 11.9,
+        "bucket": "low",
+        "embs": 27
+      },
+      {
+        "_id": "69efad9ef91ac02559f80533",
+        "snr_db": 11.4,
+        "bucket": "low",
+        "embs": 37
+      },
+      {
+        "_id": "69efa9d2f91ac02559f7f906",
+        "snr_db": 11.9,
+        "bucket": "low",
+        "embs": 227
+      },
+      {
+        "_id": "69efa860f91ac02559f7f5de",
+        "snr_db": 10.2,
+        "bucket": "low",
+        "embs": 35
+      },
+      {
+        "_id": "69efa7f6f91ac02559f7f4a7",
+        "snr_db": 12.6,
+        "bucket": "mid",
+        "embs": 215
+      }
+    ]
+  },
+  "georgi_angelov": {
+    "agent_name": "Georgi Angelov",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\georgi_angelov.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\georgi_angelov__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 32,
+        "snr_db": 17.4
+      }
+    ],
+    "n_voiceprints": 1,
+    "total_seconds": 338.9,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efaf83f91ac02559f80c19",
+        "snr_db": 17.4,
+        "bucket": "mid",
+        "embs": 9
+      },
+      {
+        "_id": "69efae51f91ac02559f80769",
+        "snr_db": 12.9,
+        "bucket": "mid",
+        "embs": 152
+      },
+      {
+        "_id": "69efaf83f91ac02559f80c19",
+        "snr_db": 17.4,
+        "bucket": "mid",
+        "embs": 9
+      },
+      {
+        "_id": "69efae51f91ac02559f80769",
+        "snr_db": 12.9,
+        "bucket": "mid",
+        "embs": 152
+      },
+      {
+        "_id": "69efaf83f91ac02559f80c19",
+        "snr_db": 17.4,
+        "bucket": "mid",
+        "embs": 9
+      }
+    ]
+  },
+  "janusaan_jeyachandran": {
+    "agent_name": "Janusaan Jeyachandran",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\janusaan_jeyachandran.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\janusaan_jeyachandran__high_0.npy",
+        "bucket": "high",
+        "n_clips": 25,
+        "snr_db": 32.9
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\janusaan_jeyachandran__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 87,
+        "snr_db": 16.4
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\janusaan_jeyachandran__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 87,
+        "snr_db": 16.4
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\janusaan_jeyachandran__low_0.npy",
+        "bucket": "low",
+        "n_clips": 129,
+        "snr_db": 11.7
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\janusaan_jeyachandran__low_1.npy",
+        "bucket": "low",
+        "n_clips": 129,
+        "snr_db": 11.7
+      }
+    ],
+    "n_voiceprints": 5,
+    "total_seconds": 1166.6,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efad47f91ac02559f80437",
+        "snr_db": 11.7,
+        "bucket": "low",
+        "embs": 284
+      },
+      {
+        "_id": "69efa4bbf91ac02559f7ec3c",
+        "snr_db": 16.4,
+        "bucket": "mid",
+        "embs": 166
+      },
+      {
+        "_id": "69ef9e2df91ac02559f7e08f",
+        "snr_db": 32.9,
+        "bucket": "high",
+        "embs": 259
+      },
+      {
+        "_id": "69efad47f91ac02559f80437",
+        "snr_db": 11.7,
+        "bucket": "low",
+        "embs": 284
+      },
+      {
+        "_id": "69efa4bbf91ac02559f7ec3c",
+        "snr_db": 16.4,
+        "bucket": "mid",
+        "embs": 166
+      }
+    ]
+  },
+  "aftaab_supervisor": {
+    "agent_name": "Aftaab Supervisor",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aftaab_supervisor.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aftaab_supervisor__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 31,
+        "snr_db": 13.9
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aftaab_supervisor__low_0.npy",
+        "bucket": "low",
+        "n_clips": 151,
+        "snr_db": 11.1
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aftaab_supervisor__low_1.npy",
+        "bucket": "low",
+        "n_clips": 151,
+        "snr_db": 11.1
+      }
+    ],
+    "n_voiceprints": 3,
+    "total_seconds": 590.3,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efac50f91ac02559f8012b",
+        "snr_db": 11.3,
+        "bucket": "low",
+        "embs": 31
+      },
+      {
+        "_id": "69ef9f46f91ac02559f7e1cf",
+        "snr_db": 10.8,
+        "bucket": "low",
+        "embs": 106
+      },
+      {
+        "_id": "69ef9cacf91ac02559f7dc34",
+        "snr_db": 13.9,
+        "bucket": "mid",
+        "embs": 37
+      },
+      {
+        "_id": "69ef9c15f91ac02559f7da4b",
+        "snr_db": 10.2,
+        "bucket": "low",
+        "embs": 378
+      },
+      {
+        "_id": "69efac50f91ac02559f8012b",
+        "snr_db": 11.3,
+        "bucket": "low",
+        "embs": 31
+      }
+    ]
+  },
+  "mohamed_yasin_ali": {
+    "agent_name": "Mohamed Yasin-ali",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohamed_yasin_ali.npy",
+    "voiceprints": [
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohamed_yasin_ali__mid_0.npy",
+        "bucket": "mid",
+        "n_clips": 58,
+        "snr_db": 16.4
+      },
+      {
+        "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohamed_yasin_ali__mid_1.npy",
+        "bucket": "mid",
+        "n_clips": 58,
+        "snr_db": 16.4
+      }
+    ],
+    "n_voiceprints": 2,
+    "total_seconds": 153.4,
+    "used_calls": 5,
+    "source": "multi_vp_v1",
+    "per_call_snr": [
+      {
+        "_id": "69efa53ff91ac02559f7ede6",
+        "snr_db": 19.1,
+        "bucket": "mid",
+        "embs": 6
+      },
+      {
+        "_id": "69efa352f91ac02559f7e936",
+        "snr_db": 8.7,
+        "bucket": "low",
+        "embs": 6
+      },
+      {
+        "_id": "69efa30af91ac02559f7e860",
+        "snr_db": 13.7,
+        "bucket": "mid",
+        "embs": 40
+      },
+      {
+        "_id": "69ef9fe9f91ac02559f7e2d0",
+        "snr_db": 13.3,
+        "bucket": "mid",
+        "embs": 88
+      },
+      {
+        "_id": "69efa53ff91ac02559f7ede6",
+        "snr_db": 19.1,
+        "bucket": "mid",
+        "embs": 6
+      }
+    ]
+  },
+  "rayyan_ali_khan": {
+    "agent_name": "Rayyan Ali Khan",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rayyan_ali_khan.npy",
+    "n_clips": 537,
+    "n_windows_total": 1251,
+    "total_seconds": 1255.9,
+    "used_calls": 3,
+    "mean_inside_sim": 0.679,
+    "max_outside_sim": 0.537,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "adorena_ishtar_hossain": {
+    "agent_name": "Adorena Ishtar Hossain",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\adorena_ishtar_hossain.npy",
+    "n_clips": 117,
+    "n_windows_total": 237,
+    "total_seconds": 242.0,
+    "used_calls": 3,
+    "mean_inside_sim": 0.619,
+    "max_outside_sim": 0.515,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "waris_sales_controllers": {
+    "agent_name": "Waris Sales Controllers",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\waris_sales_controllers.npy",
+    "n_clips": 93,
+    "n_windows_total": 252,
+    "total_seconds": 255.3,
+    "used_calls": 3,
+    "mean_inside_sim": 0.648,
+    "max_outside_sim": 0.577,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "jenifer_bajrami": {
+    "agent_name": "Jenifer Bajrami",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\jenifer_bajrami.npy",
+    "n_clips": 66,
+    "n_windows_total": 75,
+    "total_seconds": 78.5,
+    "used_calls": 3,
+    "mean_inside_sim": 0.693,
+    "max_outside_sim": 0.338,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "kacper_barnet": {
+    "agent_name": "Kacper Barnet",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\kacper_barnet.npy",
+    "n_clips": 828,
+    "n_windows_total": 2313,
+    "total_seconds": 2317.4,
+    "used_calls": 3,
+    "mean_inside_sim": 0.665,
+    "max_outside_sim": 0.57,
+    "source": "audiofy_api_bulk_tight_20260424"
+  },
+  "dinosh_sinnathamby": {
+    "agent_name": "Dinosh Sinnathamby",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\dinosh_sinnathamby.npy",
+    "n_clips": 561,
+    "n_windows_total": 603,
+    "total_seconds": 608.0,
+    "used_calls": 3,
+    "mean_inside_sim": 0.713,
+    "max_outside_sim": 0.523,
+    "source": "audiofy_api_bulk_tight_20260424"
+  }
+}

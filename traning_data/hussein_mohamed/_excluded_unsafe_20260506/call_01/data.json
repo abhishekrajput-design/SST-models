@@ -1,0 +1,106 @@
+{
+  "call_id": "20260426T144315723_42087",
+  "agent_name": "Hussein Mohamed",
+  "source": "local_parakeet_textcue_candidate",
+  "source_result_id": "enhanced_20260426T144315723_42087__parakeet-tdt-0.6b-v3",
+  "agent_speaker": "SPEAKER_01",
+  "speaker_scores": {
+    "SPEAKER_00": {
+      "agent": 3.280000000000001,
+      "customer": 0.0,
+      "duration": 5.760000000000005
+    },
+    "SPEAKER_01": {
+      "agent": 3.960000000000001,
+      "customer": 0.0,
+      "duration": 13.840000000000002
+    }
+  },
+  "training_warning": "Candidate labels inferred from local ASR text cues; verify before treating as human/Gemini truth.",
+  "segments": [
+    {
+      "start": 0.64,
+      "end": 1.12,
+      "speaker": "customer",
+      "text": "Hello?"
+    },
+    {
+      "start": 1.6,
+      "end": 2.72,
+      "speaker": "agent",
+      "text": "Hi sir, I'm Mr."
+    },
+    {
+      "start": 2.8,
+      "end": 4.4,
+      "speaker": "agent",
+      "text": "Pakulan from Carpan Orford."
+    },
+    {
+      "start": 4.56,
+      "end": 5.36,
+      "speaker": "agent",
+      "text": "Uh hi."
+    },
+    {
+      "start": 5.68,
+      "end": 8.64,
+      "speaker": "agent",
+      "text": "I'm just calling um just to let you know the finances paid out."
+    },
+    {
+      "start": 8.88,
+      "end": 12.08,
+      "speaker": "agent",
+      "text": "And if you already can get all the sorted for you."
+    },
+    {
+      "start": 12.4,
+      "end": 12.72,
+      "speaker": "customer",
+      "text": "Okay."
+    },
+    {
+      "start": 13.04,
+      "end": 16.32,
+      "speaker": "customer",
+      "text": "We're just about a minute walk from No problem."
+    },
+    {
+      "start": 16.48,
+      "end": 16.96,
+      "speaker": "agent",
+      "text": "Take your time."
+    },
+    {
+      "start": 17.2,
+      "end": 19.2,
+      "speaker": "agent",
+      "text": "Um just as soon as you come in, just go straight upstairs."
+    },
+    {
+      "start": 19.28,
+      "end": 20.16,
+      "speaker": "agent",
+      "text": "I'll help you out, yeah?"
+    },
+    {
+      "start": 20.4,
+      "end": 21.28,
+      "speaker": "customer",
+      "text": "Alright, thank you very much."
+    },
+    {
+      "start": 21.68,
+      "end": 22.48,
+      "speaker": "agent",
+      "text": "No problem at all."
+    },
+    {
+      "start": 22.72,
+      "end": 23.52,
+      "speaker": "customer",
+      "text": "Right, that's fine."
+    }
+  ]
+}

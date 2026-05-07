@@ -1,0 +1,249 @@
+﻿{
+    "call_id":  "20260426T125653668_119102",
+    "agent_name":  "Zak Raissi",
+    "source":  "local_parakeet_voice_id_candidate",
+    "source_result_id":  "enhanced_20260426T125653668_119102__parakeet-tdt-0.6b-v3",
+    "training_warning":  "Candidate labels from local ASR/speaker-ID; verify before treating as human/Gemini ground truth.",
+    "segments":  [
+                     {
+                         "start":  1.36,
+                         "end":  1.84,
+                         "speaker":  "customer",
+                         "text":  "Hello."
+                     },
+                     {
+                         "start":  2.56,
+                         "end":  4,
+                         "speaker":  "agent",
+                         "text":  "Hello, afternoon."
+                     },
+                     {
+                         "start":  4.4,
+                         "end":  4.56,
+                         "speaker":  "agent",
+                         "text":  "Mr."
+                     },
+                     {
+                         "start":  4.64,
+                         "end":  5.44,
+                         "speaker":  "agent",
+                         "text":  "Vanitherson."
+                     },
+                     {
+                         "start":  5.92,
+                         "end":  6.32,
+                         "speaker":  "customer",
+                         "text":  "Speaking."
+                     },
+                     {
+                         "start":  6.72,
+                         "end":  9.92,
+                         "speaker":  "agent",
+                         "text":  "I saw I\u0027m just calling in regards to the viewing you had for the GLC."
+                     },
+                     {
+                         "start":  10,
+                         "end":  12.24,
+                         "speaker":  "agent",
+                         "text":  "I just wanted to confirm you were still coming down."
+                     },
+                     {
+                         "start":  12.48,
+                         "end":  16.96,
+                         "speaker":  "customer",
+                         "text":  "Yeah, but somebody say told me that there\u0027s some somebody buying the car, man."
+                     },
+                     {
+                         "start":  17.76,
+                         "end":  18.96,
+                         "speaker":  "customer",
+                         "text":  "That\u0027s why they say now."
+                     },
+                     {
+                         "start":  21.76,
+                         "end":  22.08,
+                         "speaker":  "agent",
+                         "text":  "No."
+                     },
+                     {
+                         "start":  22.72,
+                         "end":  27.36,
+                         "speaker":  "customer",
+                         "text":  "Yeah, earlier I talked to somebody for me, yeah, but they they say somebody\u0027s going to buy the car."
+                     },
+                     {
+                         "start":  27.6,
+                         "end":  30.8,
+                         "speaker":  "agent",
+                         "text":  "That\u0027s why you know the car the car\u0027s waiting for your viewing."
+                     },
+                     {
+                         "start":  30.88,
+                         "end":  32.24,
+                         "speaker":  "agent",
+                         "text":  "I\u0027m not sure who\u0027s spoken to you."
+                     },
+                     {
+                         "start":  32.72,
+                         "end":  36.48,
+                         "speaker":  "customer",
+                         "text":  "Uh you know you know Zach, somebody was like Zach."
+                     },
+                     {
+                         "start":  36.96,
+                         "end":  41.12,
+                         "speaker":  "customer",
+                         "text":  "Yeah, you told me that uh uh somebody coming to buy the car."
+                     },
+                     {
+                         "start":  41.2,
+                         "end":  43.36,
+                         "speaker":  "customer",
+                         "text":  "That\u0027s what I told about no point coming then."
+                     },
+                     {
+                         "start":  43.92,
+                         "end":  45.28,
+                         "speaker":  "agent",
+                         "text":  "No, no, the car."
+                     },
+                     {
+                         "start":  45.52,
+                         "end":  49.28,
+                         "speaker":  "agent",
+                         "text":  "The only person that\u0027s coming to see the car today, we thought it was gonna be you."
+                     },
+                     {
+                         "start":  49.76,
+                         "end":  52.88,
+                         "speaker":  "customer",
+                         "text":  "No mate, somebody uh why why are you no make a mistake?"
+                     },
+                     {
+                         "start":  53.36,
+                         "end":  54.24,
+                         "speaker":  "customer",
+                         "text":  "Somebody told me that."
+                     },
+                     {
+                         "start":  55.08,
+                         "end":  57.16,
+                         "speaker":  "agent",
+                         "text":  "Oh that\u0027s why that\u0027s why I\u0027m trying to find out who called you."
+                     },
+                     {
+                         "start":  62.2,
+                         "end":  66.04,
+                         "speaker":  "agent",
+                         "text":  "I can have a look who called um and and and just find out why they told you that."
+                     },
+                     {
+                         "start":  66.44,
+                         "end":  68.68,
+                         "speaker":  "agent",
+                         "text":  "But are you gonna make it for your for for an appointment?"
+                     },
+                     {
+                         "start":  75.88,
+                         "end":  76.04,
+                         "speaker":  "agent",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  76.36,
+                         "end":  77.08,
+                         "speaker":  "agent",
+                         "text":  "No worries, sir."
+                     },
+                     {
+                         "start":  77.48,
+                         "end":  77.96,
+                         "speaker":  "customer",
+                         "text":  "Alright, alright."
+                     },
+                     {
+                         "start":  78.04,
+                         "end":  79.08,
+                         "speaker":  "customer",
+                         "text":  "I can\u0027t make it today though."
+                     },
+                     {
+                         "start":  79.16,
+                         "end":  80.84,
+                         "speaker":  "customer",
+                         "text":  "I\u0027ll uh book it another time then."
+                     },
+                     {
+                         "start":  81.08,
+                         "end":  81.72,
+                         "speaker":  "agent",
+                         "text":  "Do you know when?"
+                     },
+                     {
+                         "start":  82.52,
+                         "end":  83.08,
+                         "speaker":  "customer",
+                         "text":  "I don\u0027t know, man."
+                     },
+                     {
+                         "start":  83.24,
+                         "end":  86.52,
+                         "speaker":  "customer",
+                         "text":  "I just need to look at my time tables and uh have a look."
+                     },
+                     {
+                         "start":  86.68,
+                         "end":  89,
+                         "speaker":  "customer",
+                         "text":  "Uh why do you make a mistake like that?"
+                     },
+                     {
+                         "start":  89.08,
+                         "end":  89.48,
+                         "speaker":  "customer",
+                         "text":  "I don\u0027t understand."
+                     },
+                     {
+                         "start":  89.88,
+                         "end":  90.36,
+                         "speaker":  "agent",
+                         "text":  "You know what it is?"
+                     },
+                     {
+                         "start":  90.6,
+                         "end":  94.76,
+                         "speaker":  "agent",
+                         "text":  "I I have no idea who\u0027s who\u0027s called you and said that\u0027s you, but I\u0027m gonna check for now and find out."
+                     },
+                     {
+                         "start":  94.92,
+                         "end":  95.24,
+                         "speaker":  "customer",
+                         "text":  "Oh, okay."
+                     },
+                     {
+                         "start":  95.4,
+                         "end":  95.8,
+                         "speaker":  "customer",
+                         "text":  "Have a look."
+                     },
+                     {
+                         "start":  96.04,
+                         "end":  96.76,
+                         "speaker":  "agent",
+                         "text":  "Alright, bye-bye."
+                     },
+                     {
+                         "start":  97,
+                         "end":  97.48,
+                         "speaker":  "customer",
+                         "text":  "Thank you, mate."
+                     },
+                     {
+                         "start":  97.64,
+                         "end":  98.04,
+                         "speaker":  "customer",
+                         "text":  "Thank you."
+                     }
+                 ]
+}

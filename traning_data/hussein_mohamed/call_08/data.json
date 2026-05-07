@@ -1,0 +1,214 @@
+{
+  "call_id": "20260425T132932890_79613",
+  "agent_name": "Hussein Mohamed",
+  "source": "local_parakeet_textcue_candidate",
+  "source_result_id": "enhanced_20260425T132932890_79613__parakeet-tdt-0.6b-v3",
+  "agent_speaker": "SPEAKER_00",
+  "speaker_scores": {
+    "SPEAKER_00": {
+      "agent": 15.239999999999997,
+      "customer": 0.0,
+      "duration": 33.11999999999997
+    },
+    "SPEAKER_01": {
+      "agent": 13.760000000000005,
+      "customer": 29.760000000000012,
+      "duration": 31.520000000000003
+    }
+  },
+  "training_warning": "Candidate labels inferred from local ASR text cues; verify before treating as human/Gemini truth.",
+  "segments": [
+    {
+      "start": 0.32,
+      "end": 1.76,
+      "speaker": "agent",
+      "text": "Hello, good afternoon carplanet."
+    },
+    {
+      "start": 1.84,
+      "end": 2.8,
+      "speaker": "agent",
+      "text": "What for the scene speaking?"
+    },
+    {
+      "start": 2.88,
+      "end": 3.6,
+      "speaker": "agent",
+      "text": "How can I help?"
+    },
+    {
+      "start": 3.84,
+      "end": 4.96,
+      "speaker": "customer",
+      "text": "Hi, this is Mita."
+    },
+    {
+      "start": 5.28,
+      "end": 9.92,
+      "speaker": "customer",
+      "text": "So I had requested uh to make a full payment of my car loan."
+    },
+    {
+      "start": 10.0,
+      "end": 11.68,
+      "speaker": "customer",
+      "text": "I purchased it a few months ago."
+    },
+    {
+      "start": 12.0,
+      "end": 13.52,
+      "speaker": "agent",
+      "text": "Okay, which car is it?"
+    },
+    {
+      "start": 13.92,
+      "end": 17.2,
+      "speaker": "customer",
+      "text": "It's uh Honda, so I'll give you the numbers."
+    },
+    {
+      "start": 17.28,
+      "end": 20.72,
+      "speaker": "customer",
+      "text": "It's AX12OS."
+    },
+    {
+      "start": 22.64,
+      "end": 24.96,
+      "speaker": "agent",
+      "text": "Yeah, no problem at all."
+    },
+    {
+      "start": 25.12,
+      "end": 26.56,
+      "speaker": "agent",
+      "text": "Yeah, that's absolutely fine."
+    },
+    {
+      "start": 26.64,
+      "end": 32.16,
+      "speaker": "agent",
+      "text": "Uh you just need to call your finance company or log into their portal and make the payment."
+    },
+    {
+      "start": 32.88,
+      "end": 33.6,
+      "speaker": "customer",
+      "text": "Uh okay."
+    },
+    {
+      "start": 33.76,
+      "end": 37.6,
+      "speaker": "customer",
+      "text": "Well I requested it online, like uh for the full quote."
+    },
+    {
+      "start": 37.76,
+      "end": 44.64,
+      "speaker": "customer",
+      "text": "So maybe they will respond in three days and I had received a call from uh Car Planet and I missed it today."
+    },
+    {
+      "start": 44.96,
+      "end": 47.68,
+      "speaker": "agent",
+      "text": "Oh, I'm not I'm not sure what it was in regards to you."
+    },
+    {
+      "start": 47.76,
+      "end": 50.08,
+      "speaker": "agent",
+      "text": "Um how how long have you had the vehicle for?"
+    },
+    {
+      "start": 50.64,
+      "end": 54.88,
+      "speaker": "customer",
+      "text": "Uh I think I purchased it in March."
+    },
+    {
+      "start": 57.4,
+      "end": 60.68,
+      "speaker": "agent",
+      "text": "Okay, so what you do is just call the finance company."
+    },
+    {
+      "start": 60.92,
+      "end": 61.48,
+      "speaker": "customer",
+      "text": "Mm-hmm."
+    },
+    {
+      "start": 62.68,
+      "end": 64.36,
+      "speaker": "agent",
+      "text": "Yeah, just call the finance company."
+    },
+    {
+      "start": 64.68,
+      "end": 66.76,
+      "speaker": "agent",
+      "text": "Once they've sent you the settlement, that's all good to go."
+    },
+    {
+      "start": 66.92,
+      "end": 68.36,
+      "speaker": "agent",
+      "text": "You can complete that, alright?"
+    },
+    {
+      "start": 68.6,
+      "end": 68.84,
+      "speaker": "customer",
+      "text": "Okay."
+    },
+    {
+      "start": 70.2,
+      "end": 70.76,
+      "speaker": "agent",
+      "text": "No worries."
+    },
+    {
+      "start": 70.84,
+      "end": 71.24,
+      "speaker": "agent",
+      "text": "Bye bye."
+    },
+    {
+      "start": 71.56,
+      "end": 71.8,
+      "speaker": "customer",
+      "text": "Thank you."
+    },
+    {
+      "start": 72.12,
+      "end": 72.76,
+      "speaker": "customer",
+      "text": "Bye."
+    },
+    {
+      "start": 73.4,
+      "end": 75.72,
+      "speaker": "agent",
+      "text": "Uh yeah, I've got your keys, don't worry."
+    },
+    {
+      "start": 75.96,
+      "end": 76.52,
+      "speaker": "agent",
+      "text": "Yeah, yeah, yeah."
+    },
+    {
+      "start": 76.6,
+      "end": 77.88,
+      "speaker": "agent",
+      "text": "Do you want to give her the keys?"
+    },
+    {
+      "start": 78.04,
+      "end": 78.6,
+      "speaker": "agent",
+      "text": "Um is your"
+    }
+  ]
+}

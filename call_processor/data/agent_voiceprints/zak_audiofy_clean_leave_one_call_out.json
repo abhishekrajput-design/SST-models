@@ -1,0 +1,284 @@
+{
+  "agent_slug": "zak_raissi_barnet",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "label_source": "folder-data",
+  "offset_mode": "auto-source",
+  "include_source_prefix": "",
+  "include_calls": [],
+  "exclude_calls": [],
+  "calls": 2,
+  "eval_rows": 31,
+  "clean_rows": 75,
+  "skipped_calls": [],
+  "skipped_segments": [],
+  "folds": [
+    {
+      "heldout_call": "call_14",
+      "train_segments": 87,
+      "train_eval_segments": 27,
+      "test_segments": 4,
+      "customer_p95": 0.2738,
+      "calibrated_threshold": 0.34,
+      "best_train_threshold": {
+        "threshold": 0.28,
+        "segments": 27,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 27,
+        "total": 27,
+        "agent_correct": 18,
+        "agent_total": 18,
+        "customer_correct": 9,
+        "customer_total": 9,
+        "errors": [],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.34,
+        "segments": 4,
+        "overall_accuracy": 75.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 50.0,
+        "correct": 3,
+        "total": 4,
+        "agent_correct": 2,
+        "agent_total": 2,
+        "customer_correct": 1,
+        "customer_total": 2,
+        "errors": [
+          {
+            "call": "call_14",
+            "segment": 10,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.4013,
+            "text": "Alright, okay, Sarah, thanks."
+          }
+        ]
+      },
+      "train_tuned": {
+        "threshold": 0.28,
+        "segments": 4,
+        "overall_accuracy": 75.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 50.0,
+        "correct": 3,
+        "total": 4,
+        "agent_correct": 2,
+        "agent_total": 2,
+        "customer_correct": 1,
+        "customer_total": 2,
+        "errors": [
+          {
+            "call": "call_14",
+            "segment": 10,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.4013,
+            "text": "Alright, okay, Sarah, thanks."
+          }
+        ]
+      }
+    },
+    {
+      "heldout_call": "call_17",
+      "train_segments": 77,
+      "train_eval_segments": 4,
+      "test_segments": 27,
+      "customer_p95": 0.4123,
+      "calibrated_threshold": 0.4723,
+      "best_train_threshold": {
+        "threshold": 0.425,
+        "segments": 4,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 4,
+        "total": 4,
+        "agent_correct": 2,
+        "agent_total": 2,
+        "customer_correct": 2,
+        "customer_total": 2,
+        "errors": [],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.4723,
+        "segments": 27,
+        "overall_accuracy": 92.59,
+        "agent_accuracy": 88.89,
+        "customer_accuracy": 100.0,
+        "correct": 25,
+        "total": 27,
+        "agent_correct": 16,
+        "agent_total": 18,
+        "customer_correct": 9,
+        "customer_total": 9,
+        "errors": [
+          {
+            "call": "call_17",
+            "segment": 20,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.3359,
+            "text": "Uh so it's obviously a big lend."
+          },
+          {
+            "call": "call_17",
+            "segment": 40,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.4711,
+            "text": "Alright, take care of yourself."
+          }
+        ]
+      },
+      "train_tuned": {
+        "threshold": 0.425,
+        "segments": 27,
+        "overall_accuracy": 96.3,
+        "agent_accuracy": 94.44,
+        "customer_accuracy": 100.0,
+        "correct": 26,
+        "total": 27,
+        "agent_correct": 17,
+        "agent_total": 18,
+        "customer_correct": 9,
+        "customer_total": 9,
+        "errors": [
+          {
+            "call": "call_17",
+            "segment": 20,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.3359,
+            "text": "Uh so it's obviously a big lend."
+          }
+        ]
+      }
+    }
+  ],
+  "calibrated_leave_one_call_out": {
+    "overall_accuracy": 90.32,
+    "agent_accuracy": 90.0,
+    "customer_accuracy": 90.91,
+    "correct": 28,
+    "total": 31,
+    "agent_correct": 18,
+    "agent_total": 20,
+    "customer_correct": 10,
+    "customer_total": 11,
+    "per_call": {
+      "call_14": {
+        "threshold": 0.34,
+        "segments": 4,
+        "overall_accuracy": 75.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 50.0,
+        "correct": 3,
+        "total": 4,
+        "agent_correct": 2,
+        "agent_total": 2,
+        "customer_correct": 1,
+        "customer_total": 2
+      },
+      "call_17": {
+        "threshold": 0.4723,
+        "segments": 27,
+        "overall_accuracy": 92.59,
+        "agent_accuracy": 88.89,
+        "customer_accuracy": 100.0,
+        "correct": 25,
+        "total": 27,
+        "agent_correct": 16,
+        "agent_total": 18,
+        "customer_correct": 9,
+        "customer_total": 9
+      }
+    },
+    "errors": [
+      {
+        "call": "call_14",
+        "segment": 10,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.4013,
+        "text": "Alright, okay, Sarah, thanks."
+      },
+      {
+        "call": "call_17",
+        "segment": 20,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3359,
+        "text": "Uh so it's obviously a big lend."
+      },
+      {
+        "call": "call_17",
+        "segment": 40,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4711,
+        "text": "Alright, take care of yourself."
+      }
+    ]
+  },
+  "train_tuned_leave_one_call_out": {
+    "overall_accuracy": 93.55,
+    "agent_accuracy": 95.0,
+    "customer_accuracy": 90.91,
+    "correct": 29,
+    "total": 31,
+    "agent_correct": 19,
+    "agent_total": 20,
+    "customer_correct": 10,
+    "customer_total": 11,
+    "per_call": {
+      "call_14": {
+        "threshold": 0.28,
+        "segments": 4,
+        "overall_accuracy": 75.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 50.0,
+        "correct": 3,
+        "total": 4,
+        "agent_correct": 2,
+        "agent_total": 2,
+        "customer_correct": 1,
+        "customer_total": 2
+      },
+      "call_17": {
+        "threshold": 0.425,
+        "segments": 27,
+        "overall_accuracy": 96.3,
+        "agent_accuracy": 94.44,
+        "customer_accuracy": 100.0,
+        "correct": 26,
+        "total": 27,
+        "agent_correct": 17,
+        "agent_total": 18,
+        "customer_correct": 9,
+        "customer_total": 9
+      }
+    },
+    "errors": [
+      {
+        "call": "call_14",
+        "segment": 10,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.4013,
+        "text": "Alright, okay, Sarah, thanks."
+      },
+      {
+        "call": "call_17",
+        "segment": 20,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3359,
+        "text": "Uh so it's obviously a big lend."
+      }
+    ]
+  }
+}

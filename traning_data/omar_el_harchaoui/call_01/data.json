@@ -1,0 +1,1117 @@
+{
+  "call_id": "69efc071f91ac02559f83167",
+  "agent_name": "Omar El Harchaoui",
+  "source": "api",
+  "segments": [
+    {
+      "start": 2.4,
+      "end": 3.005,
+      "speaker": "customer",
+      "text": "Hello?"
+    },
+    {
+      "start": 5.344,
+      "end": 5.727,
+      "speaker": "customer",
+      "text": "Hello?"
+    },
+    {
+      "start": 8.475,
+      "end": 9.947,
+      "speaker": "agent",
+      "text": "Hello, I'm off to Sao Paulo."
+    },
+    {
+      "start": 10.391,
+      "end": 11.903,
+      "speaker": "customer",
+      "text": "Speaking."
+    },
+    {
+      "start": 12.086,
+      "end": 15.278,
+      "speaker": "agent",
+      "text": "Oh, I'm good, thank you."
+    },
+    {
+      "start": 16.929,
+      "end": 17.222,
+      "speaker": "agent",
+      "text": "Yeah."
+    },
+    {
+      "start": 17.452,
+      "end": 21.661,
+      "speaker": "agent",
+      "text": "I'm just giving you a quick call regarding the Peugeot 5008 you need an enquiry on."
+    },
+    {
+      "start": 21.903,
+      "end": 22.467,
+      "speaker": "customer",
+      "text": "Yes."
+    },
+    {
+      "start": 22.447,
+      "end": 25.379,
+      "speaker": "customer",
+      "text": "Sorry, I need to find it again."
+    },
+    {
+      "start": 25.419,
+      "end": 26.551,
+      "speaker": "customer",
+      "text": "CarPlanet"
+    },
+    {
+      "start": 26.784,
+      "end": 30.01,
+      "speaker": "customer",
+      "text": "You have my number, are you able to send it to me on WhatsApp?"
+    },
+    {
+      "start": 30.615,
+      "end": 33.132,
+      "speaker": "agent",
+      "text": "Yeah of course, I'll turn it over to you now."
+    },
+    {
+      "start": 33.112,
+      "end": 38.127,
+      "speaker": "customer",
+      "text": "I'm not sure which one."
+    },
+    {
+      "start": 38.107,
+      "end": 42.211,
+      "speaker": "agent",
+      "text": "I've got good news for you, with the vehicle, it is still available."
+    },
+    {
+      "start": 42.191,
+      "end": 44.27,
+      "speaker": "agent",
+      "text": "It is located in my bonded site."
+    },
+    {
+      "start": 44.604,
+      "end": 47.678,
+      "speaker": "agent",
+      "text": "If you don't mind me asking, where are you located, Sir?"
+    },
+    {
+      "start": 49.869,
+      "end": 54.648,
+      "speaker": "customer",
+      "text": "I'm in Bedfordshire Bedfordshire"
+    },
+    {
+      "start": 54.628,
+      "end": 57.213,
+      "speaker": "agent",
+      "text": "Oh, shit."
+    },
+    {
+      "start": 57.547,
+      "end": 59.244,
+      "speaker": "agent",
+      "text": "Okay, so you're not too far, which is good."
+    },
+    {
+      "start": 59.325,
+      "end": 60.395,
+      "speaker": "agent",
+      "text": "Just above Luton, right?"
+    },
+    {
+      "start": 60.517,
+      "end": 61.769,
+      "speaker": "customer",
+      "text": "Yeah, just above Luton, yeah, that's correct."
+    },
+    {
+      "start": 62.036,
+      "end": 63.446,
+      "speaker": "agent",
+      "text": "Okay, perfect."
+    },
+    {
+      "start": 63.487,
+      "end": 63.997,
+      "speaker": "agent",
+      "text": "Shut up, Paul."
+    },
+    {
+      "start": 64.162,
+      "end": 69.11,
+      "speaker": "agent",
+      "text": "I've dropped you a little message on WhatsApp, please drop me a little reply and I can send over the link to the vehicle."
+    },
+    {
+      "start": 69.09,
+      "end": 72.755,
+      "speaker": "agent",
+      "text": "I got in the vehicle which was in a really nice car"
+    },
+    {
+      "start": 72.87,
+      "end": 75.608,
+      "speaker": "agent",
+      "text": "What attracted you to his vehicle?"
+    },
+    {
+      "start": 77.198,
+      "end": 77.48,
+      "speaker": "customer",
+      "text": "Hello?"
+    },
+    {
+      "start": 78.523,
+      "end": 80.458,
+      "speaker": "agent",
+      "text": "What attracted you to the vehicle?"
+    },
+    {
+      "start": 80.539,
+      "end": 83.099,
+      "speaker": "customer",
+      "text": "I'm looking for a 7-seater"
+    },
+    {
+      "start": 83.079,
+      "end": 85.748,
+      "speaker": "customer",
+      "text": "I'm hoping you're flexible on the price."
+    },
+    {
+      "start": 85.728,
+      "end": 90.355,
+      "speaker": "customer",
+      "text": "I've not done a history check yet so I'm still due to do that but I wanted to"
+    },
+    {
+      "start": 90.335,
+      "end": 94.726,
+      "speaker": "customer",
+      "text": "First of all, the MOT is going to be expiring soon"
+    },
+    {
+      "start": 95.482,
+      "end": 98.962,
+      "speaker": "customer",
+      "text": "and you said the maintenance, I don't know what you mean by maintenance."
+    },
+    {
+      "start": 98.942,
+      "end": 103.18,
+      "speaker": "customer",
+      "text": "I'm not sure what you mean by that anyway."
+    },
+    {
+      "start": 104.426,
+      "end": 107.838,
+      "speaker": "agent",
+      "text": "maintenance and service history."
+    },
+    {
+      "start": 108.088,
+      "end": 111.365,
+      "speaker": "agent",
+      "text": "Service"
+    },
+    {
+      "start": 111.345,
+      "end": 112.534,
+      "speaker": "agent",
+      "text": "when you acquire the car."
+    },
+    {
+      "start": 113.038,
+      "end": 115.718,
+      "speaker": "agent",
+      "text": "So regarding the vehicle..."
+    },
+    {
+      "start": 115.698,
+      "end": 119.836,
+      "speaker": "customer",
+      "text": "27 that that would expire post service."
+    },
+    {
+      "start": 120.238,
+      "end": 125.236,
+      "speaker": "agent",
+      "text": "So with a service you do every 10,000 miles or every year, it's called a full service history."
+    },
+    {
+      "start": 125.216,
+      "end": 127.392,
+      "speaker": "agent",
+      "text": "Taking a look at it, which is really nice."
+    },
+    {
+      "start": 127.412,
+      "end": 129.185,
+      "speaker": "agent",
+      "text": "Now the MOT does expire."
+    },
+    {
+      "start": 129.367,
+      "end": 133.505,
+      "speaker": "agent",
+      "text": "end of November so you still have a bit of time left in your MOT."
+    },
+    {
+      "start": 133.485,
+      "end": 138.078,
+      "speaker": "agent",
+      "text": "if I'm not mistaken it's about 7 months which is a decent amount of time"
+    },
+    {
+      "start": 138.058,
+      "end": 142.145,
+      "speaker": "customer",
+      "text": "Um, and yeah, we're going to... No, I'm not doing this, there's a monster in that, what are we..."
+    },
+    {
+      "start": 143.492,
+      "end": 147.899,
+      "speaker": "agent",
+      "text": "Yep, so the MOT does expand at 26 November 2016."
+    },
+    {
+      "start": 147.879,
+      "end": 151.662,
+      "speaker": "customer",
+      "text": "I feel like a murderer at the end of the year."
+    },
+    {
+      "start": 151.642,
+      "end": 154.21,
+      "speaker": "agent",
+      "text": "It feels like that sometimes, it does, it does."
+    },
+    {
+      "start": 154.19,
+      "end": 158.598,
+      "speaker": "agent",
+      "text": "The car is in a molecular condition, taking a look at it."
+    },
+    {
+      "start": 158.578,
+      "end": 162.142,
+      "speaker": "customer",
+      "text": "I've been in an accident in the past."
+    },
+    {
+      "start": 162.982,
+      "end": 167.356,
+      "speaker": "agent",
+      "text": "No, so all of our vehicles are HP Agilent, so we make sure that we don't purchase a car."
+    },
+    {
+      "start": 167.336,
+      "end": 170.697,
+      "speaker": "agent",
+      "text": "if it's ever been written off, we make sure of that, okay?"
+    },
+    {
+      "start": 171.133,
+      "end": 174.477,
+      "speaker": "agent",
+      "text": "Now this vehicle is located in my barn up front."
+    },
+    {
+      "start": 174.457,
+      "end": 177.7,
+      "speaker": "agent",
+      "text": "So are you looking to come in and take a look at a vehicle or take it for a test drive?"
+    },
+    {
+      "start": 177.68,
+      "end": 180.248,
+      "speaker": "customer",
+      "text": "Yeah, I think we might have to."
+    },
+    {
+      "start": 180.228,
+      "end": 184.788,
+      "speaker": "customer",
+      "text": "We'll have to anyway because obviously I don't want to..."
+    },
+    {
+      "start": 185.274,
+      "end": 189.8,
+      "speaker": "customer",
+      "text": "I mixed something that I haven't tested to make sure it's okay."
+    },
+    {
+      "start": 190.337,
+      "end": 191.885,
+      "speaker": "agent",
+      "text": "Yeah, of course."
+    },
+    {
+      "start": 191.905,
+      "end": 195.183,
+      "speaker": "customer",
+      "text": "Yeah, so definitely want to just drive in."
+    },
+    {
+      "start": 196.007,
+      "end": 196.977,
+      "speaker": "agent",
+      "text": "That's perfect now."
+    },
+    {
+      "start": 197.361,
+      "end": 199.098,
+      "speaker": "agent",
+      "text": "We are open from 9am."
+    },
+    {
+      "start": 199.078,
+      "end": 202.287,
+      "speaker": "agent",
+      "text": "to 9pm every single day, Sundays 10-5."
+    },
+    {
+      "start": 202.723,
+      "end": 205.78,
+      "speaker": "agent",
+      "text": "What time and day are you looking to come in and test drive the car?"
+    },
+    {
+      "start": 205.76,
+      "end": 207.492,
+      "speaker": "customer",
+      "text": "Let me see where Brian is."
+    },
+    {
+      "start": 207.512,
+      "end": 207.94,
+      "speaker": "customer",
+      "text": "There he is."
+    },
+    {
+      "start": 211.076,
+      "end": 213.796,
+      "speaker": "customer",
+      "text": "I think Sunday might be..."
+    },
+    {
+      "start": 215.379,
+      "end": 216.564,
+      "speaker": "customer",
+      "text": "Possible"
+    },
+    {
+      "start": 218.619,
+      "end": 223.516,
+      "speaker": "customer",
+      "text": "because there should be weekly groups of church in North London"
+    },
+    {
+      "start": 224.036,
+      "end": 227.195,
+      "speaker": "customer",
+      "text": "I think Barnet might be close to Ruffalo."
+    },
+    {
+      "start": 229.031,
+      "end": 231.81,
+      "speaker": "agent",
+      "text": "Yeah, where did you go to church?"
+    },
+    {
+      "start": 231.831,
+      "end": 234.046,
+      "speaker": "customer",
+      "text": "Was it called Jesus House?"
+    },
+    {
+      "start": 234.026,
+      "end": 235.338,
+      "speaker": "customer",
+      "text": "in what do you call it?"
+    },
+    {
+      "start": 235.358,
+      "end": 235.924,
+      "speaker": "customer",
+      "text": "North London."
+    },
+    {
+      "start": 235.944,
+      "end": 237.841,
+      "speaker": "customer",
+      "text": "That would be... Brent Cross."
+    },
+    {
+      "start": 237.862,
+      "end": 238.467,
+      "speaker": "customer",
+      "text": "Brent Cross."
+    },
+    {
+      "start": 239.291,
+      "end": 240.375,
+      "speaker": "agent",
+      "text": "Very close."
+    },
+    {
+      "start": 240.692,
+      "end": 242.746,
+      "speaker": "agent",
+      "text": "Yes, that's not far from us at all."
+    },
+    {
+      "start": 242.766,
+      "end": 244.88,
+      "speaker": "agent",
+      "text": "It's literally on the A406, maybe..."
+    },
+    {
+      "start": 244.86,
+      "end": 248.339,
+      "speaker": "agent",
+      "text": "I think it's maybe a 15 minute drive away."
+    },
+    {
+      "start": 248.319,
+      "end": 251.697,
+      "speaker": "customer",
+      "text": "I think maybe with time they would work better for us."
+    },
+    {
+      "start": 252.437,
+      "end": 255.055,
+      "speaker": "agent",
+      "text": "Yeah, we can get that all booked in for you for Sunday."
+    },
+    {
+      "start": 255.035,
+      "end": 259.021,
+      "speaker": "agent",
+      "text": "come and take a look and take a little test drive you can get also at sea."
+    },
+    {
+      "start": 259.001,
+      "end": 262.092,
+      "speaker": "agent",
+      "text": "Let me get that potentiometer now."
+    },
+    {
+      "start": 262.072,
+      "end": 266.53,
+      "speaker": "customer",
+      "text": "You might need to be flexible with us a little bit in terms of the exact..."
+    },
+    {
+      "start": 266.51,
+      "end": 270.53,
+      "speaker": "customer",
+      "text": "time, because we have to finish the list and then hit clean."
+    },
+    {
+      "start": 271.218,
+      "end": 276.233,
+      "speaker": "agent",
+      "text": "What time do you normally finish service?"
+    },
+    {
+      "start": 276.213,
+      "end": 277.6,
+      "speaker": "customer",
+      "text": "Supremes."
+    },
+    {
+      "start": 278.93,
+      "end": 283.658,
+      "speaker": "customer",
+      "text": "Sometimes longer sometimes shorter"
+    },
+    {
+      "start": 283.638,
+      "end": 287.472,
+      "speaker": "customer",
+      "text": "I think usually maximum 12, 12.30 is it?"
+    },
+    {
+      "start": 287.452,
+      "end": 289.649,
+      "speaker": "customer",
+      "text": "of America."
+    },
+    {
+      "start": 289.933,
+      "end": 292.737,
+      "speaker": "customer",
+      "text": "It's double possibility."
+    },
+    {
+      "start": 292.717,
+      "end": 297.732,
+      "speaker": "customer",
+      "text": "Yeah, so it's the first one, yeah."
+    },
+    {
+      "start": 297.712,
+      "end": 300.483,
+      "speaker": "agent",
+      "text": "Yeah I think so."
+    },
+    {
+      "start": 301.273,
+      "end": 302.925,
+      "speaker": "agent",
+      "text": "Okay so it's also fairly finished."
+    },
+    {
+      "start": 302.985,
+      "end": 306.288,
+      "speaker": "agent",
+      "text": "What I'll do for you, just to give you a bit of extra time, I booked you in for 1.30."
+    },
+    {
+      "start": 306.268,
+      "end": 310.945,
+      "speaker": "agent",
+      "text": "so you can"
+    },
+    {
+      "start": 310.925,
+      "end": 312.599,
+      "speaker": "agent",
+      "text": "test drive and take a look at the vehicle."
+    },
+    {
+      "start": 312.765,
+      "end": 316.16,
+      "speaker": "agent",
+      "text": "Now the good news is you are coming to my Barnet's right, it's our flagship store."
+    },
+    {
+      "start": 316.325,
+      "end": 319.501,
+      "speaker": "agent",
+      "text": "so if we do have around a thousand cars on site"
+    },
+    {
+      "start": 319.481,
+      "end": 324.496,
+      "speaker": "agent",
+      "text": "So if you do want to take a look at some other cars that we do have there, you're more than welcome to Sayo, okay?"
+    },
+    {
+      "start": 325.337,
+      "end": 326.49,
+      "speaker": "agent",
+      "text": "That's perfect, that's perfect."
+    },
+    {
+      "start": 326.551,
+      "end": 328.411,
+      "speaker": "agent",
+      "text": "Now I've got everything booked in."
+    },
+    {
+      "start": 328.391,
+      "end": 330.925,
+      "speaker": "agent",
+      "text": "Just make sure you do bring your driver's license with you, okay?"
+    },
+    {
+      "start": 330.905,
+      "end": 334.267,
+      "speaker": "customer",
+      "text": "Can I check what warranty you have on your car?"
+    },
+    {
+      "start": 334.922,
+      "end": 337.783,
+      "speaker": "agent",
+      "text": "Yeah, so when you purchase a car from us, you get two things."
+    },
+    {
+      "start": 337.904,
+      "end": 339.093,
+      "speaker": "agent",
+      "text": "The first thing is optional."
+    },
+    {
+      "start": 339.309,
+      "end": 342.468,
+      "speaker": "agent",
+      "text": "The first thing you get is 1 year free AA breakdown cover"
+    },
+    {
+      "start": 342.448,
+      "end": 346.99,
+      "speaker": "agent",
+      "text": "Second thing you get is 6 months cover with CarPlanet so if anything goes wrong"
+    },
+    {
+      "start": 346.97,
+      "end": 350.213,
+      "speaker": "agent",
+      "text": "Just give us a call, we'll get everything sorted for you."
+    },
+    {
+      "start": 350.531,
+      "end": 354.854,
+      "speaker": "agent",
+      "text": "and the first thing you get is our extended warranty."
+    },
+    {
+      "start": 355.323,
+      "end": 360.035,
+      "speaker": "agent",
+      "text": "that covers you on everything on the vehicle from bumper to bumper anything mechanical or electrical"
+    },
+    {
+      "start": 360.015,
+      "end": 361.52,
+      "speaker": "agent",
+      "text": "up to the price of the call."
+    },
+    {
+      "start": 361.837,
+      "end": 366.093,
+      "speaker": "agent",
+      "text": "If you're happy with that, I can get one of my colleagues on arrival on Sunday to..."
+    },
+    {
+      "start": 366.073,
+      "end": 367.229,
+      "speaker": "agent",
+      "text": "walkthrough the details with you."
+    },
+    {
+      "start": 367.25,
+      "end": 368.0,
+      "speaker": "agent",
+      "text": "How does that sound?"
+    },
+    {
+      "start": 368.756,
+      "end": 371.375,
+      "speaker": "customer",
+      "text": "Yeah, I mean, if you send me all the details, it'd be helpful."
+    },
+    {
+      "start": 371.355,
+      "end": 374.21,
+      "speaker": "customer",
+      "text": "I always feel like six months is quite short."
+    },
+    {
+      "start": 374.325,
+      "end": 377.821,
+      "speaker": "customer",
+      "text": "but for one to notice an issue with the car"
+    },
+    {
+      "start": 377.801,
+      "end": 382.445,
+      "speaker": "customer",
+      "text": "Do you go up to a year at all?"
+    },
+    {
+      "start": 382.425,
+      "end": 385.313,
+      "speaker": "customer",
+      "text": "Our activity is also the manufacturer's warranty."
+    },
+    {
+      "start": 385.445,
+      "end": 388.317,
+      "speaker": "agent",
+      "text": "Yeah, so with our vehicles, whenever we purchase one"
+    },
+    {
+      "start": 388.297,
+      "end": 390.832,
+      "speaker": "agent",
+      "text": "We put it through a 150 point check."
+    },
+    {
+      "start": 390.812,
+      "end": 394.24,
+      "speaker": "agent",
+      "text": "makers of the cars mechanically and electrically sound."
+    },
+    {
+      "start": 394.423,
+      "end": 399.185,
+      "speaker": "agent",
+      "text": "so you have nothing to worry about in that aspect because the car would have been checked"
+    },
+    {
+      "start": 399.384,
+      "end": 400.418,
+      "speaker": "agent",
+      "text": "very very thoroughly."
+    },
+    {
+      "start": 400.582,
+      "end": 405.26,
+      "speaker": "agent",
+      "text": "Now with the warranty again 6 months of cover you get from us it covers you on anything"
+    },
+    {
+      "start": 405.408,
+      "end": 408.01,
+      "speaker": "agent",
+      "text": "If you do want to extend it, you're more than welcome to."
+    },
+    {
+      "start": 408.294,
+      "end": 408.999,
+      "speaker": "agent",
+      "text": "with this vehicle."
+    },
+    {
+      "start": 409.059,
+      "end": 411.577,
+      "speaker": "agent",
+      "text": "I'm not exactly too sure if it has the manufacturer warranty."
+    },
+    {
+      "start": 411.719,
+      "end": 412.786,
+      "speaker": "agent",
+      "text": "Again,"
+    },
+    {
+      "start": 412.766,
+      "end": 414.94,
+      "speaker": "agent",
+      "text": "We would need to search that for you."
+    },
+    {
+      "start": 414.961,
+      "end": 417.477,
+      "speaker": "customer",
+      "text": "Ok, if you check that for me that would be helpful."
+    },
+    {
+      "start": 417.457,
+      "end": 418.409,
+      "speaker": "agent",
+      "text": "Yep, that's perfect."
+    },
+    {
+      "start": 418.429,
+      "end": 420.008,
+      "speaker": "agent",
+      "text": "Now, I've got that all booked in for you."
+    },
+    {
+      "start": 419.988,
+      "end": 424.447,
+      "speaker": "agent",
+      "text": "If anything comes up, just give a call up to CarPlanet and we can get everything sorted for you, okay?"
+    },
+    {
+      "start": 424.427,
+      "end": 428.986,
+      "speaker": "customer",
+      "text": "Sure, and my last question I asked before, I mean I'll check with my cousin, I'm there as well but..."
+    },
+    {
+      "start": 429.287,
+      "end": 431.306,
+      "speaker": "customer",
+      "text": "are you flexible on the price?"
+    },
+    {
+      "start": 431.79,
+      "end": 433.93,
+      "speaker": "agent",
+      "text": "so with our prices they are fixed"
+    },
+    {
+      "start": 434.231,
+      "end": 436.951,
+      "speaker": "agent",
+      "text": "Simply because we are the cheapest in a 100 mile radius."
+    },
+    {
+      "start": 436.931,
+      "end": 440.242,
+      "speaker": "agent",
+      "text": "We do price match, so if you do find a cheaper car anywhere else"
+    },
+    {
+      "start": 440.525,
+      "end": 442.385,
+      "speaker": "agent",
+      "text": "will be bought at a high price, my tribute."
+    },
+    {
+      "start": 442.635,
+      "end": 447.413,
+      "speaker": "agent",
+      "text": "Now with this vehicle, like I said, you are getting a full service, you are getting almost several amounts of MOT."
+    },
+    {
+      "start": 447.63,
+      "end": 452.189,
+      "speaker": "agent",
+      "text": "and you're getting the reliability factor because like I said it goes through that 150 point check."
+    },
+    {
+      "start": 452.625,
+      "end": 457.454,
+      "speaker": "agent",
+      "text": "The reason why other cars are priced so low is because they don't go through all these things, probably breaking down on you."
+    },
+    {
+      "start": 457.67,
+      "end": 462.618,
+      "speaker": "agent",
+      "text": "with our cars because it's been thoroughly checked it does give you the peace of mind that the car is going to be secure."
+    },
+    {
+      "start": 462.783,
+      "end": 464.828,
+      "speaker": "agent",
+      "text": "two years, three years down the line."
+    },
+    {
+      "start": 465.129,
+      "end": 467.815,
+      "speaker": "agent",
+      "text": "That's the reason why our cars' prices are fixed."
+    },
+    {
+      "start": 467.795,
+      "end": 471.713,
+      "speaker": "customer",
+      "text": "Well, I'm hoping it will be good 10 years down the line, not just 3 years."
+    },
+    {
+      "start": 471.693,
+      "end": 474.447,
+      "speaker": "agent",
+      "text": "Not 2-3 years of course, much more."
+    },
+    {
+      "start": 474.427,
+      "end": 477.417,
+      "speaker": "customer",
+      "text": "I'm going to have to do it again in the next three years."
+    },
+    {
+      "start": 477.397,
+      "end": 478.804,
+      "speaker": "customer",
+      "text": "That sounds like a marriage."
+    },
+    {
+      "start": 479.628,
+      "end": 482.362,
+      "speaker": "agent",
+      "text": "Of course I understand."
+    },
+    {
+      "start": 482.342,
+      "end": 484.844,
+      "speaker": "customer",
+      "text": "No, but I am going to be buying cash."
+    },
+    {
+      "start": 484.865,
+      "end": 486.378,
+      "speaker": "customer",
+      "text": "I'm not going to be using your..."
+    },
+    {
+      "start": 486.358,
+      "end": 490.563,
+      "speaker": "customer",
+      "text": "PCPO and all of that so I would be looking to negotiate when I'm there."
+    },
+    {
+      "start": 490.543,
+      "end": 492.335,
+      "speaker": "agent",
+      "text": "Yeah, of course, I completely understand."
+    },
+    {
+      "start": 492.534,
+      "end": 493.947,
+      "speaker": "agent",
+      "text": "Like I said, the prices are fixed."
+    },
+    {
+      "start": 493.967,
+      "end": 496.975,
+      "speaker": "agent",
+      "text": "Now, if you do want to take a look at other cars we have on site, like I said, we have a thousand."
+    },
+    {
+      "start": 497.225,
+      "end": 500.789,
+      "speaker": "agent",
+      "text": "So you can take a look at some other cars that we do have, you're not committed to one, okay?"
+    },
+    {
+      "start": 501.056,
+      "end": 502.068,
+      "speaker": "customer",
+      "text": "Okay."
+    },
+    {
+      "start": 502.088,
+      "end": 504.738,
+      "speaker": "customer",
+      "text": "Do you have any that is similar to, again..."
+    },
+    {
+      "start": 504.718,
+      "end": 507.353,
+      "speaker": "customer",
+      "text": "Well, we're actually similar to this, along..."
+    },
+    {
+      "start": 508.025,
+      "end": 511.589,
+      "speaker": "customer",
+      "text": "I'm looking for a seven-seater that"
+    },
+    {
+      "start": 511.569,
+      "end": 515.572,
+      "speaker": "customer",
+      "text": "fold flat because I noticed some of them don't fold flat properly"
+    },
+    {
+      "start": 515.552,
+      "end": 520.567,
+      "speaker": "customer",
+      "text": "and obviously because of the kids, it would be good to have it fixed."
+    },
+    {
+      "start": 520.547,
+      "end": 523.047,
+      "speaker": "customer",
+      "text": "I don't want something too old."
+    },
+    {
+      "start": 523.263,
+      "end": 526.017,
+      "speaker": "customer",
+      "text": "and I want a fantastic price."
+    },
+    {
+      "start": 525.997,
+      "end": 526.827,
+      "speaker": "agent",
+      "text": "Yeah, of course."
+    },
+    {
+      "start": 526.989,
+      "end": 528.124,
+      "speaker": "agent",
+      "text": "Why would you say that?"
+    },
+    {
+      "start": 528.61,
+      "end": 529.055,
+      "speaker": "customer",
+      "text": "Yeah."
+    },
+    {
+      "start": 529.237,
+      "end": 534.151,
+      "speaker": "agent",
+      "text": "What I'll do for you then, on arrival, I'll get my colleagues to get this car ready for you."
+    },
+    {
+      "start": 534.3,
+      "end": 538.015,
+      "speaker": "agent",
+      "text": "as well as some other 7-seater cars that tick those boxes as well."
+    },
+    {
+      "start": 537.995,
+      "end": 540.53,
+      "speaker": "agent",
+      "text": "So when you do come in you can take a look at the Peugeot"
+    },
+    {
+      "start": 540.51,
+      "end": 544.175,
+      "speaker": "agent",
+      "text": "as well as the other cars we do have on site at Flickr as well."
+    },
+    {
+      "start": 544.155,
+      "end": 547.432,
+      "speaker": "customer",
+      "text": "Yeah, OK, we can do that."
+    },
+    {
+      "start": 547.412,
+      "end": 548.724,
+      "speaker": "customer",
+      "text": "So I'm guessing I'll get..."
+    },
+    {
+      "start": 548.866,
+      "end": 551.026,
+      "speaker": "customer",
+      "text": "I'm guessing on WhatsApp I'll get the... just..."
+    },
+    {
+      "start": 551.006,
+      "end": 552.546,
+      "speaker": "customer",
+      "text": "for my tech demo."
+    },
+    {
+      "start": 553.065,
+      "end": 557.084,
+      "speaker": "customer",
+      "text": "the appointment and all the stuff."
+    },
+    {
+      "start": 557.064,
+      "end": 560.78,
+      "speaker": "agent",
+      "text": "I'll send over the confirmation and everything to you, okay?"
+    },
+    {
+      "start": 561.485,
+      "end": 564.037,
+      "speaker": "agent",
+      "text": "Thank you for your time."
+    },
+    {
+      "start": 564.017,
+      "end": 568.137,
+      "speaker": "customer",
+      "text": "Oma, O-M-A-R Oma, let me just write it on that, what's that?"
+    },
+    {
+      "start": 568.117,
+      "end": 572.052,
+      "speaker": "customer",
+      "text": "are you going to be there on Sunday?"
+    },
+    {
+      "start": 572.032,
+      "end": 575.613,
+      "speaker": "agent",
+      "text": "just because I am only a call agent, but no worries, I'll give you the best one we have, okay?"
+    },
+    {
+      "start": 575.863,
+      "end": 580.27,
+      "speaker": "agent",
+      "text": "Bye Bye"
+    }
+  ]
+}

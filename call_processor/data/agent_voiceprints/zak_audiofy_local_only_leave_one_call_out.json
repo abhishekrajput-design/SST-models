@@ -1,0 +1,560 @@
+{
+  "agent_slug": "zak_raissi_barnet",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "label_source": "folder-data",
+  "offset_mode": "auto-source",
+  "include_source_prefix": "local_",
+  "calls": 3,
+  "eval_rows": 51,
+  "clean_rows": 75,
+  "skipped_calls": [
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_01\\data.json",
+      "call": "call_01",
+      "reason": "source 'gemini' does not match prefix 'local_'"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_02\\data.json",
+      "call": "call_02",
+      "reason": "source 'gemini' does not match prefix 'local_'"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_03\\data.json",
+      "call": "call_03",
+      "reason": "source 'gemini' does not match prefix 'local_'"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_04\\data.json",
+      "call": "call_04",
+      "reason": "source 'gemini' does not match prefix 'local_'"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_05\\data.json",
+      "call": "call_05",
+      "reason": "source 'gemini' does not match prefix 'local_'"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_06\\data.json",
+      "call": "call_06",
+      "reason": "source 'gemini' does not match prefix 'local_'"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_07\\data.json",
+      "call": "call_07",
+      "reason": "source 'gemini' does not match prefix 'local_'"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_09\\data.json",
+      "call": "call_09",
+      "reason": "source 'gemini' does not match prefix 'local_'"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_12\\data.json",
+      "call": "call_12",
+      "reason": "source 'gemini' does not match prefix 'local_'"
+    }
+  ],
+  "skipped_segments": [],
+  "folds": [
+    {
+      "heldout_call": "call_13",
+      "train_segments": 89,
+      "train_eval_segments": 31,
+      "test_segments": 20,
+      "customer_p95": 0.3482,
+      "calibrated_threshold": 0.4082,
+      "best_train_threshold": {
+        "threshold": 0.42,
+        "segments": 31,
+        "overall_accuracy": 96.77,
+        "agent_accuracy": 95.0,
+        "customer_accuracy": 100.0,
+        "correct": 30,
+        "total": 31,
+        "agent_correct": 19,
+        "agent_total": 20,
+        "customer_correct": 11,
+        "customer_total": 11,
+        "errors": [
+          {
+            "call": "call_17",
+            "segment": 20,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.3039,
+            "text": "Uh so it's obviously a big lend."
+          }
+        ],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.4082,
+        "segments": 20,
+        "overall_accuracy": 85.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 75.0,
+        "correct": 17,
+        "total": 20,
+        "agent_correct": 8,
+        "agent_total": 8,
+        "customer_correct": 9,
+        "customer_total": 12,
+        "errors": [
+          {
+            "call": "call_13",
+            "segment": 9,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.4373,
+            "text": "That's why they say now."
+          },
+          {
+            "call": "call_13",
+            "segment": 14,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.5378,
+            "text": "Uh you know you know Zach, somebody was like Zach."
+          },
+          {
+            "call": "call_13",
+            "segment": 27,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.4335,
+            "text": "I can't make it today though."
+          }
+        ]
+      },
+      "train_tuned": {
+        "threshold": 0.42,
+        "segments": 20,
+        "overall_accuracy": 85.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 75.0,
+        "correct": 17,
+        "total": 20,
+        "agent_correct": 8,
+        "agent_total": 8,
+        "customer_correct": 9,
+        "customer_total": 12,
+        "errors": [
+          {
+            "call": "call_13",
+            "segment": 9,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.4373,
+            "text": "That's why they say now."
+          },
+          {
+            "call": "call_13",
+            "segment": 14,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.5378,
+            "text": "Uh you know you know Zach, somebody was like Zach."
+          },
+          {
+            "call": "call_13",
+            "segment": 27,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.4335,
+            "text": "I can't make it today though."
+          }
+        ]
+      }
+    },
+    {
+      "heldout_call": "call_14",
+      "train_segments": 94,
+      "train_eval_segments": 47,
+      "test_segments": 4,
+      "customer_p95": 0.4447,
+      "calibrated_threshold": 0.5047,
+      "best_train_threshold": {
+        "threshold": 0.445,
+        "segments": 47,
+        "overall_accuracy": 95.74,
+        "agent_accuracy": 96.15,
+        "customer_accuracy": 95.24,
+        "correct": 45,
+        "total": 47,
+        "agent_correct": 25,
+        "agent_total": 26,
+        "customer_correct": 20,
+        "customer_total": 21,
+        "errors": [
+          {
+            "call": "call_13",
+            "segment": 14,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.5533,
+            "text": "Uh you know you know Zach, somebody was like Zach."
+          },
+          {
+            "call": "call_17",
+            "segment": 20,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.3006,
+            "text": "Uh so it's obviously a big lend."
+          }
+        ],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.5047,
+        "segments": 4,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 4,
+        "total": 4,
+        "agent_correct": 2,
+        "agent_total": 2,
+        "customer_correct": 2,
+        "customer_total": 2,
+        "errors": []
+      },
+      "train_tuned": {
+        "threshold": 0.445,
+        "segments": 4,
+        "overall_accuracy": 75.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 50.0,
+        "correct": 3,
+        "total": 4,
+        "agent_correct": 2,
+        "agent_total": 2,
+        "customer_correct": 1,
+        "customer_total": 2,
+        "errors": [
+          {
+            "call": "call_14",
+            "segment": 10,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.4456,
+            "text": "Alright, okay, Sarah, thanks."
+          }
+        ]
+      }
+    },
+    {
+      "heldout_call": "call_17",
+      "train_segments": 84,
+      "train_eval_segments": 24,
+      "test_segments": 27,
+      "customer_p95": 0.474,
+      "calibrated_threshold": 0.534,
+      "best_train_threshold": {
+        "threshold": 0.535,
+        "segments": 24,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 24,
+        "total": 24,
+        "agent_correct": 10,
+        "agent_total": 10,
+        "customer_correct": 14,
+        "customer_total": 14,
+        "errors": [],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.534,
+        "segments": 27,
+        "overall_accuracy": 88.89,
+        "agent_accuracy": 83.33,
+        "customer_accuracy": 100.0,
+        "correct": 24,
+        "total": 27,
+        "agent_correct": 15,
+        "agent_total": 18,
+        "customer_correct": 9,
+        "customer_total": 9,
+        "errors": [
+          {
+            "call": "call_17",
+            "segment": 8,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.4943,
+            "text": "So I have some good news and bad news."
+          },
+          {
+            "call": "call_17",
+            "segment": 20,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.3393,
+            "text": "Uh so it's obviously a big lend."
+          },
+          {
+            "call": "call_17",
+            "segment": 40,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.4732,
+            "text": "Alright, take care of yourself."
+          }
+        ]
+      },
+      "train_tuned": {
+        "threshold": 0.535,
+        "segments": 27,
+        "overall_accuracy": 88.89,
+        "agent_accuracy": 83.33,
+        "customer_accuracy": 100.0,
+        "correct": 24,
+        "total": 27,
+        "agent_correct": 15,
+        "agent_total": 18,
+        "customer_correct": 9,
+        "customer_total": 9,
+        "errors": [
+          {
+            "call": "call_17",
+            "segment": 8,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.4943,
+            "text": "So I have some good news and bad news."
+          },
+          {
+            "call": "call_17",
+            "segment": 20,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.3393,
+            "text": "Uh so it's obviously a big lend."
+          },
+          {
+            "call": "call_17",
+            "segment": 40,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.4732,
+            "text": "Alright, take care of yourself."
+          }
+        ]
+      }
+    }
+  ],
+  "calibrated_leave_one_call_out": {
+    "overall_accuracy": 88.24,
+    "agent_accuracy": 89.29,
+    "customer_accuracy": 86.96,
+    "correct": 45,
+    "total": 51,
+    "agent_correct": 25,
+    "agent_total": 28,
+    "customer_correct": 20,
+    "customer_total": 23,
+    "per_call": {
+      "call_13": {
+        "threshold": 0.4082,
+        "segments": 20,
+        "overall_accuracy": 85.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 75.0,
+        "correct": 17,
+        "total": 20,
+        "agent_correct": 8,
+        "agent_total": 8,
+        "customer_correct": 9,
+        "customer_total": 12
+      },
+      "call_14": {
+        "threshold": 0.5047,
+        "segments": 4,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 4,
+        "total": 4,
+        "agent_correct": 2,
+        "agent_total": 2,
+        "customer_correct": 2,
+        "customer_total": 2
+      },
+      "call_17": {
+        "threshold": 0.534,
+        "segments": 27,
+        "overall_accuracy": 88.89,
+        "agent_accuracy": 83.33,
+        "customer_accuracy": 100.0,
+        "correct": 24,
+        "total": 27,
+        "agent_correct": 15,
+        "agent_total": 18,
+        "customer_correct": 9,
+        "customer_total": 9
+      }
+    },
+    "errors": [
+      {
+        "call": "call_13",
+        "segment": 9,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.4373,
+        "text": "That's why they say now."
+      },
+      {
+        "call": "call_13",
+        "segment": 14,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.5378,
+        "text": "Uh you know you know Zach, somebody was like Zach."
+      },
+      {
+        "call": "call_13",
+        "segment": 27,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.4335,
+        "text": "I can't make it today though."
+      },
+      {
+        "call": "call_17",
+        "segment": 8,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4943,
+        "text": "So I have some good news and bad news."
+      },
+      {
+        "call": "call_17",
+        "segment": 20,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3393,
+        "text": "Uh so it's obviously a big lend."
+      },
+      {
+        "call": "call_17",
+        "segment": 40,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4732,
+        "text": "Alright, take care of yourself."
+      }
+    ]
+  },
+  "train_tuned_leave_one_call_out": {
+    "overall_accuracy": 86.27,
+    "agent_accuracy": 89.29,
+    "customer_accuracy": 82.61,
+    "correct": 44,
+    "total": 51,
+    "agent_correct": 25,
+    "agent_total": 28,
+    "customer_correct": 19,
+    "customer_total": 23,
+    "per_call": {
+      "call_13": {
+        "threshold": 0.42,
+        "segments": 20,
+        "overall_accuracy": 85.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 75.0,
+        "correct": 17,
+        "total": 20,
+        "agent_correct": 8,
+        "agent_total": 8,
+        "customer_correct": 9,
+        "customer_total": 12
+      },
+      "call_14": {
+        "threshold": 0.445,
+        "segments": 4,
+        "overall_accuracy": 75.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 50.0,
+        "correct": 3,
+        "total": 4,
+        "agent_correct": 2,
+        "agent_total": 2,
+        "customer_correct": 1,
+        "customer_total": 2
+      },
+      "call_17": {
+        "threshold": 0.535,
+        "segments": 27,
+        "overall_accuracy": 88.89,
+        "agent_accuracy": 83.33,
+        "customer_accuracy": 100.0,
+        "correct": 24,
+        "total": 27,
+        "agent_correct": 15,
+        "agent_total": 18,
+        "customer_correct": 9,
+        "customer_total": 9
+      }
+    },
+    "errors": [
+      {
+        "call": "call_13",
+        "segment": 9,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.4373,
+        "text": "That's why they say now."
+      },
+      {
+        "call": "call_13",
+        "segment": 14,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.5378,
+        "text": "Uh you know you know Zach, somebody was like Zach."
+      },
+      {
+        "call": "call_13",
+        "segment": 27,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.4335,
+        "text": "I can't make it today though."
+      },
+      {
+        "call": "call_14",
+        "segment": 10,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.4456,
+        "text": "Alright, okay, Sarah, thanks."
+      },
+      {
+        "call": "call_17",
+        "segment": 8,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4943,
+        "text": "So I have some good news and bad news."
+      },
+      {
+        "call": "call_17",
+        "segment": 20,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3393,
+        "text": "Uh so it's obviously a big lend."
+      },
+      {
+        "call": "call_17",
+        "segment": 40,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4732,
+        "text": "Alright, take care of yourself."
+      }
+    ]
+  }
+}

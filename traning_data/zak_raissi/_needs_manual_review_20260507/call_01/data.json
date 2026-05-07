@@ -1,0 +1,307 @@
+﻿{
+    "call_id":  "20260503T104319184_615752",
+    "agent_name":  "Zak Raissi",
+    "source":  "gemini",
+    "segments":  [
+                     {
+                         "start":  0.0,
+                         "end":  1.2,
+                         "speaker":  "customer",
+                         "text":  "Hello."
+                     },
+                     {
+                         "start":  1.5,
+                         "end":  4.1,
+                         "speaker":  "agent",
+                         "text":  "Hello, good afternoon, my friend Samuel."
+                     },
+                     {
+                         "start":  4.3,
+                         "end":  5.5,
+                         "speaker":  "customer",
+                         "text":  "Yes, Samuel speaking."
+                     },
+                     {
+                         "start":  5.7,
+                         "end":  8.0,
+                         "speaker":  "agent",
+                         "text":  "Calling you from Car Planet, I hope you\u0027re doing well."
+                     },
+                     {
+                         "start":  8.1,
+                         "end":  9.2,
+                         "speaker":  "customer",
+                         "text":  "I\u0027m good, thank you."
+                     },
+                     {
+                         "start":  9.5,
+                         "end":  20.0,
+                         "speaker":  "agent",
+                         "text":  "Just calling you to let you know we did receive your 250 yesterday and I did go ahead and mark the car and deposit and bring it down to Barnet. As well as that I hard searched your name yesterday but obviously the missus isn\u0027t it. If you can just confirm the name of your missus?"
+                     },
+                     {
+                         "start":  20.2,
+                         "end":  23.5,
+                         "speaker":  "customer",
+                         "text":  "It\u0027s Eugenia, Jessica and Niwa Jackson."
+                     },
+                     {
+                         "start":  24.0,
+                         "end":  45.0,
+                         "speaker":  "agent",
+                         "text":  "Alright perfect. Yeah, so I did a hard search with our prime lenders yesterday and obviously I didn\u0027t have a response for you yesterday before 9 so just coming back in the office and essentially so, with Close Brothers on a HP, I have got an acceptance for you guaranteed, they\u0027ve agreed to give you the max lend, meaning they don\u0027t require a further deposit above 500. Now that comes down to 16% at 411 pounds a month but to note that\u0027s on a HP not a PCP."
+                     },
+                     {
+                         "start":  45.2,
+                         "end":  46.0,
+                         "speaker":  "customer",
+                         "text":  "Okay."
+                     },
+                     {
+                         "start":  46.2,
+                         "end":  85.0,
+                         "speaker":  "agent",
+                         "text":  "Which means there is no balloon payment at the end. And if you give me one second I\u0027ll tell you something else. So yeah, and then I have 16.9 with Zopa at 412 pounds a month. However, Zopa\u0027s one, once I send documents the APR could change whereas the one with Close Brothers our prime lenders, that\u0027s a guaranteed acceptance for the full lend of the vehicle. I am still waiting for one lender to get back to us, that\u0027s MotoNovo. But usually just out of experience when Close Brothers come back with that sort of acceptance it\u0027s unlikely, it\u0027s not impossible but it\u0027s unlikely for MotoNovo to be significantly better so it might be a little bit cheaper, around 405, 400 pounds a month, obviously every penny helps, but as of yet they haven\u0027t given me a response."
+                     },
+                     {
+                         "start":  85.2,
+                         "end":  87.5,
+                         "speaker":  "customer",
+                         "text":  "Okay. So with the Close Brothers like..."
+                     },
+                     {
+                         "start":  87.7,
+                         "end":  88.5,
+                         "speaker":  "agent",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  88.7,
+                         "end":  90.5,
+                         "speaker":  "customer",
+                         "text":  "Down 12 pounds a month, right?"
+                     },
+                     {
+                         "start":  91.0,
+                         "end":  108.0,
+                         "speaker":  "agent",
+                         "text":  "Close brothers have accepted you at 411 pounds a month at 90 pence with only a 500 pound deposit. But yeah they are one of the best lenders that we work with so they do if you have any issues sort of they\u0027re very reputable in taking care and obviously helping out with early settlements. So you can always beat the interest. Go on."
+                     },
+                     {
+                         "start":  108.5,
+                         "end":  118.0,
+                         "speaker":  "customer",
+                         "text":  "Did they, I mean obviously when we were looking at your website yesterday she did say that she kinda prefers the LV 22 one, that\u0027s the one with the 9,000 miles on it isn\u0027t it?"
+                     },
+                     {
+                         "start":  118.5,
+                         "end":  130.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah, I hear it. But bear in mind, you just gotta take into consideration, numbers go up, that\u0027s all it is really. I can give you a quote for that. Now that I have the acceptance locked in I can tell you what LV22 would look like financially."
+                     },
+                     {
+                         "start":  130.2,
+                         "end":  132.5,
+                         "speaker":  "customer",
+                         "text":  "Okay, can you have a quick look?"
+                     },
+                     {
+                         "start":  133.0,
+                         "end":  165.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah bear with me right now I\u0027ll tell you but bear in mind SR72 considering it\u0027s a little bit cheaper it still has, let me tell you cos I\u0027m just looking at a video of it now even though I haven\u0027t seen it on site, bear with me. It still has virtual cockpit. It\u0027s still, it\u0027s still like not a low spec car but let me just check something one second. Yeah so SR72 it doesn\u0027t have a flat bottom steering but it does still have a full virtual cockpit. It still has the electric boot and it still has the Apple CarPlay with the two tone leather and Alcantara seats. If you would like me to put the other car into the application I can tell you what it would look like, give me a second. I\u0027m not gonna change the car yet I\u0027m just gonna give you a quote with the numbers that I have based on the acceptance I\u0027ve already got for you. Right. I\u0027m gonna put you on hold for one minute bear with me yeah."
+                     },
+                     {
+                         "start":  165.2,
+                         "end":  166.5,
+                         "speaker":  "customer",
+                         "text":  "No worries."
+                     },
+                     {
+                         "start":  226.0,
+                         "end":  227.0,
+                         "speaker":  "agent",
+                         "text":  "Hello Samuel."
+                     },
+                     {
+                         "start":  227.2,
+                         "end":  228.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah."
+                     },
+                     {
+                         "start":  228.5,
+                         "end":  248.0,
+                         "speaker":  "agent",
+                         "text":  "Yes obviously LV22 is around 2,900 pounds more than the other one which equates to around every thousand pounds usually increases your monthly payments around 20 22 pounds depending on the APR. Cos I know the APR with a 500 pound deposit on that LV22 meaning we\u0027re financing 19,950 it\u0027s coming around 480 pounds a month."
+                     },
+                     {
+                         "start":  248.5,
+                         "end":  255.0,
+                         "speaker":  "customer",
+                         "text":  "480 pounds a month. No that\u0027s fine. Um no we\u0027ll just leave it as the one that we\u0027ve done so."
+                     },
+                     {
+                         "start":  255.5,
+                         "end":  263.0,
+                         "speaker":  "agent",
+                         "text":  "But I do want you to look at the because you know what it is? The one that you\u0027ve looked at is a good car for its year considering it\u0027s three grand cheaper it\u0027s quite a high spec."
+                     },
+                     {
+                         "start":  263.5,
+                         "end":  272.0,
+                         "speaker":  "customer",
+                         "text":  "100% I\u0027ve told her she just wanted to kinda like have an idea of what it would be so I\u0027m just gonna let her know now. The LV22 is 480 a month."
+                     },
+                     {
+                         "start":  272.5,
+                         "end":  288.0,
+                         "speaker":  "agent",
+                         "text":  "It\u0027s 480 pounds a month and with 500 pound deposit obviously look if you\u0027re looking to increase your deposit then obviously I change the dynamic ever so slightly meaning we can get the payments lower but if you were looking to go ahead with the 5 bills down, 500 pound down sorry, that\u0027s what it would be looking like."
+                     },
+                     {
+                         "start":  288.5,
+                         "end":  296.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah. It won\u0027t come down much. It won\u0027t come down that much. Cos it\u0027s 2000, almost 2000, almost 3000 pounds more. So a finance..."
+                     },
+                     {
+                         "start":  296.5,
+                         "end":  300.0,
+                         "speaker":  "agent",
+                         "text":  "I can give you a quote, I can give you a quote with a thousand pound depo if you\u0027d like."
+                     },
+                     {
+                         "start":  300.2,
+                         "end":  303.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah please can I just check what that is?"
+                     },
+                     {
+                         "start":  303.5,
+                         "end":  306.0,
+                         "speaker":  "agent",
+                         "text":  "Yeah let me check, let me check for you now. Give me one second yeah."
+                     },
+                     {
+                         "start":  306.2,
+                         "end":  307.5,
+                         "speaker":  "customer",
+                         "text":  "No worries."
+                     },
+                     {
+                         "start":  308.0,
+                         "end":  309.5,
+                         "speaker":  "agent",
+                         "text":  "Say that again?"
+                     },
+                     {
+                         "start":  310.0,
+                         "end":  313.0,
+                         "speaker":  "customer",
+                         "text":  "No, no take it, just just have a check for me and let me know."
+                     },
+                     {
+                         "start":  313.5,
+                         "end":  325.0,
+                         "speaker":  "agent",
+                         "text":  "I\u0027ll tell you now just very quickly bear with me. With a thousand pound down, it means we\u0027re financing 19,450 rather than 19,950 it goes down to around 469 470. From 480."
+                     },
+                     {
+                         "start":  325.5,
+                         "end":  328.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah we\u0027ll just fix the original SR one then."
+                     },
+                     {
+                         "start":  328.5,
+                         "end":  336.0,
+                         "speaker":  "agent",
+                         "text":  "Obviously when you come down I\u0027ll make sure you actually get a chance to look at the car and tell me what you think in real life. When was you looking to come down have a look at the motor?"
+                     },
+                     {
+                         "start":  336.5,
+                         "end":  339.0,
+                         "speaker":  "customer",
+                         "text":  "Um, when, when would you get it to Barnet?"
+                     },
+                     {
+                         "start":  339.5,
+                         "end":  348.0,
+                         "speaker":  "agent",
+                         "text":  "Uh I don\u0027t see any reason why I can\u0027t bring it down today so it\u0027s already on its way to Barnet since I received your 250 yesterday I requested it yesterday night. Uh so most likely today is the truth."
+                     },
+                     {
+                         "start":  348.5,
+                         "end":  353.0,
+                         "speaker":  "customer",
+                         "text":  "Right. But time roughly cos I don\u0027t finish work till like 4 basically 4 o\u0027clock."
+                     },
+                     {
+                         "start":  353.5,
+                         "end":  354.5,
+                         "speaker":  "agent",
+                         "text":  "Okay seen."
+                     },
+                     {
+                         "start":  355.0,
+                         "end":  357.0,
+                         "speaker":  "customer",
+                         "text":  "So I don\u0027t think we\u0027ll make it today."
+                     },
+                     {
+                         "start":  357.5,
+                         "end":  366.0,
+                         "speaker":  "agent",
+                         "text":  "Okay that\u0027s no stress. That\u0027s no stress at all. That\u0027s no stress at all. Let\u0027s just put everything, if we could put everything through I\u0027ll give you a call maybe later today and I\u0027ll let you know a day that we can both come down and have a look at it."
+                     },
+                     {
+                         "start":  366.5,
+                         "end":  370.0,
+                         "speaker":  "customer",
+                         "text":  "So when you say let\u0027s put everything through do you mean you want me to send you the documents?"
+                     },
+                     {
+                         "start":  370.5,
+                         "end":  401.0,
+                         "speaker":  "agent",
+                         "text":  "Yes. I\u0027d be more than happy to send over documents, read over the numbers as mentioned with SR72 which is technically a 2023 with a 72 plate it was looking at 400, let me give you the exact quote, 411 pounds and 90 pence and that\u0027s over 500 pound deposit only. If you were to increase the deposit there obviously that would go down as well closer towards 400 pounds but leaving it at 500 that\u0027s what it\u0027s looking like. I\u0027ll send you over, I\u0027ll send you over the documents it\u0027ll come to your email, did you put down the missus\u0027s email on the finance proposal, did you put yours down?"
+                     },
+                     {
+                         "start":  401.5,
+                         "end":  405.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah it is. Yeah I put hers so it should come through that email."
+                     },
+                     {
+                         "start":  405.5,
+                         "end":  410.0,
+                         "speaker":  "agent",
+                         "text":  "Okay it will go straight to hers and Samuel what I\u0027m gonna do is just give me your email very quickly."
+                     },
+                     {
+                         "start":  410.5,
+                         "end":  418.0,
+                         "speaker":  "customer",
+                         "text":  "Yeah so it\u0027s samuel so S A M U E L K for Kilo N for November 1 0 @hotmail.com."
+                     },
+                     {
+                         "start":  418.5,
+                         "end":  431.0,
+                         "speaker":  "agent",
+                         "text":  "Cool no worries I\u0027m gonna send you over an email from myself directly. And if you have any questions or inquiries or any problems in regards to documentation just let me know and I\u0027ll help you out or give you a call back rather than you calling up. And yeah and then go on I\u0027ll speak to you soon."
+                     },
+                     {
+                         "start":  431.5,
+                         "end":  434.0,
+                         "speaker":  "customer",
+                         "text":  "Alright cheers thank you very much yeah."
+                     },
+                     {
+                         "start":  434.5,
+                         "end":  435.5,
+                         "speaker":  "agent",
+                         "text":  "Take care."
+                     }
+                 ]
+}

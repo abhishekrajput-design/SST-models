@@ -35,7 +35,7 @@ if sys.platform == "win32":
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 # Load .env
-ENV_PATH = SCRIPT_DIR.parent / ".env"
+ENV_PATH = SCRIPT_DIR.parents[2] / ".env"
 if ENV_PATH.exists():
     for line in ENV_PATH.read_text(encoding="utf-8").splitlines():
         line = line.strip()

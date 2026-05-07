@@ -1,0 +1,19 @@
+{
+  "zak_local_20260423": {
+    "agent_name": "Zak",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_local_20260423.npy",
+    "n_clips": 8,
+    "source": "local_clean_clips"
+  },
+  "omar_el_harchaoui": {
+    "agent_name": "Omar El Harchaoui",
+    "voiceprint_path": "data\\agent_voiceprints\\omar_el_harchaoui.npy",
+    "n_clips": 247,
+    "source": "audiofy_api_20260424"
+  },
+  "hussein_mohamed": {
+    "agent_name": "Hussein Mohamed",
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\hussein_mohamed.npy",
+    "source": "desk_recording_20260423"
+  }
+}
