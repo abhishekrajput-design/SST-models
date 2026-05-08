@@ -49,12 +49,16 @@ class AssemblyAITranscriber(BaseTranscriber):
     def _submit(self, upload_url: str, language: str) -> str:
         import urllib.request, json
         body = json.dumps({
-            "audio_url":       upload_url,
-            "speech_model":    "universal",   # Universal-2
-            "speaker_labels":  True,
-            "punctuate":       True,
-            "format_text":     True,
-            "language_code":   language,
+            "audio_url": upload_url,
+            "speech_models": ["universal-3-pro", "universal-2"],
+            "speaker_labels": True,
+            "speaker_options": {
+                "min_speakers_expected": int(os.getenv("ASSEMBLYAI_MIN_SPEAKERS", "3") or "3"),
+                "max_speakers_expected": int(os.getenv("ASSEMBLYAI_MAX_SPEAKERS", "5") or "5"),
+            },
+            "punctuate": True,
+            "format_text": True,
+            "language_code": language,
         }).encode()
         req = urllib.request.Request(
             TRANSCRIPT_URL, data=body,

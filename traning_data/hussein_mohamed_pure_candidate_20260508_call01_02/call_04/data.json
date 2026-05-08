@@ -1,0 +1,160 @@
+{
+  "call_id": "20260425T152512294_67102",
+  "agent_name": "Hussein Mohamed",
+  "source": "local_parakeet_textcue_candidate",
+  "source_result_id": "enhanced_20260425T152512294_67102__parakeet-tdt-0.6b-v3",
+  "agent_speaker": "SPEAKER_01",
+  "speaker_scores": {
+    "SPEAKER_00": {
+      "agent": 3.0400000000000027,
+      "customer": 3.0400000000000027,
+      "duration": 12.080000000000004
+    },
+    "SPEAKER_01": {
+      "agent": 24.839999999999996,
+      "customer": 0.0,
+      "duration": 26.48
+    }
+  },
+  "training_warning": "Candidate labels inferred from local ASR text cues; verify before treating as human/Gemini truth.",
+  "segments": [
+    {
+      "start": 0.4,
+      "end": 0.72,
+      "speaker": "customer",
+      "text": "Hello?"
+    },
+    {
+      "start": 1.2,
+      "end": 1.52,
+      "speaker": "customer",
+      "text": "Sorry."
+    },
+    {
+      "start": 2.32,
+      "end": 3.12,
+      "speaker": "agent",
+      "text": "Hiya, good afternoon."
+    },
+    {
+      "start": 3.2,
+      "end": 3.76,
+      "speaker": "agent",
+      "text": "I'm a speech."
+    },
+    {
+      "start": 5.2,
+      "end": 5.68,
+      "speaker": "customer",
+      "text": "Hello?"
+    },
+    {
+      "start": 6.16,
+      "end": 7.92,
+      "speaker": "agent",
+      "text": "Hi, I'm my speedpuja."
+    },
+    {
+      "start": 8.4,
+      "end": 8.72,
+      "speaker": "customer",
+      "text": "Yeah."
+    },
+    {
+      "start": 8.96,
+      "end": 11.2,
+      "speaker": "agent",
+      "text": "Hi, my name is Sane, I'm calling from Car Planet."
+    },
+    {
+      "start": 11.28,
+      "end": 11.76,
+      "speaker": "agent",
+      "text": "How are you doing?"
+    },
+    {
+      "start": 13.76,
+      "end": 15.04,
+      "speaker": "customer",
+      "text": "Hi, I'm good, I'm good."
+    },
+    {
+      "start": 15.12,
+      "end": 15.36,
+      "speaker": "customer",
+      "text": "Yeah."
+    },
+    {
+      "start": 15.6,
+      "end": 16.88,
+      "speaker": "agent",
+      "text": "I was just giving you a quick call."
+    },
+    {
+      "start": 16.96,
+      "end": 19.68,
+      "speaker": "agent",
+      "text": "I know you had an appointment uh for a rental capture today."
+    },
+    {
+      "start": 20.24,
+      "end": 23.28,
+      "speaker": "customer",
+      "text": "Yeah, but I have called and I canceled the appointment."
+    },
+    {
+      "start": 23.68,
+      "end": 24.48,
+      "speaker": "agent",
+      "text": "Okay, no problem."
+    },
+    {
+      "start": 24.64,
+      "end": 26.08,
+      "speaker": "agent",
+      "text": "Well when can you come down?"
+    },
+    {
+      "start": 26.32,
+      "end": 27.36,
+      "speaker": "agent",
+      "text": "It's just arrived."
+    },
+    {
+      "start": 28.08,
+      "end": 30.64,
+      "speaker": "customer",
+      "text": "I yeah, I mean the coming week it's quite tight for me."
+    },
+    {
+      "start": 30.8,
+      "end": 33.52,
+      "speaker": "customer",
+      "text": "Maybe after that I'll just check my dates and let you know, yeah?"
+    },
+    {
+      "start": 33.76,
+      "end": 45.92,
+      "speaker": "agent",
+      "text": "Yeah, we might not have the same car in stock, but what I'll do is I'll pop you a message and uh if we have uh over two thousand cars, I'll send you a website, let me know when you're available and then we can book appointment for you."
+    },
+    {
+      "start": 46.24,
+      "end": 47.04,
+      "speaker": "customer",
+      "text": "Yeah, sure, sure."
+    },
+    {
+      "start": 47.6,
+      "end": 48.32,
+      "speaker": "agent",
+      "text": "Alright, take care."
+    },
+    {
+      "start": 48.48,
+      "end": 48.96,
+      "speaker": "agent",
+      "text": "Bye-bye."
+    }
+  ]
+}

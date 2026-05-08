@@ -1,0 +1,232 @@
+{
+  "call_id": "20260426T142605444_134870",
+  "agent_name": "Hussein Mohamed",
+  "source": "local_parakeet_textcue_candidate",
+  "source_result_id": "enhanced_20260426T142605444_134870__parakeet-tdt-0.6b-v3",
+  "agent_speaker": "SPEAKER_00",
+  "speaker_scores": {
+    "SPEAKER_00": {
+      "agent": 14.120000000000008,
+      "customer": 0.0,
+      "duration": 35.20000000000001
+    },
+    "SPEAKER_01": {
+      "agent": 6.72,
+      "customer": 18.239999999999995,
+      "duration": 31.51999999999999
+    }
+  },
+  "training_warning": "Candidate labels inferred from local ASR text cues; verify before treating as human/Gemini truth.",
+  "segments": [
+    {
+      "start": 0.48,
+      "end": 1.2,
+      "speaker": "agent",
+      "text": "Good afternoon."
+    },
+    {
+      "start": 3.2,
+      "end": 8.4,
+      "speaker": "customer",
+      "text": "Um originally I had an appointment to see a car this afternoon, but I cancelled it over WhatsApp."
+    },
+    {
+      "start": 9.28,
+      "end": 12.8,
+      "speaker": "customer",
+      "text": "Um you guys have been chasing me all afternoon, so I'm not sure what the confusion is."
+    },
+    {
+      "start": 12.96,
+      "end": 15.68,
+      "speaker": "agent",
+      "text": "Uh what's the registration of the vehicle?"
+    },
+    {
+      "start": 16.88,
+      "end": 17.6,
+      "speaker": "customer",
+      "text": "No idea, mate."
+    },
+    {
+      "start": 17.92,
+      "end": 18.32,
+      "speaker": "agent",
+      "text": "No problem."
+    },
+    {
+      "start": 18.56,
+      "end": 19.68,
+      "speaker": "agent",
+      "text": "Bear with me just a moment."
+    },
+    {
+      "start": 20.16,
+      "end": 21.68,
+      "speaker": "customer",
+      "text": "It's a two o'clock appointment."
+    },
+    {
+      "start": 21.92,
+      "end": 23.68,
+      "speaker": "agent",
+      "text": "Uh in our Watford branch."
+    },
+    {
+      "start": 24.4,
+      "end": 26.16,
+      "speaker": "customer",
+      "text": "Uh yeah, Barnet."
+    },
+    {
+      "start": 26.88,
+      "end": 27.6,
+      "speaker": "agent",
+      "text": "In Barnet."
+    },
+    {
+      "start": 28.32,
+      "end": 29.52,
+      "speaker": "agent",
+      "text": "Uh let's have a look."
+    },
+    {
+      "start": 29.76,
+      "end": 31.68,
+      "speaker": "agent",
+      "text": "Barnet at two PM."
+    },
+    {
+      "start": 33.68,
+      "end": 35.12,
+      "speaker": "agent",
+      "text": "What car was it for?"
+    },
+    {
+      "start": 35.6,
+      "end": 37.12,
+      "speaker": "customer",
+      "text": "It was a Q2."
+    },
+    {
+      "start": 37.84,
+      "end": 39.28,
+      "speaker": "agent",
+      "text": "That was a Q two."
+    },
+    {
+      "start": 55.4,
+      "end": 55.88,
+      "speaker": "agent",
+      "text": "That's good."
+    },
+    {
+      "start": 56.36,
+      "end": 65.08,
+      "speaker": "agent",
+      "text": "Um I'll let them know uh that you've cancelled your viewing because I can't see anything booked in at two o'clock from what I can see."
+    },
+    {
+      "start": 65.16,
+      "end": 66.68,
+      "speaker": "agent",
+      "text": "I'm in the Watford branch."
+    },
+    {
+      "start": 66.92,
+      "end": 72.6,
+      "speaker": "customer",
+      "text": "Yeah, no, I d I'm not I did cancel it over WhatsApp, like you know, we had a WhatsApp conversation about it."
+    },
+    {
+      "start": 72.92,
+      "end": 77.24,
+      "speaker": "customer",
+      "text": "But you guys have been sending me texts and phoning me all afternoon, so I don't know why."
+    },
+    {
+      "start": 77.48,
+      "end": 78.12,
+      "speaker": "agent",
+      "text": "Let me check."
+    },
+    {
+      "start": 78.28,
+      "end": 79.64,
+      "speaker": "agent",
+      "text": "Glenn Glenn, yeah?"
+    },
+    {
+      "start": 79.88,
+      "end": 80.52,
+      "speaker": "customer",
+      "text": "Yeah."
+    },
+    {
+      "start": 81.08,
+      "end": 86.44,
+      "speaker": "agent",
+      "text": "Oh you can't have forgotten you can make it Sunday which was and then Marathon day."
+    },
+    {
+      "start": 87.08,
+      "end": 90.2,
+      "speaker": "agent",
+      "text": "I just need the registration, that's all I need so I can cancel your."
+    },
+    {
+      "start": 90.6,
+      "end": 91.8,
+      "speaker": "customer",
+      "text": "Yeah, I'm in I'm in the car, mate."
+    },
+    {
+      "start": 91.88,
+      "end": 93.32,
+      "speaker": "customer",
+      "text": "I'm nowhere near anything to show you then."
+    },
+    {
+      "start": 93.48,
+      "end": 94.68,
+      "speaker": "customer",
+      "text": "No worries, so if you don't have a look at it."
+    },
+    {
+      "start": 94.76,
+      "end": 96.84,
+      "speaker": "customer",
+      "text": "If you don't if there's no reason you're calling me, then it's fine."
+    },
+    {
+      "start": 97.08,
+      "end": 97.32,
+      "speaker": "customer",
+      "text": "Yeah, yeah."
+    },
+    {
+      "start": 97.64,
+      "end": 97.72,
+      "speaker": "customer",
+      "text": "Go."
+    },
+    {
+      "start": 98.2,
+      "end": 98.28,
+      "speaker": "customer",
+      "text": "Alright."
+    },
+    {
+      "start": 98.52,
+      "end": 99.08,
+      "speaker": "agent",
+      "text": "Take care of it."
+    },
+    {
+      "start": 99.88,
+      "end": 100.2,
+      "speaker": "customer",
+      "text": "Bye."
+    }
+  ]
+}

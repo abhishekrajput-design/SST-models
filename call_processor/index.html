@@ -894,6 +894,11 @@
             line-height: 1.55;
         }
 
+        .speech-only-text {
+            color: var(--muted);
+            font-style: italic;
+        }
+
         /* Word-level highlighting */
         .transcript-word {
             transition: background-color 0.1s, font-weight 0.1s;
@@ -1157,12 +1162,13 @@
                     <option value="deepgram-nova-3">⭐ Deepgram Nova-3 · best · ~5s</option>
                     <option value="deepgram-nova-2-phonecall">Deepgram Nova-2 Phone · ~5s</option>
                     <option value="deepgram-nova-2-meeting">Deepgram Nova-2 Meeting · ~5s</option>
+                    <option value="assemblyai-universal-2">AssemblyAI Universal - 3-5 speakers</option>
                 </optgroup>
                 <optgroup label="🖥️ Local GPU">
                     <option value="whisper-large-v3">Whisper Large-v3 · 8.1% WER</option>
                     <option value="whisper-large-v3-turbo">Whisper v3-Turbo · fast</option>
-                    <option value="distil-whisper-large-v3.5" selected>⚡ Distil-Whisper v3.5 · fastest</option>
-                    <option value="parakeet-tdt-0.6b-v3">NVIDIA Parakeet TDT v3 · GPU isolated</option>
+                    <option value="distil-whisper-large-v3.5">⚡ Distil-Whisper v3.5 · fastest</option>
+                    <option value="parakeet-tdt-0.6b-v3" selected>NVIDIA Parakeet TDT v3 · GPU isolated</option>
                     <option value="cohere-transcribe-03-2026">Cohere 03-2026 · 5.42% WER</option>
                 </optgroup>
             </select>
@@ -1207,14 +1213,6 @@
         <div class="enroll-progress" id="enrollProgress"></div>
     </div> -->
 
-        <!-- Test Results Panel -->
-        <div
-            style="padding:12px 16px; border-top:1px solid var(--border); flex-shrink:0; max-height:320px; overflow-y:auto;">
-            <div
-                style="font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:8px;">
-                Test Results</div>
-            <div id="testResultsContainer" style="font-size:0.75rem; color:var(--text);">Loading...</div>
-        </div>
     </aside>
 
     <!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
@@ -1449,7 +1447,9 @@
             if (!seg.text?.trim()) return '';
             const role = resolveRole(seg);
             const isAg = role === 'AGENT';
-            const css = isAg ? 'bubble-agent' : 'bubble-cust';
+            const isSpeechOnly = !!(seg.speech_only || seg.transcription_missing);
+            if (isSpeechOnly && seg.text.trim() === 'Speech detected - no transcript') return '';
+            const css = `${isAg ? 'bubble-agent' : 'bubble-cust'}${isSpeechOnly ? ' speech-only' : ''}`;
             const name = displaySpeaker(seg);
             // Confidence: cosine sim 0.30..0.85 → 0..100% bar.
             // Low confidence (faint orange) indicates the segment was assigned by
@@ -1466,7 +1466,7 @@
             const timePerWord = wordCount > 0 ? segDur / wordCount : 0;
 
             let wordTime = seg.start;
-            const wordSpans = words.map((word, wIdx) => {
+            const wordSpans = isSpeechOnly ? '<span class="speech-only-text">Speech detected - no transcript</span>' : words.map((word, wIdx) => {
                 if (!word.trim()) return word;
                 const wStart = wordTime;
                 const wEnd = wordTime + timePerWord;
@@ -1569,7 +1569,7 @@
                 if (p.includes('call_processor/')) p = p.split('call_processor/')[1];
                 return '/' + p.split('/').map(encodeURIComponent).join('/');
             }
-            const enhUrl = toUrl(data.enhanced_file || data.audio_file);
+            const enhUrl = toUrl(data.playback_audio_file || data.enhanced_file || data.audio_file);
             const origUrl = toUrl(data.audio_file) || enhUrl.replace(/\/enhanced_([^/]+)$/, (_, f) => '/' + f);
             DOM.audioOrig.src = origUrl; DOM.audioOrig.load();
             DOM.audioPlayer.src = enhUrl; DOM.audioPlayer.load();
@@ -2163,7 +2163,6 @@
         })();
         loadCalls();
         checkEnrollment();
-        loadTestResults();
     </script>
 </body>
 

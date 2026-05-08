@@ -323,6 +323,25 @@ def _wav_to_mp3(wav_path: str, out_mp3: str):
 
 
 # ── Pipeline 1: FFmpeg (highpass + afftdn + dynaudnorm) ─────────────────────
+def _make_playback_loud_mp3(input_path: str, output_path: str):
+    """Louder browser-playback copy only; never use this for ASR input."""
+    af = (
+        "aresample=44100,"
+        "loudnorm=I=-13:TP=-1.0:LRA=8,"
+        "dynaudnorm=p=0.98:m=35:s=10:g=22,"
+        "volume=3dB,"
+        "alimiter=limit=0.98"
+    )
+    _run_ffmpeg(
+        [
+            "ffmpeg", "-y", "-i", input_path,
+            "-af", af,
+            "-ac", "1", "-ar", "44100", "-b:a", "128k", output_path,
+        ],
+        timeout=600,
+    )
+
+
 def _enhance_ffmpeg(input_path: str, output_path: str, max_seconds: int = 300):
     """FFmpeg DSP chain — fast, always works, full audio for main pipeline."""
     cmd = ["ffmpeg", "-y", "-i", input_path]
@@ -499,6 +518,7 @@ def _derive_paths(original_path: str) -> dict:
     fname = os.path.basename(original_path)
     return {
         "ffmpeg":      os.path.join(d, f"enhanced_{fname}").replace("\\", "/"),
+        "playback_loud": os.path.join(d, f"loud_{fname}").replace("\\", "/"),
         "noisereduce": os.path.join(d, f"nr_{fname}").replace("\\", "/"),
         "deepfilter":  os.path.join(d, f"df_{fname}").replace("\\", "/"),
         "metricgan":   os.path.join(d, f"mg_{fname}").replace("\\", "/"),
@@ -655,6 +675,14 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             timeout=600,   # 30-min audio needs up to ~5 min for loudnorm
         )
 
+    def _make_minimal_asr_wav(src: str, dst: str):
+        """16 kHz mono WAV without gain/noise processing for low-level desk audio."""
+        af = "aformat=channel_layouts=mono,aresample=16000"
+        _run_ffmpeg(
+            ["ffmpeg", "-y", "-i", src, "-ar", "16000", "-af", af, dst],
+            timeout=600,
+        )
+
     # ── Load transcriber (shared for both channels) ───────────────────────────
     cuda_ok = _cuda_available()
     transcriber_device = "cuda" if cuda_ok else "cpu"
@@ -693,28 +721,375 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         _set_status(1, "Transcription", "Normalizing audio to 16 kHz mono...")
         print("[UI] Normalizing audio...")
         _make_norm_wav(audio_path, norm_wav)
+    _check_cancelled()
+
+    asr_wav = norm_wav
+    asr_audio_mode = "normalized"
+    raw_asr_env = os.getenv("SST_PARAKEET_RAW_ASR", "1")
+    raw_asr_enabled = str(raw_asr_env).strip().lower() not in {"0", "false", "no", "off"}
+    raw_asr_min_s = float(os.getenv("SST_RAW_ASR_MIN_SECONDS", "600") or "600")
+    if whisper_model == "parakeet-tdt-0.6b-v3" and raw_asr_enabled and dur_s >= raw_asr_min_s:
+        asr_wav = os.path.join(norm_dir, f"asr_raw_{base}.wav")
+        asr_audio_mode = "minimal_resample"
+        if not os.path.exists(asr_wav):
+            _set_status(1, "Transcription", "Preparing minimal-resample ASR audio...")
+            print("[UI] Preparing minimal-resample ASR audio for long desk recording...")
+            _make_minimal_asr_wav(audio_path, asr_wav)
+        _check_cancelled()
 
     _set_status(3, "Transcription", f"Transcribing with {whisper_model} on {transcriber_device.upper()}...")
-    print(f"[UI] Transcribing with {whisper_model} on {transcriber_device}...")
+    print(f"[UI] Transcribing with {whisper_model} on {transcriber_device} ({asr_audio_mode})...")
     if isolated_transcriber:
         timeout_s = max(900, int(max(dur_s, 60.0) * 6))
         segments = _transcribe_isolated(
-            norm_wav,
+            asr_wav,
             whisper_model,
             transcriber_device,
             "en",
             timeout_s,
         )
     else:
-        segments = transcriber.transcribe(norm_wav, language="en")
+        segments = transcriber.transcribe(asr_wav, language="en")
     segments = _retry_empty_transcript(
         segments,
-        norm_wav,
+        asr_wav,
         "No transcript segments returned",
     )
+    _check_cancelled()
 
     agent_time = customer_time = 0.0
     agent_turns = customer_turns = 0
+    speech_only_added = 0
+    transcript_coverage: dict = {}
+
+    def _add_untranscribed_speaker_segments(
+        text_segments: list,
+        speaker_segments: list,
+        add_rows: bool = False,
+    ) -> tuple[list, dict]:
+        """Track diarized customer speech with no ASR text.
+
+        Overlapped/background speakers are often detected by diarization even
+        when ASR only emits the dominant voice. We keep this as coverage data
+        by default instead of creating noisy placeholder transcript bubbles.
+        """
+        min_gap_s = float(os.getenv("SST_SPEECH_ONLY_MIN_SECONDS", "1.0") or "1.0")
+        include_agent = os.getenv("SST_SPEECH_ONLY_INCLUDE_AGENT", "0").strip() == "1"
+        covers = sorted(
+            (
+                float(seg.get("start", 0.0)),
+                float(seg.get("end", 0.0)),
+            )
+            for seg in text_segments
+            if str(seg.get("text") or "").strip()
+        )
+
+        def _covered_seconds(start: float, end: float) -> float:
+            total = 0.0
+            for c_start, c_end in covers:
+                if c_end <= start:
+                    continue
+                if c_start >= end:
+                    break
+                total += max(0.0, min(end, c_end) - max(start, c_start))
+            return min(max(total, 0.0), max(end - start, 0.0))
+
+        def _uncovered_ranges(start: float, end: float) -> list[tuple[float, float]]:
+            ranges = []
+            cursor = start
+            for c_start, c_end in covers:
+                if c_end <= cursor:
+                    continue
+                if c_start >= end:
+                    break
+                if c_start > cursor and (c_start - cursor) >= min_gap_s:
+                    ranges.append((cursor, min(c_start, end)))
+                cursor = max(cursor, c_end)
+                if cursor >= end:
+                    break
+            if end > cursor and (end - cursor) >= min_gap_s:
+                ranges.append((cursor, end))
+            return ranges
+
+        coverage: dict = {
+            "added_count": 0,
+            "added_seconds": 0.0,
+            "hidden_count": 0,
+            "hidden_seconds": 0.0,
+            "per_speaker": {},
+        }
+        additions = []
+        for spk_seg in speaker_segments or []:
+            start = float(spk_seg.get("start", 0.0))
+            end = float(spk_seg.get("end", 0.0))
+            dur = max(end - start, 0.0)
+            if dur <= 0:
+                continue
+            label = spk_seg.get("display_speaker") or spk_seg.get("speaker") or "Unknown"
+            role = spk_seg.get("identified_speaker") or "CUSTOMER"
+            row = coverage["per_speaker"].setdefault(
+                label,
+                {"speaker_seconds": 0.0, "transcribed_overlap_seconds": 0.0, "speech_only_seconds": 0.0},
+            )
+            covered = _covered_seconds(start, end)
+            row["speaker_seconds"] += dur
+            row["transcribed_overlap_seconds"] += covered
+            if role == "AGENT" and not include_agent:
+                continue
+            for gap_start, gap_end in _uncovered_ranges(start, end):
+                gap_dur = max(gap_end - gap_start, 0.0)
+                if gap_dur < min_gap_s:
+                    continue
+                if add_rows:
+                    additions.append({
+                        "start": round(gap_start, 3),
+                        "end": round(gap_end, 3),
+                        "speaker": spk_seg.get("speaker") or "SPEAKER_99",
+                        "identified_speaker": role,
+                        "display_speaker": label,
+                        "agent_name": spk_seg.get("agent_name"),
+                        "text": "Speech detected - no transcript",
+                        "avg_score": None,
+                        "speech_only": True,
+                        "transcription_missing": True,
+                    })
+                    coverage["added_count"] += 1
+                    coverage["added_seconds"] += gap_dur
+                else:
+                    coverage["hidden_count"] += 1
+                    coverage["hidden_seconds"] += gap_dur
+                row["speech_only_seconds"] += gap_dur
+
+        merged = list(text_segments) + additions
+        merged.sort(key=lambda seg: (float(seg.get("start", 0.0)), float(seg.get("end", 0.0))))
+        coverage["added_seconds"] = round(float(coverage["added_seconds"]), 2)
+        coverage["hidden_seconds"] = round(float(coverage["hidden_seconds"]), 2)
+        for row in coverage["per_speaker"].values():
+            row["speaker_seconds"] = round(float(row["speaker_seconds"]), 2)
+            row["transcribed_overlap_seconds"] = round(float(row["transcribed_overlap_seconds"]), 2)
+            row["speech_only_seconds"] = round(float(row["speech_only_seconds"]), 2)
+        return merged, coverage
+
+    def _smooth_short_unknown_segments(text_segments: list) -> int:
+        """Assign tiny unknown snippets to a close known neighbor."""
+        max_dur_s = float(os.getenv("SST_UNKNOWN_SMOOTH_MAX_SECONDS", "3.5") or "3.5")
+        max_gap_s = float(os.getenv("SST_UNKNOWN_SMOOTH_MAX_GAP", "0.8") or "0.8")
+
+        def _known(seg: dict) -> bool:
+            role = seg.get("identified_speaker")
+            return bool(role and role != "UNKNOWN" and not seg.get("speech_only"))
+
+        smoothed = 0
+        for idx, seg in enumerate(text_segments):
+            role = seg.get("identified_speaker")
+            display = seg.get("display_speaker")
+            if role != "UNKNOWN" and display != "UNKNOWN":
+                continue
+            if seg.get("speech_only"):
+                continue
+            start = float(seg.get("start", 0.0))
+            end = float(seg.get("end", start))
+            if max(end - start, 0.0) > max_dur_s:
+                continue
+
+            candidates: list[tuple[float, dict]] = []
+            for prev in reversed(text_segments[:idx]):
+                if _known(prev):
+                    gap = start - float(prev.get("end", start))
+                    if 0 <= gap <= max_gap_s:
+                        candidates.append((gap, prev))
+                    break
+            for nxt in text_segments[idx + 1:]:
+                if _known(nxt):
+                    gap = float(nxt.get("start", end)) - end
+                    if 0 <= gap <= max_gap_s:
+                        candidates.append((gap, nxt))
+                    break
+            if not candidates:
+                continue
+
+            _, neighbor = sorted(candidates, key=lambda item: item[0])[0]
+            seg["speaker"] = neighbor.get("speaker", seg.get("speaker", "SPEAKER_99"))
+            seg["identified_speaker"] = neighbor.get("identified_speaker", "CUSTOMER")
+            seg["display_speaker"] = neighbor.get("display_speaker") or (
+                neighbor.get("agent_name") if neighbor.get("identified_speaker") == "AGENT" else "Customer"
+            )
+            if seg["identified_speaker"] == "AGENT":
+                if neighbor.get("agent_name"):
+                    seg["agent_name"] = neighbor.get("agent_name")
+            else:
+                seg.pop("agent_name", None)
+            seg["role_smoothed"] = True
+            smoothed += 1
+        return smoothed
+
+    def _fallback_unknown_text_to_customer(text_segments: list) -> int:
+        """Keep unmatched transcript text out of agent enrollment/role claims."""
+        fallback_count = 0
+        for seg in text_segments:
+            if seg.get("speech_only"):
+                continue
+            if seg.get("identified_speaker") != "UNKNOWN" and seg.get("display_speaker") != "UNKNOWN":
+                continue
+            if not str(seg.get("text", "")).strip():
+                continue
+            seg["identified_speaker"] = "CUSTOMER"
+            seg["display_speaker"] = "Customer"
+            seg["role_fallback"] = "customer_no_speaker_overlap"
+            seg.pop("agent_name", None)
+            seg.pop("agent_slug", None)
+            fallback_count += 1
+        return fallback_count
+
+    def _repair_agent_roles_from_text_cues(
+        text_segments: list,
+        agent_name: str | None,
+        audio_duration_s: float,
+        speaker_count: int,
+    ) -> dict:
+        """Promote clear advisor-side DS speakers that voice matching split off.
+
+        Desk recordings can split one advisor into multiple diarization clusters.
+        Voiceprints still pick the strongest cluster only, so long sales
+        explanation clusters can appear as Customer. This repair is intentionally
+        speaker-level and conservative; question-heavy speakers stay customer.
+        """
+        enabled = os.getenv("SST_AGENT_TEXT_ROLE_REPAIR", "1").strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return {"enabled": False, "promoted_speakers": [], "promoted_segments": 0}
+        if audio_duration_s < float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_AUDIO_S", "300") or "300"):
+            return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "short_audio"}
+        if speaker_count < int(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SPEAKERS", "3") or "3"):
+            return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "too_few_speakers"}
+
+        strong_agent_cues = {
+            "option one": 2.5,
+            "option two": 2.5,
+            "you can pay": 2.5,
+            "you can split": 2.5,
+            "split any plan": 2.5,
+            "split over": 2.0,
+            "covers you for": 2.5,
+            "monthly payments": 2.5,
+            "i'll tell you exactly": 3.0,
+            "ill tell you exactly": 3.0,
+            "this is based on": 2.0,
+            "so this is based on": 2.0,
+            "cooling off period": 2.5,
+            "pay zero interest": 2.5,
+            "i spoke to my manager": 3.0,
+            "take the car away": 2.5,
+            "drive away the vehicle": 2.5,
+            "give me a second": 2.0,
+            "let me confirm": 2.0,
+            "let's use": 1.5,
+            "so basically": 1.5,
+        }
+        weak_agent_cues = {
+            "warranty": 0.5,
+            "service plan": 0.5,
+            "finance": 0.5,
+            "deposit": 0.5,
+            "monthly payment": 0.5,
+        }
+        customer_cues = {
+            "can i": 2.5,
+            "could i": 2.5,
+            "would i": 2.5,
+            "do i": 2.0,
+            "how would": 2.5,
+            "what if": 2.0,
+            "if i": 2.0,
+            "i wanted": 2.5,
+            "i just": 1.5,
+            "i don't": 1.5,
+            "i dont": 1.5,
+            "i mean": 1.5,
+            "about if": 2.0,
+            "can you": 2.0,
+            "could you": 2.0,
+            "my car": 1.5,
+        }
+
+        def _norm(text: str) -> str:
+            return " ".join(re.sub(r"[^a-z0-9']+", " ", text.lower()).split())
+
+        speakers: dict[str, dict] = {}
+        for seg in text_segments:
+            if seg.get("speech_only"):
+                continue
+            if seg.get("identified_speaker") != "CUSTOMER":
+                continue
+            spk = str(seg.get("speaker") or "")
+            if not spk or spk == "SPEAKER_99":
+                continue
+            text = str(seg.get("text") or "").strip()
+            if not text:
+                continue
+            bucket = speakers.setdefault(
+                spk,
+                {
+                    "segments": [],
+                    "seconds": 0.0,
+                    "agent_score": 0.0,
+                    "customer_score": 0.0,
+                    "strong_hits": set(),
+                },
+            )
+            bucket["segments"].append(seg)
+            bucket["seconds"] += max(float(seg.get("end", 0.0)) - float(seg.get("start", 0.0)), 0.0)
+            low = _norm(text)
+            for cue, weight in strong_agent_cues.items():
+                if cue in low:
+                    bucket["agent_score"] += weight
+                    bucket["strong_hits"].add(cue)
+            for cue, weight in weak_agent_cues.items():
+                if cue in low:
+                    bucket["agent_score"] += weight
+            for cue, weight in customer_cues.items():
+                if cue in low:
+                    bucket["customer_score"] += weight
+            if "?" in text:
+                bucket["customer_score"] += 1.0
+
+        min_seconds = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SPEAKER_S", "8") or "8")
+        min_score = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SCORE", "5.0") or "5.0")
+        promoted_speakers = []
+        promoted_segments = 0
+        display_name = agent_name if agent_name and agent_name not in {"None", "Unknown Agent"} else "Agent"
+        for spk, bucket in speakers.items():
+            agent_score = float(bucket["agent_score"])
+            customer_score = float(bucket["customer_score"])
+            strong_hits = sorted(bucket["strong_hits"])
+            if bucket["seconds"] < min_seconds:
+                continue
+            if len(strong_hits) < 2:
+                continue
+            if agent_score < min_score:
+                continue
+            if agent_score < (customer_score * 1.8 + 2.0):
+                continue
+            for seg in bucket["segments"]:
+                seg["identified_speaker"] = "AGENT"
+                seg["display_speaker"] = display_name
+                seg["agent_name"] = display_name
+                seg["role_text_repair"] = "agent_side_sales_explanation"
+                promoted_segments += 1
+            promoted_speakers.append(
+                {
+                    "speaker": spk,
+                    "segments": len(bucket["segments"]),
+                    "seconds": round(bucket["seconds"], 2),
+                    "agent_score": round(agent_score, 2),
+                    "customer_score": round(customer_score, 2),
+                    "strong_hits": strong_hits[:12],
+                }
+            )
+        return {
+            "enabled": True,
+            "promoted_speakers": promoted_speakers,
+            "promoted_segments": promoted_segments,
+        }
 
     # Free unused memory before speaker identification. diar_multi can use CUDA
     # for supported embedding backends; CAM++ remains CPU inside WeSpeaker.
@@ -732,7 +1107,14 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         from src.diar_clean import diarize_clean
         max_speakers = int(os.getenv("SST_MAX_SPEAKERS", "4") or "4")
         backend = os.getenv("SST_SPEAKER_DIAR_BACKEND", "sortformer").strip() or "sortformer"
-        sortformer_streaming = os.getenv("SST_SORTFORMER_STREAMING", "0").strip() == "1"
+        streaming_env = os.getenv("SST_SORTFORMER_STREAMING", "").strip().lower()
+        streaming_min_s = float(os.getenv("SST_SORTFORMER_STREAMING_MIN_SECONDS", "600") or "600")
+        if streaming_env in {"1", "true", "yes", "on"}:
+            sortformer_streaming = True
+        elif streaming_env in {"0", "false", "no", "off"}:
+            sortformer_streaming = False
+        else:
+            sortformer_streaming = backend == "sortformer" and dur_s >= streaming_min_s
         env_target_slug = os.getenv("SST_TARGET_AGENT_SLUG", "").strip() or None
         if env_target_slug:
             target_agent_slug = _resolve_target_agent_slug(env_target_slug)
@@ -743,17 +1125,58 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             f"floor={presence_floor:.2f})...",
             flush=True,
         )
-        diar_result = diarize_clean(
-            audio_path=norm_wav,
-            transcribed_segments=segments,
-            backend=backend,
-            max_speakers=max_speakers,
-            sortformer_streaming=sortformer_streaming,
-            target_agent_slug=target_agent_slug,
-            presence_floor=presence_floor,
-            hf_token=os.getenv("HF_TOKEN"),
-        )
+        def _run_diarization(use_streaming: bool):
+            return diarize_clean(
+                audio_path=norm_wav,
+                transcribed_segments=segments,
+                backend=backend,
+                max_speakers=max_speakers,
+                sortformer_streaming=use_streaming,
+                target_agent_slug=target_agent_slug,
+                presence_floor=presence_floor,
+                hf_token=os.getenv("HF_TOKEN"),
+            )
+
+        try:
+            diar_result = _run_diarization(sortformer_streaming)
+        except Exception:
+            if backend != "sortformer" or sortformer_streaming:
+                raise
+            print("[UI] Full Sortformer failed; retrying with streaming Sortformer...", flush=True)
+            try:
+                import torch as _torch, gc as _gc
+                _gc.collect()
+                if _torch.cuda.is_available():
+                    _torch.cuda.empty_cache()
+                    _torch.cuda.synchronize()
+            except Exception:
+                pass
+            sortformer_streaming = True
+            diar_result = _run_diarization(True)
         segments     = diar_result["segments"]
+        show_untranscribed = (
+            os.getenv("SST_SHOW_UNTRANSCRIBED_SPEAKERS", "0").strip().lower()
+            not in {"0", "false", "no", "off"}
+        )
+        segments, transcript_coverage = _add_untranscribed_speaker_segments(
+            segments,
+            diar_result.get("speaker_segments", []),
+            add_rows=show_untranscribed,
+        )
+        speech_only_added = int(transcript_coverage.get("added_count") or 0)
+        hidden_speech_only = int(transcript_coverage.get("hidden_count") or 0)
+        if speech_only_added:
+            print(
+                f"[UI] Added {speech_only_added} speech-only speaker rows "
+                f"({transcript_coverage.get('added_seconds', 0)}s without ASR text)",
+                flush=True,
+            )
+        elif hidden_speech_only:
+            print(
+                f"[UI] Hidden {hidden_speech_only} untranscribed speaker gaps "
+                f"({transcript_coverage.get('hidden_seconds', 0)}s without ASR text)",
+                flush=True,
+            )
         agent_name_id = diar_result.get("agent_name", "Unknown Agent")
         agent_sim     = diar_result.get("agent_similarity", 0.0)
         backend_dim   = diar_result.get("matched_backend_dim")
@@ -769,6 +1192,29 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             flush=True,
         )
         print(f"[UI] Speakers: {list(diar_result.get('per_speaker', {}).keys())}", flush=True)
+
+        unknown_segments_smoothed = _smooth_short_unknown_segments(segments)
+        if unknown_segments_smoothed:
+            print(f"[UI] Smoothed {unknown_segments_smoothed} short unknown speaker segments", flush=True)
+        unknown_segments_customer_fallback = _fallback_unknown_text_to_customer(segments)
+        if unknown_segments_customer_fallback:
+            print(
+                f"[UI] Marked {unknown_segments_customer_fallback} unmatched text snippets as customer",
+                flush=True,
+            )
+        agent_role_text_repair = _repair_agent_roles_from_text_cues(
+            segments,
+            agent_name_id,
+            dur_s,
+            int(diar_result.get("speaker_count") or 0),
+        )
+        if agent_role_text_repair.get("promoted_segments"):
+            print(
+                f"[UI] Text-cue role repair promoted "
+                f"{agent_role_text_repair['promoted_segments']} segment(s) across "
+                f"{len(agent_role_text_repair.get('promoted_speakers') or [])} speaker(s)",
+                flush=True,
+            )
 
         for seg in segments:
             dur = float(seg["end"]) - float(seg["start"])
@@ -786,6 +1232,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             seg["identified_speaker"] = "CUSTOMER"
             seg.pop("agent_name", None)
             seg["display_speaker"] = "Unknown"
+    _check_cancelled()
 
     elapsed = round(time.time() - t0, 2)
 
@@ -876,6 +1323,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
 
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
+        "asr_audio_file":           asr_wav.replace("\\", "/"),
+        "asr_audio_mode":           asr_audio_mode,
+        "diarization_audio_file":   norm_wav.replace("\\", "/"),
         "trimmed_audio_file":       trimmed_audio_file,
         "model":                    whisper_model,
         "requested_model":          requested_model,
@@ -896,16 +1346,26 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             diar_result.get("speaker_id_warning") or diar_result.get("warning")
         ),
         "speaker_id_mode":          diar_result.get("speaker_mode"),
+        "speaker_id_backend":       diar_result.get("speaker_id_backend") or diar_result.get("backend"),
+        "speaker_id_sortformer_streaming": bool(
+            diar_result.get("sortformer_streaming", sortformer_streaming)
+        ),
         "target_agent_slug":        target_agent_slug,
         "speaker_id_presence_floor": presence_floor,
         "speaker_id_cluster_report": diar_result.get("cluster_report", {}),
         "speaker_boundary_refinement": diar_result.get("boundary_refinement", {}),
+        "speech_only_segments_added": speech_only_added,
+        "transcript_coverage": transcript_coverage,
+        "unknown_segments_smoothed": locals().get("unknown_segments_smoothed", 0),
+        "unknown_segments_customer_fallback": locals().get("unknown_segments_customer_fallback", 0),
+        "agent_role_text_repair": locals().get("agent_role_text_repair", {}),
         "note": (
             f"Requested {requested_model}; transcribed with {whisper_model}"
             if requested_model != whisper_model
             else f"Transcribed with {whisper_model}"
         ),
     }
+    _check_cancelled()
     os.makedirs(out_dir, exist_ok=True)  # re-create if deleted during long transcription
     result_path = os.path.join(out_dir, "result.json")
     with open(result_path, "w", encoding="utf-8") as f:
@@ -993,7 +1453,15 @@ def _run_pipeline(
             # Skip on already-clean audio (synthetic test files, broadcast-grade
             # recordings) since DFN3 can over-process them into silence.
             pipeline_audio = paths["ffmpeg"]   # fallback
-            if _is_clean_audio(paths["ffmpeg"]):
+            skip_dfn_for_parakeet = (
+                whisper_model == "parakeet-tdt-0.6b-v3"
+                and os.getenv("SST_PARAKEET_SKIP_DFN", "1").strip().lower()
+                not in {"0", "false", "no", "off"}
+            )
+            if skip_dfn_for_parakeet:
+                _set_status(0, "Enhancing Audio", "[2/2] Parakeet DS mode - skipping neural denoise")
+                print("[UI] Stage 0b: skipped DeepFilterNet3 for Parakeet ASR.")
+            elif _is_clean_audio(paths["ffmpeg"]):
                 _set_status(0, "Enhancing Audio", "[2/2] Source already clean — skipping DFN3")
                 print("[UI] Stage 0b: skipped (audio already clean)")
             else:
@@ -1008,6 +1476,26 @@ def _run_pipeline(
                     print("[UI] deepfilternet not installed — using FFmpeg output.")
                 except Exception as e:
                     print(f"[UI] DeepFilterNet3 failed: {e} — using FFmpeg output.")
+
+            prefer_original_parakeet = (
+                whisper_model == "parakeet-tdt-0.6b-v3"
+                and os.getenv("SST_PARAKEET_ORIGINAL_SOURCE", "1").strip().lower()
+                not in {"0", "false", "no", "off"}
+            )
+            if prefer_original_parakeet:
+                pipeline_audio = upload_path
+                enhancement_paths["asr_source"] = upload_path.replace("\\", "/")
+                print("[UI] Parakeet ASR source: original upload audio.")
+
+        playback_source = paths.get("ffmpeg") or upload_path
+        if playback_source and os.path.exists(playback_source):
+            try:
+                _set_status(0, "Enhancing Audio", "Creating louder playback audio...")
+                _make_playback_loud_mp3(playback_source, paths["playback_loud"])
+                enhancement_paths["playback_loud"] = paths["playback_loud"]
+                print("[UI] Loud playback audio ready.")
+            except Exception as e:
+                print(f"[UI] Loud playback audio failed: {e}")
 
         _check_cancelled()
         # run_e2e.py (pyannote diarization) only used when enrolled agent
@@ -1034,6 +1522,7 @@ def _run_pipeline(
                 original_path=upload_path,
                 target_agent_slug=target_agent_slug,
             )
+            _check_cancelled()
         else:
             # Full pipeline via run_e2e.py subprocess (Whisper + pyannote diarization)
             _set_status(1, "Speaker Diarization", "Loading pyannote · detecting who speaks when...")
@@ -1087,6 +1576,12 @@ def _run_pipeline(
                 rdata["processing_time_seconds"] = pipeline_elapsed
                 rdata["pipeline_time_seconds"] = pipeline_elapsed
                 rdata["enhancements"] = enhancement_paths
+                if enhancement_paths.get("playback_loud"):
+                    rdata["playback_audio_file"] = enhancement_paths["playback_loud"]
+                    rdata["enhanced_file"] = enhancement_paths["playback_loud"]
+                elif enhancement_paths.get("ffmpeg"):
+                    rdata["playback_audio_file"] = enhancement_paths["ffmpeg"]
+                    rdata["enhanced_file"] = enhancement_paths["ffmpeg"]
 
                 # Cache orig_meta once so /api/calls never needs to run ffprobe.
                 if not rdata.get("orig_meta"):

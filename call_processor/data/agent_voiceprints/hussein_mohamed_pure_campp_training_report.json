@@ -2,20 +2,28 @@
   "agent_slug": "hussein_mohamed",
   "agent_name": "Hussein Mohamed",
   "labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training",
-  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed_pure_candidate_20260508",
   "label_source": "folder-data",
   "include_source_prefix": "",
   "include_calls": [],
   "exclude_calls": [],
   "offset_mode": "none",
   "agent_filter": "all",
-  "train_guard_s": 0.35,
-  "opposite_gap_s": 0.05,
+  "train_guard_s": 0.45,
+  "opposite_gap_s": 0.12,
   "calls": [
+    {
+      "call": "call_02",
+      "call_id": "20260426T142605444_134870",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed_pure_candidate_20260508\\call_02\\20260426T142605444_134870.mp3",
+      "segments": 35,
+      "offset_s": 0.0,
+      "audio_duration_s": 101.03
+    },
     {
       "call": "call_03",
       "call_id": "20260425T154443969_91232",
-      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed\\call_03\\20260425T154443969_91232.mp3",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed_pure_candidate_20260508\\call_03\\20260425T154443969_91232.mp3",
       "segments": 31,
       "offset_s": 0.0,
       "audio_duration_s": 85.96
@@ -23,7 +31,7 @@
     {
       "call": "call_04",
       "call_id": "20260425T152512294_67102",
-      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed\\call_04\\20260425T152512294_67102.mp3",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed_pure_candidate_20260508\\call_04\\20260425T152512294_67102.mp3",
       "segments": 23,
       "offset_s": 0.0,
       "audio_duration_s": 50.22
@@ -31,7 +39,7 @@
     {
       "call": "call_08",
       "call_id": "20260425T132932890_79613",
-      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed\\call_08\\20260425T132932890_79613.mp3",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed_pure_candidate_20260508\\call_08\\20260425T132932890_79613.mp3",
       "segments": 32,
       "offset_s": 0.0,
       "audio_duration_s": 79.28
@@ -39,14 +47,66 @@
   ],
   "skipped_calls": [],
   "skipped_segments": [],
-  "label_rows": 38,
-  "eval_rows": 38,
+  "label_rows": 50,
+  "eval_rows": 50,
   "clean_clip_rows": 0,
-  "agent_candidates": 18,
-  "customer_calibration_rows": 12,
-  "pure_label_rows": 18,
-  "training_rows": 18,
+  "agent_candidates": 16,
+  "customer_calibration_rows": 20,
+  "pure_label_rows": 16,
+  "training_rows": 16,
   "training_segments": [
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 4,
+      "speaker": "agent",
+      "raw_start": 12.96,
+      "raw_end": 15.68,
+      "start": 13.41,
+      "end": 15.23,
+      "duration": 1.82,
+      "text": "Uh what's the registration of the vehicle?",
+      "purity_reason": "pure_agent_guarded"
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 18,
+      "speaker": "agent",
+      "raw_start": 56.36,
+      "raw_end": 65.08,
+      "start": 56.81,
+      "end": 64.63,
+      "duration": 7.82,
+      "text": "Um I'll let them know uh that you've cancelled your viewing because I can't see anything booked in at two o'clock from what I can see.",
+      "purity_reason": "pure_agent_guarded"
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 25,
+      "speaker": "agent",
+      "raw_start": 81.08,
+      "raw_end": 86.44,
+      "start": 81.53,
+      "end": 85.99,
+      "duration": 4.46,
+      "text": "Oh you can't have forgotten you can make it Sunday which was and then Marathon day.",
+      "purity_reason": "pure_agent_guarded"
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 26,
+      "speaker": "agent",
+      "raw_start": 87.08,
+      "raw_end": 90.2,
+      "start": 87.53,
+      "end": 89.75,
+      "duration": 2.22,
+      "text": "I just need the registration, that's all I need so I can cancel your.",
+      "purity_reason": "pure_agent_guarded"
+    },
     {
       "source": "gemini_label",
       "call": "call_03",
@@ -54,9 +114,9 @@
       "speaker": "agent",
       "raw_start": 7.6,
       "raw_end": 10.16,
-      "start": 7.95,
-      "end": 9.81,
-      "duration": 1.86,
+      "start": 8.05,
+      "end": 9.71,
+      "duration": 1.66,
       "text": "Hi, uh, I'm calling from it.",
       "purity_reason": "pure_agent_guarded"
     },
@@ -67,9 +127,9 @@
       "speaker": "agent",
       "raw_start": 13.12,
       "raw_end": 16.16,
-      "start": 13.47,
-      "end": 15.81,
-      "duration": 2.34,
+      "start": 13.57,
+      "end": 15.71,
+      "duration": 2.14,
       "text": "I was just giving you a quick courtesy call ahead of your appointment tomorrow.",
       "purity_reason": "pure_agent_guarded"
     },
@@ -80,9 +140,9 @@
       "speaker": "agent",
       "raw_start": 18.96,
       "raw_end": 22.72,
-      "start": 19.31,
-      "end": 22.37,
-      "duration": 3.06,
+      "start": 19.41,
+      "end": 22.27,
+      "duration": 2.86,
       "text": "I I know you spoke to my colleague Chulai from the finance department.",
       "purity_reason": "pure_agent_guarded"
     },
@@ -93,9 +153,9 @@
       "speaker": "agent",
       "raw_start": 28.32,
       "raw_end": 32.56,
-      "start": 28.67,
-      "end": 32.21,
-      "duration": 3.54,
+      "start": 28.77,
+      "end": 32.11,
+      "duration": 3.34,
       "text": "So yeah, um in regards to obviously the car, I know you've come down before.",
       "purity_reason": "pure_agent_guarded"
     },
@@ -106,9 +166,9 @@
       "speaker": "agent",
       "raw_start": 32.8,
       "raw_end": 36.24,
-      "start": 33.15,
-      "end": 35.89,
-      "duration": 2.74,
+      "start": 33.25,
+      "end": 35.79,
+      "duration": 2.54,
       "text": "We want to obviously make sure that you have a smooth process when you come down.",
       "purity_reason": "pure_agent_guarded"
     },
@@ -119,23 +179,10 @@
       "speaker": "agent",
       "raw_start": 36.48,
       "raw_end": 40.0,
-      "start": 36.83,
-      "end": 39.65,
-      "duration": 2.82,
+      "start": 36.93,
+      "end": 39.55,
+      "duration": 2.62,
       "text": "Um so we always advise our customers to reserve the vehicle.",
-      "purity_reason": "pure_agent_guarded"
-    },
-    {
-      "source": "gemini_label",
-      "call": "call_03",
-      "segment": 19,
-      "speaker": "agent",
-      "raw_start": 40.24,
-      "raw_end": 42.48,
-      "start": 40.59,
-      "end": 42.13,
-      "duration": 1.54,
-      "text": "The registration will hold the car until tomorrow.",
       "purity_reason": "pure_agent_guarded"
     },
     {
@@ -145,36 +192,10 @@
       "speaker": "agent",
       "raw_start": 49.04,
       "raw_end": 52.4,
-      "start": 49.39,
-      "end": 52.05,
-      "duration": 2.66,
+      "start": 49.49,
+      "end": 51.95,
+      "duration": 2.46,
       "text": "Yeah, so basically it takes off the market until you see it.",
-      "purity_reason": "pure_agent_guarded"
-    },
-    {
-      "source": "gemini_label",
-      "call": "call_03",
-      "segment": 26,
-      "speaker": "agent",
-      "raw_start": 55.24,
-      "raw_end": 75.72,
-      "start": 55.59,
-      "end": 75.37,
-      "duration": 19.78,
-      "text": "ahead if you don't like the car we you get a full refund automatically that's right yeah so um if you uh uh was you speaking tomorrow on whats up yes okay I'm gonna send you the reservation link on WhatsApp okay money so you'll be seeing me tomorrow at eleven o'clock and make sure you bring your driving license with you.",
-      "purity_reason": "pure_agent_guarded"
-    },
-    {
-      "source": "gemini_label",
-      "call": "call_04",
-      "segment": 8,
-      "speaker": "agent",
-      "raw_start": 8.96,
-      "raw_end": 11.2,
-      "start": 9.31,
-      "end": 10.85,
-      "duration": 1.54,
-      "text": "Hi, my name is Sane, I'm calling from Car Planet.",
       "purity_reason": "pure_agent_guarded"
     },
     {
@@ -184,9 +205,9 @@
       "speaker": "agent",
       "raw_start": 16.96,
       "raw_end": 19.68,
-      "start": 17.31,
-      "end": 19.33,
-      "duration": 2.02,
+      "start": 17.41,
+      "end": 19.23,
+      "duration": 1.82,
       "text": "I know you had an appointment uh for a rental capture today.",
       "purity_reason": "pure_agent_guarded"
     },
@@ -197,23 +218,10 @@
       "speaker": "agent",
       "raw_start": 33.76,
       "raw_end": 45.92,
-      "start": 34.11,
-      "end": 45.57,
-      "duration": 11.46,
+      "start": 34.21,
+      "end": 45.47,
+      "duration": 11.26,
       "text": "Yeah, we might not have the same car in stock, but what I'll do is I'll pop you a message and uh if we have uh over two thousand cars, I'll send you a website, let me know when you're available and then we can book appointment for you.",
-      "purity_reason": "pure_agent_guarded"
-    },
-    {
-      "source": "gemini_label",
-      "call": "call_08",
-      "segment": 10,
-      "speaker": "agent",
-      "raw_start": 22.64,
-      "raw_end": 24.96,
-      "start": 22.99,
-      "end": 24.61,
-      "duration": 1.62,
-      "text": "Yeah, no problem at all.",
       "purity_reason": "pure_agent_guarded"
     },
     {
@@ -223,9 +231,9 @@
       "speaker": "agent",
       "raw_start": 26.64,
       "raw_end": 32.16,
-      "start": 26.99,
-      "end": 31.81,
-      "duration": 4.82,
+      "start": 27.09,
+      "end": 31.71,
+      "duration": 4.62,
       "text": "Uh you just need to call your finance company or log into their portal and make the payment.",
       "purity_reason": "pure_agent_guarded"
     },
@@ -236,23 +244,10 @@
       "speaker": "agent",
       "raw_start": 44.96,
       "raw_end": 47.68,
-      "start": 45.31,
-      "end": 47.33,
-      "duration": 2.02,
+      "start": 45.41,
+      "end": 47.23,
+      "duration": 1.82,
       "text": "Oh, I'm not I'm not sure what it was in regards to you.",
-      "purity_reason": "pure_agent_guarded"
-    },
-    {
-      "source": "gemini_label",
-      "call": "call_08",
-      "segment": 17,
-      "speaker": "agent",
-      "raw_start": 47.76,
-      "raw_end": 50.08,
-      "start": 48.11,
-      "end": 49.73,
-      "duration": 1.62,
-      "text": "Um how how long have you had the vehicle for?",
       "purity_reason": "pure_agent_guarded"
     },
     {
@@ -262,173 +257,248 @@
       "speaker": "agent",
       "raw_start": 57.4,
       "raw_end": 60.68,
-      "start": 57.75,
-      "end": 60.33,
-      "duration": 2.58,
+      "start": 57.85,
+      "end": 60.23,
+      "duration": 2.38,
       "text": "Okay, so what you do is just call the finance company.",
-      "purity_reason": "pure_agent_guarded"
-    },
-    {
-      "source": "gemini_label",
-      "call": "call_08",
-      "segment": 29,
-      "speaker": "agent",
-      "raw_start": 73.4,
-      "raw_end": 75.72,
-      "start": 73.75,
-      "end": 75.37,
-      "duration": 1.62,
-      "text": "Uh yeah, I've got your keys, don't worry.",
       "purity_reason": "pure_agent_guarded"
     }
   ],
   "exported_clean_clips": [
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0001_call_03_seg005_7.95_9.81.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0001_call_02_seg004_13.41_15.23.wav",
+      "call": "call_02",
+      "segment": 4,
+      "start": 13.41,
+      "end": 15.23,
+      "duration": 1.82
+    },
+    {
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0002_call_02_seg018_56.81_64.63.wav",
+      "call": "call_02",
+      "segment": 18,
+      "start": 56.81,
+      "end": 64.63,
+      "duration": 7.82
+    },
+    {
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0003_call_02_seg025_81.53_85.99.wav",
+      "call": "call_02",
+      "segment": 25,
+      "start": 81.53,
+      "end": 85.99,
+      "duration": 4.46
+    },
+    {
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0004_call_02_seg026_87.53_89.75.wav",
+      "call": "call_02",
+      "segment": 26,
+      "start": 87.53,
+      "end": 89.75,
+      "duration": 2.22
+    },
+    {
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0005_call_03_seg005_8.05_9.71.wav",
       "call": "call_03",
       "segment": 5,
-      "start": 7.95,
-      "end": 9.81,
-      "duration": 1.86
+      "start": 8.05,
+      "end": 9.71,
+      "duration": 1.66
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0002_call_03_seg009_13.47_15.81.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0006_call_03_seg009_13.57_15.71.wav",
       "call": "call_03",
       "segment": 9,
-      "start": 13.47,
-      "end": 15.81,
-      "duration": 2.34
+      "start": 13.57,
+      "end": 15.71,
+      "duration": 2.14
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0003_call_03_seg012_19.31_22.37.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0007_call_03_seg012_19.41_22.27.wav",
       "call": "call_03",
       "segment": 12,
-      "start": 19.31,
-      "end": 22.37,
-      "duration": 3.06
+      "start": 19.41,
+      "end": 22.27,
+      "duration": 2.86
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0004_call_03_seg016_28.67_32.21.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0008_call_03_seg016_28.77_32.11.wav",
       "call": "call_03",
       "segment": 16,
-      "start": 28.67,
-      "end": 32.21,
-      "duration": 3.54
+      "start": 28.77,
+      "end": 32.11,
+      "duration": 3.34
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0005_call_03_seg017_33.15_35.89.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0009_call_03_seg017_33.25_35.79.wav",
       "call": "call_03",
       "segment": 17,
-      "start": 33.15,
-      "end": 35.89,
-      "duration": 2.74
+      "start": 33.25,
+      "end": 35.79,
+      "duration": 2.54
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0006_call_03_seg018_36.83_39.65.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0010_call_03_seg018_36.93_39.55.wav",
       "call": "call_03",
       "segment": 18,
-      "start": 36.83,
-      "end": 39.65,
-      "duration": 2.82
+      "start": 36.93,
+      "end": 39.55,
+      "duration": 2.62
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0007_call_03_seg019_40.59_42.13.wav",
-      "call": "call_03",
-      "segment": 19,
-      "start": 40.59,
-      "end": 42.13,
-      "duration": 1.54
-    },
-    {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0008_call_03_seg023_49.39_52.05.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0011_call_03_seg023_49.49_51.95.wav",
       "call": "call_03",
       "segment": 23,
-      "start": 49.39,
-      "end": 52.05,
-      "duration": 2.66
+      "start": 49.49,
+      "end": 51.95,
+      "duration": 2.46
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0009_call_03_seg026_55.59_75.37.wav",
-      "call": "call_03",
-      "segment": 26,
-      "start": 55.59,
-      "end": 75.37,
-      "duration": 19.78
-    },
-    {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0010_call_04_seg008_9.31_10.85.wav",
-      "call": "call_04",
-      "segment": 8,
-      "start": 9.31,
-      "end": 10.85,
-      "duration": 1.54
-    },
-    {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0011_call_04_seg013_17.31_19.33.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0012_call_04_seg013_17.41_19.23.wav",
       "call": "call_04",
       "segment": 13,
-      "start": 17.31,
-      "end": 19.33,
-      "duration": 2.02
+      "start": 17.41,
+      "end": 19.23,
+      "duration": 1.82
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0012_call_04_seg020_34.11_45.57.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0013_call_04_seg020_34.21_45.47.wav",
       "call": "call_04",
       "segment": 20,
-      "start": 34.11,
-      "end": 45.57,
-      "duration": 11.46
+      "start": 34.21,
+      "end": 45.47,
+      "duration": 11.26
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0013_call_08_seg010_22.99_24.61.wav",
-      "call": "call_08",
-      "segment": 10,
-      "start": 22.99,
-      "end": 24.61,
-      "duration": 1.62
-    },
-    {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0014_call_08_seg012_26.99_31.81.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0014_call_08_seg012_27.09_31.71.wav",
       "call": "call_08",
       "segment": 12,
-      "start": 26.99,
-      "end": 31.81,
-      "duration": 4.82
+      "start": 27.09,
+      "end": 31.71,
+      "duration": 4.62
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0015_call_08_seg016_45.31_47.33.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0015_call_08_seg016_45.41_47.23.wav",
       "call": "call_08",
       "segment": 16,
-      "start": 45.31,
-      "end": 47.33,
-      "duration": 2.02
+      "start": 45.41,
+      "end": 47.23,
+      "duration": 1.82
     },
     {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0016_call_08_seg017_48.11_49.73.wav",
-      "call": "call_08",
-      "segment": 17,
-      "start": 48.11,
-      "end": 49.73,
-      "duration": 1.62
-    },
-    {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0017_call_08_seg019_57.75_60.33.wav",
+      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_pure_call02_03_04_08_20260508\\0016_call_08_seg019_57.85_60.23.wav",
       "call": "call_08",
       "segment": 19,
-      "start": 57.75,
-      "end": 60.33,
-      "duration": 2.58
-    },
-    {
-      "path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\hussein_mohamed_guarded_pure_no_offset_20260506\\0018_call_08_seg029_73.75_75.37.wav",
-      "call": "call_08",
-      "segment": 29,
-      "start": 73.75,
-      "end": 75.37,
-      "duration": 1.62
+      "start": 57.85,
+      "end": 60.23,
+      "duration": 2.38
     }
   ],
   "customer_calibration_segments": [
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 2,
+      "speaker": "customer",
+      "raw_start": 3.2,
+      "raw_end": 8.4,
+      "start": 3.2,
+      "end": 8.4,
+      "duration": 5.2,
+      "text": "Um originally I had an appointment to see a car this afternoon, but I cancelled it over WhatsApp.",
+      "purity_reason": ""
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 3,
+      "speaker": "customer",
+      "raw_start": 9.28,
+      "raw_end": 12.8,
+      "start": 9.28,
+      "end": 12.8,
+      "duration": 3.52,
+      "text": "Um you guys have been chasing me all afternoon, so I'm not sure what the confusion is.",
+      "purity_reason": ""
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 8,
+      "speaker": "customer",
+      "raw_start": 20.16,
+      "raw_end": 21.68,
+      "start": 20.16,
+      "end": 21.68,
+      "duration": 1.52,
+      "text": "It's a two o'clock appointment.",
+      "purity_reason": ""
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 15,
+      "speaker": "customer",
+      "raw_start": 35.6,
+      "raw_end": 37.12,
+      "start": 35.6,
+      "end": 37.12,
+      "duration": 1.52,
+      "text": "It was a Q2.",
+      "purity_reason": ""
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 20,
+      "speaker": "customer",
+      "raw_start": 66.92,
+      "raw_end": 72.6,
+      "start": 66.92,
+      "end": 72.6,
+      "duration": 5.68,
+      "text": "Yeah, no, I d I'm not I did cancel it over WhatsApp, like you know, we had a WhatsApp conversation about it.",
+      "purity_reason": ""
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 21,
+      "speaker": "customer",
+      "raw_start": 72.92,
+      "raw_end": 77.24,
+      "start": 72.92,
+      "end": 77.24,
+      "duration": 4.32,
+      "text": "But you guys have been sending me texts and phoning me all afternoon, so I don't know why.",
+      "purity_reason": ""
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 28,
+      "speaker": "customer",
+      "raw_start": 91.88,
+      "raw_end": 93.32,
+      "start": 91.88,
+      "end": 93.32,
+      "duration": 1.44,
+      "text": "I'm nowhere near anything to show you then.",
+      "purity_reason": ""
+    },
+    {
+      "source": "gemini_label",
+      "call": "call_02",
+      "segment": 30,
+      "speaker": "customer",
+      "raw_start": 94.76,
+      "raw_end": 96.84,
+      "start": 94.76,
+      "end": 96.84,
+      "duration": 2.08,
+      "text": "If you don't if there's no reason you're calling me, then it's fine.",
+      "purity_reason": ""
+    },
     {
       "source": "gemini_label",
       "call": "call_03",
@@ -587,40 +657,49 @@
     }
   ],
   "purity_floor": 0.55,
-  "customer_p95": 0.2263,
+  "customer_p95": 0.2522,
   "calibrated_threshold": 0.34,
   "same_data_accuracy": {
     "threshold": 0.34,
-    "segments": 38,
-    "overall_accuracy": 97.37,
-    "agent_accuracy": 96.15,
+    "segments": 50,
+    "overall_accuracy": 98.0,
+    "agent_accuracy": 96.67,
     "customer_accuracy": 100.0,
-    "agent_correct": 25,
-    "agent_total": 26,
-    "customer_correct": 12,
-    "customer_total": 12,
+    "agent_correct": 29,
+    "agent_total": 30,
+    "customer_correct": 20,
+    "customer_total": 20,
     "errors": [
       {
         "call": "call_03",
         "segment": 31,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.2826,
+        "similarity": 0.2446,
         "text": "Bye bye bye bye"
       }
     ]
   },
   "best_same_data_threshold": {
-    "threshold": 0.24,
-    "segments": 38,
-    "overall_accuracy": 100.0,
-    "agent_accuracy": 100.0,
+    "threshold": 0.295,
+    "segments": 50,
+    "overall_accuracy": 98.0,
+    "agent_accuracy": 96.67,
     "customer_accuracy": 100.0,
-    "agent_correct": 26,
-    "agent_total": 26,
-    "customer_correct": 12,
-    "customer_total": 12,
-    "errors": []
+    "agent_correct": 29,
+    "agent_total": 30,
+    "customer_correct": 20,
+    "customer_total": 20,
+    "errors": [
+      {
+        "call": "call_03",
+        "segment": 31,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2446,
+        "text": "Bye bye bye bye"
+      }
+    ]
   },
   "activation_requested": true,
   "activation_eligible": true,
@@ -634,10 +713,10 @@
       "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\hussein_mohamed_pure_campp_v4.npy"
     ],
     "agents_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.json",
-    "agents_backup": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.backup.hussein_mohamed.pure_campp.1778096267.json",
+    "agents_backup": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.backup.hussein_mohamed.pure_campp.1778227768.json",
     "activated": true,
-    "mean_inside_sim": 0.8194,
-    "max_outside_sim": 0.2263
+    "mean_inside_sim": 0.8423,
+    "max_outside_sim": 0.2522
   },
   "dry_run": false,
   "note": "Production voiceprints are trained from clean clips plus Gemini-labelled agent segments after short/backchannel/outside-audio/outlier filtering. Customer segments are used only for calibration and testing."

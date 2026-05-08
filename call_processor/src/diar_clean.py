@@ -475,6 +475,7 @@ def diarize_clean(
         "per_speaker": per_speaker,
         "speaker_mode": "speaker_first_voiceprint",
         "speaker_id_backend": backend,
+        "sortformer_streaming": bool(sortformer_streaming) if backend == "sortformer" else False,
         "matched_backend_dim": getattr(embedder, "dim", None),
         "voiceprint_dims": {
             str(vp_stack.shape[1]): int(vp_stack.shape[0])
