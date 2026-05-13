@@ -1,0 +1,24 @@
+{
+  "date": "2026-05-12",
+  "run_tag": "20260512_172220",
+  "days_scraped": 7,
+  "total_api_records": 56,
+  "qualified_agents": 1,
+  "results": {
+    "hussein_mohamed": {
+      "status": "blocked",
+      "date": "2026-05-12",
+      "n_calls_used": 44,
+      "activated": false,
+      "activation_eligible": false,
+      "blocked_by_existing": true,
+      "mean_inside_sim": 0.7447,
+      "max_outside_sim": 0.4425,
+      "same_data_accuracy": 91.82,
+      "agent_accuracy": 86.21,
+      "customer_accuracy": 97.87,
+      "loco_accuracy": 92.07,
+      "n_training_segments": 272
+    }
+  }
+}

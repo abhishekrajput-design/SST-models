@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -35,7 +35,7 @@
             overflow: hidden;
         }
 
-        /* ── Scrollbar ─────────────────────────────────────────────────── */
+        /* â”€â”€ Scrollbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -49,9 +49,9 @@
             border-radius: 3px;
         }
 
-        /* ══════════════════════════════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
            SIDEBAR
-        ══════════════════════════════════════════════════════════════════ */
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         aside {
             width: 280px;
             flex-shrink: 0;
@@ -204,6 +204,11 @@
             cursor: not-allowed;
         }
 
+        .upload-btn.uploading .upload-file-input,
+        .upload-file-input:disabled {
+            cursor: not-allowed;
+        }
+
         .upload-file-input {
             position: absolute;
             inset: 0;
@@ -230,6 +235,11 @@
         .process-timing.done {
             border-color: rgba(34, 197, 94, 0.24);
             background: rgba(34, 197, 94, 0.06);
+        }
+
+        .process-timing.error {
+            border-color: rgba(239, 68, 68, 0.32);
+            background: rgba(239, 68, 68, 0.07);
         }
 
         .process-time-head {
@@ -360,9 +370,9 @@
             }
         }
 
-        /* ══════════════════════════════════════════════════════════════════
+        /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
            MAIN AREA
-        ══════════════════════════════════════════════════════════════════ */
+        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         main {
             flex: 1;
             display: flex;
@@ -371,7 +381,19 @@
             overflow: hidden;
         }
 
-        /* ── Audio players (top, always visible) ───────────────────────── */
+        /* Tab wrapper around audio-bar + now-bar + chat. Must be a flex column
+           with min-height:0 so the chat inside can claim the remaining height
+           and scroll. Without this rule it collapses to a default block and
+           the chat becomes unscrollable. */
+        #callsContainer {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* â”€â”€ Audio players (top, always visible) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .audio-bar {
             flex-shrink: 0;
             display: none;
@@ -521,7 +543,7 @@
             color: var(--text);
         }
 
-        /* ── Speaker stats strip ────────────────────────────────────────── */
+        /* â”€â”€ Speaker stats strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .spk-strip {
             flex-shrink: 0;
             display: none;
@@ -609,7 +631,7 @@
             background: rgba(251, 191, 36, 0.2);
         }
 
-        /* ── Now speaking bar ───────────────────────────────────────────── */
+        /* â”€â”€ Now speaking bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .now-bar {
             display: none;
             flex-shrink: 0;
@@ -708,7 +730,7 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* ── Chat area ──────────────────────────────────────────────────── */
+        /* â”€â”€ Chat area â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .chat {
             flex: 1;
             overflow-y: auto;
@@ -734,7 +756,7 @@
             opacity: .4;
         }
 
-        /* ── Chat bubbles ───────────────────────────────────────────────── */
+        /* â”€â”€ Chat bubbles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .bubble {
             max-width: 65%;
             padding: 10px 14px 13px;
@@ -760,7 +782,7 @@
             }
         }
 
-        /* Agent — LEFT */
+        /* Agent â€” LEFT */
         .bubble-agent {
             align-self: flex-start;
             background: linear-gradient(135deg, #1e40af, #2563eb);
@@ -768,7 +790,7 @@
             border-bottom-left-radius: 4px;
         }
 
-        /* Customer — RIGHT */
+        /* Customer â€” RIGHT */
         .bubble-cust {
             align-self: flex-end;
             background: var(--surface2);
@@ -959,7 +981,7 @@
             opacity: 1;
         }
 
-        /* ── Jump-to-now ────────────────────────────────────────────────── */
+        /* â”€â”€ Jump-to-now â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .jump-btn {
             display: none;
             position: fixed;
@@ -992,7 +1014,7 @@
             }
         }
 
-        /* ── Progress Modal ─────────────────────────────────────────────── */
+        /* â”€â”€ Progress Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .progress-overlay {
             position: fixed;
             inset: 0;
@@ -1140,36 +1162,241 @@
             width: 90%;
             box-shadow: 0 8px 32px rgba(0, 0, 0, .5);
         }
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px;
+            border-radius: 8px;
+            margin-top: 15px;
+            width: 100%;
+        }
+        .nav-tab {
+            flex: 1;
+            padding: 8px 12px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--muted);
+            transition: all 0.2s ease;
+        }
+        .nav-tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Training Container */
+        .training-container {
+            display: none;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: white;
+            overflow-y: auto;
+            height: 100vh;
+        }
+        .training-container.active {
+            display: block;
+        }
+        .training-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+        .training-controls {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(120px, 1fr));
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 16px;
+        }
+        .training-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+        .training-field label {
+            color: var(--muted);
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0;
+        }
+        .training-field input,
+        .training-field select {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 7px;
+            color: #e5e7eb;
+            min-height: 38px;
+            padding: 0 10px;
+            font-size: 0.88rem;
+            width: 100%;
+        }
+        .training-toggle {
+            flex-direction: row;
+            align-items: center;
+            min-height: 38px;
+        }
+        .training-toggle input {
+            width: 16px;
+            min-height: 16px;
+        }
+        .training-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .train-summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 14px 0;
+        }
+        .train-summary-item {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+        .train-summary-label {
+            color: var(--muted);
+            font-size: 0.74rem;
+            margin-bottom: 4px;
+        }
+        .train-summary-value {
+            color: #f8fafc;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .secondary-train-btn {
+            background: rgba(30, 41, 59, 0.9);
+            color: #dbeafe;
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .training-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .agent-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--primary), #ec4899);
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        .stat-label { color: var(--muted); }
+        .stat-value { font-family: monospace; color: #fff; }
+        .good-metric { color: #10b981; }
+        .warn-metric { color: #f59e0b; }
+
+        .run-train-btn {
+            background: linear-gradient(135deg, #ec4899 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .run-train-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+        .status-terminal {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            height: 250px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .status-terminal div {
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- ══ SIDEBAR ═══════════════════════════════════════════════════════════ -->
+    <!-- â•â• SIDEBAR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <aside>
-        <div class="brand">
-            <div class="brand-dot"></div>
-            AI Call Dashboard
+        <div class="brand" style="flex-direction: column; align-items: stretch; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 12px; padding: 0 4px;">
+                <div class="brand-dot"></div>
+                <div>AI Call Dashboard</div>
+            </div>
+            <div class="nav-tabs">
+                <div class="nav-tab active" id="tabCalls" onclick="switchMainTab('calls')">Calls</div>
+                <div class="nav-tab" id="tabTraining" onclick="switchMainTab('training')">Training</div>
+            </div>
         </div>
 
         <div class="call-list" id="callList">
-            <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem;">Loading…</div>
+            <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem;">Loadingâ€¦</div>
         </div>
 
         <div class="upload-section">
             <select id="modelSelect" class="model-select">
-                <optgroup label="☁️ Cloud API · no GPU">
-                    <option value="deepgram-nova-3">⭐ Deepgram Nova-3 · best · ~5s</option>
-                    <option value="deepgram-nova-2-phonecall">Deepgram Nova-2 Phone · ~5s</option>
-                    <option value="deepgram-nova-2-meeting">Deepgram Nova-2 Meeting · ~5s</option>
+                <optgroup label="â˜ï¸ Cloud API Â· no GPU">
+                    <option value="deepgram-nova-3">â­ Deepgram Nova-3 Â· best Â· ~5s</option>
+                    <option value="deepgram-nova-2-phonecall">Deepgram Nova-2 Phone Â· ~5s</option>
+                    <option value="deepgram-nova-2-meeting">Deepgram Nova-2 Meeting Â· ~5s</option>
                     <option value="assemblyai-universal-2">AssemblyAI Universal - 3-5 speakers</option>
                 </optgroup>
-                <optgroup label="🖥️ Local GPU">
-                    <option value="whisper-large-v3">Whisper Large-v3 · 8.1% WER</option>
-                    <option value="whisper-large-v3-turbo">Whisper v3-Turbo · fast</option>
-                    <option value="distil-whisper-large-v3.5">⚡ Distil-Whisper v3.5 · fastest</option>
-                    <option value="parakeet-tdt-0.6b-v3" selected>NVIDIA Parakeet TDT v3 · GPU isolated</option>
-                    <option value="cohere-transcribe-03-2026">Cohere 03-2026 · 5.42% WER</option>
+                <optgroup label="ðŸ–¥ï¸ Local GPU">
+                    <option value="whisper-large-v3">Whisper Large-v3 Â· 8.1% WER</option>
+                    <option value="whisper-large-v3-turbo">Whisper v3-Turbo Â· fast</option>
+                    <option value="distil-whisper-large-v3.5">âš¡ Distil-Whisper v3.5 Â· fastest</option>
+                    <option value="parakeet-tdt-0.6b-v3" selected>NVIDIA Parakeet TDT v3 Â· GPU isolated</option>
+                    <option value="cohere-transcribe-03-2026">Cohere 03-2026 Â· 5.42% WER</option>
                 </optgroup>
             </select>
             <select id="agentSelect" class="model-select">
@@ -1193,7 +1420,7 @@
                 <div class="process-time-sub" id="processTimingSub">Ready for upload</div>
             </div>
         </div>
-        <!-- 
+        <!--
     <div class="enroll-section">
         <div class="enroll-title">Agent Voice ID</div>
         <div class="enroll-row">
@@ -1215,8 +1442,77 @@
 
     </aside>
 
-    <!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
+    <!-- â•â• MAIN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <main>
+
+        <!-- â•â• TRAINING CONTAINER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+        <div id="trainingContainer" class="training-container">
+            <div class="training-header">
+                <div>
+                    <h2 style="margin: 0 0 5px 0;">Agent Voiceprint Training</h2>
+                    <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">
+                        Automated daily enrollment from production API calls
+                    </p>
+                </div>
+                <div id="trainingHeaderStatus" style="color: var(--muted); font-size: 0.9rem;">Idle</div>
+            </div>
+
+            <div class="training-controls">
+                <div class="training-field">
+                    <label for="trainingAgentSelect">Agent</label>
+                    <select id="trainingAgentSelect">
+                        <option value="">All qualified agents</option>
+                    </select>
+                </div>
+                <div class="training-field">
+                    <label for="trainingDays">Days</label>
+                    <input id="trainingDays" type="number" min="1" max="90" value="7">
+                </div>
+                <div class="training-field">
+                    <label for="audiofyUsername">Audiofy User</label>
+                    <input id="audiofyUsername" type="text" autocomplete="username" placeholder="abhishek">
+                </div>
+                <div class="training-field">
+                    <label for="audiofyPassword">Audiofy Password</label>
+                    <input id="audiofyPassword" type="password" autocomplete="current-password" placeholder="Required if token expired">
+                </div>
+                <label class="training-field training-toggle" for="trainingDryRun">
+                    <input id="trainingDryRun" type="checkbox" checked>
+                    <span>Dry run</span>
+                </label>
+                <label class="training-field training-toggle" for="trainingActivate">
+                    <input id="trainingActivate" type="checkbox">
+                    <span>Activate if gated pass</span>
+                </label>
+            </div>
+
+            <div class="training-actions">
+                <button class="run-train-btn" onclick="runAutoTraining(false)">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Train Selected Agent
+                </button>
+                <button class="secondary-train-btn" onclick="runAutoTraining(true)">Run All Qualified</button>
+                <button class="secondary-train-btn" onclick="startCleanEnrollment()">Enroll New Agent</button>
+            </div>
+
+            <div id="trainingRunSummary" class="train-summary" style="display: none;"></div>
+            <div id="trainingStatus" class="status-terminal" style="display: none;">
+                <!-- Terminal output goes here -->
+            </div>
+
+            <h3 style="margin-top: 30px; font-size: 1.1rem; color: #cbd5e1;">Enrolled Agents (<span id="agentCount">0</span>)</h3>
+            <div class="agent-grid" id="agentGrid">
+                <!-- Agent cards will be injected here -->
+            </div>
+        </div>
+
+        <!-- â•â• CALLS CONTAINER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+        <div id="callsContainer">
 
         <!-- Audio players -->
         <div class="audio-bar" id="audioBar" style="display:none">
@@ -1236,7 +1532,7 @@
                     <span class="cp-time" id="cpOrigTime">0:00</span>
                     <input type="range" class="cp-seek" id="cpOrigSeek" value="0" min="0" max="100" step="0.01">
                     <span class="cp-dur" id="cpOrigDur">--:--</span>
-                    <button class="cp-mute" id="cpOrigMute">🔊</button>
+                    <button class="cp-mute" id="cpOrigMute">ðŸ”Š</button>
                 </div>
             </div>
 
@@ -1256,7 +1552,7 @@
                     <span class="cp-time" id="cpEnhTime">0:00</span>
                     <input type="range" class="cp-seek" id="cpEnhSeek" value="0" min="0" max="100" step="0.01">
                     <span class="cp-dur" id="cpEnhDur">--:--</span>
-                    <button class="cp-mute" id="cpEnhMute">🔊</button>
+                    <button class="cp-mute" id="cpEnhMute">ðŸ”Š</button>
                 </div>
             </div>
 
@@ -1275,7 +1571,7 @@
                 <span class="spk-info" id="spkInfoAgent">--</span>
                 <span class="spk-info" id="spkTurnsAgent">--</span>
                 <span class="spk-diar-badge" id="spkDiarBadge">--</span>
-                <button class="swap-btn" onclick="swapRoles()" id="swapRolesBtn">🔄 Swap</button>
+                <button class="swap-btn" onclick="swapRoles()" id="swapRolesBtn">ðŸ”„ Swap</button>
             </div>
             <div class="spk-row">
                 <span class="spk-label cust">Customer</span>
@@ -1297,8 +1593,8 @@
                 <div class="now-bar-el" id="nwb5"></div>
             </div>
             <span class="now-dot" id="nowDot"></span>
-            <span class="now-speaker" id="nowSpeaker">—</span>
-            <span class="now-sep">·</span>
+            <span class="now-speaker" id="nowSpeaker">â€”</span>
+            <span class="now-sep">Â·</span>
             <span class="now-phrase" id="nowPhrase"></span>
             <span class="now-time" id="nowTime"></span>
         </div>
@@ -1312,35 +1608,36 @@
                 Select a call to view transcript
             </div>
         </div>
+        </div>
     </main>
 
     <!-- Jump-to-now -->
-    <button class="jump-btn" id="jumpNowBtn" onclick="jumpToNow()">▶ Back to Now</button>
+    <button class="jump-btn" id="jumpNowBtn" onclick="jumpToNow()">â–¶ Back to Now</button>
 
     <!-- Progress modal -->
     <div id="progressModal" class="progress-overlay" style="display:none">
         <div class="progress-box">
             <div class="progress-title">
                 <div class="progress-spinner"></div>
-                Processing Call…
+                Processing Callâ€¦
             </div>
             <div class="progress-steps">
-                <div class="progress-step" id="pstep-0"><span class="step-icon">🔊</span>
+                <div class="progress-step" id="pstep-0"><span class="step-icon">ðŸ”Š</span>
                     <div>
                         <div class="step-label">Audio Enhancement</div>
                     </div>
                 </div>
-                <div class="progress-step" id="pstep-1"><span class="step-icon">🎙️</span>
+                <div class="progress-step" id="pstep-1"><span class="step-icon">ðŸŽ™ï¸</span>
                     <div>
                         <div class="step-label">Speaker Diarization</div>
                     </div>
                 </div>
-                <div class="progress-step" id="pstep-2"><span class="step-icon">🪪</span>
+                <div class="progress-step" id="pstep-2"><span class="step-icon">ðŸªª</span>
                     <div>
                         <div class="step-label">Speaker Identification</div>
                     </div>
                 </div>
-                <div class="progress-step" id="pstep-3"><span class="step-icon">📝</span>
+                <div class="progress-step" id="pstep-3"><span class="step-icon">ðŸ“</span>
                     <div>
                         <div class="step-label">Transcription</div>
                     </div>
@@ -1349,7 +1646,7 @@
             <div class="progress-track">
                 <div class="progress-fill" id="progressFill" style="width:0%"></div>
             </div>
-            <div class="progress-msg" id="progressMsg">Preparing…</div>
+            <div class="progress-msg" id="progressMsg">Preparingâ€¦</div>
             <div class="progress-timer" id="progressTimer">0:00</div>
             <div style="text-align:center;margin-top:14px;">
                 <button id="cancelBtn" onclick="cancelPipeline()" style="padding:6px 16px;background:#dc2626;color:#fff;border:none;
@@ -1361,7 +1658,7 @@
     </div>
 
     <script>
-        // ── DOM refs ────────────────────────────────────────────────────────────────
+        // â”€â”€ DOM refs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const DOM = {
             callList: document.getElementById('callList'),
             audioBar: document.getElementById('audioBar'),
@@ -1380,7 +1677,7 @@
         let _isPlaying = false;
         let _autoScroll = true;
 
-        // ── Helpers ─────────────────────────────────────────────────────────────────
+        // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function fmt(s) {
             s = Math.floor(s || 0);
             return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
@@ -1395,7 +1692,7 @@
         }
 
         function fmtDur(s) {
-            if (!s) return '—';
+            if (!s) return 'â€”';
             s = Math.max(0, Math.round(Number(s) || 0));
             const h = Math.floor(s / 3600);
             const m = Math.floor((s % 3600) / 60);
@@ -1442,7 +1739,7 @@
             return seg.display_speaker || seg.speaker || 'Unknown';
         }
 
-        // ── Render a single chat bubble ─────────────────────────────────────────────
+        // â”€â”€ Render a single chat bubble â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function renderBubble(seg, idx) {
             if (!seg.text?.trim()) return '';
             const role = resolveRole(seg);
@@ -1451,7 +1748,7 @@
             if (isSpeechOnly && seg.text.trim() === 'Speech detected - no transcript') return '';
             const css = `${isAg ? 'bubble-agent' : 'bubble-cust'}${isSpeechOnly ? ' speech-only' : ''}`;
             const name = displaySpeaker(seg);
-            // Confidence: cosine sim 0.30..0.85 → 0..100% bar.
+            // Confidence: cosine sim 0.30..0.85 â†’ 0..100% bar.
             // Low confidence (faint orange) indicates the segment was assigned by
             // neighbour-vote smoothing, not direct voiceprint match.
             const sim = Math.max(0, Math.min(1, (seg._best_sim || 0)));
@@ -1482,7 +1779,7 @@
                 ${name}
                 <span class="live-badge">LIVE</span>
             </span>
-            <span class="bubble-time" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
+            <span class="bubble-time" onclick="playFrom(${seg.start})">${fmt(seg.start)} â€“ ${fmt(seg.end)}</span>
         </div>
         <div class="bubble-text">${wordSpans}</div>
         <div class="conf-bar" title="${confTitle}" style="height:2px;margin-top:6px;background:rgba(148,163,184,0.10);border-radius:2px;overflow:hidden;">
@@ -1491,7 +1788,7 @@
     </div>`;
         }
 
-        // ── Load calls list ─────────────────────────────────────────────────────────
+        // â”€â”€ Load calls list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         async function loadCalls() {
             try {
                 const res = await fetch('/api/calls');
@@ -1512,16 +1809,16 @@
                     const meta = typeof c === 'object' ? (c.orig_meta || {}) : {};
                     const procT = typeof c === 'object' ? (c.processing_time_s || 0) : 0;
                     const procAt = typeof c === 'object' ? (c.processed_at || '') : '';
-                    const dur = meta.duration_s ? fmtDur(meta.duration_s) : '—';
-                    const size = meta.size_mb ? `${meta.size_mb} MB` : '—';
-                    const ch = meta.channels === 1 ? 'Mono' : meta.channels === 2 ? 'Stereo' : '—';
-                    const proc = procT ? fmtDur(procT) : '—';
+                    const dur = meta.duration_s ? fmtDur(meta.duration_s) : 'â€”';
+                    const size = meta.size_mb ? `${meta.size_mb} MB` : 'â€”';
+                    const ch = meta.channels === 1 ? 'Mono' : meta.channels === 2 ? 'Stereo' : 'â€”';
+                    const proc = procT ? fmtDur(procT) : 'â€”';
                     const ago = procAt ? timeAgo(procAt) : '';
                     return `<div class="call-card" onclick="loadCall('${id}', this)">
                 <div class="call-title">
                     <span class="badge-num">#${idx + 1}</span>
                     ${idx === 0 ? '<span class="badge-latest">LATEST</span>' : ''}
-                    📞 ${id}
+                    ðŸ“ž ${id}
                 </div>
                 <div class="call-meta" style="margin-bottom:4px;">
                     <span class="model-tag" style="background:${modelColor(model)}">${shortModel(model)}</span>
@@ -1529,7 +1826,7 @@
                     ${ago ? '<span style="float:right;color:var(--muted)">' + ago + '</span>' : ''}
                 </div>
                 <div class="call-meta">Proc ${proc} &nbsp;|&nbsp; Audio ${dur}</div>
-                <div class="call-meta">📦 ${size} &nbsp;·&nbsp; ${ch}</div>
+                <div class="call-meta">ðŸ“¦ ${size} &nbsp;Â·&nbsp; ${ch}</div>
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
                     <span style="font-size:.68rem;color:var(--muted)">Click to view</span>
                     <button onclick="deleteCall(event,'${id}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;padding:2px;" title="Delete">
@@ -1549,7 +1846,7 @@
             }
         }
 
-        // ── Load a single call ──────────────────────────────────────────────────────
+        // â”€â”€ Load a single call â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         async function loadCall(callId, el) {
             document.querySelectorAll('.call-card').forEach(n => n.classList.remove('active'));
             if (el) el.classList.add('active');
@@ -1622,7 +1919,7 @@
             initPlayer('audioPlayer', 'cpEnhBtn', 'cpEnhTime', 'cpEnhSeek', 'cpEnhDur', 'cpEnhMute');
         }
 
-        // ── Custom player ───────────────────────────────────────────────────────────
+        // â”€â”€ Custom player â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const _ps = {};
         function initPlayer(audioId, btnId, timeId, seekId, durId, muteId) {
             const audio = document.getElementById(audioId);
@@ -1654,7 +1951,7 @@
                 }
             };
             seek.oninput = () => { if (audio.duration) audio.currentTime = (seek.value / 100) * audio.duration; };
-            if (mute) mute.onclick = () => { audio.muted = !audio.muted; mute.textContent = audio.muted ? '🔇' : '🔊'; };
+            if (mute) mute.onclick = () => { audio.muted = !audio.muted; mute.textContent = audio.muted ? 'ðŸ”‡' : 'ðŸ”Š'; };
         }
 
         function playFrom(s) {
@@ -1662,7 +1959,7 @@
             DOM.audioPlayer.play();
         }
 
-        // ── Binary search active segment ────────────────────────────────────────────
+        // â”€â”€ Binary search active segment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function findSeg(t) {
             const segs = currentSegments;
             if (!segs.length) return -1;
@@ -1674,7 +1971,7 @@
             return (best >= 0 && t <= segs[best].end) ? best : -1;
         }
 
-        // ── Now-speaking helpers ─────────────────────────────────────────────────────
+        // â”€â”€ Now-speaking helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function showNow(seg) {
             const nb = DOM.nowBar;
             nb.style.display = 'flex';
@@ -1684,12 +1981,12 @@
             document.getElementById('nowSpeaker').style.color = color;
             document.getElementById('nowDot').style.background = color;
             document.getElementById('nowPhrase').textContent = seg.text || '';
-            document.getElementById('nowTime').textContent = fmt(seg.start) + ' → ' + fmt(seg.end);
+            document.getElementById('nowTime').textContent = fmt(seg.start) + ' â†’ ' + fmt(seg.end);
             document.querySelectorAll('.now-bar-el').forEach(b => b.style.background = color);
         }
         function hideNow() { DOM.nowBar.style.display = 'none'; }
 
-        // ── Jump to now ─────────────────────────────────────────────────────────────
+        // â”€â”€ Jump to now â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function jumpToNow() {
             _autoScroll = true;
             document.getElementById('jumpNowBtn').style.display = 'none';
@@ -1709,7 +2006,7 @@
             document.getElementById('jumpNowBtn').style.display = inView ? 'none' : 'flex';
         });
 
-        // ── Live highlight (Enhanced player timeupdate) ─────────────────────────────
+        // â”€â”€ Live highlight (Enhanced player timeupdate) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         DOM.audioPlayer.addEventListener('play', () => {
             _isPlaying = true;
             DOM.chat.classList.add('playing');
@@ -1809,7 +2106,7 @@
             }
         });
 
-        // ── Delete call ─────────────────────────────────────────────────────────────
+        // â”€â”€ Delete call â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function deleteCall(e, id) {
             e.stopPropagation();
             showConfirm(`Delete <strong style="color:#f87171;">${id}</strong>?`, async () => {
@@ -1818,7 +2115,7 @@
             });
         }
 
-        // ── Swap roles ──────────────────────────────────────────────────────────────
+        // â”€â”€ Swap roles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         async function swapRoles() {
             if (!currentCallId) return;
             const btn = document.getElementById('swapRolesBtn');
@@ -1841,12 +2138,12 @@
             try {
                 const r = await fetch(`/api/call/${encodeURIComponent(currentCallId)}/swap-roles`, { method: 'POST' });
                 const st = await r.json();
-                btn.textContent = st.swapped ? '↩ Undo' : '🔄 Swap';
+                btn.textContent = st.swapped ? 'â†© Undo' : 'ðŸ”„ Swap';
             } catch (_) { }
             btn.disabled = false;
         }
 
-        // ── Confirm dialog ───────────────────────────────────────────────────────────
+        // â”€â”€ Confirm dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function showConfirm(msg, onYes) {
             const ov = document.createElement('div');
             ov.className = 'confirm-overlay';
@@ -1861,11 +2158,13 @@
             ov.querySelector('#_cYes').onclick = () => { document.body.removeChild(ov); onYes(); };
         }
 
-        // ── Progress modal ───────────────────────────────────────────────────────────
+        // â”€â”€ Progress modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const STAGE_PCTS = [8, 30, 58, 80, 100];
+        const POLL_MS = 1200;
         let _pollTimer = null;
         let _elapsedTimer = null;
         let _elapsedStart = 0;
+        let _pollFailCount = 0;
 
         function _fmtElapsed(sec) {
             sec = Math.max(0, Math.floor(sec));
@@ -1880,6 +2179,38 @@
             if (el) el.textContent = _fmtElapsed(sec || 0);
         }
 
+        function _resetFileInput() {
+            const inp = document.getElementById('audioUpload');
+            if (inp) inp.value = '';
+        }
+
+        function setUploadState(busy, label) {
+            const btn = document.getElementById('uploadBtn');
+            const txt = document.getElementById('uploadText');
+            const inp = document.getElementById('audioUpload');
+            const model = document.getElementById('modelSelect');
+            const agent = document.getElementById('agentSelect');
+            if (btn) btn.classList.toggle('uploading', !!busy);
+            if (txt) txt.textContent = label || (busy ? 'Processing...' : 'Upload Audio');
+            if (inp) inp.disabled = !!busy;
+            if (model) model.disabled = !!busy;
+            if (agent) agent.disabled = !!busy;
+            if (!busy) _resetFileInput();
+        }
+
+        function stopPolling() {
+            if (_pollTimer) {
+                clearInterval(_pollTimer);
+                _pollTimer = null;
+            }
+        }
+
+        async function fetchStatus() {
+            const r = await fetch(`/api/status?t=${Date.now()}`, { cache: 'no-store' });
+            if (!r.ok) throw new Error(`Status HTTP ${r.status}`);
+            return r.json();
+        }
+
         function updateProcessTiming(status) {
             const box = document.getElementById('processTiming');
             const stageEl = document.getElementById('processStage');
@@ -1891,6 +2222,7 @@
             const elapsed = Number(s.elapsed_seconds ?? s.processing_time_seconds ?? 0);
             box.classList.toggle('running', !!s.running);
             box.classList.toggle('done', !!s.done && !s.running);
+            box.classList.toggle('error', !!s.error);
             elapsedEl.textContent = _fmtElapsed(elapsed);
 
             if (s.running) {
@@ -1927,7 +2259,7 @@
 
         function showProgress() {
             document.getElementById('progressModal').style.display = 'flex';
-            setStage(0, 'Uploading…');
+            setStage(0, 'Uploadingâ€¦');
             _startElapsed();
         }
         function hideProgress() {
@@ -1939,17 +2271,17 @@
 
         async function cancelPipeline() {
             const btn = document.getElementById('cancelBtn');
-            if (btn) { btn.disabled = true; btn.textContent = 'Cancelling…'; }
+            if (btn) { btn.disabled = true; btn.textContent = 'Cancellingâ€¦'; }
             try { await fetch('/api/cancel', { method: 'POST' }); } catch (_) { }
-            document.getElementById('progressMsg').textContent = 'Cancelling — finishing current stage…';
+            document.getElementById('progressMsg').textContent = 'Cancelling â€” finishing current stageâ€¦';
         }
 
         function setStage(n, msg) {
             for (let i = 0; i < 4; i++) {
                 const el = document.getElementById(`pstep-${i}`);
                 el.classList.remove('active', 'done', 'error');
-                el.querySelector('.step-icon').textContent = ['🔊', '🎙️', '🪪', '📝'][i];
-                if (i < n) { el.classList.add('done'); el.querySelector('.step-icon').textContent = '✅'; }
+                el.querySelector('.step-icon').textContent = ['ðŸ”Š', 'ðŸŽ™ï¸', 'ðŸªª', 'ðŸ“'][i];
+                if (i < n) { el.classList.add('done'); el.querySelector('.step-icon').textContent = 'âœ…'; }
                 else if (i === n && n < 4) el.classList.add('active');
             }
             document.getElementById('progressFill').style.width = STAGE_PCTS[Math.min(n, 4)] + '%';
@@ -1966,30 +2298,130 @@
                     if (s.error) { clearInterval(_pollTimer); hideProgress(); showError(s.error); return; }
                     if (s.stage === 'Cancelled') { clearInterval(_pollTimer); hideProgress(); return; }
                     setStage(s.stage_num, s.message);
-                    if (s.done) { clearInterval(_pollTimer); document.getElementById('progressMsg').textContent = '✅ Done!'; setTimeout(() => { hideProgress(); loadCalls(); }, 1200); }
+                    if (s.done) { clearInterval(_pollTimer); document.getElementById('progressMsg').textContent = 'âœ… Done!'; setTimeout(() => { hideProgress(); loadCalls(); }, 1200); }
                 } catch (_) { }
             }, 1200);
+        }
+
+        // Hardened state handlers. These override the earlier simple handlers
+        // so upload controls follow the actual server job state.
+        function showProgress(message = 'Preparing...') {
+            const modal = document.getElementById('progressModal');
+            if (modal) modal.style.display = 'flex';
+            setStage(0, message);
+            _startElapsed();
+        }
+
+        function hideProgress() {
+            const modal = document.getElementById('progressModal');
+            if (modal) modal.style.display = 'none';
+            _stopElapsed();
+            const btn = document.getElementById('cancelBtn');
+            if (btn) { btn.disabled = false; btn.textContent = 'Cancel'; }
+        }
+
+        async function cancelPipeline() {
+            const btn = document.getElementById('cancelBtn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Cancelling...'; }
+            setUploadState(true, 'Cancelling...');
+            try { await fetch('/api/cancel', { method: 'POST' }); } catch (_) { }
+            const msg = document.getElementById('progressMsg');
+            if (msg) msg.textContent = 'Cancelling - finishing current stage...';
+        }
+
+        function setStage(n, msg) {
+            n = Math.max(0, Math.min(4, Number(n) || 0));
+            for (let i = 0; i < 4; i++) {
+                const el = document.getElementById(`pstep-${i}`);
+                if (!el) continue;
+                el.classList.remove('active', 'done', 'error');
+                const icon = el.querySelector('.step-icon');
+                if (icon) icon.textContent = String(i + 1);
+                if (i < n) {
+                    el.classList.add('done');
+                    if (icon) icon.textContent = 'OK';
+                } else if (i === n && n < 4) {
+                    el.classList.add('active');
+                }
+            }
+            const fill = document.getElementById('progressFill');
+            if (fill) fill.style.width = STAGE_PCTS[n] + '%';
+            const text = document.getElementById('progressMsg');
+            if (text) text.textContent = msg || '';
+        }
+
+        function startPolling() {
+            stopPolling();
+            _pollFailCount = 0;
+            const pollOnce = async () => {
+                try {
+                    const s = await fetchStatus();
+                    _pollFailCount = 0;
+                    updateProcessTiming(s);
+                    if (typeof s.elapsed_seconds === 'number') _setProgressElapsed(s.elapsed_seconds);
+
+                    if (s.cancel_requested && s.running) {
+                        setUploadState(true, 'Cancelling...');
+                        setStage(s.stage_num, 'Cancelling - stopping current stage...');
+                        return;
+                    }
+                    if (s.error) {
+                        stopPolling();
+                        hideProgress();
+                        setUploadState(false);
+                        showError(s.error);
+                        return;
+                    }
+                    if (s.stage === 'Cancelled') {
+                        stopPolling();
+                        hideProgress();
+                        setUploadState(false);
+                        updateProcessTiming(s);
+                        return;
+                    }
+                    if (s.running || s.done) setStage(s.stage_num, s.message);
+                    if (s.done && !s.running) {
+                        stopPolling();
+                        const msg = document.getElementById('progressMsg');
+                        if (msg) msg.textContent = 'Done';
+                        setUploadState(false);
+                        setTimeout(() => { hideProgress(); loadCalls(); }, 1200);
+                    }
+                } catch (err) {
+                    _pollFailCount += 1;
+                    if (_pollFailCount >= 3) {
+                        stopPolling();
+                        hideProgress();
+                        setUploadState(false);
+                        showError(`Lost connection to local server: ${err.message}`);
+                    }
+                }
+            };
+            pollOnce();
+            _pollTimer = setInterval(pollOnce, POLL_MS);
         }
 
         function showError(msg) {
             const el = document.createElement('div');
             el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;background:#1e1e2e;border:1px solid #ef4444;border-radius:10px;padding:16px 22px;max-width:500px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.5);';
             el.innerHTML = `<div style="display:flex;gap:10px;align-items:flex-start;">
-        <span style="font-size:1.2rem;flex-shrink:0;">❌</span>
+        <span style="font-size:1.2rem;flex-shrink:0;">âŒ</span>
         <div style="flex:1;"><div style="font-weight:600;color:#f87171;margin-bottom:5px;">Pipeline Failed</div>
         <div style="font-size:.8rem;color:#cbd5e1;">${msg}</div></div>
-        <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">×</button>
+        <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;">Ã—</button>
     </div>`;
             document.body.appendChild(el);
         }
 
-        // ── Upload ────────────────────────────────────────────────────────────────────
+        // â”€â”€ Upload â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        window.__stableUploadHandler = true;
         document.getElementById('audioUpload').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
+            if (window.__stableUploadHandler) return;
             const btn = document.getElementById('uploadBtn');
             const txt = document.getElementById('uploadText');
-            btn.classList.add('uploading'); txt.textContent = 'Uploading…';
+            btn.classList.add('uploading'); txt.textContent = 'Uploadingâ€¦';
             document.getElementById('audioUpload').disabled = true;
             try {
                 const model = document.getElementById('modelSelect').value;
@@ -2019,7 +2451,63 @@
             }
         });
 
-        // ── Enrollment ────────────────────────────────────────────────────────────────
+        // â”€â”€ Enrollment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        document.getElementById('audioUpload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            let keepBusy = false;
+            setUploadState(true, 'Uploading...');
+            showProgress('Uploading audio...');
+            try {
+                const model = document.getElementById('modelSelect').value;
+                const agent = document.getElementById('agentSelect').value || 'auto';
+                const params = new URLSearchParams({
+                    filename: file.name,
+                    model,
+                    agent_slug: agent
+                });
+                const res = await fetch(`/api/upload?${params.toString()}`, { method: 'POST', body: file });
+                if (res.status === 409) {
+                    const st = await fetchStatus().catch(() => null);
+                    if (st && st.running) {
+                        updateProcessTiming(st);
+                        showProgress(st.message || 'Process already running...');
+                        startPolling();
+                        keepBusy = true;
+                    } else {
+                        hideProgress();
+                        showError('A transcription is already running.');
+                    }
+                } else if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                } else {
+                    await res.json().catch(() => null);
+                    setStage(0, 'Upload received. Starting processing...');
+                    startPolling();
+                    keepBusy = true;
+                }
+            } catch (err) {
+                try {
+                    const st = await fetchStatus();
+                    if (st.running || st.done) {
+                        updateProcessTiming(st);
+                        if (!st.done) {
+                            showProgress(st.message || 'Processing...');
+                            startPolling();
+                            keepBusy = true;
+                        } else {
+                            loadCalls();
+                        }
+                        return;
+                    }
+                } catch (_) { }
+                hideProgress();
+                showError(err.message);
+            } finally {
+                if (!keepBusy) setUploadState(false);
+            }
+        });
+
         async function checkEnrollment() {
             try {
                 const d = await (await fetch('/api/enrollment-status')).json();
@@ -2028,16 +2516,16 @@
                 const sub = document.getElementById('enrollSub');
                 const btn = document.getElementById('enrollBtn');
                 if (d.running) {
-                    dot.className = 'enroll-dot running'; nm.textContent = 'Enrolling…'; sub.textContent = d.message || '';
+                    dot.className = 'enroll-dot running'; nm.textContent = 'Enrollingâ€¦'; sub.textContent = d.message || '';
                     btn.disabled = true; setTimeout(checkEnrollment, 2000);
                 } else if (d.enrolled) {
                     dot.className = 'enroll-dot enrolled'; nm.textContent = d.agent_name || 'Voice enrolled';
                     const dimText = d.voiceprint_dims && Object.keys(d.voiceprint_dims).length
-                        ? ` · dims ${Object.entries(d.voiceprint_dims).map(([k, v]) => `${k}:${v}`).join(', ')}`
+                        ? ` Â· dims ${Object.entries(d.voiceprint_dims).map(([k, v]) => `${k}:${v}`).join(', ')}`
                         : '';
                     sub.textContent = d.agent_count > 1
-                        ? `Active · ${d.agent_count} agents${dimText}`
-                        : 'Active · matches on next upload';
+                        ? `Active Â· ${d.agent_count} agents${dimText}`
+                        : 'Active Â· matches on next upload';
                     btn.textContent = 'Re-enroll'; btn.disabled = false;
                 } else {
                     dot.className = 'enroll-dot'; nm.textContent = 'Not enrolled';
@@ -2046,30 +2534,48 @@
             } catch (_) { }
         }
 
+        let pendingEnrollAgentName = '';
+        function startCleanEnrollment() {
+            pendingEnrollAgentName = prompt('Agent name for enrollment:', '') || '';
+            if (!pendingEnrollAgentName.trim()) return;
+            document.getElementById('cleanVoiceUpload').click();
+        }
+
         const cleanVoiceUpload = document.getElementById('cleanVoiceUpload');
         if (cleanVoiceUpload) cleanVoiceUpload.addEventListener('change', async function () {
             const files = this.files;
             if (!files || !files.length) return;
             const btn = document.getElementById('enrollBtn');
-            const prog = document.getElementById('enrollProgress');
+            const prog = document.getElementById('enrollProgress') || document.getElementById('trainingHeaderStatus');
             const dot = document.getElementById('enrollDot');
             const nm = document.getElementById('enrollName');
-            btn.disabled = true; dot.className = 'enroll-dot running'; nm.textContent = 'Uploading…';
-            prog.textContent = `Uploading ${files.length} file(s)…`;
+            if (btn) btn.disabled = true;
+            if (dot) dot.className = 'enroll-dot running';
+            if (nm) nm.textContent = 'Uploading...';
+            prog.textContent = `Uploading ${files.length} file(s)â€¦`;
             const fd = new FormData();
-            const agentName = prompt('Agent name (e.g. "Zak"):', 'Agent') || 'Agent';
+            const agentName = pendingEnrollAgentName || prompt('Agent name (e.g. "Zak"):', 'Agent') || 'Agent';
+            pendingEnrollAgentName = '';
             fd.append('agent_name', agentName);
             for (const f of files) fd.append('files', f);
             try {
                 const r = await fetch('/api/enroll-clean-upload', { method: 'POST', body: fd });
                 const d = await r.json();
-                if (!r.ok) { prog.textContent = 'Error: ' + (d.message || r.statusText); dot.className = 'enroll-dot'; nm.textContent = 'Failed'; btn.disabled = false; }
-                else { prog.textContent = 'Processing…'; checkEnrollment(); }
-            } catch (err) { prog.textContent = 'Upload error: ' + err.message; btn.disabled = false; }
+                if (!r.ok) {
+                    prog.textContent = 'Error: ' + (d.message || r.statusText);
+                    if (dot) dot.className = 'enroll-dot';
+                    if (nm) nm.textContent = 'Failed';
+                    if (btn) btn.disabled = false;
+                }
+                else { prog.textContent = 'Processingâ€¦'; checkEnrollment(); }
+            } catch (err) {
+                prog.textContent = 'Upload error: ' + err.message;
+                if (btn) btn.disabled = false;
+            }
             this.value = '';
         });
 
-        // ── Load test results ──────────────────────────────────────────────────────────
+        // â”€â”€ Load test results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         async function loadTestResults() {
             try {
                 let data = null;
@@ -2112,7 +2618,7 @@
                 let html = `<div style="padding-bottom:8px;">
             <div style="font-size:0.7rem; color:var(--muted); margin-bottom:2px;">${testName}</div>
             <div style="font-size:0.85rem; color:#22c55e; font-weight:700;">
-                ${accuracy}% • ${correct}/${total} correct
+                ${accuracy}% â€¢ ${correct}/${total} correct
             </div>
         </div>`;
 
@@ -2146,23 +2652,223 @@
             }
         }
 
-        // ── Init ──────────────────────────────────────────────────────────────────────
+        // â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // Reset any stuck UI state from a previous session.
         (function _resetUiState() {
-            const ub = document.getElementById('uploadBtn');
-            if (ub) ub.classList.remove('uploading');
-            const ut = document.getElementById('uploadText');
-            if (ut) ut.textContent = 'Upload Audio';
-            const au = document.getElementById('audioUpload');
-            if (au) { au.disabled = false; au.value = ''; }
+            setUploadState(false);
             // If pipeline is running on the server when page loads, resume the polling.
-            fetch('/api/status').then(r => r.json()).then(s => {
+            fetchStatus().then(s => {
                 updateProcessTiming(s);
-                if (s.running && !s.done) { showProgress(); startPolling(); }
+                if (s.running && !s.done) {
+                    setUploadState(true, s.stage === 'Cancelling' ? 'Cancelling...' : 'Processing...');
+                    showProgress(s.message || 'Processing...');
+                    startPolling();
+                } else {
+                    setUploadState(false);
+                }
             }).catch(() => { });
         })();
         loadCalls();
         checkEnrollment();
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // TRAINING DASHBOARD
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+        let trainingStatusInterval = null;
+
+        function switchMainTab(tabName) {
+            const tabCalls = document.getElementById('tabCalls');
+            const tabTraining = document.getElementById('tabTraining');
+            const callsContainer = document.getElementById('callsContainer');
+            const trainingContainer = document.getElementById('trainingContainer');
+
+            if (tabName === 'calls') {
+                tabCalls.classList.add('active');
+                tabTraining.classList.remove('active');
+                callsContainer.style.display = 'block';
+                trainingContainer.classList.remove('active');
+            } else {
+                tabCalls.classList.remove('active');
+                tabTraining.classList.add('active');
+                callsContainer.style.display = 'none';
+                trainingContainer.classList.add('active');
+                loadAgents();
+                pollTrainingStatus();
+            }
+        }
+
+        async function loadAgents() {
+            try {
+                const res = await fetch('/api/agents');
+                const agents = await res.json();
+                const grid = document.getElementById('agentGrid');
+                document.getElementById('agentCount').innerText = agents.length;
+                const select = document.getElementById('trainingAgentSelect');
+                const selected = select ? select.value : '';
+                if (select) {
+                    select.innerHTML = '<option value="">All qualified agents</option>' + agents.map(a =>
+                        `<option value="${escapeHtml(a.name)}">${escapeHtml(a.name)}</option>`
+                    ).join('');
+                    select.value = selected;
+                }
+
+                if (agents.length === 0) {
+                    grid.innerHTML = '<div style="color:var(--muted)">No agents enrolled yet.</div>';
+                    return;
+                }
+
+                grid.innerHTML = agents.map(a => `
+                    <div class="agent-card">
+                        <h4 style="margin: 0 0 15px 0; font-size: 1.1rem; color: #fff;">${escapeHtml(a.name)}</h4>
+                        <div class="stat-row">
+                            <span class="stat-label">Model</span>
+                            <span class="stat-value">${escapeHtml(a.model)}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Voiceprints</span>
+                            <span class="stat-value">${a.n_voiceprints}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Mean Inside Sim</span>
+                            <span class="stat-value ${a.mean_inside_sim > 0.6 ? 'good-metric' : 'warn-metric'}">
+                                ${a.mean_inside_sim ? a.mean_inside_sim.toFixed(3) : 'N/A'}
+                            </span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Max Outside Sim</span>
+                            <span class="stat-value ${a.max_outside_sim < 0.4 ? 'good-metric' : 'warn-metric'}">
+                                ${a.max_outside_sim ? a.max_outside_sim.toFixed(3) : 'N/A'}
+                            </span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Total Audio</span>
+                            <span class="stat-value">${a.total_training_seconds ? Math.round(a.total_training_seconds/60) : 0} min</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Last Overall</span>
+                            <span class="stat-value ${metricClass(a.last_overall_accuracy, 85, true)}">${formatPct(a.last_overall_accuracy)}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Last Agent</span>
+                            <span class="stat-value ${metricClass(a.last_agent_accuracy, 85, true)}">${formatPct(a.last_agent_accuracy)}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Last Customer</span>
+                            <span class="stat-value ${metricClass(a.last_customer_accuracy, 85, true)}">${formatPct(a.last_customer_accuracy)}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">LOCO</span>
+                            <span class="stat-value ${metricClass(a.last_loco_accuracy, 85, true)}">${formatPct(a.last_loco_accuracy)}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Last Gate</span>
+                            <span class="stat-value ${a.last_activated ? 'good-metric' : a.last_activation_eligible ? 'good-metric' : 'warn-metric'}">
+                                ${a.last_activated ? 'Activated' : a.last_activation_eligible ? 'Eligible' : a.last_overall_accuracy ? 'Gated' : 'No run'}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                console.error("Failed to load agents", e);
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[ch]));
+        }
+
+        function formatPct(value) {
+            return Number.isFinite(Number(value)) ? `${Number(value).toFixed(2)}%` : 'N/A';
+        }
+
+        function metricClass(value, threshold, higherIsBetter) {
+            if (!Number.isFinite(Number(value))) return 'warn-metric';
+            return higherIsBetter
+                ? (Number(value) >= threshold ? 'good-metric' : 'warn-metric')
+                : (Number(value) <= threshold ? 'good-metric' : 'warn-metric');
+        }
+
+        function renderTrainingSummary(data) {
+            const box = document.getElementById('trainingRunSummary');
+            const active = data.active_agent || (data.selected_agents || []).join(', ') || 'All qualified agents';
+            const state = data.running ? 'Running' : data.done ? 'Complete' : data.error ? 'Failed' : 'Idle';
+            box.style.display = 'grid';
+            box.innerHTML = [
+                ['State', state],
+                ['Agent', active],
+                ['Message', data.error || data.message || 'Idle'],
+                ['Exit', data.exit_code === null || data.exit_code === undefined ? 'N/A' : data.exit_code]
+            ].map(([label, value]) => `
+                <div class="train-summary-item">
+                    <div class="train-summary-label">${label}</div>
+                    <div class="train-summary-value">${escapeHtml(value)}</div>
+                </div>
+            `).join('');
+            document.getElementById('trainingHeaderStatus').textContent = `${state}: ${data.error || data.message || active}`;
+        }
+
+        async function runAutoTraining(runAll) {
+            try {
+                const agent = document.getElementById('trainingAgentSelect').value;
+                const days = Math.max(1, Math.min(90, Number(document.getElementById('trainingDays').value || 7)));
+                const dryRun = document.getElementById('trainingDryRun').checked;
+                const activate = document.getElementById('trainingActivate').checked;
+                const username = document.getElementById('audiofyUsername').value.trim();
+                const password = document.getElementById('audiofyPassword').value;
+                const payload = {
+                    days,
+                    activate,
+                    dry_run: dryRun,
+                    audiofy_username: username,
+                    audiofy_password: password
+                };
+                if (!runAll && agent) payload.agents = [agent];
+                const res = await fetch('/api/auto-train', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.status === 'started' || data.status === 'already_running') {
+                    document.getElementById('trainingStatus').style.display = 'block';
+                    pollTrainingStatus();
+                }
+            } catch (e) {
+                console.error("Failed to start auto training", e);
+            }
+        }
+
+        async function pollTrainingStatus() {
+            if (trainingStatusInterval) clearInterval(trainingStatusInterval);
+
+            const tick = async () => {
+                try {
+                    const res = await fetch('/api/auto-train-status');
+                    const data = await res.json();
+                    renderTrainingSummary(data);
+
+                    const term = document.getElementById('trainingStatus');
+                    if (data.running || data.log_tail.length > 0) {
+                        term.style.display = 'block';
+                        term.innerHTML = data.log_tail.map(l => `<div>${escapeHtml(l)}</div>`).join('');
+                        term.scrollTop = term.scrollHeight;
+                    }
+
+                    if (!data.running && (data.done || data.error)) {
+                        clearInterval(trainingStatusInterval);
+                        loadAgents(); // refresh after done
+                    }
+                } catch (e) {
+                    console.error("Failed polling status", e);
+                }
+            };
+
+            await tick();
+            trainingStatusInterval = setInterval(tick, 2000);
+        }
+
     </script>
 </body>
 

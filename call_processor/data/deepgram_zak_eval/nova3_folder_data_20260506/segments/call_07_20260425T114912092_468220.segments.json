@@ -1,0 +1,702 @@
+[
+  {
+    "start": 0.24,
+    "end": 2.32,
+    "speaker": "SPEAKER_00",
+    "text": "Hello.",
+    "confidence": 0.88012695
+  },
+  {
+    "start": 4.24,
+    "end": 5.6,
+    "speaker": "SPEAKER_00",
+    "text": "Am I through to miss?",
+    "confidence": 0.96430665
+  },
+  {
+    "start": 6.7999997,
+    "end": 12.24,
+    "speaker": "SPEAKER_00",
+    "text": "Yep. That's me. Hello, madam. How are you? My call agent just essentially informed me that",
+    "confidence": 0.9315796
+  },
+  {
+    "start": 12.415,
+    "end": 16.895,
+    "speaker": "SPEAKER_00",
+    "text": "you received a virtual viewing on this Kia Sportage, and you're looking to move ahead with the car.",
+    "confidence": 0.96069336
+  },
+  {
+    "start": 17.615,
+    "end": 18.414999,
+    "speaker": "SPEAKER_01",
+    "text": "Mhmm.",
+    "confidence": 0.9980469
+  },
+  {
+    "start": 18.494999,
+    "end": 19.375,
+    "speaker": "SPEAKER_00",
+    "text": "No",
+    "confidence": 0.9970703
+  },
+  {
+    "start": 19.375,
+    "end": 20.015,
+    "speaker": "SPEAKER_00",
+    "text": "worries.",
+    "confidence": 1.0
+  },
+  {
+    "start": 20.575,
+    "end": 21.775,
+    "speaker": "SPEAKER_00",
+    "text": "Out of curiosity,",
+    "confidence": 0.9741211
+  },
+  {
+    "start": 22.095001,
+    "end": 25.695,
+    "speaker": "SPEAKER_00",
+    "text": "what was your best case scenario? Was you looking to get this car delivered or come and collect it?",
+    "confidence": 0.9951429
+  },
+  {
+    "start": 27.05,
+    "end": 34.57,
+    "speaker": "SPEAKER_01",
+    "text": "I'm looking to get it delivered, but I was speaking to 1 of your colleagues earlier this morning before the initial viewing Yeah. And he said",
+    "confidence": 0.97667515
+  },
+  {
+    "start": 34.89,
+    "end": 38.649998,
+    "speaker": "SPEAKER_01",
+    "text": "that you can include it in the finance price. We can. That is true.",
+    "confidence": 0.98263115
+  },
+  {
+    "start": 39.129997,
+    "end": 41.885002,
+    "speaker": "SPEAKER_00",
+    "text": "That is true. Alright. Okay. Essentially,",
+    "confidence": 0.8961589
+  },
+  {
+    "start": 41.885002,
+    "end": 50.525,
+    "speaker": "SPEAKER_00",
+    "text": "look. Here's the steps that we have to take here just to help you out as much as I can. Yeah? So on the finance, was you looking to put 1000 pound deposit down?",
+    "confidence": 0.96276855
+  },
+  {
+    "start": 51.325,
+    "end": 51.965,
+    "speaker": "SPEAKER_01",
+    "text": "Okay.",
+    "confidence": 0.8786621
+  },
+  {
+    "start": 53.43,
+    "end": 54.07,
+    "speaker": "SPEAKER_00",
+    "text": "So",
+    "confidence": 0.99902344
+  },
+  {
+    "start": 54.31,
+    "end": 59.67,
+    "speaker": "SPEAKER_00",
+    "text": "that thousand pounds, I'll take off you now and deposit the car so no 1 sells it.",
+    "confidence": 0.97732365
+  },
+  {
+    "start": 60.63,
+    "end": 65.11,
+    "speaker": "SPEAKER_00",
+    "text": "Oh, shit. Yeah. Because we genuinely, we sell, like, 4 40, 50 cars a day.",
+    "confidence": 0.94072264
+  },
+  {
+    "start": 65.845,
+    "end": 70.005,
+    "speaker": "SPEAKER_00",
+    "text": "So this this yeah. So just so no 1 else leaves a deposit before you,",
+    "confidence": 0.9226725
+  },
+  {
+    "start": 70.405,
+    "end": 74.005,
+    "speaker": "SPEAKER_00",
+    "text": "I will send you out a deposit link now. That will just secure the vehicle.",
+    "confidence": 0.9465983
+  },
+  {
+    "start": 74.405,
+    "end": 76.485,
+    "speaker": "SPEAKER_00",
+    "text": "And then what was your postcode?",
+    "confidence": 0.98824054
+  },
+  {
+    "start": 77.365,
+    "end": 79.205,
+    "speaker": "SPEAKER_01",
+    "text": "BF107EJ.",
+    "confidence": 0.68789065
+  },
+  {
+    "start": 79.205,
+    "end": 82.67999,
+    "speaker": "SPEAKER_01",
+    "text": "But we sold it to Fun. Bravo Sierra 10",
+    "confidence": 0.59646946
+  },
+  {
+    "start": 83.079994,
+    "end": 85.479996,
+    "speaker": "SPEAKER_01",
+    "text": "7 echo golf. Okay.",
+    "confidence": 0.9192505
+  },
+  {
+    "start": 85.479996,
+    "end": 87.56,
+    "speaker": "SPEAKER_00",
+    "text": "Tell me. What was you gonna say? Before",
+    "confidence": 0.8353729
+  },
+  {
+    "start": 87.96,
+    "end": 92.439995,
+    "speaker": "SPEAKER_01",
+    "text": "we go through all that, want to know how much it is to finance the pro the car.",
+    "confidence": 0.9480523
+  },
+  {
+    "start": 93.555,
+    "end": 100.195,
+    "speaker": "SPEAKER_00",
+    "text": "Well, I can give you obviously, look. I can give you roughly how much the numbers are gonna be, but until, obviously, I have a look at your credit",
+    "confidence": 0.970299
+  },
+  {
+    "start": 100.595,
+    "end": 111.38,
+    "speaker": "SPEAKER_00",
+    "text": "application and just see what kind of credit score we're dealing with, I can't make you a promise, but I can tell you roughly what the figure should be looking like, of course. Yes, please. That'll be nice. A 100%.",
+    "confidence": 0.966626
+  },
+  {
+    "start": 111.46,
+    "end": 113.54,
+    "speaker": "SPEAKER_00",
+    "text": "So if you were to put down",
+    "confidence": 0.9980469
+  },
+  {
+    "start": 114.18,
+    "end": 115.86,
+    "speaker": "SPEAKER_00",
+    "text": "1000 pound deposit",
+    "confidence": 0.9763997
+  },
+  {
+    "start": 117.14,
+    "end": 118.02,
+    "speaker": "SPEAKER_00",
+    "text": "Okay.",
+    "confidence": 0.9680176
+  },
+  {
+    "start": 118.5,
+    "end": 124.18,
+    "speaker": "SPEAKER_00",
+    "text": "If you were to put down 1000 first question is, what is your monthly budget? And was you looking to HP the car or PCP the car?",
+    "confidence": 0.9481698
+  },
+  {
+    "start": 125.835,
+    "end": 138.61,
+    "speaker": "SPEAKER_00",
+    "text": "Just finance. I don't wanna get the I wanna keep it at the end of my payment. I got you. I got you. I got you. Oh, look. What's just that for? Well, we've just got the HP. That's a higher purchase. So just with 1000 pound down",
+    "confidence": 0.8979772
+  },
+  {
+    "start": 139.48999,
+    "end": 143.01,
+    "speaker": "SPEAKER_00",
+    "text": "Uh-huh. You'd be looking in the region of $3.50 to $3.60.",
+    "confidence": 0.9896462
+  },
+  {
+    "start": 143.65,
+    "end": 144.53,
+    "speaker": "SPEAKER_01",
+    "text": "Come on.",
+    "confidence": 0.6717529
+  },
+  {
+    "start": 145.32999,
+    "end": 149.01,
+    "speaker": "SPEAKER_00",
+    "text": "That's just how much it is. $17 car means you'd be financing 17",
+    "confidence": 0.9187575
+  },
+  {
+    "start": 149.25,
+    "end": 150.53,
+    "speaker": "SPEAKER_00",
+    "text": "$16,700.",
+    "confidence": 0.93688965
+  },
+  {
+    "start": 151.175,
+    "end": 152.855,
+    "speaker": "SPEAKER_00",
+    "text": "And then, yes, we can include",
+    "confidence": 0.9899495
+  },
+  {
+    "start": 154.455,
+    "end": 159.895,
+    "speaker": "SPEAKER_00",
+    "text": "the delivery fee on top of that, which would only increase your monthly payment by by around a pound or \u00a32.",
+    "confidence": 0.9320417
+  },
+  {
+    "start": 160.375,
+    "end": 167.86,
+    "speaker": "SPEAKER_00",
+    "text": "Oh, right. Okay. Yeah. Maybe \u00a33 max. But the main thing is letting you know roughly, we'll be working in the region of $3.60, $3.70",
+    "confidence": 0.95529294
+  },
+  {
+    "start": 167.94,
+    "end": 173.62001,
+    "speaker": "SPEAKER_00",
+    "text": "depending on your credit score. If it's good, then it'll be lower. If it's not so good, it'll be slightly higher by 5 pounds up or down.",
+    "confidence": 0.9749349
+  },
+  {
+    "start": 174.02,
+    "end": 174.82,
+    "speaker": "SPEAKER_01",
+    "text": "Okay.",
+    "confidence": 0.9995117
+  },
+  {
+    "start": 175.62,
+    "end": 180.475,
+    "speaker": "SPEAKER_00",
+    "text": "If you're looking to increase your deposit, then, of course, your monthly payments will be lower. I sold it.",
+    "confidence": 0.93035567
+  },
+  {
+    "start": 181.435,
+    "end": 190.87502,
+    "speaker": "SPEAKER_00",
+    "text": "Oh, god. Have you had Car Finance before? Yes. I have. It's a machine. Okay. So then you I'm hoping your credit's gonna be alright, and we'll be able to get you on the on the cheaper side.",
+    "confidence": 0.9269361
+  },
+  {
+    "start": 191.115,
+    "end": 192.635,
+    "speaker": "SPEAKER_01",
+    "text": "Alright. Okay. Yeah.",
+    "confidence": 0.9235026
+  },
+  {
+    "start": 193.95,
+    "end": 194.59,
+    "speaker": "SPEAKER_01",
+    "text": "Because,",
+    "confidence": 0.51989746
+  },
+  {
+    "start": 195.23,
+    "end": 198.03,
+    "speaker": "SPEAKER_01",
+    "text": "it's it's it's a ton of 2 thingies.",
+    "confidence": 0.8230998
+  },
+  {
+    "start": 199.15,
+    "end": 204.83,
+    "speaker": "SPEAKER_01",
+    "text": "Basically, I'm looking to finance it, but, also, my mom's looking at the same car to finance it as well.",
+    "confidence": 0.9614868
+  },
+  {
+    "start": 205.915,
+    "end": 206.795,
+    "speaker": "SPEAKER_01",
+    "text": "So it's",
+    "confidence": 0.9602051
+  },
+  {
+    "start": 206.795,
+    "end": 210.395,
+    "speaker": "SPEAKER_01",
+    "text": "just a case of trying to get in before she does kind of thing.",
+    "confidence": 0.9725865
+  },
+  {
+    "start": 210.715,
+    "end": 213.995,
+    "speaker": "SPEAKER_01",
+    "text": "Okay. No worries. Basically, I'm on an IVA.",
+    "confidence": 0.97806805
+  },
+  {
+    "start": 215.275,
+    "end": 215.995,
+    "speaker": "SPEAKER_00",
+    "text": "Okay.",
+    "confidence": 0.9995117
+  },
+  {
+    "start": 216.155,
+    "end": 218.875,
+    "speaker": "SPEAKER_01",
+    "text": "I don't know if you take people on an IVA.",
+    "confidence": 0.9897949
+  },
+  {
+    "start": 220.18,
+    "end": 221.54001,
+    "speaker": "SPEAKER_00",
+    "text": "I'm not sure.",
+    "confidence": 0.99104816
+  },
+  {
+    "start": 224.42,
+    "end": 226.66,
+    "speaker": "SPEAKER_00",
+    "text": "I'm not sure. It's the truth. Okay.",
+    "confidence": 0.89304894
+  },
+  {
+    "start": 233.615,
+    "end": 235.05501,
+    "speaker": "SPEAKER_00",
+    "text": "What is an IVA?",
+    "confidence": 0.9777832
+  },
+  {
+    "start": 237.85501,
+    "end": 240.255,
+    "speaker": "SPEAKER_01",
+    "text": "It's basically like a debt repayment plan.",
+    "confidence": 0.9060407
+  },
+  {
+    "start": 243.295,
+    "end": 253.44002,
+    "speaker": "SPEAKER_00",
+    "text": "I can look into that for you, but, obviously, we work with our own 40 lenders. So the thousand pound deposit, then I'll call you and and ask you some questions and then tell you what your monthly payments would be and send you out a",
+    "confidence": 0.94503653
+  },
+  {
+    "start": 254.56001,
+    "end": 256.56003,
+    "speaker": "SPEAKER_00",
+    "text": "send you out a document to sign.",
+    "confidence": 0.97893417
+  },
+  {
+    "start": 257.2,
+    "end": 260.88,
+    "speaker": "SPEAKER_00",
+    "text": "Do you have any CCJs on your name or anything? What's a CCJ?",
+    "confidence": 0.95894676
+  },
+  {
+    "start": 261.455,
+    "end": 264.095,
+    "speaker": "SPEAKER_00",
+    "text": "It's like any any any markers on your credit profile.",
+    "confidence": 0.9461182
+  },
+  {
+    "start": 264.735,
+    "end": 265.615,
+    "speaker": "SPEAKER_01",
+    "text": "I",
+    "confidence": 0.95410156
+  },
+  {
+    "start": 265.615,
+    "end": 280.21,
+    "speaker": "SPEAKER_00",
+    "text": "don't know. I I I just know that my credit is bad. Is that a marker? And okay. Fair enough. Well, look. We have 40 lenders all the way from the best to the worst. Okay. So it's definitely worth trying out even if your monthly payment is slightly higher.",
+    "confidence": 0.966831
+  },
+  {
+    "start": 280.61,
+    "end": 284.69,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. My second question to you would be, would you be willing to try on your mom's name as well?",
+    "confidence": 0.97906494
+  },
+  {
+    "start": 285.33,
+    "end": 287.88998,
+    "speaker": "SPEAKER_01",
+    "text": "Try on my mom's name? Yeah. The finance.",
+    "confidence": 0.965271
+  },
+  {
+    "start": 288.685,
+    "end": 291.325,
+    "speaker": "SPEAKER_01",
+    "text": "Would that be possible? I thought that was, like, money. No.",
+    "confidence": 0.9458008
+  },
+  {
+    "start": 292.685,
+    "end": 294.925,
+    "speaker": "SPEAKER_00",
+    "text": "No. Why would that be money if if if",
+    "confidence": 0.93896484
+  },
+  {
+    "start": 295.245,
+    "end": 296.125,
+    "speaker": "SPEAKER_00",
+    "text": "if the car",
+    "confidence": 0.9222005
+  },
+  {
+    "start": 296.525,
+    "end": 306.16,
+    "speaker": "SPEAKER_00",
+    "text": "if that's if that's your mom and you want her to put a finance application on her name for you Okay. That's completely fine. So the logbook could be in her name, and then you can transfer that once the logbook arrives.",
+    "confidence": 0.95598495
+  },
+  {
+    "start": 306.48,
+    "end": 312.72,
+    "speaker": "SPEAKER_01",
+    "text": "Oh, right. So, like, it'll be taken out of her account, and I just transfer the money to her account every month.",
+    "confidence": 0.9764626
+  },
+  {
+    "start": 313.68,
+    "end": 314.8,
+    "speaker": "SPEAKER_01",
+    "text": "Is that what you mean?",
+    "confidence": 0.99960935
+  },
+  {
+    "start": 316.72,
+    "end": 321.04498,
+    "speaker": "SPEAKER_00",
+    "text": "Same thing I've done in my whole my first card, to be completely honest with you, because my credit wasn't good.",
+    "confidence": 0.9247466
+  },
+  {
+    "start": 321.60498,
+    "end": 322.885,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. But",
+    "confidence": 0.9602051
+  },
+  {
+    "start": 323.205,
+    "end": 323.925,
+    "speaker": "SPEAKER_00",
+    "text": "look,",
+    "confidence": 0.49987793
+  },
+  {
+    "start": 324.485,
+    "end": 325.365,
+    "speaker": "SPEAKER_00",
+    "text": "I'm gonna send you",
+    "confidence": 0.93481445
+  },
+  {
+    "start": 326.085,
+    "end": 329.845,
+    "speaker": "SPEAKER_01",
+    "text": "You broke out there because I was asking a question, and then it went silent.",
+    "confidence": 0.9333496
+  },
+  {
+    "start": 330.245,
+    "end": 331.44498,
+    "speaker": "SPEAKER_01",
+    "text": "My question was,",
+    "confidence": 0.94352216
+  },
+  {
+    "start": 332.97,
+    "end": 333.85,
+    "speaker": "SPEAKER_01",
+    "text": "would I",
+    "confidence": 0.99194336
+  },
+  {
+    "start": 335.29,
+    "end": 341.21002,
+    "speaker": "SPEAKER_01",
+    "text": "would it be would it be legal to just put the finance in her name? Of course. It would be legal.",
+    "confidence": 0.941197
+  },
+  {
+    "start": 341.69,
+    "end": 345.725,
+    "speaker": "SPEAKER_01",
+    "text": "Then I transfer the money to her account every month. A 100%.",
+    "confidence": 0.9515279
+  },
+  {
+    "start": 345.725,
+    "end": 359.86,
+    "speaker": "SPEAKER_00",
+    "text": "That's that's what I've done with my first car. It's it's on my mom's name. Just because my credit wasn't good, so I've got a cheaper monthly payment doing it through her. That's all it is. It's there's nothing there's nothing dodgy about it. It's as long as I as long as you have her permission, then, of course, it's normal.",
+    "confidence": 0.9543817
+  },
+  {
+    "start": 360.41998,
+    "end": 366.74,
+    "speaker": "SPEAKER_00",
+    "text": "But look. I need to secure the car before it does sell, and then I can call you back and do a finance application with you.",
+    "confidence": 0.93149036
+  },
+  {
+    "start": 367.38,
+    "end": 380.065,
+    "speaker": "SPEAKER_00",
+    "text": "Or I can send you the details, and you can fill it out. I will get mom to fill out her side. But we I think it's better off we try with you first and tell you what it's looking like. And then if that doesn't go through, then we consider the second option. Okay? Alright.",
+    "confidence": 0.95227486
+  },
+  {
+    "start": 380.145,
+    "end": 380.785,
+    "speaker": "SPEAKER_01",
+    "text": "Okay.",
+    "confidence": 1.0
+  },
+  {
+    "start": 380.945,
+    "end": 381.665,
+    "speaker": "SPEAKER_01",
+    "text": "Right.",
+    "confidence": 0.9980469
+  },
+  {
+    "start": 383.185,
+    "end": 383.745,
+    "speaker": "SPEAKER_01",
+    "text": "Give",
+    "confidence": 0.9506836
+  },
+  {
+    "start": 384.065,
+    "end": 389.98502,
+    "speaker": "SPEAKER_01",
+    "text": "me 15 minutes. Let me call you back. I just need to speak to my mom, tell her what you've said",
+    "confidence": 0.97974795
+  },
+  {
+    "start": 390.19,
+    "end": 392.27002,
+    "speaker": "SPEAKER_01",
+    "text": "Okay. And see if she",
+    "confidence": 0.9975586
+  },
+  {
+    "start": 392.83,
+    "end": 395.07,
+    "speaker": "SPEAKER_01",
+    "text": "if she wants to go down that route.",
+    "confidence": 0.99731445
+  },
+  {
+    "start": 395.31,
+    "end": 400.11,
+    "speaker": "SPEAKER_00",
+    "text": "And do you wanna try it on your name or no? I already know my credit's gonna be bad because I've",
+    "confidence": 0.9549386
+  },
+  {
+    "start": 400.83,
+    "end": 410.205,
+    "speaker": "SPEAKER_00",
+    "text": "I tried to get financed a couple of months ago, they said I I have to wait 6 months. And was you looking to secure the car whilst we deal with this, or did you you didn't mind leaving the car on the market?",
+    "confidence": 0.94355357
+  },
+  {
+    "start": 412.525,
+    "end": 417.485,
+    "speaker": "SPEAKER_00",
+    "text": "Because rather than taking 1000 pounds, I'll just take 500 just to secure the car fully refundable",
+    "confidence": 0.9654182
+  },
+  {
+    "start": 417.69,
+    "end": 424.17,
+    "speaker": "SPEAKER_00",
+    "text": "up until we can sort of sort out the finance. And then if it's all good, then amazing. If not, then we'll refund you your money back.",
+    "confidence": 0.97289133
+  },
+  {
+    "start": 425.53,
+    "end": 427.61002,
+    "speaker": "SPEAKER_01",
+    "text": "Alright. Okay. And that deposit",
+    "confidence": 0.9895996
+  },
+  {
+    "start": 427.85,
+    "end": 434.705,
+    "speaker": "SPEAKER_01",
+    "text": "goes towards, like, bringing the price of the finance down, or is it just securing Exactly. Well, both both, essentially. So",
+    "confidence": 0.8950864
+  },
+  {
+    "start": 435.10498,
+    "end": 444.38498,
+    "speaker": "SPEAKER_00",
+    "text": "it could be done with a \u00a3500 deposit or 1000 pound deposit on the application, but the main concern right now is just making sure the card doesn't sell whilst we sort out all of this.",
+    "confidence": 0.97236466
+  },
+  {
+    "start": 445.74002,
+    "end": 446.62,
+    "speaker": "SPEAKER_01",
+    "text": "Alright.",
+    "confidence": 0.9926758
+  },
+  {
+    "start": 446.62,
+    "end": 454.86002,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. Alright. In that case, give me 10 minutes. Alright. I'll I'll send it over to your phone anyway, and then Okay. That that expires in in 1 hour.",
+    "confidence": 0.9865891
+  },
+  {
+    "start": 455.42,
+    "end": 457.59695,
+    "speaker": "SPEAKER_01",
+    "text": "Alright. Okay. Alright.",
+    "confidence": 0.9991862
+  },
+  {
+    "start": 457.91696,
+    "end": 458.87695,
+    "speaker": "SPEAKER_01",
+    "text": "Thank you.",
+    "confidence": 1.0
+  },
+  {
+    "start": 459.19696,
+    "end": 461.19696,
+    "speaker": "SPEAKER_00",
+    "text": "Alright. Take care. Take care.",
+    "confidence": 0.8851074
+  }
+]

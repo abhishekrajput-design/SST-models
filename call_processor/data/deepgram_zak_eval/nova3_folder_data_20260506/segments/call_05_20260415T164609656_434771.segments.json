@@ -1,0 +1,478 @@
+[
+  {
+    "start": 0.24,
+    "end": 0.88,
+    "speaker": "SPEAKER_00",
+    "text": "Hello?",
+    "confidence": 0.970459
+  },
+  {
+    "start": 2.48,
+    "end": 10.48,
+    "speaker": "SPEAKER_00",
+    "text": "Hello. Apologies. Service ain't great. Can you hear me? No. No. Yeah. I ran out of battery. Sorry. Oh, no worries. No worries. Let's see. I was just about to quote you.",
+    "confidence": 0.91454124
+  },
+  {
+    "start": 11.2,
+    "end": 13.84,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. You're looking like on a monthly payment. So",
+    "confidence": 0.92423505
+  },
+  {
+    "start": 14.625,
+    "end": 16.305,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. 2 acceptances.",
+    "confidence": 0.7922092
+  },
+  {
+    "start": 17.105,
+    "end": 17.824999,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah.",
+    "confidence": 0.93359375
+  },
+  {
+    "start": 18.225,
+    "end": 20.305,
+    "speaker": "SPEAKER_00",
+    "text": "The acceptance that's guaranteed,",
+    "confidence": 0.94055176
+  },
+  {
+    "start": 20.865,
+    "end": 22.625,
+    "speaker": "SPEAKER_00",
+    "text": "15%.",
+    "confidence": 0.7342529
+  },
+  {
+    "start": 23.425,
+    "end": 24.945,
+    "speaker": "SPEAKER_00",
+    "text": "Let me advance quick.",
+    "confidence": 0.76434326
+  },
+  {
+    "start": 25.185,
+    "end": 27.665,
+    "speaker": "SPEAKER_00",
+    "text": "Bear with me 1 second. I'm just gonna pop you on a brief hold.",
+    "confidence": 0.95636857
+  },
+  {
+    "start": 28.92,
+    "end": 29.72,
+    "speaker": "SPEAKER_00",
+    "text": "Hello?",
+    "confidence": 0.9921875
+  },
+  {
+    "start": 31.08,
+    "end": 31.880001,
+    "speaker": "SPEAKER_00",
+    "text": "Hello?",
+    "confidence": 0.87841797
+  },
+  {
+    "start": 31.880001,
+    "end": 34.92,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Apologies for the brief hold. Yeah. Essentially, the",
+    "confidence": 0.88395184
+  },
+  {
+    "start": 35.239998,
+    "end": 39.08,
+    "speaker": "SPEAKER_00",
+    "text": "acceptance I have in front of me is for \u00a3345",
+    "confidence": 0.989126
+  },
+  {
+    "start": 39.08,
+    "end": 39.96,
+    "speaker": "SPEAKER_00",
+    "text": "a month. Yeah.",
+    "confidence": 0.97721356
+  },
+  {
+    "start": 41.375,
+    "end": 43.295,
+    "speaker": "SPEAKER_00",
+    "text": "Obviously, a 60 month HP,",
+    "confidence": 0.8253418
+  },
+  {
+    "start": 43.295002,
+    "end": 44.655,
+    "speaker": "SPEAKER_00",
+    "text": "\u00a312,000",
+    "confidence": 0.99108887
+  },
+  {
+    "start": 44.655,
+    "end": 45.455,
+    "speaker": "SPEAKER_00",
+    "text": "depot.",
+    "confidence": 0.8955078
+  },
+  {
+    "start": 46.095,
+    "end": 47.615,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. That's $3.04",
+    "confidence": 0.86067706
+  },
+  {
+    "start": 47.615,
+    "end": 48.335,
+    "speaker": "SPEAKER_00",
+    "text": "5",
+    "confidence": 1.0
+  },
+  {
+    "start": 48.735,
+    "end": 53.215,
+    "speaker": "SPEAKER_00",
+    "text": "a month, 60 month HP, \u00a312,000 deposit, and that includes a 3 year warranty.",
+    "confidence": 0.95185196
+  },
+  {
+    "start": 53.775,
+    "end": 69.045,
+    "speaker": "SPEAKER_00",
+    "text": "That's that's guaranteed. Look. Like, obviously, that's locked in, the acceptance I have there. Now Yeah. I can still send it to a few more lenders and see if anything else comes back. But for the time being, I do have an acceptance for you that are willing to give us the lend over 12. Because you give \u00a312,000,",
+    "confidence": 0.94460905
+  },
+  {
+    "start": 69.045,
+    "end": 70.965,
+    "speaker": "SPEAKER_00",
+    "text": "they'll give us the remaining lend. Yeah.",
+    "confidence": 0.98472375
+  },
+  {
+    "start": 72.405,
+    "end": 72.80499,
+    "speaker": "SPEAKER_00",
+    "text": "That sound",
+    "confidence": 0.63134766
+  },
+  {
+    "start": 74.005,
+    "end": 75.765,
+    "speaker": "SPEAKER_01",
+    "text": "yeah. That's what yeah. That's right.",
+    "confidence": 0.7392375
+  },
+  {
+    "start": 76.325,
+    "end": 78.405,
+    "speaker": "SPEAKER_00",
+    "text": "About studios that can call you for delivery?",
+    "confidence": 0.80867004
+  },
+  {
+    "start": 79.045,
+    "end": 81.03,
+    "speaker": "SPEAKER_00",
+    "text": "Lingford. What's your postcode?",
+    "confidence": 0.9593811
+  },
+  {
+    "start": 81.83,
+    "end": 87.83,
+    "speaker": "SPEAKER_01",
+    "text": "RH76BPRH76BPBravo",
+    "confidence": 0.9113991
+  },
+  {
+    "start": 87.83,
+    "end": 90.71,
+    "speaker": "SPEAKER_00",
+    "text": "papa. Bravo papa. And what's the house number for you?",
+    "confidence": 0.9886719
+  },
+  {
+    "start": 91.270004,
+    "end": 91.67,
+    "speaker": "SPEAKER_01",
+    "text": "12.",
+    "confidence": 0.99121094
+  },
+  {
+    "start": 92.245,
+    "end": 97.125,
+    "speaker": "SPEAKER_00",
+    "text": "12 Headland Way. Yeah? Yeah. That's it. Give me a second. I'm just plugging it in now.",
+    "confidence": 0.962029
+  },
+  {
+    "start": 107.08,
+    "end": 109.32,
+    "speaker": "SPEAKER_00",
+    "text": "So you're 60 miles away approximately",
+    "confidence": 0.9535319
+  },
+  {
+    "start": 109.56,
+    "end": 111.48,
+    "speaker": "SPEAKER_00",
+    "text": "between 59 And 60.",
+    "confidence": 0.9122925
+  },
+  {
+    "start": 112.44,
+    "end": 117.4,
+    "speaker": "SPEAKER_00",
+    "text": "Sorry. Between 55 And 60. So you'd be looking around $1.09 9 for delivery.",
+    "confidence": 0.97659737
+  },
+  {
+    "start": 118.2,
+    "end": 118.52,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah.",
+    "confidence": 0.81933594
+  },
+  {
+    "start": 119.145,
+    "end": 131.94499,
+    "speaker": "SPEAKER_00",
+    "text": "What the option to collect is still there. If you do opt for delivery, then you get 14 days to fully reject the car for any reason. So but so even if the car comes and it's mint and you love it, but you just feel like after driving it, it's not the right 1",
+    "confidence": 0.9329501
+  },
+  {
+    "start": 132.86,
+    "end": 137.82,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. I know additional cost to yourself will come and collect the car. So that's the peace of mind we give you.",
+    "confidence": 0.9302313
+  },
+  {
+    "start": 138.94,
+    "end": 150.025,
+    "speaker": "SPEAKER_00",
+    "text": "Cool. For for us to proceed, I need a a small deposit just to secure the car, and then I'll send you over documents, have a read through them. Once the finance company pays us, I'll get the remainder deposit off you.",
+    "confidence": 0.97381884
+  },
+  {
+    "start": 150.665,
+    "end": 152.025,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Can book delivery.",
+    "confidence": 0.79837036
+  },
+  {
+    "start": 152.825,
+    "end": 156.66501,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. Lovely. Cheers. Was this time restricted? When did you want the car by?",
+    "confidence": 0.97532433
+  },
+  {
+    "start": 157.305,
+    "end": 158.42499,
+    "speaker": "SPEAKER_01",
+    "text": "Whenever,",
+    "confidence": 0.6340332
+  },
+  {
+    "start": 158.42499,
+    "end": 158.58499,
+    "speaker": "SPEAKER_01",
+    "text": "really.",
+    "confidence": 0.9995117
+  },
+  {
+    "start": 159.53,
+    "end": 163.13,
+    "speaker": "SPEAKER_00",
+    "text": "Cool. Well, look. I'll send you out 1000 pound deposit to secure the car.",
+    "confidence": 0.96878487
+  },
+  {
+    "start": 163.77,
+    "end": 168.41,
+    "speaker": "SPEAKER_00",
+    "text": "I'm gonna grab a word with the finance consultant. And then if you confirm your email for me.",
+    "confidence": 0.9439087
+  },
+  {
+    "start": 169.53,
+    "end": 172.73,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. Maxluca95@hotmail.com.",
+    "confidence": 0.95572466
+  },
+  {
+    "start": 172.73,
+    "end": 175.615,
+    "speaker": "SPEAKER_00",
+    "text": "M a x l u c a 9 5",
+    "confidence": 0.992079
+  },
+  {
+    "start": 176.655,
+    "end": 179.295,
+    "speaker": "SPEAKER_00",
+    "text": "dot com. Yeah. @hotmail.com..com.",
+    "confidence": 0.9148996
+  },
+  {
+    "start": 179.935,
+    "end": 181.295,
+    "speaker": "SPEAKER_00",
+    "text": "No worries.",
+    "confidence": 0.85375977
+  },
+  {
+    "start": 181.935,
+    "end": 184.815,
+    "speaker": "SPEAKER_01",
+    "text": "And you said that finance has all gone through because, obviously,",
+    "confidence": 0.7819491
+  },
+  {
+    "start": 185.43,
+    "end": 199.10999,
+    "speaker": "SPEAKER_01",
+    "text": "the reason I'm saying that is because I've got a mark on my name for some other some other things I've done years ago. Yeah. And I'm just worried I'm just worried about that in in case it comes up. But I don't think well, it seems like it ain't. But In, like, the most summarized way possible,",
+    "confidence": 0.92478925
+  },
+  {
+    "start": 200.225,
+    "end": 202.38501,
+    "speaker": "SPEAKER_00",
+    "text": "you are a 100% accepted.",
+    "confidence": 0.9989258
+  },
+  {
+    "start": 202.545,
+    "end": 212.46501,
+    "speaker": "SPEAKER_00",
+    "text": "So the accept acceptance I do have with you is not with 1 of our prime lenders, which now makes sense. It's 1 of our subprime lenders, which usually deal with credit score that's not the greatest.",
+    "confidence": 0.9483709
+  },
+  {
+    "start": 212.705,
+    "end": 218.9,
+    "speaker": "SPEAKER_00",
+    "text": "Alright. I can't No. The good news is that your acceptance is actually a pretty decent rate considering.",
+    "confidence": 0.9009196
+  },
+  {
+    "start": 219.54,
+    "end": 225.22,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Like, based of what you've just told me, I'd expect an APR to be above 19%",
+    "confidence": 0.9732259
+  },
+  {
+    "start": 225.22,
+    "end": 227.3,
+    "speaker": "SPEAKER_01",
+    "text": "when you have Yeah. Almost been good. I've I've",
+    "confidence": 0.69847274
+  },
+  {
+    "start": 227.7,
+    "end": 236.36499,
+    "speaker": "SPEAKER_01",
+    "text": "I've sometimes had silly time ago. Yeah. Like, probably something silly as a parking ticket. Like do you know what I mean? Yeah. Oh, yeah. Yeah. Yeah. A yeah, a bit worse than",
+    "confidence": 0.8239598
+  },
+  {
+    "start": 237.165,
+    "end": 238.125,
+    "speaker": "SPEAKER_00",
+    "text": "That's that's",
+    "confidence": 0.71484375
+  },
+  {
+    "start": 238.685,
+    "end": 241.885,
+    "speaker": "SPEAKER_00",
+    "text": "that's it's just like it's just like something like that. Don't worry about it.",
+    "confidence": 0.92839706
+  },
+  {
+    "start": 243.56,
+    "end": 249.72,
+    "speaker": "SPEAKER_00",
+    "text": "But now all jokes aside, the only reason why I say that is usually when someone has a marker on their name, the APR tends to be closer to 20%.",
+    "confidence": 0.9612142
+  },
+  {
+    "start": 250.12,
+    "end": 253.24,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Considering it's not, and it's actually on the lower side.",
+    "confidence": 0.9690607
+  },
+  {
+    "start": 253.72,
+    "end": 259.16,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Yeah. Well, I think it was the CFAS marker. It's not a CCJ. I know I know what a CFAS marker",
+    "confidence": 0.79189783
+  },
+  {
+    "start": 272.16998,
+    "end": 273.12997,
+    "speaker": "SPEAKER_00",
+    "text": "what",
+    "confidence": 0.78564453
+  },
+  {
+    "start": 273.12997,
+    "end": 285.05,
+    "speaker": "SPEAKER_00",
+    "text": "I would highly recommend then is making It's not Barnet to do the mortgage in it. So I don't know. Yeah. To that field. So yeah. To be honest with you, I would say make ways with the application sooner than later",
+    "confidence": 0.85859025
+  },
+  {
+    "start": 286.305,
+    "end": 288.785,
+    "speaker": "SPEAKER_00",
+    "text": "before that before this acceptance isn't available.",
+    "confidence": 0.89850724
+  },
+  {
+    "start": 289.905,
+    "end": 298.225,
+    "speaker": "SPEAKER_00",
+    "text": "Because, genuinely, you've got very competitive rate. 15% is not a mark out rate or CCJ rate. Yeah. I'm on the spot. Decent credit rate.",
+    "confidence": 0.75600344
+  },
+  {
+    "start": 298.465,
+    "end": 299.10498,
+    "speaker": "SPEAKER_01",
+    "text": "Oh, okay.",
+    "confidence": 0.90649414
+  },
+  {
+    "start": 299.71,
+    "end": 308.91,
+    "speaker": "SPEAKER_00",
+    "text": "Cool. I'm gonna send you over 1000 pound deposit. I'm gonna go concur with the with the finance consultant now and have a word with her. If there's no issues, we'll send you the documents straight away.",
+    "confidence": 0.9683607
+  },
+  {
+    "start": 309.23,
+    "end": 317.665,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Okay. No, sir. Alright? If any issues come up, you'll receive a phone call from me. If not, I'll just send give you a call to let you know that I've sent you the correct documents.",
+    "confidence": 0.97446424
+  },
+  {
+    "start": 317.98502,
+    "end": 335.25693,
+    "speaker": "SPEAKER_01",
+    "text": "Right. So I'll send the money first, or are we waiting for this? Let me go double check. Let me go double check. And then I'll gonna go I come back on the call, I'll come back to give you a deposit link as well as tell you documents off. Yeah. No. But, yeah, let me know first before I need to go. Just don't wanna go to the last bit, and they're like, no. No. That's cool. I got you. Yeah. Alright. Thank you. Bye.",
+    "confidence": 0.8916101
+  }
+]

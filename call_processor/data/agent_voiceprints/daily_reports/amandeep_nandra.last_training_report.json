@@ -1,0 +1,852 @@
+{
+  "agent_slug": "amandeep_nandra",
+  "agent_name": "Amandeep Nandra",
+  "data_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra",
+  "calls": [
+    {
+      "call": "call_00",
+      "call_id": "69ff43424734506a1fdffd63",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_00\\audio_16k.wav",
+      "segments": 159,
+      "audio_duration_s": 693.0
+    },
+    {
+      "call": "call_01",
+      "call_id": "69fee99d4734506a1fded3c3",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_01\\audio_16k.wav",
+      "segments": 13,
+      "audio_duration_s": 31.92
+    },
+    {
+      "call": "call_02",
+      "call_id": "69fde6244734506a1fdc5300",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_02\\audio_16k.wav",
+      "segments": 63,
+      "audio_duration_s": 186.9
+    },
+    {
+      "call": "call_03",
+      "call_id": "6a018d254734506a1fe31bae",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_03\\audio_16k.wav",
+      "segments": 33,
+      "audio_duration_s": 212.02
+    },
+    {
+      "call": "call_04",
+      "call_id": "6a01df30b2b3cbdbe5ac013a",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_04\\audio_16k.wav",
+      "segments": 36,
+      "audio_duration_s": 150.6
+    },
+    {
+      "call": "call_05",
+      "call_id": "69fef9184734506a1fdf0b0a",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_05\\audio_16k.wav",
+      "segments": 15,
+      "audio_duration_s": 42.22
+    },
+    {
+      "call": "call_06",
+      "call_id": "69fda6efea74704d9030a46d",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_06\\audio_16k.wav",
+      "segments": 53,
+      "audio_duration_s": 139.56
+    },
+    {
+      "call": "call_07",
+      "call_id": "6a01f283b2b3cbdbe5ac4db5",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_07\\audio_16k.wav",
+      "segments": 44,
+      "audio_duration_s": 122.88
+    },
+    {
+      "call": "call_08",
+      "call_id": "69ff2b274734506a1fdfae3e",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_08\\audio_16k.wav",
+      "segments": 80,
+      "audio_duration_s": 257.76
+    },
+    {
+      "call": "call_09",
+      "call_id": "6a01bb614734506a1fe40e7c",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_09\\audio_16k.wav",
+      "segments": 148,
+      "audio_duration_s": 839.3
+    },
+    {
+      "call": "call_10",
+      "call_id": "69fde3c64734506a1fdc48a5",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_10\\audio_16k.wav",
+      "segments": 117,
+      "audio_duration_s": 372.38
+    },
+    {
+      "call": "call_11",
+      "call_id": "6a01a03e4734506a1fe37bea",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_11\\audio_16k.wav",
+      "segments": 13,
+      "audio_duration_s": 39.68
+    },
+    {
+      "call": "call_12",
+      "call_id": "6a01f1f1b2b3cbdbe5ac4b56",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_12\\audio_16k.wav",
+      "segments": 71,
+      "audio_duration_s": 256.1
+    },
+    {
+      "call": "call_13",
+      "call_id": "6a01fe54b2b3cbdbe5ac79cc",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_13\\audio_16k.wav",
+      "segments": 70,
+      "audio_duration_s": 203.56
+    },
+    {
+      "call": "call_14",
+      "call_id": "69ff48354734506a1fe00e32",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_14\\audio_16k.wav",
+      "segments": 101,
+      "audio_duration_s": 321.76
+    },
+    {
+      "call": "call_15",
+      "call_id": "6a019af74734506a1fe35ff2",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_15\\audio_16k.wav",
+      "segments": 49,
+      "audio_duration_s": 169.24
+    },
+    {
+      "call": "call_16",
+      "call_id": "6a01f4dab2b3cbdbe5ac5437",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_16\\audio_16k.wav",
+      "segments": 117,
+      "audio_duration_s": 369.07
+    },
+    {
+      "call": "call_17",
+      "call_id": "69fdcdd04734506a1fdbe89d",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_17\\audio_16k.wav",
+      "segments": 52,
+      "audio_duration_s": 139.38
+    },
+    {
+      "call": "call_18",
+      "call_id": "6a018c4d4734506a1fe31977",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_18\\audio_16k.wav",
+      "segments": 48,
+      "audio_duration_s": 162.24
+    },
+    {
+      "call": "call_19",
+      "call_id": "69fdaf5d4734506a1fdb404e",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra\\call_19\\audio_16k.wav",
+      "segments": 73,
+      "audio_duration_s": 216.28
+    }
+  ],
+  "skipped_calls": [],
+  "label_rows": 1110,
+  "eval_rows": 1110,
+  "agent_candidates": 339,
+  "customer_calibration_rows": 546,
+  "pure_label_rows": 322,
+  "training_rows": 322,
+  "min_train_score": 0.6,
+  "purity_floor": 0.55,
+  "customer_p95": 0.4118,
+  "calibrated_threshold": 0.4718,
+  "same_data_accuracy": {
+    "threshold": 0.4718,
+    "segments": 1110,
+    "overall_accuracy": 92.25,
+    "agent_accuracy": 87.06,
+    "customer_accuracy": 97.62,
+    "agent_correct": 491,
+    "agent_total": 564,
+    "customer_correct": 533,
+    "customer_total": 546,
+    "errors": [
+      {
+        "call": "call_00",
+        "segment": 21,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3388,
+        "text": "We're sorry."
+      },
+      {
+        "call": "call_00",
+        "segment": 159,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3104,
+        "text": "This call is being recorded."
+      },
+      {
+        "call": "call_02",
+        "segment": 55,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3751,
+        "text": "I am in tomorrow as well."
+      },
+      {
+        "call": "call_02",
+        "segment": 63,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.292,
+        "text": "Thank you."
+      },
+      {
+        "call": "call_03",
+        "segment": 3,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4695,
+        "text": "To help direct your call, press 1 to raise a new case."
+      },
+      {
+        "call": "call_03",
+        "segment": 10,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.6065,
+        "text": "OK 6-9 Wide EW"
+      },
+      {
+        "call": "call_03",
+        "segment": 13,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3155,
+        "text": "Sorry, Delta W, bear with me."
+      },
+      {
+        "call": "call_03",
+        "segment": 17,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4732,
+        "text": "It is, yeah."
+      },
+      {
+        "call": "call_03",
+        "segment": 19,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3934,
+        "text": "Can I stop you on hold?"
+      },
+      {
+        "call": "call_03",
+        "segment": 28,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2765,
+        "text": "What time is your flight?"
+      },
+      {
+        "call": "call_03",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3503,
+        "text": "Take care, bye."
+      },
+      {
+        "call": "call_04",
+        "segment": 24,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4635,
+        "text": "Okay?"
+      },
+      {
+        "call": "call_06",
+        "segment": 13,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2575,
+        "text": "So, with that peace of mind..."
+      },
+      {
+        "call": "call_06",
+        "segment": 16,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1874,
+        "text": "That's absolutely fine."
+      },
+      {
+        "call": "call_06",
+        "segment": 25,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4396,
+        "text": "No, no, that's absolutely fair."
+      },
+      {
+        "call": "call_06",
+        "segment": 28,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4826,
+        "text": "Yeah."
+      },
+      {
+        "call": "call_06",
+        "segment": 49,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3086,
+        "text": "Eddie, just give me a shout."
+      },
+      {
+        "call": "call_06",
+        "segment": 53,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5263,
+        "text": "Thank you."
+      },
+      {
+        "call": "call_07",
+        "segment": 11,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4686,
+        "text": "We've got a few conditions staying behind tonight."
+      },
+      {
+        "call": "call_07",
+        "segment": 35,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3781,
+        "text": "All of them now as well."
+      },
+      {
+        "call": "call_07",
+        "segment": 39,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5939,
+        "text": "Alright, that's fine."
+      },
+      {
+        "call": "call_07",
+        "segment": 42,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0669,
+        "text": "Alright, thank you."
+      },
+      {
+        "call": "call_08",
+        "segment": 2,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4449,
+        "text": "I'm from CarPlanet, how are you?"
+      },
+      {
+        "call": "call_08",
+        "segment": 80,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0981,
+        "text": "you."
+      },
+      {
+        "call": "call_09",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2764,
+        "text": "It's 6 o'clock now."
+      },
+      {
+        "call": "call_09",
+        "segment": 68,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.419,
+        "text": "I'm sorry to keep you on hold, I do apologise."
+      },
+      {
+        "call": "call_09",
+        "segment": 148,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4381,
+        "text": "Cheers, take care."
+      },
+      {
+        "call": "call_10",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3509,
+        "text": "Hi, you've reached CarPlanet."
+      },
+      {
+        "call": "call_10",
+        "segment": 8,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3942,
+        "text": "And it's a CLA, yeah?"
+      },
+      {
+        "call": "call_10",
+        "segment": 64,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4705,
+        "text": "Or is it the Saturday before?"
+      }
+    ]
+  },
+  "best_same_data_threshold": {
+    "threshold": 0.46,
+    "segments": 1110,
+    "overall_accuracy": 93.15,
+    "agent_accuracy": 89.01,
+    "customer_accuracy": 97.44,
+    "agent_correct": 502,
+    "agent_total": 564,
+    "customer_correct": 532,
+    "customer_total": 546,
+    "errors": [
+      {
+        "call": "call_00",
+        "segment": 21,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3388,
+        "text": "We're sorry."
+      },
+      {
+        "call": "call_00",
+        "segment": 159,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3104,
+        "text": "This call is being recorded."
+      },
+      {
+        "call": "call_02",
+        "segment": 55,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3751,
+        "text": "I am in tomorrow as well."
+      },
+      {
+        "call": "call_02",
+        "segment": 63,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.292,
+        "text": "Thank you."
+      },
+      {
+        "call": "call_03",
+        "segment": 10,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.6065,
+        "text": "OK 6-9 Wide EW"
+      },
+      {
+        "call": "call_03",
+        "segment": 13,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3155,
+        "text": "Sorry, Delta W, bear with me."
+      },
+      {
+        "call": "call_03",
+        "segment": 17,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4732,
+        "text": "It is, yeah."
+      },
+      {
+        "call": "call_03",
+        "segment": 19,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3934,
+        "text": "Can I stop you on hold?"
+      },
+      {
+        "call": "call_03",
+        "segment": 28,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2765,
+        "text": "What time is your flight?"
+      },
+      {
+        "call": "call_03",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3503,
+        "text": "Take care, bye."
+      },
+      {
+        "call": "call_06",
+        "segment": 13,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2575,
+        "text": "So, with that peace of mind..."
+      },
+      {
+        "call": "call_06",
+        "segment": 16,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1874,
+        "text": "That's absolutely fine."
+      },
+      {
+        "call": "call_06",
+        "segment": 25,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4396,
+        "text": "No, no, that's absolutely fair."
+      },
+      {
+        "call": "call_06",
+        "segment": 28,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4826,
+        "text": "Yeah."
+      },
+      {
+        "call": "call_06",
+        "segment": 49,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3086,
+        "text": "Eddie, just give me a shout."
+      },
+      {
+        "call": "call_06",
+        "segment": 53,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5263,
+        "text": "Thank you."
+      },
+      {
+        "call": "call_07",
+        "segment": 35,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3781,
+        "text": "All of them now as well."
+      },
+      {
+        "call": "call_07",
+        "segment": 39,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5939,
+        "text": "Alright, that's fine."
+      },
+      {
+        "call": "call_07",
+        "segment": 42,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0669,
+        "text": "Alright, thank you."
+      },
+      {
+        "call": "call_08",
+        "segment": 2,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4449,
+        "text": "I'm from CarPlanet, how are you?"
+      },
+      {
+        "call": "call_08",
+        "segment": 4,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4629,
+        "text": "No, of course not!"
+      },
+      {
+        "call": "call_08",
+        "segment": 80,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0981,
+        "text": "you."
+      },
+      {
+        "call": "call_09",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2764,
+        "text": "It's 6 o'clock now."
+      },
+      {
+        "call": "call_09",
+        "segment": 68,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.419,
+        "text": "I'm sorry to keep you on hold, I do apologise."
+      },
+      {
+        "call": "call_09",
+        "segment": 148,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4381,
+        "text": "Cheers, take care."
+      },
+      {
+        "call": "call_10",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3509,
+        "text": "Hi, you've reached CarPlanet."
+      },
+      {
+        "call": "call_10",
+        "segment": 8,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3942,
+        "text": "And it's a CLA, yeah?"
+      },
+      {
+        "call": "call_10",
+        "segment": 66,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4468,
+        "text": "Not bad, I think you patched it."
+      },
+      {
+        "call": "call_11",
+        "segment": 12,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4415,
+        "text": "So take care."
+      },
+      {
+        "call": "call_12",
+        "segment": 1,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5413,
+        "text": "Hello, you've reached the CarPlanet After Sales Department."
+      }
+    ]
+  },
+  "loco_result": {
+    "n_calls": 20,
+    "n_folds": 20,
+    "overall_accuracy": 87.93,
+    "per_call": [
+      {
+        "held_out": "call_00",
+        "threshold": 0.5422,
+        "accuracy": 68.85,
+        "agent_accuracy": 0.0,
+        "customer_accuracy": 100.0,
+        "segments": 61
+      },
+      {
+        "held_out": "call_01",
+        "threshold": 0.4909,
+        "accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "segments": 11
+      },
+      {
+        "held_out": "call_02",
+        "threshold": 0.4921,
+        "accuracy": 96.3,
+        "agent_accuracy": 90.48,
+        "customer_accuracy": 100.0,
+        "segments": 54
+      },
+      {
+        "held_out": "call_03",
+        "threshold": 0.4771,
+        "accuracy": 75.86,
+        "agent_accuracy": 72.22,
+        "customer_accuracy": 81.82,
+        "segments": 29
+      },
+      {
+        "held_out": "call_04",
+        "threshold": 0.4923,
+        "accuracy": 93.1,
+        "agent_accuracy": 85.71,
+        "customer_accuracy": 100.0,
+        "segments": 29
+      },
+      {
+        "held_out": "call_05",
+        "threshold": 0.4891,
+        "accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "segments": 13
+      },
+      {
+        "held_out": "call_06",
+        "threshold": 0.4906,
+        "accuracy": 88.89,
+        "agent_accuracy": 87.5,
+        "customer_accuracy": 92.31,
+        "segments": 45
+      },
+      {
+        "held_out": "call_07",
+        "threshold": 0.4787,
+        "accuracy": 89.47,
+        "agent_accuracy": 87.5,
+        "customer_accuracy": 92.86,
+        "segments": 38
+      },
+      {
+        "held_out": "call_08",
+        "threshold": 0.4897,
+        "accuracy": 97.3,
+        "agent_accuracy": 90.0,
+        "customer_accuracy": 100.0,
+        "segments": 74
+      },
+      {
+        "held_out": "call_09",
+        "threshold": 0.5021,
+        "accuracy": 95.0,
+        "agent_accuracy": 88.89,
+        "customer_accuracy": 100.0,
+        "segments": 140
+      },
+      {
+        "held_out": "call_10",
+        "threshold": 0.5494,
+        "accuracy": 81.25,
+        "agent_accuracy": 75.68,
+        "customer_accuracy": 100.0,
+        "segments": 96
+      },
+      {
+        "held_out": "call_11",
+        "threshold": 0.4899,
+        "accuracy": 90.0,
+        "agent_accuracy": 83.33,
+        "customer_accuracy": 100.0,
+        "segments": 10
+      },
+      {
+        "held_out": "call_12",
+        "threshold": 0.4834,
+        "accuracy": 87.04,
+        "agent_accuracy": 93.75,
+        "customer_accuracy": 84.21,
+        "segments": 54
+      },
+      {
+        "held_out": "call_13",
+        "threshold": 0.4912,
+        "accuracy": 88.14,
+        "agent_accuracy": 84.62,
+        "customer_accuracy": 95.0,
+        "segments": 59
+      },
+      {
+        "held_out": "call_14",
+        "threshold": 0.4788,
+        "accuracy": 91.67,
+        "agent_accuracy": 74.19,
+        "customer_accuracy": 100.0,
+        "segments": 96
+      },
+      {
+        "held_out": "call_15",
+        "threshold": 0.4704,
+        "accuracy": 75.56,
+        "agent_accuracy": 67.65,
+        "customer_accuracy": 100.0,
+        "segments": 45
+      },
+      {
+        "held_out": "call_16",
+        "threshold": 0.4932,
+        "accuracy": 89.72,
+        "agent_accuracy": 82.46,
+        "customer_accuracy": 98.0,
+        "segments": 107
+      },
+      {
+        "held_out": "call_17",
+        "threshold": 0.492,
+        "accuracy": 90.7,
+        "agent_accuracy": 82.61,
+        "customer_accuracy": 100.0,
+        "segments": 43
+      },
+      {
+        "held_out": "call_18",
+        "threshold": 0.4766,
+        "accuracy": 76.19,
+        "agent_accuracy": 66.67,
+        "customer_accuracy": 100.0,
+        "segments": 42
+      },
+      {
+        "held_out": "call_19",
+        "threshold": 0.4934,
+        "accuracy": 93.75,
+        "agent_accuracy": 85.19,
+        "customer_accuracy": 100.0,
+        "segments": 64
+      }
+    ]
+  },
+  "activation_requested": true,
+  "activation_eligible": true,
+  "activation_min_accuracy": 85.0,
+  "activated": true,
+  "blocked_by_existing": false,
+  "artifacts": {
+    "voiceprints": [
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\amandeep_nandra_pure_campp_v1.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\amandeep_nandra_pure_campp_v2.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\amandeep_nandra_pure_campp_v3.npy"
+    ],
+    "agents_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.json",
+    "agents_backup": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.backup.amandeep_nandra.auto.1778593780.json",
+    "activated": true,
+    "blocked_by_existing": false,
+    "mean_inside_sim": 0.7521,
+    "max_outside_sim": 0.4118,
+    "existing_mean_inside": 0.65,
+    "existing_max_outside": 0.669
+  },
+  "dry_run": false
+}

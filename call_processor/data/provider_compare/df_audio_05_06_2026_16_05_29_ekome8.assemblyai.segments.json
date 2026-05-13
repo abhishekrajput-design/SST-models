@@ -1,0 +1,156 @@
+[
+  {
+    "start": 26.918,
+    "end": 79.965,
+    "speaker": "SPEAKER_A",
+    "text": "I only have 3,500 pounds discounted rather than minus— I mean monthly £560? Yes! If I include it... But this means I'm getting rid of all your debts. I'm getting rid of all of your previous debt taking it off to this point. So that's— they don't have to pay that anymore. There's benefit. And then this, this 560, 570, it can go down. If you put £1,000, it'll go down to 490. If you increase your deposit, it'll go down. But the only issue is right now is this false focus because it's not helping. Okay, the deposit, it'll probably go down to 390 at 490. 3K, just 3K.",
+    "confidence": 0.78992385
+  },
+  {
+    "start": 81.005,
+    "end": 81.947,
+    "speaker": "SPEAKER_B",
+    "text": "No, no, 4K.",
+    "confidence": 0.7555204
+  },
+  {
+    "start": 84.416,
+    "end": 100.509,
+    "speaker": "SPEAKER_C",
+    "text": "562 in comparison to 573. Let me ask my manager to get advice from him just to see. Can I open this email and just show him?",
+    "confidence": 0.94943374
+  },
+  {
+    "start": 100.574,
+    "end": 103.468,
+    "speaker": "SPEAKER_A",
+    "text": "Because you know, sometimes it could be less than this.",
+    "confidence": 0.90692097
+  },
+  {
+    "start": 103.565,
+    "end": 105.57,
+    "speaker": "SPEAKER_C",
+    "text": "This might not be a settlement figure. The reason why—",
+    "confidence": 0.93939507
+  },
+  {
+    "start": 105.618,
+    "end": 108.219,
+    "speaker": "SPEAKER_B",
+    "text": "give me, bro, 3,500, very cheap.",
+    "confidence": 0.637418
+  },
+  {
+    "start": 108.669,
+    "end": 109.231,
+    "speaker": "SPEAKER_A",
+    "text": "Give them more.",
+    "confidence": 0.3587166
+  },
+  {
+    "start": 109.713,
+    "end": 118.19,
+    "speaker": "SPEAKER_C",
+    "text": "Wallah al-azim, they give me 3,500 because of the engine is misfiring. You know it's misfiring, you know, like, you know, I'm not lying to you, I'm not just making it up.",
+    "confidence": 0.84572655
+  },
+  {
+    "start": 118.319,
+    "end": 247.09,
+    "speaker": "SPEAKER_A",
+    "text": "They said it because, you know, here's what I'm thinking. Yeah, sometimes you have— when you pay in one go, this is less, but I don't know if this is the right one or not. I'm just going to ask him. Usually They give you PDF. Let me just ask my boss if I can have. But you need to debate if maybe you want to leave the If you want this, I take your Focus to my mechanic, and if it's not serious problem, I can try and give you more. Does that make sense? Because I need to check what it is. If it's not big problem, I tell them give us more. If it's big problem, I tell you 35 and keep it quiet. But if it's like small problem, then I tell my buying team, the mechanics looks at the car and it's just injector or it's just spark plug. I don't know what it is. But that's the only way I can give you more. I'm being honest. But my question to you is, do you want to forget about Focus and do application for this car and then sell the car privately, or do you want to get rid of the Focus?",
+    "confidence": 0.9295341
+  },
+  {
+    "start": 247.347,
+    "end": 251.368,
+    "speaker": "SPEAKER_B",
+    "text": "What do you want to do? No one's getting this one.",
+    "confidence": 0.8731029
+  },
+  {
+    "start": 251.593,
+    "end": 252.314,
+    "speaker": "SPEAKER_A",
+    "text": "Get rid of it.",
+    "confidence": 0.9721422
+  },
+  {
+    "start": 253.355,
+    "end": 282.98,
+    "speaker": "SPEAKER_B",
+    "text": "Focus is getting more expensive. Explain to me. Can you do this finals at the new court?",
+    "confidence": 0.7086377
+  },
+  {
+    "start": 283.387,
+    "end": 286.168,
+    "speaker": "SPEAKER_A",
+    "text": "Yes, that doesn't matter, but I can.",
+    "confidence": 0.7978329
+  },
+  {
+    "start": 286.233,
+    "end": 288.603,
+    "speaker": "SPEAKER_C",
+    "text": "Yes, I can, I can, but I'm—",
+    "confidence": 0.85019845
+  },
+  {
+    "start": 288.684,
+    "end": 289.053,
+    "speaker": "SPEAKER_A",
+    "text": "I need—",
+    "confidence": 0.9753905
+  },
+  {
+    "start": 289.23,
+    "end": 293.019,
+    "speaker": "SPEAKER_C",
+    "text": "I want to get you more for your car, so I'm gonna take it to my mechanic.",
+    "confidence": 0.93839157
+  },
+  {
+    "start": 293.099,
+    "end": 297.29,
+    "speaker": "SPEAKER_A",
+    "text": "I don't want you to pay $560, you know what I mean? Dennis, when you—",
+    "confidence": 0.89960444
+  },
+  {
+    "start": 297.499,
+    "end": 299.297,
+    "speaker": "SPEAKER_C",
+    "text": "when you're in, please come help me out.",
+    "confidence": 0.8606715
+  },
+  {
+    "start": 340.293,
+    "end": 340.711,
+    "speaker": "SPEAKER_A",
+    "text": "in this car.",
+    "confidence": 0.75802255
+  },
+  {
+    "start": 340.759,
+    "end": 342.06,
+    "speaker": "SPEAKER_C",
+    "text": "I promise you, this engine goes boom.",
+    "confidence": 0.8478924
+  },
+  {
+    "start": 343.729,
+    "end": 351.806,
+    "speaker": "SPEAKER_B",
+    "text": "I know this car very well.",
+    "confidence": 0.99409467
+  },
+  {
+    "start": 354.744,
+    "end": 362.323,
+    "speaker": "SPEAKER_A",
+    "text": "Dad knows as well.",
+    "confidence": 0.9888033
+  }
+]

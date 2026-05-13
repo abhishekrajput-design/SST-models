@@ -1,0 +1,527 @@
+[
+  {
+    "start": 0.88,
+    "end": 2.3999999,
+    "speaker": "SPEAKER_00",
+    "text": "Hello, Jay. Apologies.",
+    "confidence": 0.97403973
+  },
+  {
+    "start": 2.8799999,
+    "end": 9.28,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. I mean, the line just started calling up. I couldn't hear you. It was my service, not yours. Okay. Okay.",
+    "confidence": 0.9358782
+  },
+  {
+    "start": 9.36,
+    "end": 16.235,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. I was literally just saying to yourself, so both CLAs are here. They're in Barnet. They're both available for a viewing tomorrow.",
+    "confidence": 0.9522563
+  },
+  {
+    "start": 16.395,
+    "end": 23.755001,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Obviously, as mentioned, 1 of them has 2 owners, 1 of them has 1 owner, but they've both Yeah. The main dealer. So they've only been serviced ever at Mercedes.",
+    "confidence": 0.9394728
+  },
+  {
+    "start": 26.02,
+    "end": 36.58,
+    "speaker": "SPEAKER_00",
+    "text": "And and you were telling me that you you get quoted 2 and a half grand for a for a for a for a gearbox change. No. It's not on a complete gearbox. It's a electronic unit.",
+    "confidence": 0.9291157
+  },
+  {
+    "start": 38.075,
+    "end": 43.115,
+    "speaker": "SPEAKER_01",
+    "text": "That sounds like a headache, man. And I have called about 3 different people.",
+    "confidence": 0.93716866
+  },
+  {
+    "start": 43.355,
+    "end": 44.795002,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. And,",
+    "confidence": 0.92993164
+  },
+  {
+    "start": 45.035,
+    "end": 51.195,
+    "speaker": "SPEAKER_01",
+    "text": "yes, that that is the the price. Does the car run and drive? No. It don't drive. It's trucks.",
+    "confidence": 0.91877824
+  },
+  {
+    "start": 54.179996,
+    "end": 59.14,
+    "speaker": "SPEAKER_00",
+    "text": "I was gonna say bring it part exchange. Well, if the car doesn't drive, there's not even anything we can do with it. Yeah.",
+    "confidence": 0.93255615
+  },
+  {
+    "start": 59.78,
+    "end": 65.54,
+    "speaker": "SPEAKER_00",
+    "text": "I know. I'll be honest with you. I spent 4 and a half grand on a Golf GTI engine re gearbox recondition.",
+    "confidence": 0.96807307
+  },
+  {
+    "start": 66.725,
+    "end": 72.884995,
+    "speaker": "SPEAKER_00",
+    "text": "4 and a half. Yeah? 4 and a half for a whole carbox. I know. You know? Which is why, I'll be honest with you,",
+    "confidence": 0.89989257
+  },
+  {
+    "start": 73.365,
+    "end": 80.16499,
+    "speaker": "SPEAKER_00",
+    "text": "from I only have warranty now. I'm not I I don't buy old cars anymore. I don't like dealing with these headaches anymore. It's done.",
+    "confidence": 0.9830664
+  },
+  {
+    "start": 80.880005,
+    "end": 94.880005,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Yeah. I know. I know. You know, you're a car. At least it's me and you. Like, we're a man. We're adults. We can fix it. We can go over here. We'll find the solution. But when it happens to your sister, to your daughter Yeah. It's it's a headache. You're like, you just",
+    "confidence": 0.895459
+  },
+  {
+    "start": 95.715,
+    "end": 100.034996,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. Yeah. So but now the problem is the",
+    "confidence": 0.9425456
+  },
+  {
+    "start": 100.755,
+    "end": 105.23499,
+    "speaker": "SPEAKER_01",
+    "text": "gearbox where I was gonna book him, hey. They're saying we can't look at it till Thursday.",
+    "confidence": 0.9133588
+  },
+  {
+    "start": 106.115,
+    "end": 122.41,
+    "speaker": "SPEAKER_00",
+    "text": "And then after, let me hire a car. No 1 wants to hire. If I if I'd be honest with with you, yeah, I'm gonna give you advice that I'd give, like, a family friend. Yeah? Mhmm. Yes. You can get a higher car. Yes. You can spend 2 and a half grand, $3 getting that getting that fixed. Your best case scenario",
+    "confidence": 0.9271725
+  },
+  {
+    "start": 122.895,
+    "end": 134.015,
+    "speaker": "SPEAKER_00",
+    "text": "is not spending any additional money on that car. Because even if you fix it, it's inevitable in 1 1 year later, you spend more money, more money. Yeah. I've already, man. I put 3 brand new tires.",
+    "confidence": 0.9168155
+  },
+  {
+    "start": 134.095,
+    "end": 140.19002,
+    "speaker": "SPEAKER_01",
+    "text": "I put front disc pads. Yeah. That's what happened. I turned the front burner. And so now I'm mechanic myself.",
+    "confidence": 0.7847107
+  },
+  {
+    "start": 140.35,
+    "end": 142.75002,
+    "speaker": "SPEAKER_01",
+    "text": "Okay. But I don't do the",
+    "confidence": 0.9246419
+  },
+  {
+    "start": 143.71,
+    "end": 152.675,
+    "speaker": "SPEAKER_00",
+    "text": "I don't do, like, the They got jobs. It's g if they like the normal stuff. Yeah. Yeah. Yeah. Yeah. Look. You can fix it, but I'll highly recommend, yeah, just as a device",
+    "confidence": 0.8547184
+  },
+  {
+    "start": 152.995,
+    "end": 161.075,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Not throw 2 and a half grand because event I think just sell it as is and get rid of the car. What year is it? It's '15.",
+    "confidence": 0.940939
+  },
+  {
+    "start": 161.82,
+    "end": 163.50002,
+    "speaker": "SPEAKER_00",
+    "text": "'15. And what's the mileage?",
+    "confidence": 0.98271483
+  },
+  {
+    "start": 163.74,
+    "end": 165.42001,
+    "speaker": "SPEAKER_01",
+    "text": "84,000.",
+    "confidence": 0.98445636
+  },
+  {
+    "start": 165.74,
+    "end": 166.38002,
+    "speaker": "SPEAKER_00",
+    "text": "Okay.",
+    "confidence": 0.9995117
+  },
+  {
+    "start": 166.54001,
+    "end": 168.54001,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. I personally would recommend",
+    "confidence": 0.90878904
+  },
+  {
+    "start": 169.58,
+    "end": 172.86002,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. I'm gonna just try to send it like that. Then somebody",
+    "confidence": 0.85618085
+  },
+  {
+    "start": 173.42001,
+    "end": 185.635,
+    "speaker": "SPEAKER_00",
+    "text": "can post them. You spend 2 and a half thousand pounds here, then tomorrow, the day after, you have an extra thousand pound. Only reason why I'm saying that because I personally went through this with my Golf GT. Yeah. Yeah. That's what I told. Let me get something decent.",
+    "confidence": 0.8375464
+  },
+  {
+    "start": 185.635,
+    "end": 191.795,
+    "speaker": "SPEAKER_00",
+    "text": "And then my car was and the gearbox went on 60,000 miles. I fixed it. I drove it to 80,000 miles,",
+    "confidence": 0.9678199
+  },
+  {
+    "start": 192.035,
+    "end": 193.47499,
+    "speaker": "SPEAKER_00",
+    "text": "and then I had a issue with the suspension.",
+    "confidence": 0.93096244
+  },
+  {
+    "start": 193.93001,
+    "end": 199.61,
+    "speaker": "SPEAKER_00",
+    "text": "So I sold the car now, and I only my next car I have now is 72022.",
+    "confidence": 0.9745663
+  },
+  {
+    "start": 199.61,
+    "end": 200.97002,
+    "speaker": "SPEAKER_00",
+    "text": "I don't buy any more old.",
+    "confidence": 0.8859456
+  },
+  {
+    "start": 201.29001,
+    "end": 202.33002,
+    "speaker": "SPEAKER_00",
+    "text": "I have warranty.",
+    "confidence": 0.9978841
+  },
+  {
+    "start": 202.57,
+    "end": 226.59001,
+    "speaker": "SPEAKER_00",
+    "text": "If I have problem, it goes back to the dealership to deal with it. Done. Oh, so you're just buying, like, 2, 4 years old. Yeah? Yeah. Maximum 4, 5. Maximum 4, 5. Like, is this the best thing Do I drive it for 2 years and then sell it? No. No. It's not even driving for 2 years. I keep the car sometimes 5 years. If I if I feel like selling it, you never know what god plans, but my I don't plan to sell it. It's just that when I buy a old car",
+    "confidence": 0.9412125
+  },
+  {
+    "start": 226.99,
+    "end": 230.91,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. The problems land with me always. Yeah. I have bad luck with cars.",
+    "confidence": 0.95043945
+  },
+  {
+    "start": 231.55,
+    "end": 243.505,
+    "speaker": "SPEAKER_01",
+    "text": "Got you. To avoid that, I buy the car between 20, 30000 miles, driving till 67. That's right. You know? Okay. We were too I'm gonna ask you. I know the a class. You know Mercedes a class?",
+    "confidence": 0.801435
+  },
+  {
+    "start": 243.745,
+    "end": 245.665,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. It's too low.",
+    "confidence": 0.95251465
+  },
+  {
+    "start": 245.745,
+    "end": 250.145,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah? Yeah. It does. On the speed humps, man. It's the speed humps. No.",
+    "confidence": 0.7833819
+  },
+  {
+    "start": 253.185,
+    "end": 258.12,
+    "speaker": "SPEAKER_00",
+    "text": "No. My sister I my sister came to Car Planet last month, and I sold her a CLA.",
+    "confidence": 0.96865505
+  },
+  {
+    "start": 258.28,
+    "end": 260.92,
+    "speaker": "SPEAKER_00",
+    "text": "She she part exchanged her 1 series.",
+    "confidence": 0.8607701
+  },
+  {
+    "start": 261.16,
+    "end": 261.96,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah.",
+    "confidence": 0.96362305
+  },
+  {
+    "start": 262.36,
+    "end": 267.0,
+    "speaker": "SPEAKER_00",
+    "text": "And I I drive I drove the CLA home. It's got plenty of ride",
+    "confidence": 0.9436907
+  },
+  {
+    "start": 267.24,
+    "end": 267.88,
+    "speaker": "SPEAKER_00",
+    "text": "height clearance.",
+    "confidence": 0.9902344
+  },
+  {
+    "start": 283.9,
+    "end": 284.78,
+    "speaker": "SPEAKER_01",
+    "text": "Watford?",
+    "confidence": 0.7736003
+  },
+  {
+    "start": 284.86,
+    "end": 286.78,
+    "speaker": "SPEAKER_01",
+    "text": "Watford. Because I spoke to",
+    "confidence": 0.8692709
+  },
+  {
+    "start": 287.18,
+    "end": 296.46,
+    "speaker": "SPEAKER_01",
+    "text": "You're not doing anything. Zak Raissi? Yeah. That's the call agent, Zak Raissi. Yeah. Yeah. So he said come come look at the car first, and then we'll see what we can do.",
+    "confidence": 0.88906026
+  },
+  {
+    "start": 297.285,
+    "end": 302.965,
+    "speaker": "SPEAKER_00",
+    "text": "The thing is, I'll be honest with you. Yeah. Our prices are the cheapest in a 100 mile radius.",
+    "confidence": 0.8992085
+  },
+  {
+    "start": 303.125,
+    "end": 311.04498,
+    "speaker": "SPEAKER_00",
+    "text": "So when you come down, we will definitely take care of you, and I'll show you how I take care of you. I'll give you a good deal with the warranty. I'll make sure your car is fully protected.",
+    "confidence": 0.9919997
+  },
+  {
+    "start": 311.62,
+    "end": 323.38,
+    "speaker": "SPEAKER_00",
+    "text": "But was you looking to pay cash or finance? Cash. Cash. On a cash deal, the thing is we don't actually negotiate on car price. But the reason why we don't is because what we are the cheapest. If we negotiate it, then the car price wouldn't be right.",
+    "confidence": 0.9365783
+  },
+  {
+    "start": 324.225,
+    "end": 326.625,
+    "speaker": "SPEAKER_00",
+    "text": "So have a look at the rest of Auto Trader.",
+    "confidence": 0.89606935
+  },
+  {
+    "start": 326.865,
+    "end": 337.665,
+    "speaker": "SPEAKER_00",
+    "text": "So you will see that we're actually the cheapest in a 100 mile radius. Car Planet gives you a promise. If you can find me 1 cheaper, I'll match the price. Same mileage, same specs, and same service history. I'll match the price.",
+    "confidence": 0.9729118
+  },
+  {
+    "start": 338.56,
+    "end": 346.96,
+    "speaker": "SPEAKER_00",
+    "text": "And you won't you won't find. But I promise you when you come, you're in good hands. Is the hybrid better or the other 1? It depends what you need the car for.",
+    "confidence": 0.91542006
+  },
+  {
+    "start": 347.44,
+    "end": 354.82498,
+    "speaker": "SPEAKER_00",
+    "text": "So so, obviously, I'll I'll give you when you guys come, I'll be very informative and explain to you the benefits and drawbacks of each 1. But",
+    "confidence": 0.9738227
+  },
+  {
+    "start": 354.82498,
+    "end": 359.225,
+    "speaker": "SPEAKER_00",
+    "text": "it also depends what you what you really wanna use the car for. Well, it's my daughter's.",
+    "confidence": 0.90337056
+  },
+  {
+    "start": 359.865,
+    "end": 364.26498,
+    "speaker": "SPEAKER_01",
+    "text": "Comes to pay, like, daily, and then she screws her in. It's",
+    "confidence": 0.79866534
+  },
+  {
+    "start": 364.26498,
+    "end": 366.66498,
+    "speaker": "SPEAKER_00",
+    "text": "gonna be better for her to go for the 1 that's not a hybrid.",
+    "confidence": 0.99447197
+  },
+  {
+    "start": 367.35,
+    "end": 376.31,
+    "speaker": "SPEAKER_00",
+    "text": "Is it? Yeah. I think so. I'll be honest with you. But when you come here, I'll explain to you why, though. No. The hybrid. Why is it totally obvious, sir? You've got 2 owners?",
+    "confidence": 0.88756627
+  },
+  {
+    "start": 376.79,
+    "end": 380.38998,
+    "speaker": "SPEAKER_00",
+    "text": "Hybrid, 2 owners. But the other 1, it only has 1 owner. It's with",
+    "confidence": 0.8845215
+  },
+  {
+    "start": 381.26498,
+    "end": 385.905,
+    "speaker": "SPEAKER_00",
+    "text": "with with these cars, when a lot of these cars, people buy them PCP. It's a type of finance.",
+    "confidence": 0.94165903
+  },
+  {
+    "start": 386.145,
+    "end": 392.625,
+    "speaker": "SPEAKER_00",
+    "text": "So they they keep the car for 1 year, 2 years, 3 years, they give it back. So that's the only reason why these newer cars have high owners.",
+    "confidence": 0.9548087
+  },
+  {
+    "start": 392.865,
+    "end": 399.80002,
+    "speaker": "SPEAKER_00",
+    "text": "Both of these cars have been to main dealer religiously, so they they have very good history behind them. So I would that's why I wouldn't say that's a concern.",
+    "confidence": 0.982156
+  },
+  {
+    "start": 400.28003,
+    "end": 405.24002,
+    "speaker": "SPEAKER_01",
+    "text": "Okay. Okay. And you've got no choices or no? In 1 of these? We have 1,700",
+    "confidence": 0.80267334
+  },
+  {
+    "start": 405.24002,
+    "end": 408.04,
+    "speaker": "SPEAKER_01",
+    "text": "cars. No. Like in the the GLA.",
+    "confidence": 0.8797433
+  },
+  {
+    "start": 408.36002,
+    "end": 414.86502,
+    "speaker": "SPEAKER_00",
+    "text": "Let me see. I'll check for you very quickly. 1 second. Okay. What time are closing today? Today, we close at 9PM.",
+    "confidence": 0.97594106
+  },
+  {
+    "start": 415.02502,
+    "end": 416.545,
+    "speaker": "SPEAKER_01",
+    "text": "Oh, on a Saturday.",
+    "confidence": 0.92767334
+  },
+  {
+    "start": 416.70502,
+    "end": 420.70502,
+    "speaker": "SPEAKER_00",
+    "text": "On a Saturday. On tomorrow, we close at 5. 0, yeah. Yeah. Yeah. So",
+    "confidence": 0.96984863
+  },
+  {
+    "start": 421.98502,
+    "end": 423.58502,
+    "speaker": "SPEAKER_00",
+    "text": "there is 1, 2,",
+    "confidence": 0.993103
+  },
+  {
+    "start": 424.065,
+    "end": 425.665,
+    "speaker": "SPEAKER_00",
+    "text": "3. I'd say there's 4 cars.",
+    "confidence": 0.8887329
+  },
+  {
+    "start": 426.22998,
+    "end": 427.27,
+    "speaker": "SPEAKER_00",
+    "text": "Some",
+    "confidence": 0.7963867
+  },
+  {
+    "start": 427.27,
+    "end": 433.11002,
+    "speaker": "SPEAKER_00",
+    "text": "of them are lower than your budget, a little bit higher mileage, but we have the truth is we have 11 CLAs,",
+    "confidence": 0.965898
+  },
+  {
+    "start": 433.27,
+    "end": 436.94998,
+    "speaker": "SPEAKER_00",
+    "text": "but there's, like, 3 or 4 that that sort of fit into your box.",
+    "confidence": 0.97321427
+  },
+  {
+    "start": 438.425,
+    "end": 442.98502,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. Low mileage. I'm not Low mileage. Paying too much. Low mileage. Exactly. Exactly.",
+    "confidence": 0.9049072
+  },
+  {
+    "start": 443.545,
+    "end": 455.34,
+    "speaker": "SPEAKER_01",
+    "text": "And, Zak, do you think these guys play with the mileage? You know, it's only 3 minute job. No. No. No. You plug in this computer No. No. No. It's 3 minutes job. When you come tomorrow, Jay, you'll understand why that's not the case.",
+    "confidence": 0.9224492
+  },
+  {
+    "start": 455.9,
+    "end": 464.22,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. Alright. I'll see you tomorrow then. Yeah? We we we sell 600 cars a month, and and, you know, we're very reputable dealership. We have Lamborghinis. We have Ventegas.",
+    "confidence": 0.95018035
+  },
+  {
+    "start": 464.22,
+    "end": 468.815,
+    "speaker": "SPEAKER_00",
+    "text": "We have Mhmm. 100,000 pound cars. We we don't do dodgy stuff like that. Okay.",
+    "confidence": 0.9271132
+  },
+  {
+    "start": 469.695,
+    "end": 477.695,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. No worries. I'll continue tomorrow then. Alright. I'm gonna send you a confirmation just so you have the postcode. Alright? Yeah. Yeah, please. Alright. Take care, Jason. Okay. Have a lovely",
+    "confidence": 0.9436035
+  }
+]

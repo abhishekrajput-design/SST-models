@@ -1,0 +1,82 @@
+{
+  "labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui",
+  "offset_mode": "none",
+  "include_source_prefix": "",
+  "include_calls": [
+    "call_02"
+  ],
+  "exclude_calls": [],
+  "skipped_calls": [],
+  "label_reports": {
+    "call_02": {
+      "call_id": "69c840836a2041f487a6ac20",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_02\\audio.mp3",
+      "offset_s": 0.0,
+      "segments": 20,
+      "agent_segments": 9,
+      "customer_segments": 11,
+      "alternation_baseline": {
+        "segments": 20,
+        "accuracy": 55.0,
+        "first_role": "agent",
+        "adjacent_same_role_pairs": 12,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    }
+  },
+  "all_labels_alternation_baseline": {
+    "segments": 20,
+    "accuracy": 55.0,
+    "first_role": "agent",
+    "adjacent_same_role_pairs": 12,
+    "note": "label-structure baseline only; not voice-model accuracy"
+  },
+  "saved_results": {
+    "omar_api_69c840836a2041f487a6ac20_call_02__parakeet-tdt-0.6b-v3": {
+      "call_id": "69c840836a2041f487a6ac20",
+      "field": "segments",
+      "score": {
+        "segments": 20,
+        "overall_accuracy": 90.0,
+        "agent_accuracy": 88.89,
+        "customer_accuracy": 90.91,
+        "agent_correct": 8,
+        "agent_total": 9,
+        "customer_correct": 10,
+        "customer_total": 11,
+        "duration_weighted": {
+          "agent_accuracy": 82.1,
+          "customer_accuracy": 72.4,
+          "overall_accuracy": 77.23
+        },
+        "no_overlap_segments": 0,
+        "errors": [
+          {
+            "segment": 3,
+            "time": [
+              7.71,
+              8.18
+            ],
+            "expected": "customer",
+            "predicted": "agent",
+            "overlap_seconds": 0.26,
+            "text": "Hello."
+          },
+          {
+            "segment": 18,
+            "time": [
+              60.29,
+              60.58
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 0.23,
+            "text": "Okay."
+          }
+        ]
+      }
+    }
+  },
+  "note": "Correct model verification must use timestamp overlap and held-out calls. The alternation baseline is reported only to reveal label structure."
+}

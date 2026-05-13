@@ -1,0 +1,60 @@
+{
+  "top_5_agents": [
+    {
+      "agent_name": "Zak Raissi",
+      "num_calls": 6,
+      "calls": [
+        {
+          "id": "zak_e2e_test_20260423",
+          "segments": 171,
+          "audio_file": "C:\\Users\\abhis\\Desktop\\SST-models\\Agents-recoding\\zak_recodings\\20260416T183339447_2052154.mp3",
+          "orig_file": "C:/Users/abhis/Desktop/SST-models/Agents-recoding/zak_recodings/20260416T183339447_2052154.mp3"
+        },
+        {
+          "id": "zak_compare_20260423",
+          "segments": 104,
+          "audio_file": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\audiofy\\zak_raissi_barnet\\audio\\call_69e3afc81bbc87d03ab29ae6.mp3",
+          "orig_file": "C:/Users/abhis/Desktop/SST-models/call_processor/data/audiofy/zak_raissi_barnet/audio/call_69e3afc81bbc87d03ab29ae6.mp3"
+        },
+        {
+          "id": "zak_audiofy_verify_20260423",
+          "segments": 56,
+          "audio_file": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\audiofy\\zak_raissi_barnet\\audio\\call_69e4a4415453871f7cde30b5.mp3",
+          "orig_file": "C:/Users/abhis/Desktop/SST-models/call_processor/data/audiofy/zak_raissi_barnet/audio/call_69e4a4415453871f7cde30b5.mp3"
+        },
+        {
+          "id": "enhanced_zak_raissi_barnet_00_audio_03_15_2026_10_08_04_qbpe8e__parakeet-tdt-0.6b-v3",
+          "segments": 253,
+          "audio_file": "data/raw_calls/enhanced_zak_raissi_barnet_00_audio_03_15_2026_10_08_04_qbpe8e.mp3",
+          "orig_file": "data/raw_calls/zak_raissi_barnet_00_audio_03_15_2026_10_08_04_qbpe8e.mp3"
+        },
+        {
+          "id": "enhanced_test_desk_zak__parakeet-tdt-0.6b-v3",
+          "segments": 33,
+          "audio_file": "data/raw_calls/enhanced_test_desk_zak.mp3",
+          "orig_file": "data/raw_calls/test_desk_zak.mp3"
+        },
+        {
+          "id": "enhanced_test_desk_zak2__parakeet-tdt-0.6b-v3",
+          "segments": 33,
+          "audio_file": "data/raw_calls/enhanced_test_desk_zak2.mp3",
+          "orig_file": "data/raw_calls/test_desk_zak2.mp3"
+        }
+      ]
+    },
+    {
+      "agent_name": "Hussein",
+      "num_calls": 1,
+      "calls": [
+        {
+          "id": "enhanced_hussein_desk_recording__parakeet-tdt-0.6b-v3",
+          "segments": 154,
+          "audio_file": "data/processed/enhanced_hussein_desk_recording/norm_enhanced_hussein_desk_recording.wav",
+          "orig_file": "data/processed/hussein_desk_recording/norm_hussein_desk_recording.wav"
+        }
+      ]
+    }
+  ],
+  "timestamp": "2026-05-05 17:47:13",
+  "next_step": "Manual Gemini upload for each agent"
+}

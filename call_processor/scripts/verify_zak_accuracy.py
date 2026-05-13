@@ -198,13 +198,33 @@ def infer_call_id_from_result_path(path: Path) -> str:
     return stem.strip()
 
 
+def resolve_call_id_for_result(data: dict, path: Path, calls_by_id: dict[str, object]) -> str:
+    call_id = str(data.get("call_id") or data.get("target_call_id") or "").strip()
+    if call_id in calls_by_id:
+        return call_id
+
+    candidates = [
+        call_id,
+        infer_call_id_from_result_path(path),
+        str(data.get("audio_file") or ""),
+        str(data.get("orig_file") or ""),
+        str(data.get("asr_audio_file") or ""),
+        str(data.get("diarization_audio_file") or ""),
+    ]
+    for candidate in candidates:
+        if not candidate:
+            continue
+        for known_id in calls_by_id:
+            if known_id and known_id in candidate:
+                return known_id
+    return call_id or infer_call_id_from_result_path(path)
+
+
 def score_saved_results(calls_by_id: dict[str, object], result_paths: Iterable[Path], field: str) -> dict:
     out = {}
     for path in result_paths:
         data = json.loads(path.read_text(encoding="utf-8"))
-        call_id = str(data.get("call_id") or data.get("target_call_id") or "").strip()
-        if not call_id:
-            call_id = infer_call_id_from_result_path(path)
+        call_id = resolve_call_id_for_result(data, path, calls_by_id)
         if not call_id:
             # Existing local call_02 reports do not carry call_id in the root.
             if "call02" in path.name.lower() or "call_02" in path.name.lower():

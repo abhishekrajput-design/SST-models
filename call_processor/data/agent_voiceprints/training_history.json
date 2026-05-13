@@ -1,0 +1,119 @@
+{
+  "omar_el_harchaoui": {
+    "agent_name": "Omar El Harchaoui",
+    "history": [
+      {
+        "date": "2026-05-12",
+        "n_calls_used": 275,
+        "activated": false,
+        "activation_eligible": false,
+        "blocked_by_existing": true,
+        "mean_inside_sim": 0.7338,
+        "max_outside_sim": 0.4735,
+        "same_data_accuracy": 84.65,
+        "agent_accuracy": 75.0,
+        "customer_accuracy": 97.45,
+        "loco_accuracy": 83.99,
+        "n_training_segments": 102
+      }
+    ]
+  },
+  "hussein_mohamed": {
+    "agent_name": "Hussein Mohamed",
+    "history": [
+      {
+        "date": "2026-05-12",
+        "n_calls_used": 44,
+        "activated": false,
+        "activation_eligible": false,
+        "blocked_by_existing": true,
+        "mean_inside_sim": 0.7447,
+        "max_outside_sim": 0.4425,
+        "same_data_accuracy": 91.82,
+        "agent_accuracy": 86.21,
+        "customer_accuracy": 97.87,
+        "loco_accuracy": 92.07,
+        "n_training_segments": 272
+      }
+    ]
+  },
+  "amandeep_nandra": {
+    "agent_name": "Amandeep Nandra",
+    "history": [
+      {
+        "date": "2026-05-12",
+        "n_calls_used": 430,
+        "activated": false,
+        "activation_eligible": false,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.7543,
+        "max_outside_sim": 0.4656,
+        "same_data_accuracy": 72.58,
+        "agent_accuracy": 57.08,
+        "customer_accuracy": 97.04,
+        "loco_accuracy": 68.75,
+        "n_training_segments": 164
+      },
+      {
+        "date": "2026-05-12",
+        "n_calls_used": 390,
+        "activated": false,
+        "activation_eligible": false,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.76,
+        "max_outside_sim": 0.4359,
+        "same_data_accuracy": 90.98,
+        "agent_accuracy": 86.39,
+        "customer_accuracy": 96.2,
+        "loco_accuracy": 88.61,
+        "n_training_segments": 182,
+        "improvement": "+0.0057 inside, -0.0297 outside"
+      },
+      {
+        "date": "2026-05-12",
+        "n_calls_used": 390,
+        "activated": false,
+        "activation_eligible": false,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.76,
+        "max_outside_sim": 0.4359,
+        "same_data_accuracy": 90.98,
+        "agent_accuracy": 86.39,
+        "customer_accuracy": 96.2,
+        "loco_accuracy": 88.61,
+        "n_training_segments": 182,
+        "improvement": "+0.0000 inside, +0.0000 outside"
+      },
+      {
+        "date": "2026-05-12",
+        "n_calls_used": 390,
+        "activated": false,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.7521,
+        "max_outside_sim": 0.4118,
+        "same_data_accuracy": 92.25,
+        "agent_accuracy": 87.06,
+        "customer_accuracy": 97.62,
+        "loco_accuracy": 87.93,
+        "n_training_segments": 322,
+        "improvement": "-0.0079 inside, -0.0241 outside"
+      },
+      {
+        "date": "2026-05-12",
+        "n_calls_used": 390,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.7521,
+        "max_outside_sim": 0.4118,
+        "same_data_accuracy": 92.25,
+        "agent_accuracy": 87.06,
+        "customer_accuracy": 97.62,
+        "loco_accuracy": 87.93,
+        "n_training_segments": 322,
+        "improvement": "+0.0000 inside, +0.0000 outside"
+      }
+    ]
+  }
+}

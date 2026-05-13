@@ -1,0 +1,106 @@
+{
+  "labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "offset_mode": "detected",
+  "include_source_prefix": "",
+  "include_calls": [],
+  "exclude_calls": [],
+  "skipped_calls": [],
+  "label_reports": {
+    "call_14": {
+      "call_id": "20260426T122156209_33629",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_14\\20260426T122156209_33629.mp3",
+      "offset_s": 0.0,
+      "segments": 10,
+      "agent_segments": 7,
+      "customer_segments": 3,
+      "alternation_baseline": {
+        "segments": 10,
+        "accuracy": 40.0,
+        "first_role": "agent",
+        "adjacent_same_role_pairs": 3,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_17": {
+      "call_id": "20260425T175023849_113343",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_17\\20260425T175023849_113343.mp3",
+      "offset_s": 1.54,
+      "segments": 40,
+      "agent_segments": 25,
+      "customer_segments": 15,
+      "alternation_baseline": {
+        "segments": 40,
+        "accuracy": 52.5,
+        "first_role": "agent",
+        "adjacent_same_role_pairs": 15,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    }
+  },
+  "all_labels_alternation_baseline": {
+    "segments": 50,
+    "accuracy": 50.0,
+    "first_role": "agent",
+    "adjacent_same_role_pairs": 19,
+    "note": "label-structure baseline only; not voice-model accuracy"
+  },
+  "saved_results": {
+    "fullsystem_smoke_20260426T122156209_33629__parakeet-tdt-0.6b-v3": {
+      "call_id": "20260426T122156209_33629",
+      "field": "segments",
+      "score": {
+        "segments": 10,
+        "overall_accuracy": 70.0,
+        "agent_accuracy": 71.43,
+        "customer_accuracy": 66.67,
+        "agent_correct": 5,
+        "agent_total": 7,
+        "customer_correct": 2,
+        "customer_total": 3,
+        "duration_weighted": {
+          "agent_accuracy": 88.28,
+          "customer_accuracy": 94.44,
+          "overall_accuracy": 90.11
+        },
+        "no_overlap_segments": 2,
+        "errors": [
+          {
+            "segment": 1,
+            "time": [
+              6.32,
+              6.96
+            ],
+            "expected": "agent",
+            "predicted": "unknown",
+            "overlap_seconds": 0.0,
+            "text": "Alhamdulillah."
+          },
+          {
+            "segment": 8,
+            "time": [
+              19.84,
+              20.0
+            ],
+            "expected": "customer",
+            "predicted": "unknown",
+            "overlap_seconds": 0.0,
+            "text": "Okay."
+          },
+          {
+            "segment": 11,
+            "time": [
+              25.84,
+              26.4
+            ],
+            "expected": "agent",
+            "predicted": "customer",
+            "overlap_seconds": 0.48,
+            "text": "Alright, take care."
+          }
+        ]
+      }
+    }
+  },
+  "note": "Correct model verification must use timestamp overlap and held-out calls. The alternation baseline is reported only to reveal label structure."
+}

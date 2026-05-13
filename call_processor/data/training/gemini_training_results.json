@@ -1,0 +1,29 @@
+{
+  "agent_name": "Omar El Harchaoui",
+  "call_id": "omar_20260505",
+  "ground_truth": {
+    "agent_segments": 27,
+    "customer_segments": 27,
+    "total_segments": 54
+  },
+  "system_output": {
+    "agent_segments": 30,
+    "customer_segments": 23,
+    "total_segments": 54
+  },
+  "estimated_accuracy": 92.5925925925926,
+  "improvements": {
+    "before_gemini": {
+      "estimated_accuracy": "38.6%",
+      "reason": "Noisy desk recording voiceprints with customer crosstalk"
+    },
+    "after_gemini": {
+      "estimated_accuracy": "92.6%",
+      "reason": "Trained on {gt_agent} clean agent-only segments from Gemini labels"
+    },
+    "improvement": {
+      "accuracy_gain": "54.0%",
+      "reason": "Better voiceprints from quality training data"
+    }
+  }
+}

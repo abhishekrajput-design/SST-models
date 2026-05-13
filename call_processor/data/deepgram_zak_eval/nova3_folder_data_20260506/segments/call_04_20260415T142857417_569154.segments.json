@@ -1,0 +1,674 @@
+[
+  {
+    "start": 0.24,
+    "end": 1.44,
+    "speaker": "SPEAKER_00",
+    "text": "Hello?",
+    "confidence": 0.9748535
+  },
+  {
+    "start": 3.12,
+    "end": 5.92,
+    "speaker": "SPEAKER_01",
+    "text": "Hello. Am I through to Cerise? Yeah. You are.",
+    "confidence": 0.9451317
+  },
+  {
+    "start": 6.8799996,
+    "end": 16.664999,
+    "speaker": "SPEAKER_01",
+    "text": "Hi, Cerise. My colleague just essentially told me I missed the call from yourself about the Vauxhall Grandland x. You was looking to come down. Yeah. I was. But now I have some",
+    "confidence": 0.94687843
+  },
+  {
+    "start": 19.065,
+    "end": 20.105,
+    "speaker": "SPEAKER_00",
+    "text": "I'm a bit",
+    "confidence": 1.0
+  },
+  {
+    "start": 20.505,
+    "end": 21.785,
+    "speaker": "SPEAKER_00",
+    "text": "skeptical now.",
+    "confidence": 0.96484375
+  },
+  {
+    "start": 22.025,
+    "end": 22.985,
+    "speaker": "SPEAKER_01",
+    "text": "No worries.",
+    "confidence": 1.0
+  },
+  {
+    "start": 23.625,
+    "end": 25.465,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. So the car,",
+    "confidence": 0.9291992
+  },
+  {
+    "start": 25.625,
+    "end": 28.185,
+    "speaker": "SPEAKER_00",
+    "text": "I was told that it was it's part of an auction.",
+    "confidence": 0.970348
+  },
+  {
+    "start": 29.65,
+    "end": 32.45,
+    "speaker": "SPEAKER_00",
+    "text": "Or Okay. It was taken from an auction.",
+    "confidence": 0.9906311
+  },
+  {
+    "start": 32.77,
+    "end": 36.129997,
+    "speaker": "SPEAKER_00",
+    "text": "And, obviously Okay. It doesn't come with a fresh MOT.",
+    "confidence": 0.9827474
+  },
+  {
+    "start": 37.01,
+    "end": 40.37,
+    "speaker": "SPEAKER_01",
+    "text": "The MOT expires on the 10/04/2026.",
+    "confidence": 0.9874471
+  },
+  {
+    "start": 40.37,
+    "end": 41.89,
+    "speaker": "SPEAKER_00",
+    "text": "So that's back in 5 months.",
+    "confidence": 0.9790446
+  },
+  {
+    "start": 43.015003,
+    "end": 49.815002,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. But, obviously, look, if there's any problems you have or you want us to do a fresh MOT on the car, all you have to do is ask.",
+    "confidence": 0.9423449
+  },
+  {
+    "start": 50.215,
+    "end": 57.61,
+    "speaker": "SPEAKER_00",
+    "text": "Well, I did, and the person kinda said that's not something that you guys will do. So You have to ask me specifically.",
+    "confidence": 0.9562245
+  },
+  {
+    "start": 58.25,
+    "end": 64.97,
+    "speaker": "SPEAKER_01",
+    "text": "Because, look, our cars, if the MOT expires in 3 months, we don't redo it because it means, essentially,",
+    "confidence": 0.9489746
+  },
+  {
+    "start": 64.97,
+    "end": 83.375,
+    "speaker": "SPEAKER_01",
+    "text": "it's eligible to be on the road and it's safe for x, y, and zed. Now it expires in 5 months. But if for any specific reason the customer had a concern and and wanted us to look into this, it's definitely something that we can look into and give them that peace of mind. All of our cars, they're good to go for more than 12 months. So",
+    "confidence": 0.9543139
+  },
+  {
+    "start": 83.52,
+    "end": 90.0,
+    "speaker": "SPEAKER_00",
+    "text": "that's 1 thing that, yeah, I would like to obviously get a fresh MOT on the on the car.",
+    "confidence": 0.96855724
+  },
+  {
+    "start": 90.799995,
+    "end": 91.52,
+    "speaker": "SPEAKER_01",
+    "text": "Okay.",
+    "confidence": 0.99853516
+  },
+  {
+    "start": 94.799995,
+    "end": 100.035,
+    "speaker": "SPEAKER_00",
+    "text": "Do you want me to send you over the service history? Yeah. I would like for you to send me over the service history.",
+    "confidence": 0.96661377
+  },
+  {
+    "start": 100.275,
+    "end": 102.195,
+    "speaker": "SPEAKER_00",
+    "text": "And, also, yeah, I would like",
+    "confidence": 0.9642741
+  },
+  {
+    "start": 102.915,
+    "end": 104.915,
+    "speaker": "SPEAKER_00",
+    "text": "MOT to be done on the car.",
+    "confidence": 0.95842636
+  },
+  {
+    "start": 105.795,
+    "end": 109.875,
+    "speaker": "SPEAKER_00",
+    "text": "So you guys can't tell me now what was the reason the last owner got rid of the car, can you?",
+    "confidence": 0.9433826
+  },
+  {
+    "start": 111.369995,
+    "end": 116.17,
+    "speaker": "SPEAKER_01",
+    "text": "We wouldn't know the reason. Need to bear in mind, obviously, we buy 4, 500 cars a month.",
+    "confidence": 0.9652371
+  },
+  {
+    "start": 116.49,
+    "end": 122.329994,
+    "speaker": "SPEAKER_01",
+    "text": "So it could be 1000000 reasons. It's the truth. It could be there were there could be they were upgrading.",
+    "confidence": 0.88225096
+  },
+  {
+    "start": 122.729996,
+    "end": 134.445,
+    "speaker": "SPEAKER_01",
+    "text": "It could be so much, like, genuinely. It only has 2 owners, so it's not like it's had 4, 5 owners where ownership's passed on numerous times. And the space of 6, 7, 8 years, it's only had 2 owners. So",
+    "confidence": 0.92912775
+  },
+  {
+    "start": 134.925,
+    "end": 138.285,
+    "speaker": "SPEAKER_01",
+    "text": "k. Also, when I send you the service history, you'll be able to look at",
+    "confidence": 0.9619954
+  },
+  {
+    "start": 138.765,
+    "end": 143.86002,
+    "speaker": "SPEAKER_01",
+    "text": "the fact that the car's gone to main dealer. So it's been serviced at at Vauxhall.",
+    "confidence": 0.92300415
+  },
+  {
+    "start": 145.06,
+    "end": 147.38,
+    "speaker": "SPEAKER_01",
+    "text": "To be fair, the the history of the car is quite clean.",
+    "confidence": 0.9649251
+  },
+  {
+    "start": 149.86,
+    "end": 156.58,
+    "speaker": "SPEAKER_01",
+    "text": "We buy our cars from plenty of places. It could be BCA. It could be private. It could be a part exchange, but all of our cars do go through",
+    "confidence": 0.97350806
+  },
+  {
+    "start": 157.22499,
+    "end": 166.905,
+    "speaker": "SPEAKER_01",
+    "text": "multiple point inspection. So if it means it's gonna cause us headache when we sell the car, we won't buy the car, if that makes sense. So we don't buy any cars that have been through any damages.",
+    "confidence": 0.9620618
+  },
+  {
+    "start": 168.345,
+    "end": 172.32,
+    "speaker": "SPEAKER_01",
+    "text": "Obviously, the HPI clear on the procedure, but even, like, minor damages,",
+    "confidence": 0.8202922
+  },
+  {
+    "start": 172.48,
+    "end": 173.76001,
+    "speaker": "SPEAKER_01",
+    "text": "we tend to avoid.",
+    "confidence": 0.99609375
+  },
+  {
+    "start": 174.0,
+    "end": 174.72,
+    "speaker": "SPEAKER_00",
+    "text": "And",
+    "confidence": 0.9921875
+  },
+  {
+    "start": 175.12,
+    "end": 180.64,
+    "speaker": "SPEAKER_01",
+    "text": "how long have you had the car for? We've had this car for it's been it's been on-site",
+    "confidence": 0.9986527
+  },
+  {
+    "start": 180.64,
+    "end": 181.20001,
+    "speaker": "SPEAKER_01",
+    "text": "for",
+    "confidence": 1.0
+  },
+  {
+    "start": 181.52,
+    "end": 184.24,
+    "speaker": "SPEAKER_01",
+    "text": "18 days, and it's been advertised for 17.",
+    "confidence": 0.9900818
+  },
+  {
+    "start": 185.52,
+    "end": 191.57501,
+    "speaker": "SPEAKER_01",
+    "text": "K. This is 1 of our new cars, if anything, in comparison to some cars that that have been here for months plus.",
+    "confidence": 0.95151156
+  },
+  {
+    "start": 191.735,
+    "end": 200.63,
+    "speaker": "SPEAKER_01",
+    "text": "So, obviously, this is the kind of car that will go quickly with it being a Grandland x 1.2. They're just sort of mass market cars. They're the most expensive car.",
+    "confidence": 0.93389827
+  },
+  {
+    "start": 201.43001,
+    "end": 205.91,
+    "speaker": "SPEAKER_01",
+    "text": "So with these kind of cheap cheaper cars, they don't last too long on our stock. Everyone",
+    "confidence": 0.96811813
+  },
+  {
+    "start": 206.15001,
+    "end": 209.19002,
+    "speaker": "SPEAKER_01",
+    "text": "no 1 can say no to an automatic for 7,800.",
+    "confidence": 0.992511
+  },
+  {
+    "start": 209.51001,
+    "end": 212.71,
+    "speaker": "SPEAKER_01",
+    "text": "We have Okay. Services trained and 2 owners from a dealership.",
+    "confidence": 0.75965464
+  },
+  {
+    "start": 213.175,
+    "end": 215.735,
+    "speaker": "SPEAKER_01",
+    "text": "So it was we will sell it eventually.",
+    "confidence": 0.9482422
+  },
+  {
+    "start": 216.855,
+    "end": 217.57501,
+    "speaker": "SPEAKER_00",
+    "text": "K.",
+    "confidence": 0.66845703
+  },
+  {
+    "start": 217.655,
+    "end": 218.375,
+    "speaker": "SPEAKER_00",
+    "text": "And",
+    "confidence": 0.8647461
+  },
+  {
+    "start": 219.255,
+    "end": 238.09001,
+    "speaker": "SPEAKER_00",
+    "text": "okay. So, yeah, can you send me over the services? Basically, I'm good to go. I've got the cash for the car. Okay. You just want some peace of mind before you make a jump. Yeah? Yeah. And, obviously, I'm traveling from quite far. You know, I've got my car and all of that. So Of course. Of course. Of course. She's obviously gonna be driving in the car a lot with me.",
+    "confidence": 0.96555275
+  },
+  {
+    "start": 238.41,
+    "end": 242.115,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Like I said before, I had a I I I just",
+    "confidence": 0.9273071
+  },
+  {
+    "start": 242.675,
+    "end": 253.315,
+    "speaker": "SPEAKER_00",
+    "text": "gave a car back last month last month. Yeah. I know you told me, and you can't go through that headache again. The car. So I don't wanna go through the headache again. And, also, if there was issue with the car, I will be bringing it back.",
+    "confidence": 0.93403625
+  },
+  {
+    "start": 254.40999,
+    "end": 261.53,
+    "speaker": "SPEAKER_01",
+    "text": "To be completely honest with you, I don't know where you bought the last car from, but if you were to buy this car from us and you had any issues,",
+    "confidence": 0.9869503
+  },
+  {
+    "start": 261.69,
+    "end": 276.715,
+    "speaker": "SPEAKER_01",
+    "text": "we would ask for it back. You know, we would tell you bring it back. I would give you a courtesy car. You're within you're within 6 months to reject the car. If anything goes wrong in the first 6 months or in time to reject the car and get your money back. So there's a lot of peace of mind you do get buying with us.",
+    "confidence": 0.9321763
+  },
+  {
+    "start": 277.435,
+    "end": 292.05002,
+    "speaker": "SPEAKER_01",
+    "text": "But the only reason why we give this much peace of mind is due to the fact our cars are in very good condition, and and we try it's tried to be less problems than more problems. So we hope that never is the case. But on the worst case scenario, you obviously got peace of mind. What I'm sending you now is as well",
+    "confidence": 0.9327693
+  },
+  {
+    "start": 292.69,
+    "end": 299.785,
+    "speaker": "SPEAKER_01",
+    "text": "is actually very, very, very, very good news. So I'm just looking at the service history now, and I can see that 600",
+    "confidence": 0.953677
+  },
+  {
+    "start": 299.785,
+    "end": 305.785,
+    "speaker": "SPEAKER_01",
+    "text": "plus pounds was spent on this car for a new engine wet belt. So if you know any people",
+    "confidence": 0.99349815
+  },
+  {
+    "start": 306.185,
+    "end": 307.945,
+    "speaker": "SPEAKER_01",
+    "text": "around you that are mechanics,",
+    "confidence": 0.9771484
+  },
+  {
+    "start": 308.10498,
+    "end": 310.745,
+    "speaker": "SPEAKER_01",
+    "text": "if you told them this car has just had a wet belt changed,",
+    "confidence": 0.99147385
+  },
+  {
+    "start": 311.29,
+    "end": 318.65002,
+    "speaker": "SPEAKER_01",
+    "text": "they will tell you to buy this car with your eyes closed. This is the biggest concern with these cars is whether the wet belt has been changed or not. So",
+    "confidence": 0.9747039
+  },
+  {
+    "start": 319.37,
+    "end": 324.33002,
+    "speaker": "SPEAKER_01",
+    "text": "it's actually very good news for you and, obviously, for us as well. So even if you don't buy it, next customer,",
+    "confidence": 0.95523906
+  },
+  {
+    "start": 325.495,
+    "end": 333.33502,
+    "speaker": "SPEAKER_01",
+    "text": "they'll know that the cars I haven't I didn't disclose this to you because we weren't really 100 percent set. It was more of can we see what can be done with the finance?",
+    "confidence": 0.97736675
+  },
+  {
+    "start": 333.735,
+    "end": 334.295,
+    "speaker": "SPEAKER_01",
+    "text": "But",
+    "confidence": 0.99902344
+  },
+  {
+    "start": 335.335,
+    "end": 338.695,
+    "speaker": "SPEAKER_01",
+    "text": "this car had a new wet belt. So, yeah, it's had \u00a3700 spent on",
+    "confidence": 0.9235665
+  },
+  {
+    "start": 340.16,
+    "end": 346.16003,
+    "speaker": "SPEAKER_01",
+    "text": "1 I think it was last year. I'm gonna send you over the service history now anyway so you can look at it in your own time Mhmm. In detail.",
+    "confidence": 0.9582601
+  },
+  {
+    "start": 347.12003,
+    "end": 349.2,
+    "speaker": "SPEAKER_01",
+    "text": "But, yeah, if you do ask any mechanics,",
+    "confidence": 0.98220825
+  },
+  {
+    "start": 349.68002,
+    "end": 358.745,
+    "speaker": "SPEAKER_01",
+    "text": "if you told them that this car had a wet belt changed a year ago, they'll tell you to buy the car with your eyes closed. It's the biggest concern with these engines is whether the wet belt's been changed or not.",
+    "confidence": 0.97338283
+  },
+  {
+    "start": 360.10498,
+    "end": 360.825,
+    "speaker": "SPEAKER_01",
+    "text": "K.",
+    "confidence": 0.65649414
+  },
+  {
+    "start": 360.985,
+    "end": 366.345,
+    "speaker": "SPEAKER_01",
+    "text": "So, yeah, I'm sending you a few service history. Some of them are \u00a3600 invoices. Some of them are only 175,",
+    "confidence": 0.9845191
+  },
+  {
+    "start": 366.345,
+    "end": 367.54498,
+    "speaker": "SPEAKER_01",
+    "text": "just the normal service.",
+    "confidence": 0.8512573
+  },
+  {
+    "start": 368.345,
+    "end": 370.57,
+    "speaker": "SPEAKER_01",
+    "text": "But there are a few full services as well.",
+    "confidence": 0.9944661
+  },
+  {
+    "start": 371.53,
+    "end": 372.97003,
+    "speaker": "SPEAKER_00",
+    "text": "K. And",
+    "confidence": 0.8676758
+  },
+  {
+    "start": 373.21002,
+    "end": 376.01,
+    "speaker": "SPEAKER_00",
+    "text": "how long do I have to get back to you to let you know?",
+    "confidence": 0.9976981
+  },
+  {
+    "start": 377.61002,
+    "end": 385.45,
+    "speaker": "SPEAKER_01",
+    "text": "Look. Preferably, ASAP, so we don't want to yeah. We've left a \u00a3100 to protect the car. Obviously, our minimum deposit is usually a bit more. So",
+    "confidence": 0.94727015
+  },
+  {
+    "start": 386.94498,
+    "end": 387.905,
+    "speaker": "SPEAKER_01",
+    "text": "I don't wanna, like",
+    "confidence": 0.9746704
+  },
+  {
+    "start": 388.94498,
+    "end": 392.785,
+    "speaker": "SPEAKER_01",
+    "text": "what I would say to you is, preferably, by the end of the day or",
+    "confidence": 0.9669922
+  },
+  {
+    "start": 392.865,
+    "end": 397.985,
+    "speaker": "SPEAKER_01",
+    "text": "early tomorrow, if you could let us know what you wanted to do just because I'd have to put a car back on the website.",
+    "confidence": 0.9740723
+  },
+  {
+    "start": 398.865,
+    "end": 399.26498,
+    "speaker": "SPEAKER_01",
+    "text": "K.",
+    "confidence": 0.703125
+  },
+  {
+    "start": 400.14,
+    "end": 401.58002,
+    "speaker": "SPEAKER_01",
+    "text": "And I think that's fair.",
+    "confidence": 0.9866699
+  },
+  {
+    "start": 402.38,
+    "end": 407.42,
+    "speaker": "SPEAKER_00",
+    "text": "Cool. So what I will do then is I'll take a look at the service.",
+    "confidence": 0.98243815
+  },
+  {
+    "start": 408.46002,
+    "end": 419.795,
+    "speaker": "SPEAKER_01",
+    "text": "And then how soon can I get the car? So if you want if you are a 100%, you wanna go ahead with it, I'll send this car for an MOT today, and it'll be done tomorrow or it'll be done the day after latest. So",
+    "confidence": 0.95164156
+  },
+  {
+    "start": 420.11502,
+    "end": 422.515,
+    "speaker": "SPEAKER_01",
+    "text": "the car will be ready Tuesday Thursday, Friday",
+    "confidence": 0.9526367
+  },
+  {
+    "start": 423.635,
+    "end": 426.595,
+    "speaker": "SPEAKER_01",
+    "text": "Thursday on our optimistic 1, Friday latest.",
+    "confidence": 0.95176476
+  },
+  {
+    "start": 427.795,
+    "end": 432.05,
+    "speaker": "SPEAKER_00",
+    "text": "K. Cool. Yeah. Alright then. Let me do some inquiries",
+    "confidence": 0.95161134
+  },
+  {
+    "start": 432.21,
+    "end": 433.25,
+    "speaker": "SPEAKER_00",
+    "text": "as to that.",
+    "confidence": 0.66263837
+  },
+  {
+    "start": 433.81,
+    "end": 434.85,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. And",
+    "confidence": 0.9370117
+  },
+  {
+    "start": 435.16998,
+    "end": 443.49,
+    "speaker": "SPEAKER_00",
+    "text": "like I said, I have the money, and I I I've called from 10:00 this morning. I've probably called about 3 times. Yeah. No. My colleagues did tell me, man. He told me to get back to",
+    "confidence": 0.8984166
+  },
+  {
+    "start": 443.88498,
+    "end": 451.725,
+    "speaker": "SPEAKER_00",
+    "text": "they kept saying Searcy. I thought that miss Raissi say it right. Yeah. If it was if he had called me back straight away, I would have probably been there already.",
+    "confidence": 0.91104716
+  },
+  {
+    "start": 451.965,
+    "end": 454.285,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. I hear you. I've had time to",
+    "confidence": 0.9709778
+  },
+  {
+    "start": 455.565,
+    "end": 460.01,
+    "speaker": "SPEAKER_00",
+    "text": "buy more and, you know, stuff like that. So No worries. Well, look, obviously,",
+    "confidence": 0.9009661
+  },
+  {
+    "start": 460.33,
+    "end": 467.13,
+    "speaker": "SPEAKER_01",
+    "text": "I wanna make sure you're happy with the car and whatnot and just satisfied to do your game. After looking at the service history,",
+    "confidence": 0.8796997
+  },
+  {
+    "start": 468.09,
+    "end": 471.745,
+    "speaker": "SPEAKER_01",
+    "text": "it's actually giving me more peace of mind than it should have. Genuinely,",
+    "confidence": 0.9282696
+  },
+  {
+    "start": 471.825,
+    "end": 478.945,
+    "speaker": "SPEAKER_01",
+    "text": "if you do some research, find out how important a wet belt is when it's changed because it's not a cheap job. This guy spends \u00a36,700",
+    "confidence": 0.94939095
+  },
+  {
+    "start": 478.945,
+    "end": 496.08002,
+    "speaker": "SPEAKER_01",
+    "text": "on it. And the fact that it's already been done means that it's an extra thing that you don't need to do when you're owning the car. So that's that's what I mean. And you have to do wet belts on these cars. Like, if you go and chat GBT and ask them what's the biggest concern when I'm this car, they'll always say to you is has the wet belt been changed.",
+    "confidence": 0.9131955
+  },
+  {
+    "start": 497.935,
+    "end": 498.655,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah.",
+    "confidence": 0.5734863
+  },
+  {
+    "start": 498.895,
+    "end": 500.175,
+    "speaker": "SPEAKER_00",
+    "text": "No problem.",
+    "confidence": 0.6994629
+  },
+  {
+    "start": 500.57498,
+    "end": 506.495,
+    "speaker": "SPEAKER_01",
+    "text": "I'm just sending that to you now. Direct it's a direct number to call you back on, or is this just the main number? Do you have an extension?",
+    "confidence": 0.9633705
+  },
+  {
+    "start": 506.815,
+    "end": 523.91003,
+    "speaker": "SPEAKER_01",
+    "text": "I don't have a direct extension, but I'm dropping you an email. And this is my my best contact, and I'm always active on this email. Sometimes even if I'm with a customer, I'll still reply to your email. So I won't K. Okay. Shouldn't be any delays. The only problem the only apologies for not getting back to you. I just had a was with a few customers. That's that's why.",
+    "confidence": 0.95884705
+  },
+  {
+    "start": 524.63,
+    "end": 538.93506,
+    "speaker": "SPEAKER_01",
+    "text": "K. But on this email, any any questions you have, just drop me an email. I will give you a call right back, or I'll just reply to you on the email. Yeah? Alright. No worries. Happy to go ahead, then, obviously, I'll take the next steps to sending this car by a motif for yourself. Yeah?",
+    "confidence": 0.9451369
+  },
+  {
+    "start": 539.41504,
+    "end": 540.695,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. No problem.",
+    "confidence": 0.9972331
+  },
+  {
+    "start": 541.255,
+    "end": 545.99097,
+    "speaker": "SPEAKER_01",
+    "text": "Alright. See you guys, please. I'll speak to you. Alright. Alright then. Take care. Bye bye. Bye bye.",
+    "confidence": 0.91847396
+  }
+]

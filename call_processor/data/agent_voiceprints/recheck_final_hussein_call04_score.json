@@ -1,0 +1,108 @@
+{
+  "labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed",
+  "offset_mode": "auto-source",
+  "include_source_prefix": "",
+  "include_calls": [],
+  "exclude_calls": [],
+  "skipped_calls": [
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training\\gemini_labels_zak_call_01.json",
+      "call_id": "20260503T104319184_615752",
+      "reason": "no matching audio"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training\\gemini_labels_zak_call_02.json",
+      "call_id": "20260429T085638315_375379",
+      "reason": "no matching audio"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training\\gemini_labels_zak_call_03.json",
+      "call_id": "20260423T120114270_510233",
+      "reason": "no matching audio"
+    },
+    {
+      "label": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training\\gemini_labels_zak_call_04.json",
+      "call_id": "20260415T142857417_569154",
+      "reason": "no matching audio"
+    }
+  ],
+  "label_reports": {
+    "call_03": {
+      "call_id": "20260425T154443969_91232",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed\\call_03\\20260425T154443969_91232.mp3",
+      "offset_s": 0.0,
+      "segments": 31,
+      "agent_segments": 24,
+      "customer_segments": 7,
+      "alternation_baseline": {
+        "segments": 31,
+        "accuracy": 54.84,
+        "first_role": "agent",
+        "adjacent_same_role_pairs": 18,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_04": {
+      "call_id": "20260425T152512294_67102",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed\\call_04\\20260425T152512294_67102.mp3",
+      "offset_s": 0.0,
+      "segments": 23,
+      "agent_segments": 13,
+      "customer_segments": 10,
+      "alternation_baseline": {
+        "segments": 23,
+        "accuracy": 56.52,
+        "first_role": "customer",
+        "adjacent_same_role_pairs": 9,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_08": {
+      "call_id": "20260425T132932890_79613",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed\\call_08\\20260425T132932890_79613.mp3",
+      "offset_s": 0.0,
+      "segments": 32,
+      "agent_segments": 19,
+      "customer_segments": 13,
+      "alternation_baseline": {
+        "segments": 32,
+        "accuracy": 59.38,
+        "first_role": "agent",
+        "adjacent_same_role_pairs": 17,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    }
+  },
+  "all_labels_alternation_baseline": {
+    "segments": 86,
+    "accuracy": 56.98,
+    "first_role": "agent",
+    "adjacent_same_role_pairs": 45,
+    "note": "label-structure baseline only; not voice-model accuracy"
+  },
+  "saved_results": {
+    "final_hussein_call04_20260425T152512294_67102__parakeet-tdt-0.6b-v3": {
+      "call_id": "20260425T152512294_67102",
+      "field": "segments",
+      "score": {
+        "segments": 23,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "agent_correct": 13,
+        "agent_total": 13,
+        "customer_correct": 10,
+        "customer_total": 10,
+        "duration_weighted": {
+          "agent_accuracy": 97.28,
+          "customer_accuracy": 97.35,
+          "overall_accuracy": 97.3
+        },
+        "no_overlap_segments": 0,
+        "errors": []
+      }
+    }
+  },
+  "note": "Correct model verification must use timestamp overlap and held-out calls. The alternation baseline is reported only to reveal label structure."
+}

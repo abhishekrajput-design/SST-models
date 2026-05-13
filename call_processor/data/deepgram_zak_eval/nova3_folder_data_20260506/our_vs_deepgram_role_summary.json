@@ -1,0 +1,28 @@
+{
+  "dataset": "cleaned active traning_data/zak_raissi folder-data calls",
+  "active_calls": 9,
+  "deepgram_nova3": {
+    "overall_accuracy": 48.72,
+    "agent_accuracy": 59.91,
+    "customer_accuracy": 26.29,
+    "ticks": 17756,
+    "unknown_ticks": 3249
+  },
+  "our_current_production_voiceprint_operating": {
+    "overall_accuracy": 50.8,
+    "agent_accuracy": 32.91,
+    "customer_accuracy": 70.62,
+    "threshold": 0.601
+  },
+  "our_pure_gemini_voiceprint_best_threshold": {
+    "overall_accuracy": 60.86,
+    "agent_accuracy": 70.92,
+    "customer_accuracy": 49.72,
+    "threshold": 0.68
+  },
+  "decision": "Deepgram Nova 3 is not better for role identification on this Zak set; do not use its speaker labels as pure Zak training data.",
+  "artifacts": {
+    "deepgram_report": "call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\deepgram_zak_nova3_comparison.json",
+    "our_report": "call_processor\\data\\agent_voiceprints\\zak_voiceprint_comparison_folder_data.json"
+  }
+}

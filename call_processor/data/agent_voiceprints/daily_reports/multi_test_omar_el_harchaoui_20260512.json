@@ -1,0 +1,702 @@
+{
+  "agent_slug": "omar_el_harchaoui",
+  "agent_name": "Omar El Harchaoui",
+  "data_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui",
+  "calls": [
+    {
+      "call": "call_00",
+      "call_id": "6a01fe66b2b3cbdbe5ac7a1e",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_00\\audio_16k.wav",
+      "segments": 121,
+      "audio_duration_s": 374.98
+    },
+    {
+      "call": "call_01",
+      "call_id": "6a01f674b2b3cbdbe5ac59f6",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_01\\audio_16k.wav",
+      "segments": 66,
+      "audio_duration_s": 226.22
+    },
+    {
+      "call": "call_02",
+      "call_id": "6a01f58eb2b3cbdbe5ac57eb",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_02\\audio_16k.wav",
+      "segments": 24,
+      "audio_duration_s": 54.66
+    },
+    {
+      "call": "call_03",
+      "call_id": "6a01f500b2b3cbdbe5ac5587",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_03\\audio_16k.wav",
+      "segments": 55,
+      "audio_duration_s": 242.16
+    },
+    {
+      "call": "call_04",
+      "call_id": "6a01f307b2b3cbdbe5ac4f58",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_04\\audio_16k.wav",
+      "segments": 97,
+      "audio_duration_s": 261.64
+    },
+    {
+      "call": "call_05",
+      "call_id": "6a01cc684734506a1fe456fe",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_05\\audio_16k.wav",
+      "segments": 30,
+      "audio_duration_s": 88.54
+    },
+    {
+      "call": "call_06",
+      "call_id": "6a01ca224734506a1fe44b4c",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_06\\audio_16k.wav",
+      "segments": 69,
+      "audio_duration_s": 203.66
+    },
+    {
+      "call": "call_07",
+      "call_id": "6a01c7aa4734506a1fe441c6",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_07\\audio_16k.wav",
+      "segments": 10,
+      "audio_duration_s": 38.0
+    },
+    {
+      "call": "call_08",
+      "call_id": "6a01c4434734506a1fe434b6",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_08\\audio_16k.wav",
+      "segments": 22,
+      "audio_duration_s": 63.3
+    },
+    {
+      "call": "call_09",
+      "call_id": "6a01be484734506a1fe41af7",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui\\call_09\\audio_16k.wav",
+      "segments": 33,
+      "audio_duration_s": 112.1
+    }
+  ],
+  "skipped_calls": [],
+  "label_rows": 460,
+  "eval_rows": 460,
+  "agent_candidates": 114,
+  "customer_calibration_rows": 194,
+  "pure_label_rows": 104,
+  "training_rows": 104,
+  "min_train_score": 0.6,
+  "purity_floor": 0.55,
+  "customer_p95": 0.4359,
+  "calibrated_threshold": 0.4959,
+  "same_data_accuracy": {
+    "threshold": 0.4959,
+    "segments": 460,
+    "overall_accuracy": 88.91,
+    "agent_accuracy": 81.95,
+    "customer_accuracy": 98.45,
+    "agent_correct": 218,
+    "agent_total": 266,
+    "customer_correct": 191,
+    "customer_total": 194,
+    "errors": [
+      {
+        "call": "call_00",
+        "segment": 23,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3179,
+        "text": "Nice, all right, no worries."
+      },
+      {
+        "call": "call_00",
+        "segment": 26,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3984,
+        "text": "Black."
+      },
+      {
+        "call": "call_00",
+        "segment": 27,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2776,
+        "text": "Oh yeah, that's right, yeah."
+      },
+      {
+        "call": "call_00",
+        "segment": 32,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5326,
+        "text": "No worries."
+      },
+      {
+        "call": "call_00",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.162,
+        "text": "Sorry."
+      },
+      {
+        "call": "call_00",
+        "segment": 43,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4485,
+        "text": "Oh, okay."
+      },
+      {
+        "call": "call_00",
+        "segment": 54,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5763,
+        "text": "is a"
+      },
+      {
+        "call": "call_00",
+        "segment": 106,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4339,
+        "text": "Okay Chris?"
+      },
+      {
+        "call": "call_01",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2411,
+        "text": "This is an inquiry from Autotrader."
+      },
+      {
+        "call": "call_01",
+        "segment": 2,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4488,
+        "text": "Hello, thank you for calling CarPlanet."
+      },
+      {
+        "call": "call_01",
+        "segment": 4,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3831,
+        "text": "I can't help you today."
+      },
+      {
+        "call": "call_01",
+        "segment": 14,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2799,
+        "text": "Okay."
+      },
+      {
+        "call": "call_01",
+        "segment": 26,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4382,
+        "text": "Please appreciate that."
+      },
+      {
+        "call": "call_01",
+        "segment": 43,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2925,
+        "text": "and"
+      },
+      {
+        "call": "call_01",
+        "segment": 51,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.6818,
+        "text": "Nice to meet you, Chris."
+      },
+      {
+        "call": "call_02",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3608,
+        "text": "Hey Luke, I'm just doing pie-panning."
+      },
+      {
+        "call": "call_02",
+        "segment": 5,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3414,
+        "text": "Hello?"
+      },
+      {
+        "call": "call_02",
+        "segment": 18,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": -0.0005,
+        "text": "Thank you for watching."
+      },
+      {
+        "call": "call_02",
+        "segment": 19,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1656,
+        "text": "Thank you for this talk."
+      },
+      {
+        "call": "call_03",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4159,
+        "text": "Hello, thank you for calling CarPlanet."
+      },
+      {
+        "call": "call_03",
+        "segment": 22,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2834,
+        "text": "in the next video."
+      },
+      {
+        "call": "call_03",
+        "segment": 27,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3473,
+        "text": "Yeah, it's a weird spelling."
+      },
+      {
+        "call": "call_03",
+        "segment": 28,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4873,
+        "text": "Double A."
+      },
+      {
+        "call": "call_03",
+        "segment": 31,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4412,
+        "text": "Let me see."
+      },
+      {
+        "call": "call_03",
+        "segment": 34,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4005,
+        "text": "Yeah, so that should be all good."
+      },
+      {
+        "call": "call_03",
+        "segment": 40,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1534,
+        "text": "Arrrgh"
+      },
+      {
+        "call": "call_03",
+        "segment": 41,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4788,
+        "text": "Sorry about this, I'm just sorting everything out."
+      },
+      {
+        "call": "call_04",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1431,
+        "text": "That's all right."
+      },
+      {
+        "call": "call_04",
+        "segment": 16,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3445,
+        "text": "Do you have to have the red key?"
+      },
+      {
+        "call": "call_04",
+        "segment": 31,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4059,
+        "text": "Give me one second."
+      }
+    ]
+  },
+  "best_same_data_threshold": {
+    "threshold": 0.38,
+    "segments": 460,
+    "overall_accuracy": 90.22,
+    "agent_accuracy": 90.6,
+    "customer_accuracy": 89.69,
+    "agent_correct": 241,
+    "agent_total": 266,
+    "customer_correct": 174,
+    "customer_total": 194,
+    "errors": [
+      {
+        "call": "call_00",
+        "segment": 18,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4296,
+        "text": "And you're based in..."
+      },
+      {
+        "call": "call_00",
+        "segment": 21,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.3873,
+        "text": "and I was just trying to remember what..."
+      },
+      {
+        "call": "call_00",
+        "segment": 23,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3179,
+        "text": "Nice, all right, no worries."
+      },
+      {
+        "call": "call_00",
+        "segment": 27,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2776,
+        "text": "Oh yeah, that's right, yeah."
+      },
+      {
+        "call": "call_00",
+        "segment": 29,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4302,
+        "text": "I'm a bit getting confused because I've had so many"
+      },
+      {
+        "call": "call_00",
+        "segment": 32,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5326,
+        "text": "No worries."
+      },
+      {
+        "call": "call_00",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.162,
+        "text": "Sorry."
+      },
+      {
+        "call": "call_00",
+        "segment": 34,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.3976,
+        "text": "Okay."
+      },
+      {
+        "call": "call_00",
+        "segment": 40,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4544,
+        "text": "I was just trying to think of... Where are you located?"
+      },
+      {
+        "call": "call_00",
+        "segment": 51,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4945,
+        "text": "So I'm obviously needing someone to drop you off."
+      },
+      {
+        "call": "call_00",
+        "segment": 54,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5763,
+        "text": "is a"
+      },
+      {
+        "call": "call_00",
+        "segment": 61,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4672,
+        "text": "No, we are..."
+      },
+      {
+        "call": "call_00",
+        "segment": 65,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4417,
+        "text": "and the"
+      },
+      {
+        "call": "call_01",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2411,
+        "text": "This is an inquiry from Autotrader."
+      },
+      {
+        "call": "call_01",
+        "segment": 7,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4018,
+        "text": "I saw online the"
+      },
+      {
+        "call": "call_01",
+        "segment": 9,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.3962,
+        "text": "2018 one you've got."
+      },
+      {
+        "call": "call_01",
+        "segment": 14,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2799,
+        "text": "Okay."
+      },
+      {
+        "call": "call_01",
+        "segment": 20,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4246,
+        "text": "Yeah, yeah, yeah, I've got the ridge."
+      },
+      {
+        "call": "call_01",
+        "segment": 37,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4837,
+        "text": "so no it doesn't run on a wet belt."
+      },
+      {
+        "call": "call_01",
+        "segment": 43,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2925,
+        "text": "and"
+      },
+      {
+        "call": "call_01",
+        "segment": 47,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.415,
+        "text": "if it hasn't come up on your phone happy to give it to you that would be great"
+      },
+      {
+        "call": "call_01",
+        "segment": 51,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.6818,
+        "text": "Nice to meet you, Chris."
+      },
+      {
+        "call": "call_01",
+        "segment": 61,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4056,
+        "text": "If it isn't a wet belt, yeah, I'd be interested."
+      },
+      {
+        "call": "call_02",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3608,
+        "text": "Hey Luke, I'm just doing pie-panning."
+      },
+      {
+        "call": "call_02",
+        "segment": 5,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3414,
+        "text": "Hello?"
+      },
+      {
+        "call": "call_02",
+        "segment": 18,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": -0.0005,
+        "text": "Thank you for watching."
+      },
+      {
+        "call": "call_02",
+        "segment": 19,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1656,
+        "text": "Thank you for this talk."
+      },
+      {
+        "call": "call_03",
+        "segment": 22,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2834,
+        "text": "in the next video."
+      },
+      {
+        "call": "call_03",
+        "segment": 27,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3473,
+        "text": "Yeah, it's a weird spelling."
+      },
+      {
+        "call": "call_03",
+        "segment": 40,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1534,
+        "text": "Arrrgh"
+      }
+    ]
+  },
+  "loco_result": {
+    "n_calls": 10,
+    "n_folds": 10,
+    "overall_accuracy": 83.91,
+    "per_call": [
+      {
+        "held_out": "call_00",
+        "threshold": 0.453,
+        "accuracy": 90.99,
+        "agent_accuracy": 88.14,
+        "customer_accuracy": 94.23,
+        "segments": 111
+      },
+      {
+        "held_out": "call_01",
+        "threshold": 0.5024,
+        "accuracy": 85.0,
+        "agent_accuracy": 75.86,
+        "customer_accuracy": 93.55,
+        "segments": 60
+      },
+      {
+        "held_out": "call_02",
+        "threshold": 0.5073,
+        "accuracy": 61.54,
+        "agent_accuracy": 50.0,
+        "customer_accuracy": 100.0,
+        "segments": 13
+      },
+      {
+        "held_out": "call_03",
+        "threshold": 0.5348,
+        "accuracy": 78.85,
+        "agent_accuracy": 71.05,
+        "customer_accuracy": 100.0,
+        "segments": 52
+      },
+      {
+        "held_out": "call_04",
+        "threshold": 0.5512,
+        "accuracy": 81.4,
+        "agent_accuracy": 60.98,
+        "customer_accuracy": 100.0,
+        "segments": 86
+      },
+      {
+        "held_out": "call_05",
+        "threshold": 0.5636,
+        "accuracy": 87.5,
+        "agent_accuracy": 75.0,
+        "customer_accuracy": 100.0,
+        "segments": 24
+      },
+      {
+        "held_out": "call_06",
+        "threshold": 0.5155,
+        "accuracy": 80.7,
+        "agent_accuracy": 70.27,
+        "customer_accuracy": 100.0,
+        "segments": 57
+      },
+      {
+        "held_out": "call_07",
+        "threshold": 0.5076,
+        "accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "segments": 8
+      },
+      {
+        "held_out": "call_08",
+        "threshold": 0.4766,
+        "accuracy": 85.71,
+        "agent_accuracy": 78.57,
+        "customer_accuracy": 100.0,
+        "segments": 21
+      },
+      {
+        "held_out": "call_09",
+        "threshold": 0.5065,
+        "accuracy": 89.29,
+        "agent_accuracy": 85.71,
+        "customer_accuracy": 100.0,
+        "segments": 28
+      }
+    ]
+  },
+  "activation_requested": false,
+  "activation_eligible": false,
+  "activation_min_accuracy": 85.0,
+  "activated": false,
+  "blocked_by_existing": false,
+  "artifacts": {
+    "voiceprints": [
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v1.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v2.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v3.npy"
+    ],
+    "agents_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.json",
+    "agents_backup": null,
+    "activated": false,
+    "blocked_by_existing": false,
+    "mean_inside_sim": 0.7273,
+    "max_outside_sim": 0.4359,
+    "existing_mean_inside": 0.756,
+    "existing_max_outside": 0.4569
+  },
+  "dry_run": true
+}

@@ -1,0 +1,590 @@
+[
+  {
+    "start": 0.39999998,
+    "end": 1.44,
+    "speaker": "SPEAKER_00",
+    "text": "Hello?",
+    "confidence": 0.9309082
+  },
+  {
+    "start": 1.5999999,
+    "end": 12.799999,
+    "speaker": "SPEAKER_00",
+    "text": "Hello. Am I free to mister Ishmael? You're speaking. Who's that? Ishmael, it's Zak calling from Car Planet. How are you? We spoke yesterday. How are doing, mate? How are you doing? You alright? Yeah. All good. All good. All good. Did you receive that email?",
+    "confidence": 0.9416902
+  },
+  {
+    "start": 13.04,
+    "end": 28.085,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. I did. But I I wanna ask you a few questions here. Basically I've got it. I've I've read on the thing, and it's just it's done it's put down 6,000 miles here. Yeah. And it's and it's talking about if I did the mileage and this and now why there'll be mileage charges.",
+    "confidence": 0.84008676
+  },
+  {
+    "start": 28.51,
+    "end": 33.31,
+    "speaker": "SPEAKER_01",
+    "text": "But I think we were saying, like, it was about 10,010",
+    "confidence": 0.907049
+  },
+  {
+    "start": 33.31,
+    "end": 37.39,
+    "speaker": "SPEAKER_00",
+    "text": "minimum minute. Was it was it 10,000 that we discussed yesterday? 100%. Yeah?",
+    "confidence": 0.88880336
+  },
+  {
+    "start": 37.95,
+    "end": 47.214996,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Might have been it might have been propped incorrectly. However, what I would tell you is, yeah, the way that sort of works is so, obviously, I quoted you around \u00a3301",
+    "confidence": 0.9442482
+  },
+  {
+    "start": 47.214996,
+    "end": 50.414997,
+    "speaker": "SPEAKER_00",
+    "text": "a month, but I got you accepted at 280 something. Was it not?",
+    "confidence": 0.9553317
+  },
+  {
+    "start": 50.894997,
+    "end": 59.27,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Yeah. Yeah. So as well as lowering your monthly payment, which is beneficial to you, the only way you would ever have to worry about getting charged",
+    "confidence": 0.98177665
+  },
+  {
+    "start": 59.43,
+    "end": 66.31,
+    "speaker": "SPEAKER_00",
+    "text": "for mileage, like, this is this is me telling you the truth about how PCP and finance works, is if you gave the car back to the finance company.",
+    "confidence": 0.96262544
+  },
+  {
+    "start": 66.63,
+    "end": 73.125,
+    "speaker": "SPEAKER_00",
+    "text": "So, obviously, the average customer like yourself, I don't think you're gonna give it back to them. I think you'd either part exchange at our dealership",
+    "confidence": 0.91599685
+  },
+  {
+    "start": 73.125,
+    "end": 74.485,
+    "speaker": "SPEAKER_00",
+    "text": "or sell it privately. If",
+    "confidence": 0.87050784
+  },
+  {
+    "start": 75.045,
+    "end": 78.725,
+    "speaker": "SPEAKER_00",
+    "text": "you was to do that, no 1 the only way you have to worry about",
+    "confidence": 0.95048827
+  },
+  {
+    "start": 79.604996,
+    "end": 80.645,
+    "speaker": "SPEAKER_00",
+    "text": "the mileage",
+    "confidence": 0.99902344
+  },
+  {
+    "start": 81.125,
+    "end": 85.939995,
+    "speaker": "SPEAKER_00",
+    "text": "and and them charging you is if you give the car back to the finance company, which I recommend",
+    "confidence": 0.9546669
+  },
+  {
+    "start": 86.18,
+    "end": 88.82,
+    "speaker": "SPEAKER_00",
+    "text": "no 1 to do ever. Like,",
+    "confidence": 0.9897461
+  },
+  {
+    "start": 89.14,
+    "end": 96.5,
+    "speaker": "SPEAKER_00",
+    "text": "you just pay that balloon payment. It doesn't matter where you got the money from, how you sold the car, whether it was a part exchange, whether you sold it privately, whether it an auto trader.",
+    "confidence": 0.9282973
+  },
+  {
+    "start": 96.74,
+    "end": 101.495,
+    "speaker": "SPEAKER_00",
+    "text": "Now that's up to you. I can change it, but your month your monthly payment is gonna go up to around \u00a3301,",
+    "confidence": 0.95943934
+  },
+  {
+    "start": 101.495,
+    "end": 102.855,
+    "speaker": "SPEAKER_00",
+    "text": "\u00a3304.",
+    "confidence": 0.9909668
+  },
+  {
+    "start": 103.975,
+    "end": 106.215004,
+    "speaker": "SPEAKER_00",
+    "text": "But if you wanna benefit from paying $2.80,",
+    "confidence": 0.9857788
+  },
+  {
+    "start": 106.695,
+    "end": 112.06,
+    "speaker": "SPEAKER_00",
+    "text": "I'd recommend just keeping it like that. It's 6,000 miles a year. I don't know how much you drive, Obviously,",
+    "confidence": 0.98533934
+  },
+  {
+    "start": 113.259995,
+    "end": 119.259995,
+    "speaker": "SPEAKER_00",
+    "text": "I know you work as a bus driver, so you might be spending more time driving the bus than you do in the in the CLA. I don't know.",
+    "confidence": 0.96349394
+  },
+  {
+    "start": 119.899994,
+    "end": 122.86,
+    "speaker": "SPEAKER_01",
+    "text": "But you get I was just thinking over 4 years, 24,000",
+    "confidence": 0.8386452
+  },
+  {
+    "start": 122.86,
+    "end": 137.02,
+    "speaker": "SPEAKER_00",
+    "text": "miles, ain't it? I think that isn't it? Yeah. But the truth is yeah. No. I hear where you're coming from. I hear where you're coming from. But the truth is I can change it, and the monthly payments will go up to $3.00 1. But the main thing is that if you're looking to give the car back to the finance company,",
+    "confidence": 0.94611275
+  },
+  {
+    "start": 137.42,
+    "end": 141.82,
+    "speaker": "SPEAKER_00",
+    "text": "then yes. Of course. But if you're looking to part exchange the car towards the end of your term",
+    "confidence": 0.9624666
+  },
+  {
+    "start": 142.06,
+    "end": 144.38,
+    "speaker": "SPEAKER_00",
+    "text": "like, let's say you were gonna sell it in 3 years' time,",
+    "confidence": 0.922404
+  },
+  {
+    "start": 144.94,
+    "end": 150.22,
+    "speaker": "SPEAKER_00",
+    "text": "yeah, or part go to a dealership. So you came to us in 3 years' time, yeah, and we gave you a price.",
+    "confidence": 0.9275858
+  },
+  {
+    "start": 152.905,
+    "end": 162.82501,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. That won't that won't affected me on the mileage. No. Not to they're not gonna say to you, oh, you had a mileage discrepancy, this time, the other, or you got pay a section. The only way that happens",
+    "confidence": 0.86924136
+  },
+  {
+    "start": 163.545,
+    "end": 170.89,
+    "speaker": "SPEAKER_00",
+    "text": "is if you give the car back to the finance company, then they'll even they'll even deduct stuff for alloys x, y, and zed, and",
+    "confidence": 0.95266604
+  },
+  {
+    "start": 172.09001,
+    "end": 174.81001,
+    "speaker": "SPEAKER_00",
+    "text": "carry on going into details saying alloys are scuffed.",
+    "confidence": 0.90997535
+  },
+  {
+    "start": 174.97,
+    "end": 176.49,
+    "speaker": "SPEAKER_00",
+    "text": "This this this this this.",
+    "confidence": 0.8870605
+  },
+  {
+    "start": 176.97,
+    "end": 186.455,
+    "speaker": "SPEAKER_00",
+    "text": "But if you sold the car as a part exchange, like, for example, if you gave the car to us, it's gonna value the car as it is. You're gonna have a set balloon payment with the finance company, and you're gonna pay that off.",
+    "confidence": 0.93994683
+  },
+  {
+    "start": 187.73499,
+    "end": 188.455,
+    "speaker": "SPEAKER_01",
+    "text": "Alright.",
+    "confidence": 0.9291992
+  },
+  {
+    "start": 188.855,
+    "end": 190.535,
+    "speaker": "SPEAKER_01",
+    "text": "It's up to you that I can change it back.",
+    "confidence": 0.9527832
+  },
+  {
+    "start": 191.09499,
+    "end": 195.17,
+    "speaker": "SPEAKER_01",
+    "text": "No. What I was gonna do is I was gonna come down, pop in, and see you, and then just finalize",
+    "confidence": 0.96501815
+  },
+  {
+    "start": 195.17,
+    "end": 202.85,
+    "speaker": "SPEAKER_00",
+    "text": "everything. You know I mean? Yeah. No. That's all good. Well, look, the car's gonna the car's in the wash now. It was put in the washer on 10, 11:00. It should be done, if anything.",
+    "confidence": 0.9430135
+  },
+  {
+    "start": 203.73,
+    "end": 204.29001,
+    "speaker": "SPEAKER_00",
+    "text": "Mhmm.",
+    "confidence": 0.7315674
+  },
+  {
+    "start": 205.09,
+    "end": 226.97002,
+    "speaker": "SPEAKER_00",
+    "text": "And I'd if you're happy to go ahead, I'd recommend signing it. They take around an hour, hour and a half to pay us. So by that time, they paid us. You can come in and clear your deposit. But if you had any questions, I'll I'd love to clear them up now just so that when you come here, you're not spending 2, 3 hours waiting too much time. Waiting around for final What was the final payment I've got for somebody? What what did we So this was done with a \u00a35,000 deposit on the application",
+    "confidence": 0.93133485
+  },
+  {
+    "start": 228.25,
+    "end": 230.33,
+    "speaker": "SPEAKER_00",
+    "text": "Mhmm. At 287",
+    "confidence": 0.8861003
+  },
+  {
+    "start": 230.33,
+    "end": 235.85501,
+    "speaker": "SPEAKER_00",
+    "text": "is what I think you've been accepted. I'm not sure at the top of my head. Yeah. And you're covered for the next 3 years",
+    "confidence": 0.922456
+  },
+  {
+    "start": 236.655,
+    "end": 238.095,
+    "speaker": "SPEAKER_00",
+    "text": "at $2.87.",
+    "confidence": 0.9310913
+  },
+  {
+    "start": 238.815,
+    "end": 240.095,
+    "speaker": "SPEAKER_01",
+    "text": "At $2.87.",
+    "confidence": 0.9454346
+  },
+  {
+    "start": 240.335,
+    "end": 243.77501,
+    "speaker": "SPEAKER_01",
+    "text": "And now and I could I could actually and like you said, to",
+    "confidence": 0.88889724
+  },
+  {
+    "start": 244.415,
+    "end": 254.98001,
+    "speaker": "SPEAKER_00",
+    "text": "waive that balloon payment, I can trade it in and then pay the difference and get another phone. Well, I would honestly recommend, like, the majority of customers that come to us, they're they're they're on their third",
+    "confidence": 0.9263498
+  },
+  {
+    "start": 255.22,
+    "end": 262.115,
+    "speaker": "SPEAKER_00",
+    "text": "slash fourth year of the PCP agreement. So they've enjoyed the car for 3, 4 years. This car probably be on around, what, 60,000",
+    "confidence": 0.920934
+  },
+  {
+    "start": 262.115,
+    "end": 264.035,
+    "speaker": "SPEAKER_00",
+    "text": "miles, something like that, 70.",
+    "confidence": 0.89995116
+  },
+  {
+    "start": 264.51498,
+    "end": 269.79498,
+    "speaker": "SPEAKER_00",
+    "text": "Just before any issues come, before the major depreciation happens, you always sell a car before 90,000 miles.",
+    "confidence": 0.96483016
+  },
+  {
+    "start": 270.51498,
+    "end": 280.77002,
+    "speaker": "SPEAKER_00",
+    "text": "And Yeah. They'll sell this car. There's no way it's gonna be worth Like, I'm gonna be so negative. Let's just say you've absolutely abused and ragged this car, and it's only worth Yeah.",
+    "confidence": 0.93000704
+  },
+  {
+    "start": 281.41,
+    "end": 282.69,
+    "speaker": "SPEAKER_00",
+    "text": "$15.",
+    "confidence": 0.98205566
+  },
+  {
+    "start": 282.85,
+    "end": 283.49002,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah.",
+    "confidence": 0.7727051
+  },
+  {
+    "start": 283.81,
+    "end": 286.05002,
+    "speaker": "SPEAKER_00",
+    "text": "Which means it's depreciated over $5.",
+    "confidence": 0.9505005
+  },
+  {
+    "start": 287.375,
+    "end": 299.45502,
+    "speaker": "SPEAKER_00",
+    "text": "And I promise you, now this car's already taken its biggest depreciation hit. These cars, that deal, are very expensive. Yeah. Like, in the first 3 years when they lost a lot of money, they're saying a $20 car from factory. It's a $40 car from factory, if not more.",
+    "confidence": 0.8952368
+  },
+  {
+    "start": 300.13,
+    "end": 306.13,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. So, yeah, if it's $15, then your balloon payment is I don't know what the exact balloon payment is, but let's say it's $10.10 grand.",
+    "confidence": 0.9653555
+  },
+  {
+    "start": 306.37003,
+    "end": 307.01,
+    "speaker": "SPEAKER_00",
+    "text": "You're",
+    "confidence": 0.71191406
+  },
+  {
+    "start": 307.65002,
+    "end": 310.85,
+    "speaker": "SPEAKER_00",
+    "text": "gonna be left to $5, and that can go into to the next finance for a better car.",
+    "confidence": 0.85753036
+  },
+  {
+    "start": 312.795,
+    "end": 314.075,
+    "speaker": "SPEAKER_01",
+    "text": "So what if I was",
+    "confidence": 0.8009766
+  },
+  {
+    "start": 314.55502,
+    "end": 320.39502,
+    "speaker": "SPEAKER_01",
+    "text": "what if for any reason, brother, I don't wanna take out another car? How do you work about that? Yeah. You can always sell the car",
+    "confidence": 0.9206731
+  },
+  {
+    "start": 320.71503,
+    "end": 343.295,
+    "speaker": "SPEAKER_00",
+    "text": "and just clear off your balloon payment. You don't have to buy exchange. It's probably better that way because if you sell the car privately You gotta buy back cars. Yeah? No. We don't just buy back cars, but it would be better if you'd sell it privately in that case because Privately. Think it's perfectly $2 for the car than what trade value would be. Yeah. You know? And, obviously, buying someone buying a grand a car that's $15 privately is much easier than someone buying a $21 car privately.",
+    "confidence": 0.8942549
+  },
+  {
+    "start": 343.695,
+    "end": 347.295,
+    "speaker": "SPEAKER_00",
+    "text": "Like, 15, 14, 13, you have people who will still spend money. Yeah.",
+    "confidence": 0.7771935
+  },
+  {
+    "start": 348.575,
+    "end": 349.45502,
+    "speaker": "SPEAKER_01",
+    "text": "Alright",
+    "confidence": 0.52490234
+  },
+  {
+    "start": 350.015,
+    "end": 358.21002,
+    "speaker": "SPEAKER_01",
+    "text": "then. Well, I'll pop down the scene in a little while then. I'll I'll make my way down the scene. Yeah? No worries. So did you was you gonna send documents before, or did you wanna do that on-site?",
+    "confidence": 0.92339617
+  },
+  {
+    "start": 358.45,
+    "end": 359.01,
+    "speaker": "SPEAKER_01",
+    "text": "I",
+    "confidence": 0.45629883
+  },
+  {
+    "start": 359.41,
+    "end": 361.41003,
+    "speaker": "SPEAKER_01",
+    "text": "would do it on-site, man, to be honest.",
+    "confidence": 0.8497009
+  },
+  {
+    "start": 361.89,
+    "end": 374.815,
+    "speaker": "SPEAKER_00",
+    "text": "I will. Well, the only reason why I'm it's up to you. You can do whatever is easy for you. I'll book you in. The only reason why I'm consider sending you is because when you do come, if you sign them here, there's a possibility of waiting 1 to 2 hours realistically for them to pay us.",
+    "confidence": 0.9282458
+  },
+  {
+    "start": 375.935,
+    "end": 383.695,
+    "speaker": "SPEAKER_00",
+    "text": "That's the only was a bad idea in mind. How was it? Oh, I've seen so okay. I get what you mean. So the finance company takes around so say say you sign the documents now.",
+    "confidence": 0.7931349
+  },
+  {
+    "start": 384.22,
+    "end": 392.14,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. I'm I'm my manager's gonna come to sign them on his end. Yeah. And then from there, you go into a payout queue. It should take around an hour.",
+    "confidence": 0.9583903
+  },
+  {
+    "start": 392.78,
+    "end": 398.06003,
+    "speaker": "SPEAKER_00",
+    "text": "Could be up to 2, but they'll there's, a little waiting period just to give you, like, full so you know everything.",
+    "confidence": 0.94193894
+  },
+  {
+    "start": 398.38,
+    "end": 398.62,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah.",
+    "confidence": 0.9980469
+  },
+  {
+    "start": 399.465,
+    "end": 408.505,
+    "speaker": "SPEAKER_00",
+    "text": "Oh, so you're saying it's better off just doing it through there. Well, look. All I would say to you is if you had any questions, let me clear them up for you. Your monthly payments are lower than COVID. The car is still protected",
+    "confidence": 0.95636934
+  },
+  {
+    "start": 408.505,
+    "end": 413.465,
+    "speaker": "SPEAKER_00",
+    "text": "for 3 years. I can extend that to 4 years, and you'll be up back around to around the 300 area,",
+    "confidence": 0.9578334
+  },
+  {
+    "start": 413.785,
+    "end": 416.42,
+    "speaker": "SPEAKER_00",
+    "text": "or you can just benefit from keeping it under 300.",
+    "confidence": 0.9854492
+  },
+  {
+    "start": 416.97998,
+    "end": 423.94,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. But wait. I it's already on the 4 year, isn't it? Ain't it already on the 4 year? It's on a 4 year It's on a it's on a 4 year with a 3 year warranty.",
+    "confidence": 0.8622519
+  },
+  {
+    "start": 424.1,
+    "end": 424.98,
+    "speaker": "SPEAKER_00",
+    "text": "But I'm saying",
+    "confidence": 0.9902344
+  },
+  {
+    "start": 425.69998,
+    "end": 427.62,
+    "speaker": "SPEAKER_01",
+    "text": "Oh, the yeah. The warranty wasn't it?",
+    "confidence": 0.8495919
+  },
+  {
+    "start": 428.54498,
+    "end": 436.305,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. But if you wanted me to give you an extra year, it would go back to \u00a3300. But right now Yeah. Yeah. You're still fully covered under $302.87.",
+    "confidence": 0.995562
+  },
+  {
+    "start": 437.425,
+    "end": 447.78,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. No. No. That's alright anyway, man. So I'll see you then. Yes. Plenty, man. I'll stick with the areas. I I was just happy that you had good credit. When it came back 1212%",
+    "confidence": 0.824185
+  },
+  {
+    "start": 447.78,
+    "end": 450.74,
+    "speaker": "SPEAKER_00",
+    "text": "acceptance, I was like, you'll be happy with \u00a3280.",
+    "confidence": 0.9706285
+  },
+  {
+    "start": 450.74,
+    "end": 452.82,
+    "speaker": "SPEAKER_00",
+    "text": "It's much better than \u00a3304.",
+    "confidence": 0.99794924
+  },
+  {
+    "start": 453.53998,
+    "end": 454.18,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah.",
+    "confidence": 0.9975586
+  },
+  {
+    "start": 454.58,
+    "end": 466.395,
+    "speaker": "SPEAKER_01",
+    "text": "Alright then. I'll I'll let me go through that paperwork and sign it off, and then then what do I do? Wait for you guys to get back to me? Or No. I'm a hours. What I'll do is I'm gonna drop you a message now on a secure chat, Mitch, on WhatsApp.",
+    "confidence": 0.8762875
+  },
+  {
+    "start": 466.475,
+    "end": 469.035,
+    "speaker": "SPEAKER_00",
+    "text": "It's just gonna say, hi. It's Zak from Car Planet.",
+    "confidence": 0.98125
+  },
+  {
+    "start": 469.275,
+    "end": 470.95502,
+    "speaker": "SPEAKER_00",
+    "text": "Once it's all signed, just let",
+    "confidence": 0.962972
+  },
+  {
+    "start": 471.35498,
+    "end": 481.65997,
+    "speaker": "SPEAKER_00",
+    "text": "me know because what I need to do is just counter sign it on my end so I can actually enter the payout queue. Yeah. 11983626987626987.",
+    "confidence": 0.93377686
+  },
+  {
+    "start": 481.65997,
+    "end": 486.06,
+    "speaker": "SPEAKER_00",
+    "text": "And then you can just drop me a message saying I'm coming down now or wherever it may be.",
+    "confidence": 0.95288086
+  },
+  {
+    "start": 487.565,
+    "end": 503.8209,
+    "speaker": "SPEAKER_00",
+    "text": "I'll book you on let me know what time you're coming down. That's it. Yeah. Alright. The week is up. Nice on me. Yeah. Alright. Cheers, bro. Did you did you receive that message from me on WhatsApp? Yeah. Yeah. I've just got 1 now. Alright. Perfect. Well, I'll speak to you soon. Just communicate with me through there. Alright then. Cheers, Zak. Thanks, mate. Alright. Sweet. Bye bye.",
+    "confidence": 0.9145791
+  }
+]

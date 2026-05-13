@@ -1,0 +1,319 @@
+{
+    "call_id": "20260429T085638315_375379",
+    "agent_name": "zak_local_20260423",
+    "source": "gemini",
+    "segments": [
+        {
+            "start": 0.0,
+            "end": 1.0,
+            "speaker": "customer",
+            "text": "Hello."
+        },
+        {
+            "start": 1.0,
+            "end": 2.0,
+            "speaker": "agent",
+            "text": "Hello."
+        },
+        {
+            "start": 2.0,
+            "end": 8.0,
+            "speaker": "customer",
+            "text": "Hello, good morning. Um, I just been transfer to you. I spoke with one of your um colleagues. I'm calling in regards to the cancellation."
+        },
+        {
+            "start": 8.0,
+            "end": 14.0,
+            "speaker": "agent",
+            "text": "Okay, no worries. And that was on uh it was Jason that sold you the car correct? HJ72."
+        },
+        {
+            "start": 14.0,
+            "end": 15.0,
+            "speaker": "customer",
+            "text": "Yes, please."
+        },
+        {
+            "start": 15.0,
+            "end": 18.0,
+            "speaker": "agent",
+            "text": "And how many years warranty did you go for?"
+        },
+        {
+            "start": 18.0,
+            "end": 19.0,
+            "speaker": "customer",
+            "text": "Five."
+        },
+        {
+            "start": 19.0,
+            "end": 37.0,
+            "speaker": "agent",
+            "text": "Five years. Alright, and uh, give me one second, I'll sort this out for you. So I'm just gonna check that you're still within the right cooling-off period, which I believe you are still within the period. 1, 2, 3, 4."
+        },
+        {
+            "start": 37.0,
+            "end": 39.0,
+            "speaker": "customer",
+            "text": "Today will be the last day."
+        },
+        {
+            "start": 39.0,
+            "end": 42.0,
+            "speaker": "agent",
+            "text": "Okay, so that means we have to solve it today."
+        },
+        {
+            "start": 42.0,
+            "end": 51.0,
+            "speaker": "customer",
+            "text": "Yes, 'cause I tried to call you yesterday, but for some reason that called it didn't went through, and then my partner tried, so yeah..."
+        },
+        {
+            "start": 51.0,
+            "end": 63.0,
+            "speaker": "agent",
+            "text": "No stress, no stress, no stress. I'm going to leave a note now. Um, you should receive an email to confirm that your warranty has been refunded, bear with me."
+        },
+        {
+            "start": 63.0,
+            "end": 71.0,
+            "speaker": "customer",
+            "text": "Okay, one question please, very quick. So this was added on my finance. How this is going to affect my finance?"
+        },
+        {
+            "start": 71.0,
+            "end": 75.0,
+            "speaker": "agent",
+            "text": "Bear with me, I'm just, give me one second please."
+        },
+        {
+            "start": 75.0,
+            "end": 76.0,
+            "speaker": "customer",
+            "text": "No worries."
+        },
+        {
+            "start": 76.0,
+            "end": 79.0,
+            "speaker": "agent",
+            "text": "And was it the full five years you wanted to cancel?"
+        },
+        {
+            "start": 79.0,
+            "end": 81.0,
+            "speaker": "customer",
+            "text": "Yes, yeah."
+        },
+        {
+            "start": 81.0,
+            "end": 85.0,
+            "speaker": "agent",
+            "text": "So you don't want no protection on your car?"
+        },
+        {
+            "start": 85.0,
+            "end": 96.0,
+            "speaker": "customer",
+            "text": "Uh, no it's fine, I have very bad experience with this kind of warranties, and we want to pay quicker the car, and yeah."
+        },
+        {
+            "start": 96.0,
+            "end": 105.0,
+            "speaker": "agent",
+            "text": "Okay, no worries. Just bear with me. So essentially, what would happen is... what was your deposit?"
+        },
+        {
+            "start": 105.0,
+            "end": 106.0,
+            "speaker": "customer",
+            "text": "Seven."
+        },
+        {
+            "start": 106.0,
+            "end": 108.0,
+            "speaker": "agent",
+            "text": "7,000 pounds?"
+        },
+        {
+            "start": 108.0,
+            "end": 109.0,
+            "speaker": "customer",
+            "text": "Yes."
+        },
+        {
+            "start": 109.0,
+            "end": 120.0,
+            "speaker": "agent",
+            "text": "Okay, then you'll get a direct refund. Um, so it won't affect the finance in any way, but you'll get a direct refund as the payment for the warranty was taken out of your deposit most likely."
+        },
+        {
+            "start": 120.0,
+            "end": 124.0,
+            "speaker": "customer",
+            "text": "Okay, so I'll get it back on the same payment method?"
+        },
+        {
+            "start": 124.0,
+            "end": 129.0,
+            "speaker": "agent",
+            "text": "Correct, correct. And then you'll have an option to make an overpayment with your finance company."
+        },
+        {
+            "start": 129.0,
+            "end": 136.0,
+            "speaker": "customer",
+            "text": "Yes, yes, this is what I'm going to do because I'm thinking to pay quicker the..."
+        },
+        {
+            "start": 136.0,
+            "end": 139.0,
+            "speaker": "agent",
+            "text": "No worries. What was your first name again?"
+        },
+        {
+            "start": 139.0,
+            "end": 141.0,
+            "speaker": "customer",
+            "text": "Um, Mariana."
+        },
+        {
+            "start": 141.0,
+            "end": 159.0,
+            "speaker": "agent",
+            "text": "Mariana, okay. Alright Mariana, just confirm your email for me, that will be the last thing."
+        },
+        {
+            "start": 159.0,
+            "end": 169.0,
+            "speaker": "customer",
+            "text": "Uh, M A R R Y L O Z O V A N U @ gmail.com"
+        },
+        {
+            "start": 169.0,
+            "end": 175.0,
+            "speaker": "agent",
+            "text": "Mary, M A R R Y L O Z O..."
+        },
+        {
+            "start": 175.0,
+            "end": 177.0,
+            "speaker": "customer",
+            "text": "L O Z O..."
+        },
+        {
+            "start": 177.0,
+            "end": 180.0,
+            "speaker": "agent",
+            "text": "L O Z O V O... Mary Lovoz?"
+        },
+        {
+            "start": 180.0,
+            "end": 184.0,
+            "speaker": "customer",
+            "text": "No, Mary Lozo Z please..."
+        },
+        {
+            "start": 184.0,
+            "end": 185.0,
+            "speaker": "agent",
+            "text": "Z ah sorry."
+        },
+        {
+            "start": 185.0,
+            "end": 189.0,
+            "speaker": "customer",
+            "text": "Okay. L O Z O V A N U."
+        },
+        {
+            "start": 189.0,
+            "end": 192.0,
+            "speaker": "agent",
+            "text": "V A N U. Marylozovanu."
+        },
+        {
+            "start": 192.0,
+            "end": 196.0,
+            "speaker": "customer",
+            "text": "Marylozovanu@gmail.com."
+        },
+        {
+            "start": 196.0,
+            "end": 198.0,
+            "speaker": "agent",
+            "text": "@gmail.com yeah."
+        },
+        {
+            "start": 198.0,
+            "end": 201.0,
+            "speaker": "customer",
+            "text": "Yeah, you should have my email because I've got lots of emails from you guys."
+        },
+        {
+            "start": 201.0,
+            "end": 206.0,
+            "speaker": "agent",
+            "text": "No, I do have it, I just have to confirm, I just have to confirm. No worries, you're going to receive an email just to give you confirmation that it has been processed, hopefully in the next half an hour. Um, and the refund usually takes up to 7 days, um, but it could be on the shorter side, and next 3 days, but I'd say always wait 5 to 7 days to be safe, alright?"
+        },
+        {
+            "start": 206.0,
+            "end": 230.0,
+            "speaker": "customer",
+            "text": "Okay, no worries. So um, this Friday I have an appointment with you guys, I think service with regards with the engine mount. Um, so I'm not sure how this goes in um, this kind of inspection. Are they still going covered by?"
+        },
+        {
+            "start": 230.0,
+            "end": 237.0,
+            "speaker": "agent",
+            "text": "Well, the service shouldn't be linked to the warranty, so it should be okay."
+        },
+        {
+            "start": 237.0,
+            "end": 240.0,
+            "speaker": "customer",
+            "text": "Yeah it's not, this is what um the girl told us on the phone."
+        },
+        {
+            "start": 240.0,
+            "end": 244.0,
+            "speaker": "agent",
+            "text": "Yeah no that that that should be okay, there's no worries with that."
+        },
+        {
+            "start": 244.0,
+            "end": 252.0,
+            "speaker": "customer",
+            "text": "Okay. And plus, yeah, plus um the service plan that we separately bought is still in place. That one I don't wanna cancel."
+        },
+        {
+            "start": 252.0,
+            "end": 253.0,
+            "speaker": "agent",
+            "text": "Okay, no worries."
+        },
+        {
+            "start": 253.0,
+            "end": 256.0,
+            "speaker": "customer",
+            "text": "Yeah, so it should be there, yeah? This won't affect my service plan?"
+        },
+        {
+            "start": 256.0,
+            "end": 265.0,
+            "speaker": "agent",
+            "text": "No, it won't affect your service plan. Um, you're just gonna get a refund for the 5 years, whatever you charged for the 5 years. Okay, take care."
+        },
+        {
+            "start": 265.0,
+            "end": 266.0,
+            "speaker": "customer",
+            "text": "Yeah, okay. Okay, yeah, okay. Thank you very much, thank you, have a good day, bye."
+        },
+        {
+            "start": 266.0,
+            "end": 267.0,
+            "speaker": "agent",
+            "text": "No worries Mariana, take care. Bye bye."
+        }
+    ]
+}

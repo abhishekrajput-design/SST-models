@@ -1,0 +1,24 @@
+{
+  "date": "2026-05-12",
+  "run_tag": "20260512_171711",
+  "days_scraped": 14,
+  "total_api_records": 500,
+  "qualified_agents": 1,
+  "results": {
+    "omar_el_harchaoui": {
+      "status": "blocked",
+      "date": "2026-05-12",
+      "n_calls_used": 275,
+      "activated": false,
+      "activation_eligible": false,
+      "blocked_by_existing": true,
+      "mean_inside_sim": 0.7338,
+      "max_outside_sim": 0.4735,
+      "same_data_accuracy": 84.65,
+      "agent_accuracy": 75.0,
+      "customer_accuracy": 97.45,
+      "loco_accuracy": 83.99,
+      "n_training_segments": 102
+    }
+  }
+}

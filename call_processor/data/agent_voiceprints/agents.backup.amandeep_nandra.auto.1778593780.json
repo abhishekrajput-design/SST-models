@@ -404,38 +404,14 @@
   },
   "amandeep_nandra": {
     "agent_name": "Amandeep Nandra",
-    "voiceprint_path": "amandeep_nandra_pure_campp_v1.npy",
-    "voiceprints": [
-      {
-        "path": "amandeep_nandra_pure_campp_v1.npy",
-        "source": "daily_auto_api_labels",
-        "embedding_model": "cam++",
-        "embedding_dim": 512
-      },
-      {
-        "path": "amandeep_nandra_pure_campp_v2.npy",
-        "source": "daily_auto_api_labels",
-        "embedding_model": "cam++",
-        "embedding_dim": 512
-      },
-      {
-        "path": "amandeep_nandra_pure_campp_v3.npy",
-        "source": "daily_auto_api_labels",
-        "embedding_model": "cam++",
-        "embedding_dim": 512
-      }
-    ],
-    "n_voiceprints": 3,
-    "embedding_model": "cam++",
-    "embedding_dim": 512,
-    "source": "daily_auto_api_labels",
-    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra",
-    "purity_report": "amandeep_nandra_auto_training_report.json",
-    "n_training_segments": 322,
-    "total_training_seconds": 1101.33,
-    "mean_inside_sim": 0.7521,
-    "max_outside_sim": 0.4118,
-    "updated_at_epoch": 1778593780
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\amandeep_nandra.npy",
+    "n_clips": 153,
+    "n_windows_total": 664,
+    "total_seconds": 670.9,
+    "used_calls": 4,
+    "mean_inside_sim": 0.65,
+    "max_outside_sim": 0.669,
+    "source": "audiofy_api_bulk_tight_20260424"
   },
   "tulay_finance_consultant": {
     "agent_name": "Tulay Finance Consultant",

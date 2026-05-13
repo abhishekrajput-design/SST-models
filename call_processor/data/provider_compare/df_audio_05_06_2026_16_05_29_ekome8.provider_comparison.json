@@ -1,0 +1,52 @@
+{
+  "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\raw_calls\\df_audio_05_06_2026_16_05_29_ekome8.mp3",
+  "reference": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_ds_ekome8_latest_overlay_debug.json",
+  "reference_turns": 197,
+  "providers": {
+    "assemblyai": {
+      "provider": "assemblyai",
+      "segments": 22,
+      "speakers": [
+        "SPEAKER_A",
+        "SPEAKER_B",
+        "SPEAKER_C"
+      ],
+      "speaker_role_map_by_local_overlap": {
+        "SPEAKER_A": "AGENT",
+        "SPEAKER_B": "CUSTOMER",
+        "SPEAKER_C": "AGENT"
+      },
+      "reference_seconds": {
+        "AGENT": 136.8,
+        "CUSTOMER": 202.88
+      },
+      "provider_segment_seconds_by_mapped_role": {
+        "AGENT": 226.24,
+        "CUSTOMER": 56.19
+      },
+      "words_by_mapped_role": {
+        "AGENT": 460,
+        "CUSTOMER": 57
+      },
+      "chars_by_mapped_role": {
+        "AGENT": 2238,
+        "CUSTOMER": 276
+      },
+      "speaker_overlap_seconds": {
+        "SPEAKER_A": {
+          "AGENT": 92.18,
+          "CUSTOMER": 49.85
+        },
+        "SPEAKER_B": {
+          "AGENT": 3.89,
+          "CUSTOMER": 30.96
+        },
+        "SPEAKER_C": {
+          "AGENT": 26.17,
+          "CUSTOMER": 3.24
+        }
+      }
+    }
+  },
+  "warning": "Provider speaker IDs are generic diarization labels. Role mapping here uses overlap with local Zak/customer diarization and is diagnostic only."
+}

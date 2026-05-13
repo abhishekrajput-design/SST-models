@@ -1,0 +1,702 @@
+{
+  "agent_slug": "hussein_mohamed",
+  "agent_name": "Hussein Mohamed",
+  "data_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed",
+  "calls": [
+    {
+      "call": "call_00",
+      "call_id": "6a00ab844734506a1fe26e86",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_00\\audio_16k.wav",
+      "segments": 14,
+      "audio_duration_s": 32.82
+    },
+    {
+      "call": "call_01",
+      "call_id": "6a00a4ad4734506a1fe25e23",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_01\\audio_16k.wav",
+      "segments": 139,
+      "audio_duration_s": 467.78
+    },
+    {
+      "call": "call_02",
+      "call_id": "6a009f984734506a1fe24f90",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_02\\audio_16k.wav",
+      "segments": 172,
+      "audio_duration_s": 554.9
+    },
+    {
+      "call": "call_03",
+      "call_id": "6a0061514734506a1fe1a53f",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_03\\audio_16k.wav",
+      "segments": 74,
+      "audio_duration_s": 247.24
+    },
+    {
+      "call": "call_04",
+      "call_id": "6a0054b74734506a1fe18117",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_04\\audio_16k.wav",
+      "segments": 37,
+      "audio_duration_s": 78.56
+    },
+    {
+      "call": "call_05",
+      "call_id": "6a0051874734506a1fe1755a",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_05\\audio_16k.wav",
+      "segments": 289,
+      "audio_duration_s": 833.69
+    },
+    {
+      "call": "call_06",
+      "call_id": "69ff14084734506a1fdf62c7",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_06\\audio_16k.wav",
+      "segments": 43,
+      "audio_duration_s": 114.46
+    },
+    {
+      "call": "call_07",
+      "call_id": "69ff12824734506a1fdf5da1",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_07\\audio_16k.wav",
+      "segments": 47,
+      "audio_duration_s": 158.14
+    },
+    {
+      "call": "call_08",
+      "call_id": "69feffd14734506a1fdf2133",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_08\\audio_16k.wav",
+      "segments": 24,
+      "audio_duration_s": 51.44
+    },
+    {
+      "call": "call_09",
+      "call_id": "69fefa514734506a1fdf1039",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\hussein_mohamed\\call_09\\audio_16k.wav",
+      "segments": 33,
+      "audio_duration_s": 222.18
+    }
+  ],
+  "skipped_calls": [],
+  "label_rows": 782,
+  "eval_rows": 782,
+  "agent_candidates": 295,
+  "customer_calibration_rows": 376,
+  "pure_label_rows": 272,
+  "training_rows": 272,
+  "min_train_score": 0.6,
+  "purity_floor": 0.55,
+  "customer_p95": 0.4425,
+  "calibrated_threshold": 0.5025,
+  "same_data_accuracy": {
+    "threshold": 0.5025,
+    "segments": 782,
+    "overall_accuracy": 91.82,
+    "agent_accuracy": 86.21,
+    "customer_accuracy": 97.87,
+    "agent_correct": 350,
+    "agent_total": 406,
+    "customer_correct": 368,
+    "customer_total": 376,
+    "errors": [
+      {
+        "call": "call_01",
+        "segment": 3,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5407,
+        "text": "I think I phoned out as well."
+      },
+      {
+        "call": "call_01",
+        "segment": 31,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.379,
+        "text": "Does that make sense?"
+      },
+      {
+        "call": "call_01",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2694,
+        "text": "Yeah, of course!"
+      },
+      {
+        "call": "call_01",
+        "segment": 34,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5161,
+        "text": "Whether it's HP or PCP, because... You're not tied into this."
+      },
+      {
+        "call": "call_01",
+        "segment": 36,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2816,
+        "text": "Yeah, yeah, exactly."
+      },
+      {
+        "call": "call_01",
+        "segment": 56,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3909,
+        "text": "I'm surprised to be honest"
+      },
+      {
+        "call": "call_01",
+        "segment": 65,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3383,
+        "text": "Yeah, yeah, yeah."
+      },
+      {
+        "call": "call_01",
+        "segment": 68,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1479,
+        "text": "No worries at all."
+      },
+      {
+        "call": "call_01",
+        "segment": 69,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2972,
+        "text": "We're here to help."
+      },
+      {
+        "call": "call_01",
+        "segment": 86,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2618,
+        "text": "Yes, yes."
+      },
+      {
+        "call": "call_01",
+        "segment": 98,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4716,
+        "text": "Give me a second, yeah?"
+      },
+      {
+        "call": "call_01",
+        "segment": 100,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5415,
+        "text": "Yeah, all right cool"
+      },
+      {
+        "call": "call_01",
+        "segment": 101,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4078,
+        "text": "Hiya, thanks for the hold."
+      },
+      {
+        "call": "call_01",
+        "segment": 126,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4879,
+        "text": "is a"
+      },
+      {
+        "call": "call_01",
+        "segment": 134,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3733,
+        "text": "No worries."
+      },
+      {
+        "call": "call_02",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3003,
+        "text": "So..."
+      },
+      {
+        "call": "call_02",
+        "segment": 42,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3971,
+        "text": "With what car?"
+      },
+      {
+        "call": "call_02",
+        "segment": 43,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4919,
+        "text": "What's the price of the car?"
+      },
+      {
+        "call": "call_02",
+        "segment": 45,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2898,
+        "text": "Same price?"
+      },
+      {
+        "call": "call_02",
+        "segment": 60,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4643,
+        "text": "Is it a new or used car?"
+      },
+      {
+        "call": "call_02",
+        "segment": 70,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2384,
+        "text": "One second, let me check."
+      },
+      {
+        "call": "call_02",
+        "segment": 71,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4774,
+        "text": "Marshall's... Let's have a look for you"
+      },
+      {
+        "call": "call_02",
+        "segment": 72,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2837,
+        "text": "2 seconds"
+      },
+      {
+        "call": "call_02",
+        "segment": 131,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4673,
+        "text": "You can use the calculator on our website."
+      },
+      {
+        "call": "call_02",
+        "segment": 151,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4116,
+        "text": "I've got you on the watch out, hasn't I?"
+      },
+      {
+        "call": "call_03",
+        "segment": 7,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.383,
+        "text": "Thank you, that's great."
+      },
+      {
+        "call": "call_03",
+        "segment": 15,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0006,
+        "text": "Neither would I."
+      },
+      {
+        "call": "call_03",
+        "segment": 59,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4762,
+        "text": "if you tell them to hold off on that"
+      },
+      {
+        "call": "call_03",
+        "segment": 71,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4873,
+        "text": "Yeah, should be with you before 1 o'clock."
+      },
+      {
+        "call": "call_05",
+        "segment": 17,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4877,
+        "text": "Perfect, let's have a look for you."
+      }
+    ]
+  },
+  "best_same_data_threshold": {
+    "threshold": 0.46,
+    "segments": 782,
+    "overall_accuracy": 93.35,
+    "agent_accuracy": 90.39,
+    "customer_accuracy": 96.54,
+    "agent_correct": 367,
+    "agent_total": 406,
+    "customer_correct": 363,
+    "customer_total": 376,
+    "errors": [
+      {
+        "call": "call_01",
+        "segment": 3,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5407,
+        "text": "I think I phoned out as well."
+      },
+      {
+        "call": "call_01",
+        "segment": 31,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.379,
+        "text": "Does that make sense?"
+      },
+      {
+        "call": "call_01",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2694,
+        "text": "Yeah, of course!"
+      },
+      {
+        "call": "call_01",
+        "segment": 34,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5161,
+        "text": "Whether it's HP or PCP, because... You're not tied into this."
+      },
+      {
+        "call": "call_01",
+        "segment": 36,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2816,
+        "text": "Yeah, yeah, exactly."
+      },
+      {
+        "call": "call_01",
+        "segment": 56,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3909,
+        "text": "I'm surprised to be honest"
+      },
+      {
+        "call": "call_01",
+        "segment": 65,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3383,
+        "text": "Yeah, yeah, yeah."
+      },
+      {
+        "call": "call_01",
+        "segment": 68,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1479,
+        "text": "No worries at all."
+      },
+      {
+        "call": "call_01",
+        "segment": 69,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2972,
+        "text": "We're here to help."
+      },
+      {
+        "call": "call_01",
+        "segment": 86,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2618,
+        "text": "Yes, yes."
+      },
+      {
+        "call": "call_01",
+        "segment": 100,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5415,
+        "text": "Yeah, all right cool"
+      },
+      {
+        "call": "call_01",
+        "segment": 101,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4078,
+        "text": "Hiya, thanks for the hold."
+      },
+      {
+        "call": "call_01",
+        "segment": 134,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3733,
+        "text": "No worries."
+      },
+      {
+        "call": "call_02",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3003,
+        "text": "So..."
+      },
+      {
+        "call": "call_02",
+        "segment": 42,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3971,
+        "text": "With what car?"
+      },
+      {
+        "call": "call_02",
+        "segment": 45,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2898,
+        "text": "Same price?"
+      },
+      {
+        "call": "call_02",
+        "segment": 70,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2384,
+        "text": "One second, let me check."
+      },
+      {
+        "call": "call_02",
+        "segment": 72,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2837,
+        "text": "2 seconds"
+      },
+      {
+        "call": "call_02",
+        "segment": 151,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4116,
+        "text": "I've got you on the watch out, hasn't I?"
+      },
+      {
+        "call": "call_03",
+        "segment": 7,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.383,
+        "text": "Thank you, that's great."
+      },
+      {
+        "call": "call_03",
+        "segment": 15,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0006,
+        "text": "Neither would I."
+      },
+      {
+        "call": "call_03",
+        "segment": 16,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.485,
+        "text": "No."
+      },
+      {
+        "call": "call_05",
+        "segment": 41,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1996,
+        "text": "Yes."
+      },
+      {
+        "call": "call_05",
+        "segment": 55,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0832,
+        "text": "Yes, that's correct."
+      },
+      {
+        "call": "call_05",
+        "segment": 83,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3629,
+        "text": "Yeah, absolutely."
+      },
+      {
+        "call": "call_05",
+        "segment": 91,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5207,
+        "text": "Right?"
+      },
+      {
+        "call": "call_05",
+        "segment": 110,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5178,
+        "text": "Oh, but in my report it says independent"
+      },
+      {
+        "call": "call_05",
+        "segment": 114,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4064,
+        "text": "in Croydon."
+      },
+      {
+        "call": "call_05",
+        "segment": 155,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3685,
+        "text": "Yeah, absolutely."
+      },
+      {
+        "call": "call_05",
+        "segment": 162,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4896,
+        "text": "I can do anytime after"
+      }
+    ]
+  },
+  "loco_result": {
+    "n_calls": 10,
+    "n_folds": 10,
+    "overall_accuracy": 92.07,
+    "per_call": [
+      {
+        "held_out": "call_00",
+        "threshold": 0.4899,
+        "accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "segments": 13
+      },
+      {
+        "held_out": "call_01",
+        "threshold": 0.4892,
+        "accuracy": 89.39,
+        "agent_accuracy": 82.61,
+        "customer_accuracy": 96.83,
+        "segments": 132
+      },
+      {
+        "held_out": "call_02",
+        "threshold": 0.5024,
+        "accuracy": 94.12,
+        "agent_accuracy": 86.36,
+        "customer_accuracy": 100.0,
+        "segments": 153
+      },
+      {
+        "held_out": "call_03",
+        "threshold": 0.492,
+        "accuracy": 94.2,
+        "agent_accuracy": 91.84,
+        "customer_accuracy": 100.0,
+        "segments": 69
+      },
+      {
+        "held_out": "call_04",
+        "threshold": 0.5134,
+        "accuracy": 96.67,
+        "agent_accuracy": 94.44,
+        "customer_accuracy": 100.0,
+        "segments": 30
+      },
+      {
+        "held_out": "call_05",
+        "threshold": 0.4182,
+        "accuracy": 91.15,
+        "agent_accuracy": 90.48,
+        "customer_accuracy": 91.79,
+        "segments": 260
+      },
+      {
+        "held_out": "call_06",
+        "threshold": 0.4902,
+        "accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "segments": 33
+      },
+      {
+        "held_out": "call_07",
+        "threshold": 0.4919,
+        "accuracy": 95.35,
+        "agent_accuracy": 93.55,
+        "customer_accuracy": 100.0,
+        "segments": 43
+      },
+      {
+        "held_out": "call_08",
+        "threshold": 0.5062,
+        "accuracy": 88.24,
+        "agent_accuracy": 81.82,
+        "customer_accuracy": 100.0,
+        "segments": 17
+      },
+      {
+        "held_out": "call_09",
+        "threshold": 0.5064,
+        "accuracy": 87.5,
+        "agent_accuracy": 55.56,
+        "customer_accuracy": 100.0,
+        "segments": 32
+      }
+    ]
+  },
+  "activation_requested": false,
+  "activation_eligible": false,
+  "activation_min_accuracy": 85.0,
+  "activated": false,
+  "blocked_by_existing": true,
+  "artifacts": {
+    "voiceprints": [
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\hussein_mohamed_pure_campp_v1.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\hussein_mohamed_pure_campp_v2.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\hussein_mohamed_pure_campp_v3.npy"
+    ],
+    "agents_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.json",
+    "agents_backup": null,
+    "activated": false,
+    "blocked_by_existing": true,
+    "mean_inside_sim": 0.7447,
+    "max_outside_sim": 0.4425,
+    "existing_mean_inside": 0.8423,
+    "existing_max_outside": 0.2522
+  },
+  "dry_run": true
+}

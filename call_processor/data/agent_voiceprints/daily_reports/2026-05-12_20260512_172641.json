@@ -1,0 +1,24 @@
+{
+  "date": "2026-05-12",
+  "run_tag": "20260512_172641",
+  "days_scraped": 30,
+  "total_api_records": 500,
+  "qualified_agents": 1,
+  "results": {
+    "amandeep_nandra": {
+      "status": "gated",
+      "date": "2026-05-12",
+      "n_calls_used": 430,
+      "activated": false,
+      "activation_eligible": false,
+      "blocked_by_existing": false,
+      "mean_inside_sim": 0.7543,
+      "max_outside_sim": 0.4656,
+      "same_data_accuracy": 72.58,
+      "agent_accuracy": 57.08,
+      "customer_accuracy": 97.04,
+      "loco_accuracy": 68.75,
+      "n_training_segments": 164
+    }
+  }
+}

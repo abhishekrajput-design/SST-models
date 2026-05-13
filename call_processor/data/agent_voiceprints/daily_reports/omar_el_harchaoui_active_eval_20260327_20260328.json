@@ -1,0 +1,1123 @@
+{
+  "agent_slug": "omar_el_harchaoui",
+  "agent_name": "Omar El Harchaoui",
+  "data_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\omar_el_harchaoui",
+  "calls": 10,
+  "voiceprints": [
+    "omar_el_harchaoui_pure_campp_v1.npy",
+    "omar_el_harchaoui_pure_campp_v2.npy",
+    "omar_el_harchaoui_pure_campp_v3.npy"
+  ],
+  "rows": 470,
+  "agent_rows": 371,
+  "customer_rows": 99,
+  "active_mean_agent_sim_on_dataset": 0.5373,
+  "active_customer_p95_on_dataset": 0.5162,
+  "threshold_new_customer_p95_plus_margin": 0.5762,
+  "threshold_existing_stats_plus_margin": 0.5169,
+  "accuracy_new_customer_threshold": {
+    "threshold": 0.5762,
+    "segments": 470,
+    "overall_accuracy": 64.04,
+    "agent_accuracy": 54.72,
+    "customer_accuracy": 98.99,
+    "agent_correct": 203,
+    "agent_total": 371,
+    "customer_correct": 98,
+    "customer_total": 99,
+    "errors": [
+      {
+        "call": "call_00",
+        "segment": 3,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4854,
+        "text": "Am I free to add, guys?"
+      },
+      {
+        "call": "call_00",
+        "segment": 8,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5431,
+        "text": "Are you free for a quick discussion?"
+      },
+      {
+        "call": "call_00",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5671,
+        "text": "I have good news for you, the car is still available"
+      },
+      {
+        "call": "call_00",
+        "segment": 11,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5362,
+        "text": "Where are you located at guys if you don't mind me asking?"
+      },
+      {
+        "call": "call_00",
+        "segment": 16,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4012,
+        "text": "Okay, okay."
+      },
+      {
+        "call": "call_00",
+        "segment": 17,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.423,
+        "text": "Yep, I can see it here."
+      },
+      {
+        "call": "call_00",
+        "segment": 21,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5374,
+        "text": "What are your plans?"
+      },
+      {
+        "call": "call_00",
+        "segment": 25,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4995,
+        "text": "Okay, that's perfect."
+      },
+      {
+        "call": "call_00",
+        "segment": 28,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5612,
+        "text": "Are you looking for me in the morning or the afternoon?"
+      },
+      {
+        "call": "call_00",
+        "segment": 31,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.475,
+        "text": "Okay, fair enough, fair enough."
+      },
+      {
+        "call": "call_00",
+        "segment": 32,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5252,
+        "text": "Then let's wild you a few."
+      },
+      {
+        "call": "call_00",
+        "segment": 46,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4791,
+        "text": "Okay, perfect."
+      },
+      {
+        "call": "call_01",
+        "segment": 21,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5493,
+        "text": "That is something that we would do."
+      },
+      {
+        "call": "call_01",
+        "segment": 24,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3255,
+        "text": "Yes, of course."
+      },
+      {
+        "call": "call_01",
+        "segment": 28,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4099,
+        "text": "Where are you located?"
+      },
+      {
+        "call": "call_01",
+        "segment": 32,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3335,
+        "text": "Give me one second"
+      },
+      {
+        "call": "call_01",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4537,
+        "text": "Is that... Haze?"
+      },
+      {
+        "call": "call_01",
+        "segment": 36,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5034,
+        "text": "Uh, we're literally"
+      },
+      {
+        "call": "call_01",
+        "segment": 38,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2195,
+        "text": "Not that far."
+      },
+      {
+        "call": "call_01",
+        "segment": 39,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4894,
+        "text": "Very close."
+      },
+      {
+        "call": "call_01",
+        "segment": 41,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.491,
+        "text": "When are you looking for coming?"
+      },
+      {
+        "call": "call_01",
+        "segment": 42,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.523,
+        "text": "We're not that far from you."
+      },
+      {
+        "call": "call_01",
+        "segment": 53,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5698,
+        "text": "We need to, we can only do that in person."
+      },
+      {
+        "call": "call_01",
+        "segment": 54,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5133,
+        "text": "We wouldn't be able to do it..."
+      },
+      {
+        "call": "call_01",
+        "segment": 55,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4802,
+        "text": "on Quora."
+      },
+      {
+        "call": "call_01",
+        "segment": 64,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.345,
+        "text": "Of course, of course."
+      },
+      {
+        "call": "call_01",
+        "segment": 65,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3736,
+        "text": "Last one, okay?"
+      },
+      {
+        "call": "call_01",
+        "segment": 68,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4275,
+        "text": "Thank you, Amir."
+      },
+      {
+        "call": "call_02",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2898,
+        "text": "Yes."
+      },
+      {
+        "call": "call_02",
+        "segment": 11,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5685,
+        "text": "on Monday because after sales are closed tomorrow."
+      }
+    ]
+  },
+  "accuracy_existing_stats_threshold": {
+    "threshold": 0.5169,
+    "segments": 470,
+    "overall_accuracy": 70.43,
+    "agent_accuracy": 63.88,
+    "customer_accuracy": 94.95,
+    "agent_correct": 237,
+    "agent_total": 371,
+    "customer_correct": 94,
+    "customer_total": 99,
+    "errors": [
+      {
+        "call": "call_00",
+        "segment": 3,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4854,
+        "text": "Am I free to add, guys?"
+      },
+      {
+        "call": "call_00",
+        "segment": 16,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4012,
+        "text": "Okay, okay."
+      },
+      {
+        "call": "call_00",
+        "segment": 17,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.423,
+        "text": "Yep, I can see it here."
+      },
+      {
+        "call": "call_00",
+        "segment": 25,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4995,
+        "text": "Okay, that's perfect."
+      },
+      {
+        "call": "call_00",
+        "segment": 31,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.475,
+        "text": "Okay, fair enough, fair enough."
+      },
+      {
+        "call": "call_00",
+        "segment": 46,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4791,
+        "text": "Okay, perfect."
+      },
+      {
+        "call": "call_01",
+        "segment": 24,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3255,
+        "text": "Yes, of course."
+      },
+      {
+        "call": "call_01",
+        "segment": 28,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4099,
+        "text": "Where are you located?"
+      },
+      {
+        "call": "call_01",
+        "segment": 32,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3335,
+        "text": "Give me one second"
+      },
+      {
+        "call": "call_01",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4537,
+        "text": "Is that... Haze?"
+      },
+      {
+        "call": "call_01",
+        "segment": 36,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5034,
+        "text": "Uh, we're literally"
+      },
+      {
+        "call": "call_01",
+        "segment": 38,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2195,
+        "text": "Not that far."
+      },
+      {
+        "call": "call_01",
+        "segment": 39,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4894,
+        "text": "Very close."
+      },
+      {
+        "call": "call_01",
+        "segment": 41,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.491,
+        "text": "When are you looking for coming?"
+      },
+      {
+        "call": "call_01",
+        "segment": 54,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5133,
+        "text": "We wouldn't be able to do it..."
+      },
+      {
+        "call": "call_01",
+        "segment": 55,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4802,
+        "text": "on Quora."
+      },
+      {
+        "call": "call_01",
+        "segment": 64,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.345,
+        "text": "Of course, of course."
+      },
+      {
+        "call": "call_01",
+        "segment": 65,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3736,
+        "text": "Last one, okay?"
+      },
+      {
+        "call": "call_01",
+        "segment": 68,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4275,
+        "text": "Thank you, Amir."
+      },
+      {
+        "call": "call_02",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2898,
+        "text": "Yes."
+      },
+      {
+        "call": "call_03",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0813,
+        "text": "Your call has been forwarded to voicemail."
+      },
+      {
+        "call": "call_03",
+        "segment": 2,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": -0.0221,
+        "text": "The person you're trying to reach is not available."
+      },
+      {
+        "call": "call_03",
+        "segment": 3,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": -0.0488,
+        "text": "At the tone, please record your message."
+      },
+      {
+        "call": "call_03",
+        "segment": 6,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4309,
+        "text": "Oh, hello Rufus and Jane."
+      },
+      {
+        "call": "call_03",
+        "segment": 8,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.5153,
+        "text": "Hi Ajay, this is Omer from CarPlanet."
+      },
+      {
+        "call": "call_03",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4823,
+        "text": "I know it's a bit late, but how are you today?"
+      },
+      {
+        "call": "call_03",
+        "segment": 10,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2905,
+        "text": "Yeah, I'm good, thank you."
+      },
+      {
+        "call": "call_03",
+        "segment": 16,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1615,
+        "text": "Yeah, that's right."
+      },
+      {
+        "call": "call_03",
+        "segment": 21,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1373,
+        "text": "I'm not too sure because I haven't"
+      },
+      {
+        "call": "call_03",
+        "segment": 22,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1535,
+        "text": "Sophie delivered and they said it should be before 11."
+      }
+    ]
+  },
+  "accuracy_threshold_0_50": {
+    "threshold": 0.5,
+    "segments": 470,
+    "overall_accuracy": 70.85,
+    "agent_accuracy": 65.5,
+    "customer_accuracy": 90.91,
+    "agent_correct": 243,
+    "agent_total": 371,
+    "customer_correct": 90,
+    "customer_total": 99,
+    "errors": [
+      {
+        "call": "call_00",
+        "segment": 3,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4854,
+        "text": "Am I free to add, guys?"
+      },
+      {
+        "call": "call_00",
+        "segment": 16,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4012,
+        "text": "Okay, okay."
+      },
+      {
+        "call": "call_00",
+        "segment": 17,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.423,
+        "text": "Yep, I can see it here."
+      },
+      {
+        "call": "call_00",
+        "segment": 25,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4995,
+        "text": "Okay, that's perfect."
+      },
+      {
+        "call": "call_00",
+        "segment": 31,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.475,
+        "text": "Okay, fair enough, fair enough."
+      },
+      {
+        "call": "call_00",
+        "segment": 46,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4791,
+        "text": "Okay, perfect."
+      },
+      {
+        "call": "call_01",
+        "segment": 24,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3255,
+        "text": "Yes, of course."
+      },
+      {
+        "call": "call_01",
+        "segment": 28,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4099,
+        "text": "Where are you located?"
+      },
+      {
+        "call": "call_01",
+        "segment": 32,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3335,
+        "text": "Give me one second"
+      },
+      {
+        "call": "call_01",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4537,
+        "text": "Is that... Haze?"
+      },
+      {
+        "call": "call_01",
+        "segment": 38,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2195,
+        "text": "Not that far."
+      },
+      {
+        "call": "call_01",
+        "segment": 39,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4894,
+        "text": "Very close."
+      },
+      {
+        "call": "call_01",
+        "segment": 41,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.491,
+        "text": "When are you looking for coming?"
+      },
+      {
+        "call": "call_01",
+        "segment": 51,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.505,
+        "text": "Maybe I know what time."
+      },
+      {
+        "call": "call_01",
+        "segment": 55,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4802,
+        "text": "on Quora."
+      },
+      {
+        "call": "call_01",
+        "segment": 56,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5096,
+        "text": "You have to see the call."
+      },
+      {
+        "call": "call_01",
+        "segment": 64,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.345,
+        "text": "Of course, of course."
+      },
+      {
+        "call": "call_01",
+        "segment": 65,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3736,
+        "text": "Last one, okay?"
+      },
+      {
+        "call": "call_01",
+        "segment": 68,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4275,
+        "text": "Thank you, Amir."
+      },
+      {
+        "call": "call_02",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2898,
+        "text": "Yes."
+      },
+      {
+        "call": "call_03",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0813,
+        "text": "Your call has been forwarded to voicemail."
+      },
+      {
+        "call": "call_03",
+        "segment": 2,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": -0.0221,
+        "text": "The person you're trying to reach is not available."
+      },
+      {
+        "call": "call_03",
+        "segment": 3,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": -0.0488,
+        "text": "At the tone, please record your message."
+      },
+      {
+        "call": "call_03",
+        "segment": 6,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4309,
+        "text": "Oh, hello Rufus and Jane."
+      },
+      {
+        "call": "call_03",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4823,
+        "text": "I know it's a bit late, but how are you today?"
+      },
+      {
+        "call": "call_03",
+        "segment": 10,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2905,
+        "text": "Yeah, I'm good, thank you."
+      },
+      {
+        "call": "call_03",
+        "segment": 16,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1615,
+        "text": "Yeah, that's right."
+      },
+      {
+        "call": "call_03",
+        "segment": 21,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1373,
+        "text": "I'm not too sure because I haven't"
+      },
+      {
+        "call": "call_03",
+        "segment": 22,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1535,
+        "text": "Sophie delivered and they said it should be before 11."
+      },
+      {
+        "call": "call_03",
+        "segment": 23,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1847,
+        "text": "It depends what time that comes really."
+      }
+    ]
+  },
+  "best_same_data_threshold": {
+    "threshold": 0.33,
+    "segments": 470,
+    "overall_accuracy": 80.0,
+    "agent_accuracy": 84.1,
+    "customer_accuracy": 64.65,
+    "agent_correct": 312,
+    "agent_total": 371,
+    "customer_correct": 64,
+    "customer_total": 99,
+    "errors": [
+      {
+        "call": "call_00",
+        "segment": 12,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.3642,
+        "text": "Brentwood Brentwood?"
+      },
+      {
+        "call": "call_01",
+        "segment": 1,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.3629,
+        "text": "Hello, yes."
+      },
+      {
+        "call": "call_01",
+        "segment": 24,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3255,
+        "text": "Yes, of course."
+      },
+      {
+        "call": "call_01",
+        "segment": 29,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.3732,
+        "text": "UB4 UB4?"
+      },
+      {
+        "call": "call_01",
+        "segment": 38,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2195,
+        "text": "Not that far."
+      },
+      {
+        "call": "call_01",
+        "segment": 51,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.505,
+        "text": "Maybe I know what time."
+      },
+      {
+        "call": "call_01",
+        "segment": 52,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.3809,
+        "text": "How much to pay for my car?"
+      },
+      {
+        "call": "call_01",
+        "segment": 56,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5096,
+        "text": "You have to see the call."
+      },
+      {
+        "call": "call_02",
+        "segment": 4,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.3552,
+        "text": "Actually, two days ago, like two, three days ago,"
+      },
+      {
+        "call": "call_02",
+        "segment": 7,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.4064,
+        "text": "No heating is coming in the car."
+      },
+      {
+        "call": "call_02",
+        "segment": 8,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.3896,
+        "text": "Yeah, and that's the Volvo S90 The Volvo S90"
+      },
+      {
+        "call": "call_02",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2898,
+        "text": "Yes."
+      },
+      {
+        "call": "call_03",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0813,
+        "text": "Your call has been forwarded to voicemail."
+      },
+      {
+        "call": "call_03",
+        "segment": 2,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": -0.0221,
+        "text": "The person you're trying to reach is not available."
+      },
+      {
+        "call": "call_03",
+        "segment": 3,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": -0.0488,
+        "text": "At the tone, please record your message."
+      },
+      {
+        "call": "call_03",
+        "segment": 10,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2905,
+        "text": "Yeah, I'm good, thank you."
+      },
+      {
+        "call": "call_03",
+        "segment": 16,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1615,
+        "text": "Yeah, that's right."
+      },
+      {
+        "call": "call_03",
+        "segment": 21,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1373,
+        "text": "I'm not too sure because I haven't"
+      },
+      {
+        "call": "call_03",
+        "segment": 22,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1535,
+        "text": "Sophie delivered and they said it should be before 11."
+      },
+      {
+        "call": "call_03",
+        "segment": 23,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1847,
+        "text": "It depends what time that comes really."
+      },
+      {
+        "call": "call_03",
+        "segment": 24,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2048,
+        "text": "Hopefully towards midday, early afternoon."
+      },
+      {
+        "call": "call_03",
+        "segment": 30,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.0354,
+        "text": "Okay, yeah, that's fine."
+      },
+      {
+        "call": "call_03",
+        "segment": 33,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2361,
+        "text": "Yeah, that's great."
+      },
+      {
+        "call": "call_03",
+        "segment": 39,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1196,
+        "text": "It's probably a test drive, but would it be ready to take away with it?"
+      },
+      {
+        "call": "call_03",
+        "segment": 43,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1533,
+        "text": "Do you take credit card payments?"
+      },
+      {
+        "call": "call_03",
+        "segment": 45,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1321,
+        "text": "OK, yes, because I'd have to transfer some money from somewhere, so it probably wouldn't be..."
+      },
+      {
+        "call": "call_03",
+        "segment": 47,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1981,
+        "text": "Yeah, please."
+      },
+      {
+        "call": "call_03",
+        "segment": 53,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1037,
+        "text": "Thank you very much."
+      },
+      {
+        "call": "call_04",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1385,
+        "text": "This is the Vodafone voicemail service for..."
+      },
+      {
+        "call": "call_04",
+        "segment": 3,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2007,
+        "text": "4 5 7 2 2 1"
+      }
+    ]
+  },
+  "per_call": [
+    {
+      "call": "call_00",
+      "segments": 39,
+      "agent_segments": 31,
+      "customer_segments": 8,
+      "accuracy_new_customer_threshold": 69.23,
+      "accuracy_existing_stats_threshold": 84.62
+    },
+    {
+      "call": "call_01",
+      "segments": 48,
+      "agent_segments": 30,
+      "customer_segments": 18,
+      "accuracy_new_customer_threshold": 66.67,
+      "accuracy_existing_stats_threshold": 72.92
+    },
+    {
+      "call": "call_02",
+      "segments": 16,
+      "agent_segments": 7,
+      "customer_segments": 9,
+      "accuracy_new_customer_threshold": 81.25,
+      "accuracy_existing_stats_threshold": 93.75
+    },
+    {
+      "call": "call_03",
+      "segments": 44,
+      "agent_segments": 44,
+      "customer_segments": 0,
+      "accuracy_new_customer_threshold": 47.73,
+      "accuracy_existing_stats_threshold": 56.82
+    },
+    {
+      "call": "call_04",
+      "segments": 4,
+      "agent_segments": 3,
+      "customer_segments": 1,
+      "accuracy_new_customer_threshold": 25.0,
+      "accuracy_existing_stats_threshold": 25.0
+    },
+    {
+      "call": "call_05",
+      "segments": 31,
+      "agent_segments": 20,
+      "customer_segments": 11,
+      "accuracy_new_customer_threshold": 74.19,
+      "accuracy_existing_stats_threshold": 74.19
+    },
+    {
+      "call": "call_06",
+      "segments": 47,
+      "agent_segments": 47,
+      "customer_segments": 0,
+      "accuracy_new_customer_threshold": 31.91,
+      "accuracy_existing_stats_threshold": 42.55
+    },
+    {
+      "call": "call_07",
+      "segments": 117,
+      "agent_segments": 70,
+      "customer_segments": 47,
+      "accuracy_new_customer_threshold": 82.05,
+      "accuracy_existing_stats_threshold": 84.62
+    },
+    {
+      "call": "call_08",
+      "segments": 112,
+      "agent_segments": 112,
+      "customer_segments": 0,
+      "accuracy_new_customer_threshold": 55.36,
+      "accuracy_existing_stats_threshold": 60.71
+    },
+    {
+      "call": "call_09",
+      "segments": 12,
+      "agent_segments": 7,
+      "customer_segments": 5,
+      "accuracy_new_customer_threshold": 91.67,
+      "accuracy_existing_stats_threshold": 100.0
+    }
+  ],
+  "skipped_calls": [],
+  "skipped_segments": [
+    {
+      "call": "call_08",
+      "segment": 138,
+      "reason": "outside audio",
+      "start": 379.3,
+      "end": 379.99,
+      "audio_end": 379.94
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+{
+  "model": "nova-3",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "out_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506",
+  "calls": 9,
+  "skipped_calls": [],
+  "comparison_note": "Deepgram speaker IDs are mapped to agent/customer by maximum overlap with local data.json labels. This is an upper-bound diarization score.",
+  "weighted_role_accuracy": {
+    "overall_accuracy": 48.72,
+    "agent_accuracy": 59.91,
+    "customer_accuracy": 26.29,
+    "ticks": 17756,
+    "unknown_ticks": 3249
+  },
+  "results": [
+    {
+      "call": "call_01",
+      "call_id": "20260503T104319184_615752",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_01\\20260503T104319184_615752.mp3",
+      "audio_duration_s": 608.62,
+      "deepgram_elapsed_s": 0.0,
+      "raw_response": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\raw\\call_01_20260503T104319184_615752.deepgram.json",
+      "segments_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\segments\\call_01_20260503T104319184_615752.segments.json",
+      "truth_segments": 50,
+      "pred_segments": 123,
+      "deepgram": {
+        "request_id": "019dfd86-6cfd-7993-aca2-c1e896a094dd",
+        "duration": 608.61597,
+        "utterances": 123,
+        "words": 1444,
+        "transcript_chars": 7421
+      },
+      "role_accuracy": {
+        "role_map": {
+          "SPEAKER_00": "agent",
+          "SPEAKER_01": "customer"
+        },
+        "time_step_s": 0.25,
+        "ticks": 1424,
+        "unknown_ticks": 484,
+        "overall_accuracy": 41.71,
+        "agent_accuracy": 53.39,
+        "customer_accuracy": 3.31,
+        "agent_ticks": 1092,
+        "customer_ticks": 332
+      }
+    },
+    {
+      "call": "call_02",
+      "call_id": "20260429T085638315_375379",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_02\\20260429T085638315_375379.mp3",
+      "audio_duration_s": 297.7,
+      "deepgram_elapsed_s": 0.0,
+      "raw_response": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\raw\\call_02_20260429T085638315_375379.deepgram.json",
+      "segments_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\segments\\call_02_20260429T085638315_375379.segments.json",
+      "truth_segments": 52,
+      "pred_segments": 59,
+      "deepgram": {
+        "request_id": "019dfd87-5bbc-7b60-a09d-5b1cccb45936",
+        "duration": 297.69995,
+        "utterances": 59,
+        "words": 685,
+        "transcript_chars": 3527
+      },
+      "role_accuracy": {
+        "role_map": {
+          "SPEAKER_00": "agent",
+          "SPEAKER_01": "customer"
+        },
+        "time_step_s": 0.25,
+        "ticks": 1068,
+        "unknown_ticks": 291,
+        "overall_accuracy": 39.89,
+        "agent_accuracy": 32.12,
+        "customer_accuracy": 48.98,
+        "agent_ticks": 576,
+        "customer_ticks": 492
+      }
+    },
+    {
+      "call": "call_03",
+      "call_id": "20260423T120114270_510233",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_03\\20260423T120114270_510233.mp3",
+      "audio_duration_s": 503.86,
+      "deepgram_elapsed_s": 0.0,
+      "raw_response": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\raw\\call_03_20260423T120114270_510233.deepgram.json",
+      "segments_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\segments\\call_03_20260423T120114270_510233.segments.json",
+      "truth_segments": 52,
+      "pred_segments": 84,
+      "deepgram": {
+        "request_id": "019dfd87-6d66-7cd0-a3c0-8d755f102615",
+        "duration": 503.85593,
+        "utterances": 84,
+        "words": 1819,
+        "transcript_chars": 9301
+      },
+      "role_accuracy": {
+        "role_map": {
+          "SPEAKER_00": "agent",
+          "SPEAKER_01": "customer"
+        },
+        "time_step_s": 0.25,
+        "ticks": 1112,
+        "unknown_ticks": 96,
+        "overall_accuracy": 47.84,
+        "agent_accuracy": 76.42,
+        "customer_accuracy": 10.21,
+        "agent_ticks": 632,
+        "customer_ticks": 480
+      }
+    },
+    {
+      "call": "call_04",
+      "call_id": "20260415T142857417_569154",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_04\\20260415T142857417_569154.mp3",
+      "audio_duration_s": 547.06,
+      "deepgram_elapsed_s": 0.0,
+      "raw_response": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\raw\\call_04_20260415T142857417_569154.deepgram.json",
+      "segments_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\segments\\call_04_20260415T142857417_569154.segments.json",
+      "truth_segments": 48,
+      "pred_segments": 96,
+      "deepgram": {
+        "request_id": "019dfd87-8b15-7540-bfed-6af7d1706e32",
+        "duration": 547.0559,
+        "utterances": 96,
+        "words": 1814,
+        "transcript_chars": 8999
+      },
+      "role_accuracy": {
+        "role_map": {
+          "SPEAKER_00": "customer",
+          "SPEAKER_01": "agent"
+        },
+        "time_step_s": 0.25,
+        "ticks": 2308,
+        "unknown_ticks": 394,
+        "overall_accuracy": 63.34,
+        "agent_accuracy": 69.3,
+        "customer_accuracy": 45.28,
+        "agent_ticks": 1736,
+        "customer_ticks": 572
+      }
+    },
+    {
+      "call": "call_05",
+      "call_id": "20260415T164609656_434771",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_05\\20260415T164609656_434771.mp3",
+      "audio_duration_s": 335.23,
+      "deepgram_elapsed_s": 0.0,
+      "raw_response": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\raw\\call_05_20260415T164609656_434771.deepgram.json",
+      "segments_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\segments\\call_05_20260415T164609656_434771.segments.json",
+      "truth_segments": 61,
+      "pred_segments": 68,
+      "deepgram": {
+        "request_id": "019dfd87-a9a9-7f80-80f8-e1fb534dc259",
+        "duration": 335.23193,
+        "utterances": 68,
+        "words": 950,
+        "transcript_chars": 5018
+      },
+      "role_accuracy": {
+        "role_map": {
+          "SPEAKER_00": "agent",
+          "SPEAKER_01": "customer"
+        },
+        "time_step_s": 0.25,
+        "ticks": 1240,
+        "unknown_ticks": 251,
+        "overall_accuracy": 54.11,
+        "agent_accuracy": 67.11,
+        "customer_accuracy": 17.99,
+        "agent_ticks": 912,
+        "customer_ticks": 328
+      }
+    },
+    {
+      "call": "call_06",
+      "call_id": "20260418T162400911_477551 (2)",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_06\\20260418T162400911_477551 (2).mp3",
+      "audio_duration_s": 477.79,
+      "deepgram_elapsed_s": 0.0,
+      "raw_response": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\raw\\call_06_20260418T162400911_477551 (2).deepgram.json",
+      "segments_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\segments\\call_06_20260418T162400911_477551 (2).segments.json",
+      "truth_segments": 87,
+      "pred_segments": 75,
+      "deepgram": {
+        "request_id": "019dfd87-c43f-7d22-a388-a32a6bd74a9d",
+        "duration": 477.79193,
+        "utterances": 75,
+        "words": 1531,
+        "transcript_chars": 7719
+      },
+      "role_accuracy": {
+        "role_map": {
+          "SPEAKER_00": "agent",
+          "SPEAKER_01": "customer"
+        },
+        "time_step_s": 0.25,
+        "ticks": 1808,
+        "unknown_ticks": 222,
+        "overall_accuracy": 51.83,
+        "agent_accuracy": 66.28,
+        "customer_accuracy": 22.13,
+        "agent_ticks": 1216,
+        "customer_ticks": 592
+      }
+    },
+    {
+      "call": "call_07",
+      "call_id": "20260425T114912092_468220",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_07\\20260425T114912092_468220.mp3",
+      "audio_duration_s": 462.67,
+      "deepgram_elapsed_s": 0.0,
+      "raw_response": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\raw\\call_07_20260425T114912092_468220.deepgram.json",
+      "segments_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\segments\\call_07_20260425T114912092_468220.segments.json",
+      "truth_segments": 96,
+      "pred_segments": 100,
+      "deepgram": {
+        "request_id": "019dfd87-de1d-7e63-9af4-98ff03a274f8",
+        "duration": 462.67194,
+        "utterances": 100,
+        "words": 1381,
+        "transcript_chars": 7006
+      },
+      "role_accuracy": {
+        "role_map": {
+          "SPEAKER_00": "agent",
+          "SPEAKER_01": "customer"
+        },
+        "time_step_s": 0.25,
+        "ticks": 1448,
+        "unknown_ticks": 259,
+        "overall_accuracy": 42.47,
+        "agent_accuracy": 57.3,
+        "customer_accuracy": 16.79,
+        "agent_ticks": 918,
+        "customer_ticks": 530
+      }
+    },
+    {
+      "call": "call_09",
+      "call_id": "20260429T091119416_1437271 (1)",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_09\\20260429T091119416_1437271 (1).mp3",
+      "audio_duration_s": 1429.13,
+      "deepgram_elapsed_s": 0.0,
+      "raw_response": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\raw\\call_09_20260429T091119416_1437271 (1).deepgram.json",
+      "segments_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\segments\\call_09_20260429T091119416_1437271 (1).segments.json",
+      "truth_segments": 253,
+      "pred_segments": 274,
+      "deepgram": {
+        "request_id": "019dfd87-f6d5-7c40-87b2-3cf4993a9d39",
+        "duration": 1429.1279,
+        "utterances": 274,
+        "words": 4517,
+        "transcript_chars": 23350
+      },
+      "role_accuracy": {
+        "role_map": {
+          "SPEAKER_00": "agent",
+          "SPEAKER_01": "customer"
+        },
+        "time_step_s": 0.25,
+        "ticks": 5484,
+        "unknown_ticks": 932,
+        "overall_accuracy": 46.55,
+        "agent_accuracy": 56.2,
+        "customer_accuracy": 28.18,
+        "agent_ticks": 3596,
+        "customer_ticks": 1888
+      }
+    },
+    {
+      "call": "call_12",
+      "call_id": "20260506T095332963_533200",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_12\\20260506T095332963_533200.mp3",
+      "audio_duration_s": 533.59,
+      "deepgram_elapsed_s": 0.0,
+      "raw_response": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\raw\\call_12_20260506T095332963_533200.deepgram.json",
+      "segments_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\deepgram_zak_eval\\nova3_folder_data_20260506\\segments\\call_12_20260506T095332963_533200.segments.json",
+      "truth_segments": 123,
+      "pred_segments": 116,
+      "deepgram": {
+        "request_id": "019dfd88-32e8-7d21-945b-986db4548833",
+        "duration": 533.5919,
+        "utterances": 116,
+        "words": 1539,
+        "transcript_chars": 7525
+      },
+      "role_accuracy": {
+        "role_map": {
+          "SPEAKER_00": "agent",
+          "SPEAKER_01": "customer"
+        },
+        "time_step_s": 0.25,
+        "ticks": 1864,
+        "unknown_ticks": 320,
+        "overall_accuracy": 46.24,
+        "agent_accuracy": 58.01,
+        "customer_accuracy": 26.23,
+        "agent_ticks": 1174,
+        "customer_ticks": 690
+      }
+    }
+  ]
+}

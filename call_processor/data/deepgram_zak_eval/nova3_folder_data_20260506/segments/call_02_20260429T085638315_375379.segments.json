@@ -1,0 +1,415 @@
+[
+  {
+    "start": 3.28,
+    "end": 4.08,
+    "speaker": "SPEAKER_00",
+    "text": "Hello?",
+    "confidence": 0.98706055
+  },
+  {
+    "start": 5.12,
+    "end": 5.92,
+    "speaker": "SPEAKER_00",
+    "text": "Hello?",
+    "confidence": 0.94628906
+  },
+  {
+    "start": 6.08,
+    "end": 7.28,
+    "speaker": "SPEAKER_00",
+    "text": "Hello. Good morning.",
+    "confidence": 0.9973958
+  },
+  {
+    "start": 7.68,
+    "end": 12.16,
+    "speaker": "SPEAKER_00",
+    "text": "I just been transferred to you. I spoke with 1 of your colleagues.",
+    "confidence": 0.94591343
+  },
+  {
+    "start": 12.16,
+    "end": 17.405,
+    "speaker": "SPEAKER_00",
+    "text": "No worries. No regards to the counseling. Yes, please. Okay. Yeah. No worries. And that was on",
+    "confidence": 0.8785113
+  },
+  {
+    "start": 19.085,
+    "end": 23.244999,
+    "speaker": "SPEAKER_01",
+    "text": "it was Jason that sold you the car. Correct? HJ72?",
+    "confidence": 0.9866414
+  },
+  {
+    "start": 23.244999,
+    "end": 23.884998,
+    "speaker": "SPEAKER_00",
+    "text": "Yes.",
+    "confidence": 1.0
+  },
+  {
+    "start": 24.045,
+    "end": 29.005001,
+    "speaker": "SPEAKER_01",
+    "text": "And how many years warranty did you go for? 5. 5 years. Alright. And",
+    "confidence": 0.99375695
+  },
+  {
+    "start": 29.67,
+    "end": 30.949999,
+    "speaker": "SPEAKER_01",
+    "text": "give me 1 second,",
+    "confidence": 0.9147339
+  },
+  {
+    "start": 32.07,
+    "end": 33.59,
+    "speaker": "SPEAKER_01",
+    "text": "and I'll sort this out for you.",
+    "confidence": 0.9984654
+  },
+  {
+    "start": 34.47,
+    "end": 35.51,
+    "speaker": "SPEAKER_01",
+    "text": "So",
+    "confidence": 0.9838867
+  },
+  {
+    "start": 40.309998,
+    "end": 47.864998,
+    "speaker": "SPEAKER_01",
+    "text": "I'm just gonna check that you're still within the right cooling off period, which I believe you are still within the period. 1, 2, 3, 4.",
+    "confidence": 0.97945464
+  },
+  {
+    "start": 49.385,
+    "end": 50.824997,
+    "speaker": "SPEAKER_00",
+    "text": "Today would be the last day.",
+    "confidence": 0.9457194
+  },
+  {
+    "start": 51.625,
+    "end": 53.945,
+    "speaker": "SPEAKER_01",
+    "text": "Okay. So that means we have to solve it today.",
+    "confidence": 0.9682617
+  },
+  {
+    "start": 54.585,
+    "end": 61.68,
+    "speaker": "SPEAKER_00",
+    "text": "Yes. Because I tried to call yesterday, but for some reason, they called it and it didn't went through, and then my partner tried.",
+    "confidence": 0.9114329
+  },
+  {
+    "start": 62.32,
+    "end": 66.4,
+    "speaker": "SPEAKER_01",
+    "text": "So yeah. No. No stress. No stress. No stress. I'm gonna leave a note now.",
+    "confidence": 0.96036786
+  },
+  {
+    "start": 66.72,
+    "end": 70.08,
+    "speaker": "SPEAKER_01",
+    "text": "You should receive an email to confirm that your",
+    "confidence": 0.9828017
+  },
+  {
+    "start": 70.72,
+    "end": 72.64,
+    "speaker": "SPEAKER_01",
+    "text": "warranty has been refunded. Bear with me.",
+    "confidence": 0.999721
+  },
+  {
+    "start": 73.785,
+    "end": 79.865005,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. 1 question, please, very quick. So this was added on my finance. How this gonna affect my finance?",
+    "confidence": 0.9441946
+  },
+  {
+    "start": 83.145004,
+    "end": 86.745,
+    "speaker": "SPEAKER_01",
+    "text": "Just bear with me. I'm just give me 1 second, please. No worries.",
+    "confidence": 0.92786586
+  },
+  {
+    "start": 87.305,
+    "end": 89.545006,
+    "speaker": "SPEAKER_01",
+    "text": "And was it a full 5 years you wanted to cancel?",
+    "confidence": 0.9870827
+  },
+  {
+    "start": 90.53001,
+    "end": 93.97,
+    "speaker": "SPEAKER_01",
+    "text": "Yes. Yes. You don't want no protection on your on your cash guide?",
+    "confidence": 0.9126493
+  },
+  {
+    "start": 95.25,
+    "end": 98.93,
+    "speaker": "SPEAKER_00",
+    "text": "No. It's fine. I have very bad experience with this kind of warranty.",
+    "confidence": 0.9620643
+  },
+  {
+    "start": 99.490005,
+    "end": 103.01,
+    "speaker": "SPEAKER_00",
+    "text": "And we want to pay quicker the car and Okay.",
+    "confidence": 0.9172119
+  },
+  {
+    "start": 103.875,
+    "end": 104.674995,
+    "speaker": "SPEAKER_01",
+    "text": "No worries.",
+    "confidence": 0.9975586
+  },
+  {
+    "start": 105.23499,
+    "end": 106.435,
+    "speaker": "SPEAKER_01",
+    "text": "Just bear with me.",
+    "confidence": 0.9942627
+  },
+  {
+    "start": 113.795,
+    "end": 118.115,
+    "speaker": "SPEAKER_01",
+    "text": "So, essentially, what would happen is what was your deposit",
+    "confidence": 0.9890625
+  },
+  {
+    "start": 118.5,
+    "end": 119.38,
+    "speaker": "SPEAKER_00",
+    "text": "7.",
+    "confidence": 0.95458984
+  },
+  {
+    "start": 119.38,
+    "end": 121.06,
+    "speaker": "SPEAKER_01",
+    "text": "\u00a37,000?",
+    "confidence": 0.98986816
+  },
+  {
+    "start": 121.22,
+    "end": 124.1,
+    "speaker": "SPEAKER_01",
+    "text": "Yes. Okay. Then you'll get a direct refund.",
+    "confidence": 0.9733887
+  },
+  {
+    "start": 125.38,
+    "end": 129.54001,
+    "speaker": "SPEAKER_01",
+    "text": "So it won't it won't affect the finance in any way, but you'll get direct refund",
+    "confidence": 0.9559479
+  },
+  {
+    "start": 130.885,
+    "end": 136.085,
+    "speaker": "SPEAKER_01",
+    "text": "as the as the the payment for the warranty was taken out of your deposit most likely.",
+    "confidence": 0.945571
+  },
+  {
+    "start": 136.725,
+    "end": 148.49,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. So I'll get it back on the same payment method? Correct. Correct. And then you'll have an option to make an overpayment with your finance company. Yes. This is what I'm gonna do because I'm thinking to pay quicker. No",
+    "confidence": 0.9703042
+  },
+  {
+    "start": 148.81,
+    "end": 152.41,
+    "speaker": "SPEAKER_01",
+    "text": "worries. Is it what was your first name again? Mariana.",
+    "confidence": 0.9028157
+  },
+  {
+    "start": 152.41,
+    "end": 153.20999,
+    "speaker": "SPEAKER_01",
+    "text": "Mariana. Okay.",
+    "confidence": 0.98527014
+  },
+  {
+    "start": 175.68,
+    "end": 178.96,
+    "speaker": "SPEAKER_01",
+    "text": "Alright, Mariana. Just confirm your email for me. That'll be the last thing.",
+    "confidence": 0.9628781
+  },
+  {
+    "start": 180.0,
+    "end": 187.645,
+    "speaker": "SPEAKER_00",
+    "text": "Ma,rr,ylovovanu@gmail.com.",
+    "confidence": 0.96655273
+  },
+  {
+    "start": 187.72499,
+    "end": 190.685,
+    "speaker": "SPEAKER_01",
+    "text": "Mary, m a r r y l o?",
+    "confidence": 0.95534265
+  },
+  {
+    "start": 191.405,
+    "end": 192.285,
+    "speaker": "SPEAKER_01",
+    "text": "Z o.",
+    "confidence": 0.8338623
+  },
+  {
+    "start": 192.525,
+    "end": 195.965,
+    "speaker": "SPEAKER_01",
+    "text": "L o z o. 0, v o. Yes. Mary Loveau.",
+    "confidence": 0.84351
+  },
+  {
+    "start": 196.36499,
+    "end": 198.205,
+    "speaker": "SPEAKER_00",
+    "text": "No. Mary Loveau.",
+    "confidence": 0.83070207
+  },
+  {
+    "start": 198.84499,
+    "end": 199.805,
+    "speaker": "SPEAKER_01",
+    "text": "V o zed.",
+    "confidence": 0.7664388
+  },
+  {
+    "start": 200.7,
+    "end": 206.14001,
+    "speaker": "SPEAKER_01",
+    "text": "Zed, please. Z as o. I'm sorry. Yeah. Okay. L o z o?",
+    "confidence": 0.7560879
+  },
+  {
+    "start": 206.7,
+    "end": 210.38,
+    "speaker": "SPEAKER_00",
+    "text": "V a n u. V a n u.",
+    "confidence": 0.96069336
+  },
+  {
+    "start": 210.62,
+    "end": 214.3,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Mary Lozovano. MaryLozovano@Gmail.com.",
+    "confidence": 0.7334706
+  },
+  {
+    "start": 215.135,
+    "end": 216.815,
+    "speaker": "SPEAKER_01",
+    "text": "At g mail dot com. Yeah.",
+    "confidence": 0.865804
+  },
+  {
+    "start": 217.69499,
+    "end": 223.375,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. You should send my email because I got lots of No. No. I do have it. I just have to confirm. I just have to confirm. Okay.",
+    "confidence": 0.91851807
+  },
+  {
+    "start": 223.375,
+    "end": 225.05501,
+    "speaker": "SPEAKER_01",
+    "text": "No worries. You're gonna receive",
+    "confidence": 0.92685544
+  },
+  {
+    "start": 225.295,
+    "end": 233.87001,
+    "speaker": "SPEAKER_01",
+    "text": "an email just to give you confirmation that it has been processed, please, in the next half an hour. Okay. And the refund usually takes up to 7 days.",
+    "confidence": 0.9312597
+  },
+  {
+    "start": 234.59,
+    "end": 246.835,
+    "speaker": "SPEAKER_01",
+    "text": "But it could be on the shorter side and next 3 days. But I'd say always wait 5 to 7 days to be safe. Alright? Okay. No worries. So this Friday, I have an appointment with you guys, I think, of service",
+    "confidence": 0.9313093
+  },
+  {
+    "start": 246.835,
+    "end": 249.79501,
+    "speaker": "SPEAKER_00",
+    "text": "of with the regards with the engine mount.",
+    "confidence": 0.8772583
+  },
+  {
+    "start": 249.875,
+    "end": 250.51501,
+    "speaker": "SPEAKER_01",
+    "text": "Okay.",
+    "confidence": 0.99902344
+  },
+  {
+    "start": 251.235,
+    "end": 253.875,
+    "speaker": "SPEAKER_00",
+    "text": "So I'm not sure how this goes in",
+    "confidence": 0.998291
+  },
+  {
+    "start": 255.83,
+    "end": 260.79,
+    "speaker": "SPEAKER_00",
+    "text": "this kind of inspection. They are they still going covered by Well,",
+    "confidence": 0.9293213
+  },
+  {
+    "start": 262.15,
+    "end": 266.79,
+    "speaker": "SPEAKER_01",
+    "text": "the service shouldn't be linked to the warranty, so it should be okay. Yeah. It's not. This is what",
+    "confidence": 0.9897332
+  },
+  {
+    "start": 267.75,
+    "end": 273.49503,
+    "speaker": "SPEAKER_01",
+    "text": "girl told us on the phone. No. That that that that that should be okay. There's no worries of that. Plus, yeah, plus",
+    "confidence": 0.93703294
+  },
+  {
+    "start": 274.135,
+    "end": 280.45502,
+    "speaker": "SPEAKER_00",
+    "text": "the service plan that we separately bought is still in place. That 1, I don't wanna cancel. Okay. No worries. Yeah.",
+    "confidence": 0.9767485
+  },
+  {
+    "start": 281.255,
+    "end": 286.35,
+    "speaker": "SPEAKER_00",
+    "text": "So it should be there. Yeah. This won't affect my service plan. No. It won't affect your service plan.",
+    "confidence": 0.97436523
+  },
+  {
+    "start": 286.99002,
+    "end": 296.11002,
+    "speaker": "SPEAKER_01",
+    "text": "You're just gonna get a refund for the 5 years, whatever you would charge for the 5 years. Okay? Take care. Yeah. Okay. Thank you very much. No worries, Mariana. Take care. Have a good day. Bye. Bye bye.",
+    "confidence": 0.9356961
+  }
+]

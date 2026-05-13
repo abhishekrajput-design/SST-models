@@ -1,0 +1,155 @@
+{
+  "labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "offset_mode": "auto-source",
+  "include_source_prefix": "",
+  "include_calls": [],
+  "exclude_calls": [],
+  "skipped_calls": [],
+  "label_reports": {
+    "call_01": {
+      "call_id": "20260503T104319184_615752",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\_needs_manual_review_20260507\\call_01\\audio_16k.wav",
+      "offset_s": 1.44,
+      "segments": 50,
+      "agent_segments": 25,
+      "customer_segments": 25,
+      "alternation_baseline": {
+        "segments": 50,
+        "accuracy": 100.0,
+        "first_role": "customer",
+        "adjacent_same_role_pairs": 0,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_02": {
+      "call_id": "20260429T085638315_375379",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\_needs_manual_review_20260507\\call_02\\audio_16k.wav",
+      "offset_s": 3.45,
+      "segments": 52,
+      "agent_segments": 26,
+      "customer_segments": 26,
+      "alternation_baseline": {
+        "segments": 52,
+        "accuracy": 100.0,
+        "first_role": "customer",
+        "adjacent_same_role_pairs": 0,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_03": {
+      "call_id": "20260423T120114270_510233",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\_needs_manual_review_20260507\\call_03\\20260423T120114270_510233.mp3",
+      "offset_s": 0.89,
+      "segments": 52,
+      "agent_segments": 26,
+      "customer_segments": 26,
+      "alternation_baseline": {
+        "segments": 52,
+        "accuracy": 100.0,
+        "first_role": "customer",
+        "adjacent_same_role_pairs": 0,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_04": {
+      "call_id": "20260415T142857417_569154",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\_needs_manual_review_20260507\\call_04\\20260415T142857417_569154.mp3",
+      "offset_s": 0.74,
+      "segments": 44,
+      "agent_segments": 22,
+      "customer_segments": 22,
+      "alternation_baseline": {
+        "segments": 44,
+        "accuracy": 100.0,
+        "first_role": "customer",
+        "adjacent_same_role_pairs": 0,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_14": {
+      "call_id": "20260426T122156209_33629",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_14\\20260426T122156209_33629.mp3",
+      "offset_s": 0.0,
+      "segments": 10,
+      "agent_segments": 7,
+      "customer_segments": 3,
+      "alternation_baseline": {
+        "segments": 10,
+        "accuracy": 40.0,
+        "first_role": "agent",
+        "adjacent_same_role_pairs": 3,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    },
+    "call_17": {
+      "call_id": "20260425T175023849_113343",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_17\\20260425T175023849_113343.mp3",
+      "offset_s": 0.0,
+      "segments": 41,
+      "agent_segments": 25,
+      "customer_segments": 16,
+      "alternation_baseline": {
+        "segments": 41,
+        "accuracy": 51.22,
+        "first_role": "agent",
+        "adjacent_same_role_pairs": 15,
+        "note": "label-structure baseline only; not voice-model accuracy"
+      }
+    }
+  },
+  "all_labels_alternation_baseline": {
+    "segments": 249,
+    "accuracy": 89.96,
+    "first_role": "customer",
+    "adjacent_same_role_pairs": 20,
+    "note": "label-structure baseline only; not voice-model accuracy"
+  },
+  "saved_results": {
+    "final_zak_call14_20260426T122156209_33629__parakeet-tdt-0.6b-v3": {
+      "call_id": "20260426T122156209_33629",
+      "field": "segments",
+      "score": {
+        "segments": 10,
+        "overall_accuracy": 80.0,
+        "agent_accuracy": 85.71,
+        "customer_accuracy": 66.67,
+        "agent_correct": 6,
+        "agent_total": 7,
+        "customer_correct": 2,
+        "customer_total": 3,
+        "duration_weighted": {
+          "agent_accuracy": 92.97,
+          "customer_accuracy": 94.44,
+          "overall_accuracy": 93.41
+        },
+        "no_overlap_segments": 2,
+        "errors": [
+          {
+            "segment": 1,
+            "time": [
+              6.32,
+              6.96
+            ],
+            "expected": "agent",
+            "predicted": "unknown",
+            "overlap_seconds": 0.0,
+            "text": "Alhamdulillah."
+          },
+          {
+            "segment": 8,
+            "time": [
+              19.84,
+              20.0
+            ],
+            "expected": "customer",
+            "predicted": "unknown",
+            "overlap_seconds": 0.0,
+            "text": "Okay."
+          }
+        ]
+      }
+    }
+  },
+  "note": "Correct model verification must use timestamp overlap and held-out calls. The alternation baseline is reported only to reveal label structure."
+}

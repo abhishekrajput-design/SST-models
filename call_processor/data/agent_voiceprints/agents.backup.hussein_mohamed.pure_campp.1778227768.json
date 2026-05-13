@@ -404,38 +404,14 @@
   },
   "amandeep_nandra": {
     "agent_name": "Amandeep Nandra",
-    "voiceprint_path": "amandeep_nandra_pure_campp_v1.npy",
-    "voiceprints": [
-      {
-        "path": "amandeep_nandra_pure_campp_v1.npy",
-        "source": "daily_auto_api_labels",
-        "embedding_model": "cam++",
-        "embedding_dim": 512
-      },
-      {
-        "path": "amandeep_nandra_pure_campp_v2.npy",
-        "source": "daily_auto_api_labels",
-        "embedding_model": "cam++",
-        "embedding_dim": 512
-      },
-      {
-        "path": "amandeep_nandra_pure_campp_v3.npy",
-        "source": "daily_auto_api_labels",
-        "embedding_model": "cam++",
-        "embedding_dim": 512
-      }
-    ],
-    "n_voiceprints": 3,
-    "embedding_model": "cam++",
-    "embedding_dim": 512,
-    "source": "daily_auto_api_labels",
-    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\amandeep_nandra",
-    "purity_report": "amandeep_nandra_auto_training_report.json",
-    "n_training_segments": 322,
-    "total_training_seconds": 1101.33,
-    "mean_inside_sim": 0.7521,
-    "max_outside_sim": 0.4118,
-    "updated_at_epoch": 1778593780
+    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\amandeep_nandra.npy",
+    "n_clips": 153,
+    "n_windows_total": 664,
+    "total_seconds": 670.9,
+    "used_calls": 4,
+    "mean_inside_sim": 0.65,
+    "max_outside_sim": 0.669,
+    "source": "audiofy_api_bulk_tight_20260424"
   },
   "tulay_finance_consultant": {
     "agent_name": "Tulay Finance Consultant",
@@ -1839,19 +1815,143 @@
         "source": "pure_agent_segments_plus_clean_clips",
         "embedding_model": "cam++",
         "embedding_dim": 512
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v1.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
+        "source_offset": 900,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_03",
+        "source_similarity_to_phone_vp": 0.379
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v2.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+        "source_offset": 1500,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.3349
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v3.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
+        "source_offset": 0,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.3307
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v4.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
+        "source_offset": 300,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.3286
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v5.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
+        "source_offset": 300,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_01",
+        "source_similarity_to_phone_vp": 0.3012
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v6.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+        "source_offset": 600,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_01",
+        "source_similarity_to_phone_vp": 0.2913
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v7.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+        "source_offset": 1200,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.2912
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v8.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
+        "source_offset": 0,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.2859
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v9.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+        "source_offset": 0,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_01",
+        "source_similarity_to_phone_vp": 0.2727
+      },
+      {
+        "path": "hussein_mohamed_desk_campp_v10.npy",
+        "source": "desk_recordings_campp_stable_ds",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
+        "source_offset": 600,
+        "source_seconds": 120,
+        "source_speaker": "SPEAKER_00",
+        "source_similarity_to_phone_vp": 0.2725
       }
     ],
-    "n_voiceprints": 4,
+    "n_voiceprints": 14,
     "embedding_model": "cam++",
     "embedding_dim": 512,
     "source": "pure_agent_segments_plus_clean_clips",
     "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training",
     "purity_report": "hussein_mohamed_pure_campp_training_report.json",
     "validation_report": "hussein_mohamed_pure_campp_training_report.json",
-    "n_training_segments": 16,
-    "total_training_seconds": 55.84,
-    "mean_inside_sim": 0.8423,
-    "max_outside_sim": 0.2522,
-    "updated_at_epoch": 1778227768
+    "n_training_segments": 18,
+    "total_training_seconds": 69.64,
+    "mean_inside_sim": 0.8194,
+    "max_outside_sim": 0.2263,
+    "updated_at_epoch": 1778096267,
+    "has_desk_voiceprints": true,
+    "desk_voiceprints": [
+      "hussein_mohamed_desk_campp_v1.npy",
+      "hussein_mohamed_desk_campp_v2.npy",
+      "hussein_mohamed_desk_campp_v3.npy",
+      "hussein_mohamed_desk_campp_v4.npy",
+      "hussein_mohamed_desk_campp_v5.npy",
+      "hussein_mohamed_desk_campp_v6.npy",
+      "hussein_mohamed_desk_campp_v7.npy",
+      "hussein_mohamed_desk_campp_v8.npy",
+      "hussein_mohamed_desk_campp_v9.npy",
+      "hussein_mohamed_desk_campp_v10.npy"
+    ],
+    "stable_ds_report": "stable_ds_voiceprint_report.json"
   }
 }

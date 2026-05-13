@@ -1,0 +1,814 @@
+[
+  {
+    "start": 2.8799999,
+    "end": 3.7599998,
+    "speaker": "SPEAKER_00",
+    "text": "Hello?",
+    "confidence": 0.94873047
+  },
+  {
+    "start": 3.9199998,
+    "end": 11.599999,
+    "speaker": "SPEAKER_00",
+    "text": "Yes, sir. Yes, sir. How are you? I'm good. Thank you. Good. Good. You're through to Zak from the Barnet branch. I'm 1 of the senior sales execs.",
+    "confidence": 0.9738755
+  },
+  {
+    "start": 11.679999,
+    "end": 19.955,
+    "speaker": "SPEAKER_00",
+    "text": "Essentially, I've been told you've left a deposit on a lovely Volvo x c 42 days ago. However, you're not happy with the insurance prices that you found.",
+    "confidence": 0.9648176
+  },
+  {
+    "start": 20.595,
+    "end": 22.515,
+    "speaker": "SPEAKER_01",
+    "text": "It's \u00a3460,",
+    "confidence": 0.87564087
+  },
+  {
+    "start": 22.515,
+    "end": 24.195,
+    "speaker": "SPEAKER_01",
+    "text": "I think. \u00a3460",
+    "confidence": 0.9148763
+  },
+  {
+    "start": 24.195,
+    "end": 26.914999,
+    "speaker": "SPEAKER_00",
+    "text": "a month? A year. A a year?",
+    "confidence": 0.9057966
+  },
+  {
+    "start": 27.235,
+    "end": 28.275,
+    "speaker": "SPEAKER_01",
+    "text": "A a month.",
+    "confidence": 0.8146159
+  },
+  {
+    "start": 28.81,
+    "end": 38.41,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. A year. If it if it is if it's a year, I'll pay it 3 times. 3 times. Yeah. I was about to say the same thing. Well, look, mister Roland, obviously,",
+    "confidence": 0.8847804
+  },
+  {
+    "start": 40.57,
+    "end": 44.09,
+    "speaker": "SPEAKER_00",
+    "text": "is usually subject to the license more than anything. I know you live in London,",
+    "confidence": 0.964388
+  },
+  {
+    "start": 44.825,
+    "end": 53.545,
+    "speaker": "SPEAKER_00",
+    "text": "and probably the postcode you live in has is is, like, susceptible. What what I pay for my car, have my CLS been to How much CLS?",
+    "confidence": 0.9006107
+  },
+  {
+    "start": 54.025,
+    "end": 55.704998,
+    "speaker": "SPEAKER_00",
+    "text": "$2.60.",
+    "confidence": 0.8338623
+  },
+  {
+    "start": 55.864998,
+    "end": 57.145,
+    "speaker": "SPEAKER_00",
+    "text": "Which year is the CLS?",
+    "confidence": 0.99921876
+  },
+  {
+    "start": 57.56,
+    "end": 58.92,
+    "speaker": "SPEAKER_01",
+    "text": "2,015.",
+    "confidence": 0.96744794
+  },
+  {
+    "start": 59.16,
+    "end": 61.079998,
+    "speaker": "SPEAKER_01",
+    "text": "1 year. Which engine?",
+    "confidence": 0.8631592
+  },
+  {
+    "start": 61.88,
+    "end": 62.92,
+    "speaker": "SPEAKER_01",
+    "text": "2.2.",
+    "confidence": 0.86376953
+  },
+  {
+    "start": 64.44,
+    "end": 74.315,
+    "speaker": "SPEAKER_01",
+    "text": "And it's $2.60. Yeah? Yeah. This 1, which 1 I called my insurance to just transfer it from my CLS to to the the vehicle. And they quoted you 460.",
+    "confidence": 0.883079
+  },
+  {
+    "start": 74.315,
+    "end": 75.435,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah? Yeah.",
+    "confidence": 0.99316406
+  },
+  {
+    "start": 75.515,
+    "end": 76.875,
+    "speaker": "SPEAKER_00",
+    "text": "Okay. Do me a favor.",
+    "confidence": 0.9970215
+  },
+  {
+    "start": 77.275,
+    "end": 77.915,
+    "speaker": "SPEAKER_01",
+    "text": "Yes.",
+    "confidence": 0.9980469
+  },
+  {
+    "start": 79.755,
+    "end": 85.16,
+    "speaker": "SPEAKER_00",
+    "text": "Because, look, I can I can try and find you another car that we have will give you cheaper insurance,",
+    "confidence": 0.97056884
+  },
+  {
+    "start": 85.56,
+    "end": 88.840004,
+    "speaker": "SPEAKER_00",
+    "text": "but I assume that you like the Volvo x c 90?",
+    "confidence": 0.93397105
+  },
+  {
+    "start": 89.72,
+    "end": 97.8,
+    "speaker": "SPEAKER_00",
+    "text": "My list is gonna kill me if if I get another car. That's what I'm saying. So, look, I don't wanna find you another car. I'm just gonna solve your problem.",
+    "confidence": 0.9416504
+  },
+  {
+    "start": 98.12,
+    "end": 102.475,
+    "speaker": "SPEAKER_00",
+    "text": "So Oh. Obviously, me personally, I work with a few insurance brokers,",
+    "confidence": 0.9425659
+  },
+  {
+    "start": 102.715004,
+    "end": 108.795,
+    "speaker": "SPEAKER_00",
+    "text": "but I can't make you a promise in terms of insurance. What I can tell you is if you look on confused.com",
+    "confidence": 0.9848707
+  },
+  {
+    "start": 108.795,
+    "end": 113.435,
+    "speaker": "SPEAKER_01",
+    "text": "without trying to transfer your insurance over I I tried last night. I tried",
+    "confidence": 0.937779
+  },
+  {
+    "start": 114.25,
+    "end": 119.689995,
+    "speaker": "SPEAKER_01",
+    "text": "I tried to different insurance as well. Mhmm. They told me same price.",
+    "confidence": 0.81627476
+  },
+  {
+    "start": 121.85,
+    "end": 126.329994,
+    "speaker": "SPEAKER_00",
+    "text": "But listen, I'm surprised. I think it's because the 9 x t 90 is known for being stolen,",
+    "confidence": 0.8486192
+  },
+  {
+    "start": 126.865005,
+    "end": 138.385,
+    "speaker": "SPEAKER_00",
+    "text": "but that's not a big deal. You know, when you do the insurance and it says you have track of it, immobile Every car every car, but if it's if they come to see you with every car, they can see you with that. I know. And a Volvo and Range Rover,",
+    "confidence": 0.83581424
+  },
+  {
+    "start": 138.97,
+    "end": 143.13,
+    "speaker": "SPEAKER_00",
+    "text": "they're they're they're a lot they're expensive. So when you steal it, it's easy money for them.",
+    "confidence": 0.9707606
+  },
+  {
+    "start": 143.53,
+    "end": 145.45001,
+    "speaker": "SPEAKER_00",
+    "text": "But what was I gonna say, Roland,",
+    "confidence": 0.89923966
+  },
+  {
+    "start": 145.93,
+    "end": 150.01,
+    "speaker": "SPEAKER_00",
+    "text": "on the insurance, have you put down that you have a ghost immobilizer tracker?",
+    "confidence": 0.9663667
+  },
+  {
+    "start": 150.01,
+    "end": 150.57,
+    "speaker": "SPEAKER_01",
+    "text": "For",
+    "confidence": 0.29589844
+  },
+  {
+    "start": 151.69,
+    "end": 157.155,
+    "speaker": "SPEAKER_01",
+    "text": "what that was, yes. Because what I'm using for my car, and what I said that this 1",
+    "confidence": 0.79694283
+  },
+  {
+    "start": 158.675,
+    "end": 160.35501,
+    "speaker": "SPEAKER_01",
+    "text": "they just give me the",
+    "confidence": 0.9151367
+  },
+  {
+    "start": 160.595,
+    "end": 161.39502,
+    "speaker": "SPEAKER_01",
+    "text": "the",
+    "confidence": 0.70703125
+  },
+  {
+    "start": 161.955,
+    "end": 162.675,
+    "speaker": "SPEAKER_01",
+    "text": "best",
+    "confidence": 0.53808594
+  },
+  {
+    "start": 163.235,
+    "end": 164.51501,
+    "speaker": "SPEAKER_01",
+    "text": "what they've given me.",
+    "confidence": 0.805542
+  },
+  {
+    "start": 165.07501,
+    "end": 167.07501,
+    "speaker": "SPEAKER_01",
+    "text": "They said to me just to",
+    "confidence": 0.8548991
+  },
+  {
+    "start": 167.48,
+    "end": 169.16,
+    "speaker": "SPEAKER_01",
+    "text": "check how much it's gonna be.",
+    "confidence": 0.96765137
+  },
+  {
+    "start": 169.72,
+    "end": 172.36,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. And they said to me the",
+    "confidence": 0.8823591
+  },
+  {
+    "start": 172.52,
+    "end": 173.8,
+    "speaker": "SPEAKER_01",
+    "text": "$4.60,",
+    "confidence": 0.80078125
+  },
+  {
+    "start": 173.8,
+    "end": 175.64,
+    "speaker": "SPEAKER_01",
+    "text": "and I I checked last night.",
+    "confidence": 0.8327637
+  },
+  {
+    "start": 176.12,
+    "end": 178.36,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah. And",
+    "confidence": 0.9830322
+  },
+  {
+    "start": 178.36,
+    "end": 182.025,
+    "speaker": "SPEAKER_01",
+    "text": "they saying to me same thing, like, $3.60,",
+    "confidence": 0.805542
+  },
+  {
+    "start": 182.025,
+    "end": 183.94499,
+    "speaker": "SPEAKER_01",
+    "text": "400.",
+    "confidence": 0.87475586
+  },
+  {
+    "start": 183.94499,
+    "end": 197.86002,
+    "speaker": "SPEAKER_00",
+    "text": "3 60 is a lot better, but it's not perfect. We need to be on this under under that. You know? At least, like, sustain, like, my 1, and I can cancel my my my insurance. At least. I know. Like like, we can't take the piss. You know?",
+    "confidence": 0.93977696
+  },
+  {
+    "start": 198.26001,
+    "end": 209.06,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Because it's too much work. Mean, if you if you see, you're gonna pay 400 and No. No. Not for x c 90. Maybe I pay that for Lamborghini Urus, but not for x c 90. You understand me?",
+    "confidence": 0.8606455
+  },
+  {
+    "start": 210.055,
+    "end": 213.575,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. So I I get I understand what you're saying. I'm",
+    "confidence": 0.9101784
+  },
+  {
+    "start": 213.575,
+    "end": 215.335,
+    "speaker": "SPEAKER_00",
+    "text": "just trying to think of a way to",
+    "confidence": 0.9984131
+  },
+  {
+    "start": 215.97499,
+    "end": 221.81499,
+    "speaker": "SPEAKER_01",
+    "text": "I was I was speaking with your manager. His manager, I don't know which 1 is the the guy",
+    "confidence": 0.8431461
+  },
+  {
+    "start": 221.97499,
+    "end": 223.495,
+    "speaker": "SPEAKER_00",
+    "text": "What was he saying? Last night.",
+    "confidence": 0.98099774
+  },
+  {
+    "start": 224.13,
+    "end": 236.37001,
+    "speaker": "SPEAKER_00",
+    "text": "Said He to me, if you don't find anything, like, you can take get the deposit back, he said. Oh, he said to you, you can get a deposit back. Yeah? Yeah. Yeah. I said to to him, let her know the lady which 1 was dealing with me. Was okay.",
+    "confidence": 0.8873171
+  },
+  {
+    "start": 237.465,
+    "end": 239.225,
+    "speaker": "SPEAKER_01",
+    "text": "The Indian 1. Okay.",
+    "confidence": 0.9959717
+  },
+  {
+    "start": 239.625,
+    "end": 240.985,
+    "speaker": "SPEAKER_00",
+    "text": "I'll speak to her as well.",
+    "confidence": 0.9442749
+  },
+  {
+    "start": 241.705,
+    "end": 243.865,
+    "speaker": "SPEAKER_00",
+    "text": "I'm just double checking all of that. But",
+    "confidence": 0.9515686
+  },
+  {
+    "start": 245.14499,
+    "end": 253.305,
+    "speaker": "SPEAKER_00",
+    "text": "do you not want to buy the car, or is it just the insurance that's the issue? The insurance is the the issue, ma'am. Because of the car, it it was cheaper insurance.",
+    "confidence": 0.8909579
+  },
+  {
+    "start": 254.08,
+    "end": 258.96002,
+    "speaker": "SPEAKER_00",
+    "text": "Have you tried it? No? Tried to look at any other x t nineties and have a look how much they are? I",
+    "confidence": 0.8661154
+  },
+  {
+    "start": 259.68,
+    "end": 263.28,
+    "speaker": "SPEAKER_01",
+    "text": "tried the different 1. What do you have? Do you guys have do you want",
+    "confidence": 0.83266604
+  },
+  {
+    "start": 265.04,
+    "end": 269.325,
+    "speaker": "SPEAKER_01",
+    "text": "see, in our website, I'll just see the number 2. Yeah. And",
+    "confidence": 0.75575763
+  },
+  {
+    "start": 269.885,
+    "end": 271.64502,
+    "speaker": "SPEAKER_01",
+    "text": "they're saying the same thing. But",
+    "confidence": 0.7845052
+  },
+  {
+    "start": 274.685,
+    "end": 277.40503,
+    "speaker": "SPEAKER_01",
+    "text": "it was hybrid and petrol, I think. And",
+    "confidence": 0.90440875
+  },
+  {
+    "start": 277.805,
+    "end": 279.565,
+    "speaker": "SPEAKER_00",
+    "text": "was you looking for just petrol?",
+    "confidence": 0.9647624
+  },
+  {
+    "start": 280.685,
+    "end": 281.405,
+    "speaker": "SPEAKER_01",
+    "text": "Well, this",
+    "confidence": 0.6867676
+  },
+  {
+    "start": 282.99,
+    "end": 285.39,
+    "speaker": "SPEAKER_01",
+    "text": "5 bit as well. We're same thing. Same",
+    "confidence": 0.57351685
+  },
+  {
+    "start": 286.51,
+    "end": 288.99002,
+    "speaker": "SPEAKER_01",
+    "text": "same price. 460.",
+    "confidence": 0.84403485
+  },
+  {
+    "start": 289.07,
+    "end": 289.63,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah.",
+    "confidence": 0.9970703
+  },
+  {
+    "start": 290.11,
+    "end": 291.31,
+    "speaker": "SPEAKER_00",
+    "text": "The thing is look.",
+    "confidence": 0.9893799
+  },
+  {
+    "start": 291.87,
+    "end": 297.87,
+    "speaker": "SPEAKER_00",
+    "text": "I'll double check just to give you full peace of mind that your money is is refundable, and I can transfer you back to deposit. That's no problem.",
+    "confidence": 0.9810123
+  },
+  {
+    "start": 298.565,
+    "end": 306.725,
+    "speaker": "SPEAKER_00",
+    "text": "As long as it's been as long as it's been approved long as been approved, like you say, is gonna be no issue at all, and you'll get the money in 2 to 3 days. But at the same time,",
+    "confidence": 0.92840576
+  },
+  {
+    "start": 307.285,
+    "end": 312.805,
+    "speaker": "SPEAKER_00",
+    "text": "if there is a solution, I wanna help you find it. Now was there was there any other calls on the website of interest?",
+    "confidence": 0.9850464
+  },
+  {
+    "start": 315.41,
+    "end": 321.17,
+    "speaker": "SPEAKER_01",
+    "text": "No. To be honest with you, because what you guys have is a 7 seaters you have, but didn't like it.",
+    "confidence": 0.8313628
+  },
+  {
+    "start": 322.53,
+    "end": 323.65002,
+    "speaker": "SPEAKER_00",
+    "text": "Shit. Okay.",
+    "confidence": 0.87109375
+  },
+  {
+    "start": 323.89,
+    "end": 328.05,
+    "speaker": "SPEAKER_01",
+    "text": "Because I'm looking I'm looking for any 7 seaters. But if anything comes,",
+    "confidence": 0.9554349
+  },
+  {
+    "start": 329.175,
+    "end": 330.215,
+    "speaker": "SPEAKER_01",
+    "text": "like, after,",
+    "confidence": 0.8386841
+  },
+  {
+    "start": 331.415,
+    "end": 339.735,
+    "speaker": "SPEAKER_01",
+    "text": "maybe we have a look, and I will come back to you guys. Don't know. It's close for me as well. Alright. Cool. There's 1 last thing I wanna try for you. Yeah?",
+    "confidence": 0.91256434
+  },
+  {
+    "start": 343.18,
+    "end": 344.38,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. So,",
+    "confidence": 0.881958
+  },
+  {
+    "start": 344.78,
+    "end": 348.06,
+    "speaker": "SPEAKER_00",
+    "text": "obviously, like I said, I've got networking links with insurance brokerage.",
+    "confidence": 0.9930309
+  },
+  {
+    "start": 348.46,
+    "end": 351.18,
+    "speaker": "SPEAKER_00",
+    "text": "If I get you a quote that makes sense to you,",
+    "confidence": 0.98131216
+  },
+  {
+    "start": 351.81998,
+    "end": 353.81998,
+    "speaker": "SPEAKER_00",
+    "text": "would would you still be happy to proceed?",
+    "confidence": 0.9378052
+  },
+  {
+    "start": 356.345,
+    "end": 363.145,
+    "speaker": "SPEAKER_01",
+    "text": "Look. It's gonna be a same thing. I know because I I deal with the insurance. I deal with the I promise you.",
+    "confidence": 0.8012642
+  },
+  {
+    "start": 363.465,
+    "end": 364.185,
+    "speaker": "SPEAKER_00",
+    "text": "I",
+    "confidence": 0.5722656
+  },
+  {
+    "start": 364.585,
+    "end": 368.425,
+    "speaker": "SPEAKER_01",
+    "text": "know people who would I know people who would have been \u00a36,000.",
+    "confidence": 0.7814331
+  },
+  {
+    "start": 368.425,
+    "end": 370.5,
+    "speaker": "SPEAKER_00",
+    "text": "My goal should have been \u00a36,000.",
+    "confidence": 0.9112142
+  },
+  {
+    "start": 370.66,
+    "end": 372.02,
+    "speaker": "SPEAKER_00",
+    "text": "I paid 2,400.",
+    "confidence": 0.8974202
+  },
+  {
+    "start": 372.02,
+    "end": 375.38,
+    "speaker": "SPEAKER_00",
+    "text": "It's not cheap, but it's it's like fast GTI. So I",
+    "confidence": 0.9230587
+  },
+  {
+    "start": 375.86,
+    "end": 390.86502,
+    "speaker": "SPEAKER_00",
+    "text": "understand insurance from a different perspective, from a different angle. So that's why I'm asking you. If I can get you a quote, would you still be happy But no. Dodgy 1. Yeah? Because I dodgy 1. I work I work at dealership, man. I can't do dodgy stuff, but it's it's all it's all legal. You know? We I I",
+    "confidence": 0.92144346
+  },
+  {
+    "start": 391.58502,
+    "end": 394.14502,
+    "speaker": "SPEAKER_01",
+    "text": "Because if they stop me, I get fucked.",
+    "confidence": 0.86572266
+  },
+  {
+    "start": 394.465,
+    "end": 400.065,
+    "speaker": "SPEAKER_00",
+    "text": "No. Dodgy is not the Dodgy is not even up for debate. It's gonna be on on just a normal insurance",
+    "confidence": 0.93193126
+  },
+  {
+    "start": 400.14502,
+    "end": 401.93,
+    "speaker": "SPEAKER_00",
+    "text": "with, like, money supermarket.",
+    "confidence": 0.97210693
+  },
+  {
+    "start": 403.29,
+    "end": 403.93,
+    "speaker": "SPEAKER_01",
+    "text": "Yeah.",
+    "confidence": 0.8869629
+  },
+  {
+    "start": 404.57,
+    "end": 411.45,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. So I'm just asking you if if I get you a quote that makes sense to you, would you still be happy to get or no? Just leave it for now. Just",
+    "confidence": 0.90664953
+  },
+  {
+    "start": 412.00998,
+    "end": 413.93,
+    "speaker": "SPEAKER_00",
+    "text": "because I take all the insurances.",
+    "confidence": 0.91208225
+  },
+  {
+    "start": 415.39502,
+    "end": 416.11502,
+    "speaker": "SPEAKER_01",
+    "text": "But",
+    "confidence": 0.8071289
+  },
+  {
+    "start": 416.595,
+    "end": 417.475,
+    "speaker": "SPEAKER_01",
+    "text": "if you can",
+    "confidence": 0.73966473
+  },
+  {
+    "start": 418.915,
+    "end": 422.595,
+    "speaker": "SPEAKER_00",
+    "text": "Look. Obviously, we can sort out the deposit and send it back to you if that's the case.",
+    "confidence": 0.98048234
+  },
+  {
+    "start": 422.995,
+    "end": 427.39502,
+    "speaker": "SPEAKER_00",
+    "text": "But if you like the x c 90, I don't mind trying to find you a quote",
+    "confidence": 0.96492994
+  },
+  {
+    "start": 428.23,
+    "end": 431.83002,
+    "speaker": "SPEAKER_00",
+    "text": "of between 200 to \u00a3250 a month for your car.",
+    "confidence": 0.9940268
+  },
+  {
+    "start": 434.31,
+    "end": 438.31,
+    "speaker": "SPEAKER_00",
+    "text": "Like, can you pounds a month? 200, \u00a3250 a month for your insurance. Yeah.",
+    "confidence": 0.9116763
+  },
+  {
+    "start": 442.925,
+    "end": 444.605,
+    "speaker": "SPEAKER_00",
+    "text": "Just have a look.",
+    "confidence": 0.98913574
+  },
+  {
+    "start": 445.085,
+    "end": 447.325,
+    "speaker": "SPEAKER_00",
+    "text": "I'll have a look. I'm gonna send you a email.",
+    "confidence": 0.9567871
+  },
+  {
+    "start": 448.04498,
+    "end": 459.95,
+    "speaker": "SPEAKER_00",
+    "text": "Just reply back to it, and then I'll send you a quote and tell you if it's if it's worth. If I What what can I do, Tyler? I'll send you an email, and then I'll just fill out the information, and I'll try and get you a competitive quote.",
+    "confidence": 0.93614745
+  },
+  {
+    "start": 460.27,
+    "end": 463.79,
+    "speaker": "SPEAKER_00",
+    "text": "If I can't, it's okay. You know? But if I can, I'll try. You know?",
+    "confidence": 0.9657335
+  },
+  {
+    "start": 464.59,
+    "end": 466.11,
+    "speaker": "SPEAKER_01",
+    "text": "Alright. Let me see. You know?",
+    "confidence": 0.89534503
+  },
+  {
+    "start": 468.92502,
+    "end": 473.885,
+    "speaker": "SPEAKER_00",
+    "text": "Alright, Roland. I'll speak to you soon. I'm gonna drop you an email. Alright. And then we'll get in touch.",
+    "confidence": 0.9106323
+  },
+  {
+    "start": 474.36502,
+    "end": 480.20502,
+    "speaker": "SPEAKER_00",
+    "text": "I mean, if I can't help you out, at least I tried. And if you're a 100% sure there's no other 7 seaters on our website",
+    "confidence": 0.93312424
+  },
+  {
+    "start": 482.14,
+    "end": 490.38,
+    "speaker": "SPEAKER_01",
+    "text": "Well, 1 is another 1, but it's 6 owners, man. What I cannot do with that? Well, what car is it? The white white 1. XC 90?",
+    "confidence": 0.8625579
+  },
+  {
+    "start": 490.7,
+    "end": 493.42,
+    "speaker": "SPEAKER_00",
+    "text": "Mhmm. Give me a second before you go.",
+    "confidence": 0.9802551
+  },
+  {
+    "start": 494.86002,
+    "end": 497.34,
+    "speaker": "SPEAKER_00",
+    "text": "Owners are are the same family.",
+    "confidence": 0.9687907
+  },
+  {
+    "start": 498.585,
+    "end": 502.745,
+    "speaker": "SPEAKER_00",
+    "text": "Yeah. Yeah. Not all the time, but sometimes. And sometimes I can check if that's the case.",
+    "confidence": 0.90072095
+  },
+  {
+    "start": 503.865,
+    "end": 505.225,
+    "speaker": "SPEAKER_00",
+    "text": "S y 65.",
+    "confidence": 0.79919434
+  },
+  {
+    "start": 505.305,
+    "end": 505.785,
+    "speaker": "SPEAKER_00",
+    "text": "Okay.",
+    "confidence": 0.9975586
+  },
+  {
+    "start": 507.785,
+    "end": 510.82498,
+    "speaker": "SPEAKER_01",
+    "text": "I was expensive as well or or no? How much was that?",
+    "confidence": 0.7126465
+  },
+  {
+    "start": 511.55002,
+    "end": 512.83,
+    "speaker": "SPEAKER_00",
+    "text": "$20,006.50,",
+    "confidence": 0.9439291
+  },
+  {
+    "start": 512.83,
+    "end": 514.51,
+    "speaker": "SPEAKER_00",
+    "text": "the car. And",
+    "confidence": 0.9810384
+  },
+  {
+    "start": 515.15,
+    "end": 523.07,
+    "speaker": "SPEAKER_00",
+    "text": "the 1 the 1 you're looking at is 22,000. So this one's 2,000 cheaper. A full main dealer, 6 previous owners, last 1 is a female.",
+    "confidence": 0.96915376
+  },
+  {
+    "start": 524.19,
+    "end": 533.3068,
+    "speaker": "SPEAKER_00",
+    "text": "Nah. I'm not good with that 1 because 6 owners. Okay. You you find his house in. Yeah. Okay, Roland. I'll leave you to it, and I'll be in call. I'll be in touch with you. Alright, man.",
+    "confidence": 0.7981375
+  }
+]

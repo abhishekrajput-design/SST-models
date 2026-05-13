@@ -1,0 +1,471 @@
+{
+  "agent_slug": "hussein_mohamed",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\hussein_mohamed_pure_candidate_20260508",
+  "label_source": "folder-data",
+  "offset_mode": "none",
+  "include_source_prefix": "",
+  "include_calls": [],
+  "exclude_calls": [],
+  "calls": 4,
+  "eval_rows": 50,
+  "clean_rows": 0,
+  "skipped_calls": [],
+  "skipped_segments": [],
+  "folds": [
+    {
+      "heldout_call": "call_02",
+      "train_segments": 12,
+      "train_eval_segments": 36,
+      "test_segments": 14,
+      "customer_p95": 0.1893,
+      "calibrated_threshold": 0.34,
+      "best_train_threshold": {
+        "threshold": 0.215,
+        "segments": 36,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 36,
+        "total": 36,
+        "agent_correct": 24,
+        "agent_total": 24,
+        "customer_correct": 12,
+        "customer_total": 12,
+        "errors": [],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.34,
+        "segments": 14,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 14,
+        "total": 14,
+        "agent_correct": 6,
+        "agent_total": 6,
+        "customer_correct": 8,
+        "customer_total": 8,
+        "errors": []
+      },
+      "train_tuned": {
+        "threshold": 0.215,
+        "segments": 14,
+        "overall_accuracy": 71.43,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 50.0,
+        "correct": 10,
+        "total": 14,
+        "agent_correct": 6,
+        "agent_total": 6,
+        "customer_correct": 4,
+        "customer_total": 8,
+        "errors": [
+          {
+            "call": "call_02",
+            "segment": 20,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.2539,
+            "text": "Yeah, no, I d I'm not I did cancel it over WhatsApp, like you know, we had a WhatsApp conversation about it."
+          },
+          {
+            "call": "call_02",
+            "segment": 21,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.2908,
+            "text": "But you guys have been sending me texts and phoning me all afternoon, so I don't know why."
+          },
+          {
+            "call": "call_02",
+            "segment": 28,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.2501,
+            "text": "I'm nowhere near anything to show you then."
+          },
+          {
+            "call": "call_02",
+            "segment": 30,
+            "truth": "customer",
+            "predicted": "agent",
+            "similarity": 0.2329,
+            "text": "If you don't if there's no reason you're calling me, then it's fine."
+          }
+        ]
+      }
+    },
+    {
+      "heldout_call": "call_03",
+      "train_segments": 9,
+      "train_eval_segments": 34,
+      "test_segments": 16,
+      "customer_p95": 0.2613,
+      "calibrated_threshold": 0.34,
+      "best_train_threshold": {
+        "threshold": 0.295,
+        "segments": 34,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 34,
+        "total": 34,
+        "agent_correct": 17,
+        "agent_total": 17,
+        "customer_correct": 17,
+        "customer_total": 17,
+        "errors": [],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.34,
+        "segments": 16,
+        "overall_accuracy": 93.75,
+        "agent_accuracy": 92.31,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 16,
+        "agent_correct": 12,
+        "agent_total": 13,
+        "customer_correct": 3,
+        "customer_total": 3,
+        "errors": [
+          {
+            "call": "call_03",
+            "segment": 31,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.2293,
+            "text": "Bye bye bye bye"
+          }
+        ]
+      },
+      "train_tuned": {
+        "threshold": 0.295,
+        "segments": 16,
+        "overall_accuracy": 93.75,
+        "agent_accuracy": 92.31,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 16,
+        "agent_correct": 12,
+        "agent_total": 13,
+        "customer_correct": 3,
+        "customer_total": 3,
+        "errors": [
+          {
+            "call": "call_03",
+            "segment": 31,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.2293,
+            "text": "Bye bye bye bye"
+          }
+        ]
+      }
+    },
+    {
+      "heldout_call": "call_04",
+      "train_segments": 14,
+      "train_eval_segments": 45,
+      "test_segments": 5,
+      "customer_p95": 0.2177,
+      "calibrated_threshold": 0.34,
+      "best_train_threshold": {
+        "threshold": 0.255,
+        "segments": 45,
+        "overall_accuracy": 97.78,
+        "agent_accuracy": 96.15,
+        "customer_accuracy": 100.0,
+        "correct": 44,
+        "total": 45,
+        "agent_correct": 25,
+        "agent_total": 26,
+        "customer_correct": 19,
+        "customer_total": 19,
+        "errors": [
+          {
+            "call": "call_03",
+            "segment": 31,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.2446,
+            "text": "Bye bye bye bye"
+          }
+        ],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.34,
+        "segments": 5,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 5,
+        "total": 5,
+        "agent_correct": 4,
+        "agent_total": 4,
+        "customer_correct": 1,
+        "customer_total": 1,
+        "errors": []
+      },
+      "train_tuned": {
+        "threshold": 0.255,
+        "segments": 5,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 5,
+        "total": 5,
+        "agent_correct": 4,
+        "agent_total": 4,
+        "customer_correct": 1,
+        "customer_total": 1,
+        "errors": []
+      }
+    },
+    {
+      "heldout_call": "call_08",
+      "train_segments": 13,
+      "train_eval_segments": 35,
+      "test_segments": 15,
+      "customer_p95": 0.2685,
+      "calibrated_threshold": 0.34,
+      "best_train_threshold": {
+        "threshold": 0.295,
+        "segments": 35,
+        "overall_accuracy": 97.14,
+        "agent_accuracy": 95.65,
+        "customer_accuracy": 100.0,
+        "correct": 34,
+        "total": 35,
+        "agent_correct": 22,
+        "agent_total": 23,
+        "customer_correct": 12,
+        "customer_total": 12,
+        "errors": [
+          {
+            "call": "call_03",
+            "segment": 31,
+            "truth": "agent",
+            "predicted": "customer",
+            "similarity": 0.2293,
+            "text": "Bye bye bye bye"
+          }
+        ],
+        "met_role_floor": true
+      },
+      "calibrated": {
+        "threshold": 0.34,
+        "segments": 15,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 15,
+        "agent_correct": 7,
+        "agent_total": 7,
+        "customer_correct": 8,
+        "customer_total": 8,
+        "errors": []
+      },
+      "train_tuned": {
+        "threshold": 0.295,
+        "segments": 15,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 15,
+        "agent_correct": 7,
+        "agent_total": 7,
+        "customer_correct": 8,
+        "customer_total": 8,
+        "errors": []
+      }
+    }
+  ],
+  "calibrated_leave_one_call_out": {
+    "overall_accuracy": 98.0,
+    "agent_accuracy": 96.67,
+    "customer_accuracy": 100.0,
+    "correct": 49,
+    "total": 50,
+    "agent_correct": 29,
+    "agent_total": 30,
+    "customer_correct": 20,
+    "customer_total": 20,
+    "per_call": {
+      "call_02": {
+        "threshold": 0.34,
+        "segments": 14,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 14,
+        "total": 14,
+        "agent_correct": 6,
+        "agent_total": 6,
+        "customer_correct": 8,
+        "customer_total": 8
+      },
+      "call_03": {
+        "threshold": 0.34,
+        "segments": 16,
+        "overall_accuracy": 93.75,
+        "agent_accuracy": 92.31,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 16,
+        "agent_correct": 12,
+        "agent_total": 13,
+        "customer_correct": 3,
+        "customer_total": 3
+      },
+      "call_04": {
+        "threshold": 0.34,
+        "segments": 5,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 5,
+        "total": 5,
+        "agent_correct": 4,
+        "agent_total": 4,
+        "customer_correct": 1,
+        "customer_total": 1
+      },
+      "call_08": {
+        "threshold": 0.34,
+        "segments": 15,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 15,
+        "agent_correct": 7,
+        "agent_total": 7,
+        "customer_correct": 8,
+        "customer_total": 8
+      }
+    },
+    "errors": [
+      {
+        "call": "call_03",
+        "segment": 31,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.2293,
+        "text": "Bye bye bye bye"
+      }
+    ]
+  },
+  "train_tuned_leave_one_call_out": {
+    "overall_accuracy": 90.0,
+    "agent_accuracy": 96.67,
+    "customer_accuracy": 80.0,
+    "correct": 45,
+    "total": 50,
+    "agent_correct": 29,
+    "agent_total": 30,
+    "customer_correct": 16,
+    "customer_total": 20,
+    "per_call": {
+      "call_02": {
+        "threshold": 0.215,
+        "segments": 14,
+        "overall_accuracy": 71.43,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 50.0,
+        "correct": 10,
+        "total": 14,
+        "agent_correct": 6,
+        "agent_total": 6,
+        "customer_correct": 4,
+        "customer_total": 8
+      },
+      "call_03": {
+        "threshold": 0.295,
+        "segments": 16,
+        "overall_accuracy": 93.75,
+        "agent_accuracy": 92.31,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 16,
+        "agent_correct": 12,
+        "agent_total": 13,
+        "customer_correct": 3,
+        "customer_total": 3
+      },
+      "call_04": {
+        "threshold": 0.255,
+        "segments": 5,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 5,
+        "total": 5,
+        "agent_correct": 4,
+        "agent_total": 4,
+        "customer_correct": 1,
+        "customer_total": 1
+      },
+      "call_08": {
+        "threshold": 0.295,
+        "segments": 15,
+        "overall_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "correct": 15,
+        "total": 15,
+        "agent_correct": 7,
+        "agent_total": 7,
+        "customer_correct": 8,
+        "customer_total": 8
+      }
+    },
+    "errors": [
+      {
+        "call": "call_02",
+        "segment": 20,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.2539,
+        "text": "Yeah, no, I d I'm not I did cancel it over WhatsApp, like you know, we had a WhatsApp conversation about it."
+      },
+      {
+        "call": "call_02",
+        "segment": 21,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.2908,
+        "text": "But you guys have been sending me texts and phoning me all afternoon, so I don't know why."
+      },
+      {
+        "call": "call_02",
+        "segment": 28,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.2501,
+        "text": "I'm nowhere near anything to show you then."
+      },
+      {
+        "call": "call_02",
+        "segment": 30,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.2329,
+        "text": "If you don't if there's no reason you're calling me, then it's fine."
+      },
+      {
+        "call": "call_03",
+        "segment": 31,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.2293,
+        "text": "Bye bye bye bye"
+      }
+    ]
+  }
+}

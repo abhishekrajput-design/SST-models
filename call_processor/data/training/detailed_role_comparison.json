@@ -1,0 +1,506 @@
+{
+  "agent_name": "Omar El Harchaoui",
+  "overall_accuracy": 48.148148148148145,
+  "correct_count": 26,
+  "incorrect_count": 28,
+  "per_role_accuracy": {
+    "agent": {
+      "correct": 15,
+      "total": 27
+    },
+    "customer": {
+      "correct": 11,
+      "total": 27
+    }
+  },
+  "agent_errors": 12,
+  "customer_errors": 16,
+  "segments": [
+    {
+      "segment_num": 1,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.0066689010709524155,
+      "duration": 1.9,
+      "text": "Hello?"
+    },
+    {
+      "segment_num": 2,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.056114405393600464,
+      "duration": 0.8999999999999999,
+      "text": "Hello, Mark?"
+    },
+    {
+      "segment_num": 3,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.09107768535614014,
+      "duration": 0.8000000000000003,
+      "text": "Yeah, speaking."
+    },
+    {
+      "segment_num": 4,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.27839696407318115,
+      "duration": 2.1999999999999997,
+      "text": "Hi Mark, it's Omar from Car Planet, how are you?"
+    },
+    {
+      "segment_num": 5,
+      "gemini_role": "CUSTOMER",
+      "system_role": "UNKNOWN",
+      "match": false,
+      "similarity": 0.1195748969912529,
+      "duration": 1.0,
+      "text": "I'm good, thank you."
+    },
+    {
+      "segment_num": 6,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.4327946901321411,
+      "duration": 3.8,
+      "text": "Awesome. Just giving you a quick call regarding the MINI Hatch you made an inquiry on."
+    },
+    {
+      "segment_num": 7,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.29368728399276733,
+      "duration": 1.200000000000001,
+      "text": "That's right, yes."
+    },
+    {
+      "segment_num": 8,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.42128321528434753,
+      "duration": 3.0,
+      "text": "Yeah. I can also see that you did place a reservation on the vehicle, is that right?"
+    },
+    {
+      "segment_num": 9,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.08910925686359406,
+      "duration": 0.7999999999999989,
+      "text": "That's correct."
+    },
+    {
+      "segment_num": 10,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.3316056728363037,
+      "duration": 1.4000000000000004,
+      "text": "Okay, under the name Holly?"
+    },
+    {
+      "segment_num": 11,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.3573955297470093,
+      "duration": 1.1999999999999993,
+      "text": "That's correct, yes."
+    },
+    {
+      "segment_num": 12,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.5348283648490906,
+      "duration": 16.7,
+      "text": "Yep, yep. Er, so I've got good news for you, car is still available. It is located in our Watford site from what I can see. Only thing is, at the current moment, it's just going through some final checks and our 150-point check that we always do on the vehicle. So it should be available by tomorrow. I will let you know. I will ask my preparation team to ask, I will ask them and they should let me know. I can see that you're looking to come in tomorrow, is that right?"
+    },
+    {
+      "segment_num": 13,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.4934733510017395,
+      "duration": 8.700000000000003,
+      "text": "Yeah, we looking to come in tomorrow. I mean, we don't, we don't have to collect it tomorrow, um, but obviously, you know, we wanna view it, make sure, absolutely, first."
+    },
+    {
+      "segment_num": 14,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.49110954999923706,
+      "duration": 6.5,
+      "text": "Yeah, of course, of course, of course, I completely understand. We can get you booked in for a little viewing and test drive for tomorrow. Now we are open from 9 o'clock to 9 o'clock. What time works best for you, Mark?"
+    },
+    {
+      "segment_num": 15,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.13953249156475067,
+      "duration": 7.899999999999999,
+      "text": "Um, so it's gonna be later in the day, um, so, um, 'cause my daughter is working in a school, so um, it's gonna be, you know, probably around 5 o'clock."
+    },
+    {
+      "segment_num": 16,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.16261249780654907,
+      "duration": 0.7000000000000028,
+      "text": "5 o'clock?"
+    },
+    {
+      "segment_num": 17,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.41907045245170593,
+      "duration": 5.099999999999994,
+      "text": "Yeah, um, give or take it, you know, between 5:00 and half past, anyway."
+    },
+    {
+      "segment_num": 18,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.5674480199813843,
+      "duration": 10.700000000000003,
+      "text": "Yeah, okay. Give me one second. Let me see our availability for you, Mark. Okay, amazing news for you, Mark. I've got you booked in for around 5 o'clock. I am gonna send over a viewing confirmation as well as our address to the Watford site. Now you've already reserved the car, which is really good. What I'm also going to do for you, do you have WhatsApp by any chance?"
+    },
+    {
+      "segment_num": 19,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.20763647556304932,
+      "duration": 0.7999999999999972,
+      "text": "Yes."
+    },
+    {
+      "segment_num": 20,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.03754886984825134,
+      "duration": 0.9000000000000057,
+      "text": "On this number?"
+    },
+    {
+      "segment_num": 21,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.271068811416626,
+      "duration": 1.0,
+      "text": "Yes."
+    },
+    {
+      "segment_num": 22,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.27521175146102905,
+      "duration": 11.399999999999991,
+      "text": "Okay, so what I'll do for you, Mark, I'll keep in contact with you via WhatsApp and I'll ask my preparation team when the car will be out and I'll let you know ASAP when they get back to me. Um, and if anything comes up on my side, I'll be sure to let you know, and if anything comes up on your side, just let me know, okay, Mark?"
+    },
+    {
+      "segment_num": 23,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.5100049376487732,
+      "duration": 17.200000000000003,
+      "text": "Right, okay. Um, yeah, so basically, I'm coming with my daughter, so there'll only be the two of us, so we wouldn't actually be able to drive it home tomorrow, um, 'cause, you know, obviously she's only got a provisional license at the moment. Um, so, but obviously we could make arrangements to, to collect it back or you do home delivery, don't you?"
+    },
+    {
+      "segment_num": 24,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.3744409680366516,
+      "duration": 2.200000000000003,
+      "text": "So we do offer a home delivery, yeah."
+    },
+    {
+      "segment_num": 25,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.4452857971191406,
+      "duration": 6.5,
+      "text": "Yeah, is that... delivery somewhere, you know, is it 2 pounds a mile or something?"
+    },
+    {
+      "segment_num": 26,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.5263171792030334,
+      "duration": 7.700000000000003,
+      "text": "So it's 2 pounds per mile over 100 miles. If you're, if you're in that 100-mile radius, the price to get delivery is 199. Does that make sense?"
+    },
+    {
+      "segment_num": 27,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.40525758266448975,
+      "duration": 5.099999999999994,
+      "text": "Yeah, yeah, yeah, it probably would've been that anyway. Probably about 60 miles."
+    },
+    {
+      "segment_num": 28,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.5135095119476318,
+      "duration": 10.899999999999991,
+      "text": "Yeah, so with the 60 miles, it would still cost the 199 because that we use an external company, that is the minimum price of delivery. So even if you were like 50, 60, 70 miles, it's 199 still the minimum price. Does that make sense?"
+    },
+    {
+      "segment_num": 29,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.5286528468132019,
+      "duration": 2.0,
+      "text": "Right, okay. Yeah, okay. But we could arrange to come back to collect it, right?"
+    },
+    {
+      "segment_num": 30,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.19433622062206268,
+      "duration": 9.100000000000023,
+      "text": "Yeah, yeah. So when you come in, all of our cars are prepped and ready to drive away the same day. If you're not looking to drive away the same day, we can, uh, book a collection on the vehicle on any day that works best for you, okay?"
+    },
+    {
+      "segment_num": 31,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.28793907165527344,
+      "duration": 10.699999999999989,
+      "text": "Right, okay, that's fine. Um, and um, there is um, there is basically, she would have a deposit to put down, um... there is... some finance available on it, isn't there?"
+    },
+    {
+      "segment_num": 32,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.21230898797512054,
+      "duration": 0.9000000000000057,
+      "text": "Pardon?"
+    },
+    {
+      "segment_num": 33,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.2803894877433777,
+      "duration": 5.5,
+      "text": "Yeah, so on the, on Auto Trader, it came up with a finance option."
+    },
+    {
+      "segment_num": 34,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.22466003894805908,
+      "duration": 0.9000000000000057,
+      "text": "Yep."
+    },
+    {
+      "segment_num": 35,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.4146529734134674,
+      "duration": 1.8999999999999773,
+      "text": "Um, so that could be discussed tomorrow, yeah?"
+    },
+    {
+      "segment_num": 36,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.36673957109451294,
+      "duration": 7.0,
+      "text": "Yeah, so you are more than welcome to discuss finance tomorrow when you guys come in. We work with quite a few different lenders, so you'll be more than happy to discuss it with my sales executives and they can sort everything out for you, okay, Mark?"
+    },
+    {
+      "segment_num": 37,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.5228850841522217,
+      "duration": 11.400000000000006,
+      "text": "Right, okay, that's great. I did notice as well that it's only just had an MOT, is that right?"
+    },
+    {
+      "segment_num": 38,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.28842997550964355,
+      "duration": 4.700000000000017,
+      "text": "Yep, so it had an MOT, 26th of April 2027."
+    },
+    {
+      "segment_num": 39,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.46512719988822937,
+      "duration": 10.5,
+      "text": "Yeah, um, and one thing I also noticed, 'cause I see it's favorable, is if I do a check on myself, um, this vehicle has basically had nine clear passes on MOTs, it's never had any advisories even."
+    },
+    {
+      "segment_num": 40,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.43498069047927856,
+      "duration": 3.0,
+      "text": "No, which is obviously really, it's been well looked after by the previous owner."
+    },
+    {
+      "segment_num": 41,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.40613964200019836,
+      "duration": 8.5,
+      "text": "Yeah, of course. Even when we've done our check on it, 'cause we always do a 150-point check, normally takes anywhere from a week and a half to two weeks to get a car out into the market, this car's done it in five days, so it's actually in immaculate condition."
+    },
+    {
+      "segment_num": 42,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.5178611278533936,
+      "duration": 13.099999999999994,
+      "text": "Yes. Um, I mean, I'm assuming it probably has had tires, you know, at some point, 'cause that would have been worn in the 10 years, but I mean, that's probably been done in between the MOTs I'm assuming."
+    },
+    {
+      "segment_num": 43,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.06920882314443588,
+      "duration": 6.5,
+      "text": "Let me... we... let me see. I believe we gave it fresh tires when it came in as well."
+    },
+    {
+      "segment_num": 44,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": -0.02435150370001793,
+      "duration": 1.1999999999999886,
+      "text": "Uh-huh, right."
+    },
+    {
+      "segment_num": 45,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": -0.0010665692389011383,
+      "duration": 1.3000000000000114,
+      "text": "So it's had four fresh tires."
+    },
+    {
+      "segment_num": 46,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.19185739755630493,
+      "duration": 1.799999999999983,
+      "text": "Yeah, I believe so."
+    },
+    {
+      "segment_num": 47,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.25079044699668884,
+      "duration": 2.0,
+      "text": "Right. Okay, cool."
+    },
+    {
+      "segment_num": 48,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.2863801419734955,
+      "duration": 5.300000000000011,
+      "text": "Okay, all right. So yeah, we will... we will see you tomorrow."
+    },
+    {
+      "segment_num": 49,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.31664490699768066,
+      "duration": 7.5,
+      "text": "Perfect, Mark. Look forward to seeing you tomorrow. I did drop you a little message on WhatsApp. Please drop me a little reply like 'hello' or 'hi'. The moment my preparation team get back to me, I'll let you know, okay?"
+    },
+    {
+      "segment_num": 50,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.44885504245758057,
+      "duration": 1.1999999999999886,
+      "text": "Right, okay. Great."
+    },
+    {
+      "segment_num": 51,
+      "gemini_role": "AGENT",
+      "system_role": "AGENT",
+      "match": true,
+      "similarity": 0.0,
+      "duration": 1.200000000000017,
+      "text": "Perfect, Mark. Perfect, Mark."
+    },
+    {
+      "segment_num": 52,
+      "gemini_role": "CUSTOMER",
+      "system_role": "AGENT",
+      "match": false,
+      "similarity": 0.4432053565979004,
+      "duration": 1.299999999999983,
+      "text": "Okay, alright. Okay, thanks very much."
+    },
+    {
+      "segment_num": 53,
+      "gemini_role": "AGENT",
+      "system_role": "CUSTOMER",
+      "match": false,
+      "similarity": 0.35996589064598083,
+      "duration": 1.3000000000000114,
+      "text": "No worries, Mark. Thank you. Cheers. Bye-bye."
+    },
+    {
+      "segment_num": 54,
+      "gemini_role": "CUSTOMER",
+      "system_role": "CUSTOMER",
+      "match": true,
+      "similarity": 0.4006763696670532,
+      "duration": 1.0,
+      "text": "Bye-bye."
+    }
+  ]
+}

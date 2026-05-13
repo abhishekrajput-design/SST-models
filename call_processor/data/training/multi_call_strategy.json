@@ -1,0 +1,66 @@
+{
+  "strategy": "Multi-call training for 95%+ accuracy",
+  "agents": {
+    "Omar El Harchaoui": {
+      "primary_call": "omar_20260505",
+      "gemini_trained": true,
+      "current_accuracy": 92.6,
+      "target_accuracy": 96.0,
+      "strategy": "Add more training calls + fine-tune threshold",
+      "calls_available": 0
+    },
+    "Zak Raissi": {
+      "primary_call": "zak_e2e_test_20260423",
+      "gemini_trained": false,
+      "current_accuracy": null,
+      "target_accuracy": 95.0,
+      "strategy": "Upload multiple calls to Gemini + combine training",
+      "calls_available": 4
+    },
+    "Hussein": {
+      "primary_call": "enhanced_hussein_desk_recording__parakeet-tdt-0.6b-v3",
+      "gemini_trained": false,
+      "current_accuracy": null,
+      "target_accuracy": 95.0,
+      "strategy": "Upload to Gemini + train on multiple segments",
+      "calls_available": 1
+    }
+  },
+  "agent_calls": {
+    "Zak Raissi": [
+      {
+        "id": "zak_e2e_test_20260423",
+        "segments": 171,
+        "audio_file": "C:\\Users\\abhis\\Desktop\\SST-models\\Agents-recoding\\zak_recodings\\20260416T183339447_2052154.mp3",
+        "orig_file": "C:/Users/abhis/Desktop/SST-models/Agents-recoding/zak_recodings/20260416T183339447_2052154.mp3"
+      },
+      {
+        "id": "zak_compare_20260423",
+        "segments": 104,
+        "audio_file": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\audiofy\\zak_raissi_barnet\\audio\\call_69e3afc81bbc87d03ab29ae6.mp3",
+        "orig_file": "C:/Users/abhis/Desktop/SST-models/call_processor/data/audiofy/zak_raissi_barnet/audio/call_69e3afc81bbc87d03ab29ae6.mp3"
+      },
+      {
+        "id": "zak_audiofy_verify_20260423",
+        "segments": 56,
+        "audio_file": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\audiofy\\zak_raissi_barnet\\audio\\call_69e4a4415453871f7cde30b5.mp3",
+        "orig_file": "C:/Users/abhis/Desktop/SST-models/call_processor/data/audiofy/zak_raissi_barnet/audio/call_69e4a4415453871f7cde30b5.mp3"
+      },
+      {
+        "id": "enhanced_zak_raissi_barnet_00_audio_03_15_2026_10_08_04_qbpe8e__parakeet-tdt-0.6b-v3",
+        "segments": 253,
+        "audio_file": "data/raw_calls/enhanced_zak_raissi_barnet_00_audio_03_15_2026_10_08_04_qbpe8e.mp3",
+        "orig_file": "data/raw_calls/zak_raissi_barnet_00_audio_03_15_2026_10_08_04_qbpe8e.mp3"
+      }
+    ],
+    "Hussein": [
+      {
+        "id": "enhanced_hussein_desk_recording__parakeet-tdt-0.6b-v3",
+        "segments": 154,
+        "audio_file": "data/processed/enhanced_hussein_desk_recording/norm_enhanced_hussein_desk_recording.wav",
+        "orig_file": "data/processed/hussein_desk_recording/norm_hussein_desk_recording.wav"
+      }
+    ]
+  },
+  "timestamp": "2026-05-05 17:54:17"
+}

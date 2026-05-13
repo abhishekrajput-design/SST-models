@@ -1,0 +1,5740 @@
+{
+  "segments": [],
+  "speaker_segments": [
+    {
+      "start": 6.72,
+      "end": 8.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 7.36,
+      "end": 8.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 9.36,
+      "end": 11.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 12.0,
+      "end": 14.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 18.88,
+      "end": 20.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 22.32,
+      "end": 23.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 23.84,
+      "end": 25.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 27.04,
+      "end": 28.48,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 28.88,
+      "end": 29.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 29.68,
+      "end": 30.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 30.16,
+      "end": 30.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 31.76,
+      "end": 33.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 34.64,
+      "end": 37.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 38.8,
+      "end": 39.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 39.76,
+      "end": 40.16,
+      "speaker": "SPEAKER_02",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 2"
+    },
+    {
+      "start": 40.56,
+      "end": 41.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 42.08,
+      "end": 43.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 43.28,
+      "end": 43.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 44.16,
+      "end": 44.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 45.84,
+      "end": 47.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 48.08,
+      "end": 49.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 50.32,
+      "end": 58.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 59.36,
+      "end": 61.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 60.64,
+      "end": 63.2,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 61.68,
+      "end": 63.36,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 63.36,
+      "end": 69.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 70.72,
+      "end": 72.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 72.4,
+      "end": 72.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 74.08,
+      "end": 74.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 75.36,
+      "end": 82.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 77.52,
+      "end": 79.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 80.64,
+      "end": 81.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 82.64,
+      "end": 82.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 83.04,
+      "end": 84.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 83.28,
+      "end": 86.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 87.2,
+      "end": 88.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 88.24,
+      "end": 90.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 90.24,
+      "end": 94.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 96.16,
+      "end": 97.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 100.32,
+      "end": 101.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 102.4,
+      "end": 103.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 103.92,
+      "end": 105.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 105.28,
+      "end": 108.48,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 105.52,
+      "end": 110.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 111.28,
+      "end": 112.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 112.8,
+      "end": 114.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 113.6,
+      "end": 113.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 114.32,
+      "end": 122.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 123.28,
+      "end": 126.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 128.8,
+      "end": 131.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 129.28,
+      "end": 129.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 131.52,
+      "end": 135.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 136.32,
+      "end": 148.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 147.44,
+      "end": 148.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 148.64,
+      "end": 150.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 150.4,
+      "end": 151.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 151.84,
+      "end": 151.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 151.92,
+      "end": 154.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 154.32,
+      "end": 155.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 155.76,
+      "end": 157.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 157.76,
+      "end": 160.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 161.76,
+      "end": 163.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 164.24,
+      "end": 165.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 167.28,
+      "end": 167.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 169.04,
+      "end": 174.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 175.36,
+      "end": 178.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 179.2,
+      "end": 181.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 182.24,
+      "end": 184.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 183.04,
+      "end": 194.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 194.48,
+      "end": 200.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 200.88,
+      "end": 202.72,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 203.28,
+      "end": 203.36,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 204.08,
+      "end": 204.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 204.24,
+      "end": 207.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 207.92,
+      "end": 210.56,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 210.64,
+      "end": 213.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 213.76,
+      "end": 213.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 213.84,
+      "end": 213.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 213.92,
+      "end": 214.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 214.08,
+      "end": 214.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 214.16,
+      "end": 214.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 214.24,
+      "end": 214.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 214.32,
+      "end": 214.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 214.48,
+      "end": 214.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 215.12,
+      "end": 218.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 219.44,
+      "end": 223.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 221.2,
+      "end": 222.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 224.88,
+      "end": 225.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 225.6,
+      "end": 232.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 232.24,
+      "end": 232.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 232.56,
+      "end": 234.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 234.4,
+      "end": 240.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 240.32,
+      "end": 240.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 241.28,
+      "end": 242.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 241.84,
+      "end": 242.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 242.64,
+      "end": 246.56,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 246.72,
+      "end": 249.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 250.8,
+      "end": 257.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 257.6,
+      "end": 259.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 260.08,
+      "end": 265.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 265.6,
+      "end": 265.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 265.68,
+      "end": 268.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 268.08,
+      "end": 268.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 269.2,
+      "end": 270.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 270.8,
+      "end": 271.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 271.28,
+      "end": 277.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 277.84,
+      "end": 277.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 277.84,
+      "end": 278.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 278.0,
+      "end": 278.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 278.48,
+      "end": 278.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 279.44,
+      "end": 284.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 284.0,
+      "end": 284.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 284.24,
+      "end": 285.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 285.84,
+      "end": 299.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 300.48,
+      "end": 306.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 310.0,
+      "end": 313.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 312.88,
+      "end": 314.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 315.12,
+      "end": 315.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 315.84,
+      "end": 316.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 316.48,
+      "end": 316.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 317.28,
+      "end": 320.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 320.8,
+      "end": 321.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 322.08,
+      "end": 322.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 322.32,
+      "end": 322.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 323.28,
+      "end": 324.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 324.48,
+      "end": 325.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 324.8,
+      "end": 326.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 326.56,
+      "end": 327.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 328.4,
+      "end": 328.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 328.8,
+      "end": 334.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 333.84,
+      "end": 334.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 334.88,
+      "end": 335.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 334.96,
+      "end": 336.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 336.88,
+      "end": 340.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 338.4,
+      "end": 339.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 341.6,
+      "end": 342.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 342.88,
+      "end": 345.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 345.6,
+      "end": 346.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 345.84,
+      "end": 348.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 349.6,
+      "end": 352.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 351.44,
+      "end": 354.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 353.12,
+      "end": 353.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 354.56,
+      "end": 356.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 358.16,
+      "end": 360.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 366.56,
+      "end": 367.36,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 367.76,
+      "end": 368.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 368.72,
+      "end": 370.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 371.52,
+      "end": 376.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 377.68,
+      "end": 378.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 378.64,
+      "end": 379.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 379.52,
+      "end": 380.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 380.96,
+      "end": 383.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 381.76,
+      "end": 383.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 384.16,
+      "end": 384.72,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 384.64,
+      "end": 385.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 387.28,
+      "end": 388.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 387.92,
+      "end": 389.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 390.88,
+      "end": 392.56,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 391.76,
+      "end": 392.72,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 393.28,
+      "end": 397.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 393.76,
+      "end": 394.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 398.0,
+      "end": 400.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 404.0,
+      "end": 404.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 404.4,
+      "end": 407.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 406.16,
+      "end": 407.12,
+      "speaker": "SPEAKER_02",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 2"
+    },
+    {
+      "start": 408.16,
+      "end": 410.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 411.52,
+      "end": 411.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 411.6,
+      "end": 415.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 414.4,
+      "end": 415.04,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 415.6,
+      "end": 416.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 417.68,
+      "end": 418.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 418.24,
+      "end": 419.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 419.12,
+      "end": 420.56,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 420.4,
+      "end": 426.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 421.12,
+      "end": 421.6,
+      "speaker": "SPEAKER_02",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 2"
+    },
+    {
+      "start": 422.56,
+      "end": 423.28,
+      "speaker": "SPEAKER_02",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 2"
+    },
+    {
+      "start": 426.88,
+      "end": 428.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 429.04,
+      "end": 429.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 429.36,
+      "end": 429.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 430.88,
+      "end": 431.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 432.72,
+      "end": 434.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 434.4,
+      "end": 434.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 434.4,
+      "end": 434.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 435.92,
+      "end": 436.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 436.32,
+      "end": 436.56,
+      "speaker": "SPEAKER_03",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 3"
+    },
+    {
+      "start": 438.32,
+      "end": 439.04,
+      "speaker": "SPEAKER_03",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 3"
+    },
+    {
+      "start": 440.64,
+      "end": 440.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 442.24,
+      "end": 442.56,
+      "speaker": "SPEAKER_03",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 3"
+    },
+    {
+      "start": 444.56,
+      "end": 447.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 446.64,
+      "end": 449.44,
+      "speaker": "SPEAKER_03",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 3"
+    },
+    {
+      "start": 449.68,
+      "end": 452.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 453.28,
+      "end": 456.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 456.72,
+      "end": 458.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 456.96,
+      "end": 457.04,
+      "speaker": "SPEAKER_03",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 3"
+    },
+    {
+      "start": 458.8,
+      "end": 458.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 460.48,
+      "end": 461.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 462.56,
+      "end": 463.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 463.84,
+      "end": 466.56,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 467.12,
+      "end": 468.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 469.04,
+      "end": 469.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 470.08,
+      "end": 471.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 472.48,
+      "end": 472.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 472.56,
+      "end": 473.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 472.8,
+      "end": 472.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 474.32,
+      "end": 476.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 476.56,
+      "end": 476.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 476.88,
+      "end": 477.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 478.56,
+      "end": 480.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 480.0,
+      "end": 491.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 490.64,
+      "end": 494.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 495.76,
+      "end": 504.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 505.2,
+      "end": 507.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 508.0,
+      "end": 508.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 510.24,
+      "end": 512.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 515.6,
+      "end": 516.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 518.48,
+      "end": 519.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 518.56,
+      "end": 519.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 521.92,
+      "end": 522.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 522.96,
+      "end": 523.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 524.48,
+      "end": 524.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 526.4,
+      "end": 529.6,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 531.12,
+      "end": 532.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 535.76,
+      "end": 537.36,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 538.32,
+      "end": 539.2,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 540.24,
+      "end": 541.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 541.44,
+      "end": 541.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 544.8,
+      "end": 547.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 545.68,
+      "end": 546.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 549.2,
+      "end": 550.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 552.16,
+      "end": 553.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 556.48,
+      "end": 558.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 558.56,
+      "end": 561.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 561.2,
+      "end": 563.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 563.36,
+      "end": 568.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 568.4,
+      "end": 569.36,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 571.12,
+      "end": 572.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 572.96,
+      "end": 574.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 576.08,
+      "end": 576.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 577.76,
+      "end": 580.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 582.88,
+      "end": 585.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 585.6,
+      "end": 588.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 589.2,
+      "end": 593.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 595.76,
+      "end": 597.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 595.84,
+      "end": 596.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 598.96,
+      "end": 599.2,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 599.44,
+      "end": 600.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 599.52,
+      "end": 600.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 601.68,
+      "end": 613.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 602.8,
+      "end": 603.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 604.96,
+      "end": 605.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 614.88,
+      "end": 615.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 616.72,
+      "end": 618.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 621.44,
+      "end": 631.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 632.4,
+      "end": 647.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 647.76,
+      "end": 649.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 651.12,
+      "end": 652.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 653.2,
+      "end": 655.36,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 656.56,
+      "end": 657.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 658.8,
+      "end": 660.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 662.08,
+      "end": 665.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 666.0,
+      "end": 667.6,
+      "speaker": "SPEAKER_03",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 3"
+    },
+    {
+      "start": 666.88,
+      "end": 668.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 667.84,
+      "end": 669.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 669.04,
+      "end": 671.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 670.0,
+      "end": 670.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 672.72,
+      "end": 673.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 673.36,
+      "end": 674.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 674.8,
+      "end": 678.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 679.2,
+      "end": 680.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 682.24,
+      "end": 683.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 689.52,
+      "end": 689.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 691.84,
+      "end": 692.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 692.0,
+      "end": 693.2,
+      "speaker": "SPEAKER_03",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 3"
+    },
+    {
+      "start": 692.8,
+      "end": 692.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 694.64,
+      "end": 695.04,
+      "speaker": "SPEAKER_03",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 3"
+    },
+    {
+      "start": 695.6,
+      "end": 695.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 696.48,
+      "end": 701.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 702.96,
+      "end": 703.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 703.6,
+      "end": 705.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 706.56,
+      "end": 706.88,
+      "speaker": "SPEAKER_02",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 2"
+    },
+    {
+      "start": 706.88,
+      "end": 710.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 712.32,
+      "end": 712.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 719.76,
+      "end": 721.36,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 722.08,
+      "end": 722.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 722.72,
+      "end": 723.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 723.44,
+      "end": 725.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 726.64,
+      "end": 733.04,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 733.36,
+      "end": 736.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 736.88,
+      "end": 741.04,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 737.04,
+      "end": 737.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 740.88,
+      "end": 741.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 741.68,
+      "end": 748.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 747.2,
+      "end": 747.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 749.44,
+      "end": 751.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 752.32,
+      "end": 753.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 753.92,
+      "end": 760.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 762.72,
+      "end": 763.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 765.92,
+      "end": 770.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 768.32,
+      "end": 769.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 771.92,
+      "end": 774.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 771.92,
+      "end": 773.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 774.16,
+      "end": 774.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 776.72,
+      "end": 777.6,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 777.28,
+      "end": 779.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 783.76,
+      "end": 784.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 786.0,
+      "end": 786.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 788.0,
+      "end": 788.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 788.24,
+      "end": 790.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 788.32,
+      "end": 788.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 791.44,
+      "end": 792.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 793.28,
+      "end": 794.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 794.08,
+      "end": 794.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 794.88,
+      "end": 795.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 796.24,
+      "end": 806.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 805.52,
+      "end": 806.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 807.6,
+      "end": 812.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 812.16,
+      "end": 815.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 816.72,
+      "end": 821.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 821.68,
+      "end": 822.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 823.68,
+      "end": 824.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 824.16,
+      "end": 832.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 832.8,
+      "end": 835.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 837.76,
+      "end": 837.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 838.4,
+      "end": 846.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 846.72,
+      "end": 852.48,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 853.04,
+      "end": 856.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 853.04,
+      "end": 854.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 855.2,
+      "end": 855.36,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 856.64,
+      "end": 860.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 862.08,
+      "end": 862.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 862.8,
+      "end": 862.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 863.36,
+      "end": 864.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 864.64,
+      "end": 864.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 866.8,
+      "end": 867.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 866.96,
+      "end": 876.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 872.4,
+      "end": 872.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 880.24,
+      "end": 885.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 885.2,
+      "end": 887.36,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 887.36,
+      "end": 888.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 889.76,
+      "end": 895.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 896.88,
+      "end": 897.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 898.08,
+      "end": 899.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 900.24,
+      "end": 901.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 901.92,
+      "end": 902.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 904.08,
+      "end": 904.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 906.24,
+      "end": 907.2,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 908.72,
+      "end": 910.56,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 909.36,
+      "end": 910.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 910.72,
+      "end": 911.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 911.2,
+      "end": 911.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 914.16,
+      "end": 914.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 915.76,
+      "end": 917.36,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 917.44,
+      "end": 924.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 925.2,
+      "end": 926.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 925.52,
+      "end": 930.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 930.56,
+      "end": 935.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 936.64,
+      "end": 939.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 937.84,
+      "end": 938.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 939.36,
+      "end": 940.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 941.44,
+      "end": 942.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 944.4,
+      "end": 948.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 948.96,
+      "end": 949.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 949.92,
+      "end": 952.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 953.76,
+      "end": 956.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 955.92,
+      "end": 959.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 956.56,
+      "end": 958.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 959.76,
+      "end": 960.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 960.24,
+      "end": 961.6,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 962.64,
+      "end": 966.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 963.52,
+      "end": 964.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 965.36,
+      "end": 965.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 966.4,
+      "end": 968.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 969.12,
+      "end": 986.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 969.44,
+      "end": 969.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 976.32,
+      "end": 976.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 980.32,
+      "end": 980.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 985.68,
+      "end": 986.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 986.96,
+      "end": 989.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 989.36,
+      "end": 990.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 990.48,
+      "end": 995.2,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 995.84,
+      "end": 1006.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1007.12,
+      "end": 1007.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1007.68,
+      "end": 1009.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1009.44,
+      "end": 1009.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1009.52,
+      "end": 1009.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1009.6,
+      "end": 1012.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1009.68,
+      "end": 1009.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1012.48,
+      "end": 1019.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1020.08,
+      "end": 1021.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1021.92,
+      "end": 1022.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1022.4,
+      "end": 1027.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1025.44,
+      "end": 1031.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1031.6,
+      "end": 1032.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1033.2,
+      "end": 1035.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1035.92,
+      "end": 1037.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1037.92,
+      "end": 1038.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1038.32,
+      "end": 1038.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1038.8,
+      "end": 1039.2,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1039.68,
+      "end": 1040.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1040.4,
+      "end": 1041.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1042.56,
+      "end": 1047.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1048.4,
+      "end": 1052.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1053.04,
+      "end": 1054.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1056.4,
+      "end": 1058.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1058.72,
+      "end": 1059.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1059.52,
+      "end": 1061.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1059.76,
+      "end": 1061.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1061.44,
+      "end": 1066.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1066.96,
+      "end": 1067.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1067.04,
+      "end": 1068.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1069.76,
+      "end": 1072.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1069.84,
+      "end": 1070.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1073.04,
+      "end": 1075.2,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1075.76,
+      "end": 1080.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1078.24,
+      "end": 1080.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1080.96,
+      "end": 1083.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1081.04,
+      "end": 1081.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1084.24,
+      "end": 1087.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1088.16,
+      "end": 1091.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1093.6,
+      "end": 1094.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1094.88,
+      "end": 1098.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1099.6,
+      "end": 1100.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1100.88,
+      "end": 1103.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1102.32,
+      "end": 1103.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1105.12,
+      "end": 1106.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1107.6,
+      "end": 1109.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1109.76,
+      "end": 1110.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1111.2,
+      "end": 1111.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1111.84,
+      "end": 1112.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1112.16,
+      "end": 1113.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1115.12,
+      "end": 1118.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1118.96,
+      "end": 1119.6,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1119.04,
+      "end": 1119.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1120.24,
+      "end": 1124.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1135.68,
+      "end": 1137.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1141.36,
+      "end": 1144.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1145.84,
+      "end": 1147.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1148.24,
+      "end": 1148.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1152.0,
+      "end": 1152.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1153.36,
+      "end": 1153.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1155.36,
+      "end": 1160.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1171.44,
+      "end": 1174.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1176.4,
+      "end": 1178.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1179.6,
+      "end": 1180.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1187.6,
+      "end": 1189.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1190.08,
+      "end": 1190.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1196.08,
+      "end": 1198.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1199.2,
+      "end": 1200.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1203.84,
+      "end": 1204.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1212.88,
+      "end": 1213.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1214.72,
+      "end": 1216.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1217.28,
+      "end": 1220.72,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1220.96,
+      "end": 1223.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1223.92,
+      "end": 1225.6,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1226.48,
+      "end": 1230.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1234.4,
+      "end": 1235.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1236.48,
+      "end": 1236.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1237.2,
+      "end": 1237.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1237.28,
+      "end": 1239.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1239.76,
+      "end": 1241.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1247.84,
+      "end": 1248.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1255.12,
+      "end": 1255.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1259.36,
+      "end": 1259.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1260.88,
+      "end": 1263.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1269.2,
+      "end": 1269.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1270.48,
+      "end": 1272.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1273.04,
+      "end": 1280.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1281.04,
+      "end": 1282.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1283.28,
+      "end": 1284.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1284.0,
+      "end": 1285.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1284.08,
+      "end": 1284.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1286.32,
+      "end": 1288.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1289.2,
+      "end": 1289.52,
+      "speaker": "SPEAKER_03",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 3"
+    },
+    {
+      "start": 1290.96,
+      "end": 1293.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1293.44,
+      "end": 1293.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1294.4,
+      "end": 1299.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1299.76,
+      "end": 1302.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1302.64,
+      "end": 1304.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1304.32,
+      "end": 1305.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1306.4,
+      "end": 1308.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1308.48,
+      "end": 1310.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1310.0,
+      "end": 1310.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1311.6,
+      "end": 1311.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1312.24,
+      "end": 1312.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1314.64,
+      "end": 1315.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1316.72,
+      "end": 1319.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1321.04,
+      "end": 1321.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1323.68,
+      "end": 1326.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1327.36,
+      "end": 1328.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1330.48,
+      "end": 1332.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1344.72,
+      "end": 1346.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1348.0,
+      "end": 1349.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1354.4,
+      "end": 1364.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1365.12,
+      "end": 1365.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1386.56,
+      "end": 1388.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1392.08,
+      "end": 1394.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1395.2,
+      "end": 1396.4,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1396.96,
+      "end": 1399.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1398.4,
+      "end": 1398.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1399.52,
+      "end": 1400.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1400.4,
+      "end": 1401.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1402.08,
+      "end": 1404.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1405.28,
+      "end": 1408.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1405.28,
+      "end": 1406.0,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1408.16,
+      "end": 1408.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1408.72,
+      "end": 1410.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1411.84,
+      "end": 1418.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1425.92,
+      "end": 1429.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1430.16,
+      "end": 1434.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1435.44,
+      "end": 1436.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1438.96,
+      "end": 1441.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1442.88,
+      "end": 1443.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1444.0,
+      "end": 1448.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1446.16,
+      "end": 1446.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1449.44,
+      "end": 1453.28,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1453.84,
+      "end": 1455.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1456.24,
+      "end": 1459.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1460.56,
+      "end": 1461.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1461.2,
+      "end": 1462.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1461.84,
+      "end": 1464.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1465.44,
+      "end": 1466.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1467.92,
+      "end": 1469.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1468.16,
+      "end": 1469.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1470.88,
+      "end": 1472.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1473.12,
+      "end": 1474.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1475.36,
+      "end": 1475.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1475.52,
+      "end": 1476.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1478.0,
+      "end": 1479.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1480.24,
+      "end": 1481.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1482.32,
+      "end": 1482.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1483.28,
+      "end": 1484.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1483.28,
+      "end": 1485.04,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1485.12,
+      "end": 1485.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1486.24,
+      "end": 1488.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1488.88,
+      "end": 1490.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1490.88,
+      "end": 1491.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1491.92,
+      "end": 1496.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1497.2,
+      "end": 1497.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1497.76,
+      "end": 1498.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1499.6,
+      "end": 1500.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1503.2,
+      "end": 1504.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1505.92,
+      "end": 1506.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1507.12,
+      "end": 1507.92,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1508.48,
+      "end": 1509.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1511.6,
+      "end": 1512.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1513.28,
+      "end": 1514.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1517.36,
+      "end": 1518.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1519.76,
+      "end": 1519.84,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1521.28,
+      "end": 1522.96,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1522.08,
+      "end": 1523.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1523.44,
+      "end": 1525.12,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1525.84,
+      "end": 1527.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1529.2,
+      "end": 1530.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1530.88,
+      "end": 1533.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1534.0,
+      "end": 1536.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1539.44,
+      "end": 1540.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1539.76,
+      "end": 1542.88,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1543.36,
+      "end": 1547.36,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1543.92,
+      "end": 1545.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1547.76,
+      "end": 1548.08,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1550.64,
+      "end": 1554.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1550.72,
+      "end": 1551.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1556.32,
+      "end": 1559.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1561.04,
+      "end": 1561.44,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1561.12,
+      "end": 1561.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1562.88,
+      "end": 1563.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1563.92,
+      "end": 1565.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1565.52,
+      "end": 1571.04,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1565.6,
+      "end": 1565.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1572.16,
+      "end": 1574.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1576.32,
+      "end": 1576.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1586.48,
+      "end": 1587.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1589.84,
+      "end": 1590.48,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1590.8,
+      "end": 1590.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1593.68,
+      "end": 1595.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1596.08,
+      "end": 1596.16,
+      "speaker": "SPEAKER_02",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 2"
+    },
+    {
+      "start": 1597.68,
+      "end": 1599.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1601.92,
+      "end": 1609.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1604.72,
+      "end": 1604.8,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1608.0,
+      "end": 1608.16,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1609.92,
+      "end": 1610.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1611.52,
+      "end": 1617.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1618.16,
+      "end": 1621.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1622.24,
+      "end": 1622.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1625.36,
+      "end": 1630.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1630.88,
+      "end": 1631.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1631.36,
+      "end": 1634.64,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1633.6,
+      "end": 1636.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1637.92,
+      "end": 1638.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1640.72,
+      "end": 1640.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1648.32,
+      "end": 1650.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1651.52,
+      "end": 1654.8,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1654.16,
+      "end": 1654.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1654.8,
+      "end": 1655.2,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1655.92,
+      "end": 1656.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1656.08,
+      "end": 1661.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1662.88,
+      "end": 1663.92,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1664.72,
+      "end": 1665.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1667.12,
+      "end": 1669.44,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1669.44,
+      "end": 1673.52,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1673.52,
+      "end": 1675.84,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1675.36,
+      "end": 1676.48,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1676.24,
+      "end": 1677.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1677.68,
+      "end": 1679.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1680.32,
+      "end": 1682.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1682.64,
+      "end": 1684.56,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1685.28,
+      "end": 1689.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1690.24,
+      "end": 1692.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1692.8,
+      "end": 1693.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1694.0,
+      "end": 1694.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1694.4,
+      "end": 1695.76,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1695.76,
+      "end": 1697.28,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1697.04,
+      "end": 1697.12,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1698.32,
+      "end": 1700.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1701.52,
+      "end": 1702.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1704.08,
+      "end": 1708.72,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1716.48,
+      "end": 1718.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1721.2,
+      "end": 1724.88,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1728.48,
+      "end": 1728.72,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1733.44,
+      "end": 1735.2,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1736.64,
+      "end": 1738.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1745.52,
+      "end": 1746.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1752.08,
+      "end": 1753.52,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1752.8,
+      "end": 1753.6,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1757.28,
+      "end": 1759.68,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1759.68,
+      "end": 1766.4,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1767.52,
+      "end": 1770.0,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1770.0,
+      "end": 1770.08,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1770.08,
+      "end": 1772.32,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1772.16,
+      "end": 1779.36,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1779.28,
+      "end": 1780.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1779.52,
+      "end": 1779.76,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1780.4,
+      "end": 1780.96,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1782.08,
+      "end": 1784.16,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1784.8,
+      "end": 1788.64,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1789.68,
+      "end": 1794.32,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1797.52,
+      "end": 1797.68,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    },
+    {
+      "start": 1797.68,
+      "end": 1798.24,
+      "speaker": "SPEAKER_00",
+      "identified_speaker": "CUSTOMER",
+      "display_speaker": "Customer 1"
+    },
+    {
+      "start": 1797.76,
+      "end": 1798.24,
+      "speaker": "SPEAKER_01",
+      "identified_speaker": "AGENT",
+      "agent_name": "Zak Raissi Barnet",
+      "agent_slug": "zak_raissi_barnet",
+      "display_speaker": "Zak Raissi Barnet"
+    }
+  ],
+  "speaker_count": 4,
+  "agent_speaker_id": "SPEAKER_01",
+  "agent_name": "Zak Raissi Barnet",
+  "agent_slug": "zak_raissi_barnet",
+  "agent_similarity": 0.6793304681777954,
+  "target_agent_slug": null,
+  "cluster_match_table": {
+    "SPEAKER_00": {
+      "omar_el_harchaoui": {
+        "name": "Omar El Harchaoui",
+        "similarity": 0.20052394270896912
+      },
+      "haris_bajwa": {
+        "name": "Haris Bajwa",
+        "similarity": 0.37416374683380127
+      },
+      "shuahib_miah": {
+        "name": "Shuahib Miah",
+        "similarity": 0.15061290562152863
+      },
+      "mohammed_malik": {
+        "name": "Mohammed Malik",
+        "similarity": 0.23659254610538483
+      },
+      "mohammed_hussein_al_khwildi": {
+        "name": "Mohammed-Hussein  Al-Khwildi",
+        "similarity": 0.04406264051795006
+      },
+      "allan_johnson": {
+        "name": "Allan Johnson",
+        "similarity": 0.12399201840162277
+      },
+      "sababa_hossain": {
+        "name": "Sababa Hossain",
+        "similarity": 0.12342754006385803
+      },
+      "benjamin_ahmadi": {
+        "name": "Benjamin Ahmadi",
+        "similarity": 0.25698190927505493
+      },
+      "niloufar_dastbaz": {
+        "name": "Niloufar Dastbaz",
+        "similarity": 0.07805217802524567
+      },
+      "rafik_saleh": {
+        "name": "Rafik Saleh",
+        "similarity": 0.17915920913219452
+      },
+      "talha_azam": {
+        "name": "Talha Azam",
+        "similarity": 0.17153146862983704
+      },
+      "gabriel_bighiu": {
+        "name": "Gabriel Bighiu",
+        "similarity": 0.03582805395126343
+      },
+      "nirvan_nagra": {
+        "name": "Nirvan Nagra",
+        "similarity": 0.053733691573143005
+      },
+      "mohammad_malki": {
+        "name": "Mohammad Malki",
+        "similarity": 0.16681578755378723
+      },
+      "arfat_barnet": {
+        "name": "Arfat Barnet",
+        "similarity": 0.10578873753547668
+      },
+      "dilayda_barnet": {
+        "name": "Dilayda Barnet",
+        "similarity": 0.036197494715452194
+      },
+      "kleo_gurra": {
+        "name": "Kleo Gurra",
+        "similarity": 0.1826462745666504
+      },
+      "sylwia_recruitment": {
+        "name": "Sylwia Recruitment",
+        "similarity": 0.08081665635108948
+      },
+      "ideal_dacaj": {
+        "name": "Ideal Dacaj",
+        "similarity": 0.21795092523097992
+      },
+      "harrison_morgan": {
+        "name": "Harrison Morgan",
+        "similarity": -0.005224699154496193
+      },
+      "adil_al_sammerai": {
+        "name": "Adil Al- Sammerai",
+        "similarity": 0.1344965696334839
+      },
+      "angeline_packiyaseelan": {
+        "name": "Angeline Packiyaseelan",
+        "similarity": 0.0649864599108696
+      },
+      "jason_kurti": {
+        "name": "Jason Kurti",
+        "similarity": 0.22077268362045288
+      },
+      "anoush_sefatzadeh": {
+        "name": "Anoush Sefatzadeh",
+        "similarity": 0.1567447930574417
+      },
+      "kowsar_alam": {
+        "name": "Kowsar Alam",
+        "similarity": 0.29572364687919617
+      },
+      "georgi_angelov": {
+        "name": "Georgi Angelov",
+        "similarity": 0.06258329004049301
+      },
+      "janusaan_jeyachandran": {
+        "name": "Janusaan Jeyachandran",
+        "similarity": 0.17387261986732483
+      },
+      "aftaab_supervisor": {
+        "name": "Aftaab Supervisor",
+        "similarity": 0.3388393521308899
+      },
+      "mohamed_yasin_ali": {
+        "name": "Mohamed Yasin-ali",
+        "similarity": 0.0915326476097107
+      },
+      "rayyan_ali_khan": {
+        "name": "Rayyan Ali Khan",
+        "similarity": 0.17310474812984467
+      },
+      "adorena_ishtar_hossain": {
+        "name": "Adorena Ishtar Hossain",
+        "similarity": 0.4045468270778656
+      },
+      "waris_sales_controllers": {
+        "name": "Waris Sales Controllers",
+        "similarity": 0.31868666410446167
+      },
+      "jenifer_bajrami": {
+        "name": "Jenifer Bajrami",
+        "similarity": 0.07298597693443298
+      },
+      "kacper_barnet": {
+        "name": "Kacper Barnet",
+        "similarity": 0.16248783469200134
+      },
+      "dinosh_sinnathamby": {
+        "name": "Dinosh Sinnathamby",
+        "similarity": 0.1778765618801117
+      },
+      "zak_raissi_barnet": {
+        "name": "Zak Raissi Barnet",
+        "similarity": 0.5919946432113647
+      },
+      "hussein_mohamed": {
+        "name": "Hussein Mohamed",
+        "similarity": 0.367218554019928
+      }
+    },
+    "SPEAKER_01": {
+      "omar_el_harchaoui": {
+        "name": "Omar El Harchaoui",
+        "similarity": 0.3031921684741974
+      },
+      "haris_bajwa": {
+        "name": "Haris Bajwa",
+        "similarity": 0.4726872146129608
+      },
+      "shuahib_miah": {
+        "name": "Shuahib Miah",
+        "similarity": 0.21835236251354218
+      },
+      "mohammed_malik": {
+        "name": "Mohammed Malik",
+        "similarity": 0.23476900160312653
+      },
+      "mohammed_hussein_al_khwildi": {
+        "name": "Mohammed-Hussein  Al-Khwildi",
+        "similarity": 0.013943394646048546
+      },
+      "allan_johnson": {
+        "name": "Allan Johnson",
+        "similarity": 0.16728797554969788
+      },
+      "sababa_hossain": {
+        "name": "Sababa Hossain",
+        "similarity": 0.10813850164413452
+      },
+      "benjamin_ahmadi": {
+        "name": "Benjamin Ahmadi",
+        "similarity": 0.32107311487197876
+      },
+      "niloufar_dastbaz": {
+        "name": "Niloufar Dastbaz",
+        "similarity": 0.16412149369716644
+      },
+      "rafik_saleh": {
+        "name": "Rafik Saleh",
+        "similarity": 0.2265482097864151
+      },
+      "talha_azam": {
+        "name": "Talha Azam",
+        "similarity": 0.1610519140958786
+      },
+      "gabriel_bighiu": {
+        "name": "Gabriel Bighiu",
+        "similarity": 0.059485625475645065
+      },
+      "nirvan_nagra": {
+        "name": "Nirvan Nagra",
+        "similarity": 0.12203921377658844
+      },
+      "mohammad_malki": {
+        "name": "Mohammad Malki",
+        "similarity": 0.2343013435602188
+      },
+      "arfat_barnet": {
+        "name": "Arfat Barnet",
+        "similarity": 0.144886776804924
+      },
+      "dilayda_barnet": {
+        "name": "Dilayda Barnet",
+        "similarity": 0.05385598912835121
+      },
+      "kleo_gurra": {
+        "name": "Kleo Gurra",
+        "similarity": 0.1965411752462387
+      },
+      "sylwia_recruitment": {
+        "name": "Sylwia Recruitment",
+        "similarity": 0.1011095717549324
+      },
+      "ideal_dacaj": {
+        "name": "Ideal Dacaj",
+        "similarity": 0.24165844917297363
+      },
+      "harrison_morgan": {
+        "name": "Harrison Morgan",
+        "similarity": -0.0031940219923853874
+      },
+      "adil_al_sammerai": {
+        "name": "Adil Al- Sammerai",
+        "similarity": 0.16512352228164673
+      },
+      "angeline_packiyaseelan": {
+        "name": "Angeline Packiyaseelan",
+        "similarity": 0.1657087802886963
+      },
+      "jason_kurti": {
+        "name": "Jason Kurti",
+        "similarity": 0.2823196351528168
+      },
+      "anoush_sefatzadeh": {
+        "name": "Anoush Sefatzadeh",
+        "similarity": 0.25419166684150696
+      },
+      "kowsar_alam": {
+        "name": "Kowsar Alam",
+        "similarity": 0.3580264449119568
+      },
+      "georgi_angelov": {
+        "name": "Georgi Angelov",
+        "similarity": 0.019545961171388626
+      },
+      "janusaan_jeyachandran": {
+        "name": "Janusaan Jeyachandran",
+        "similarity": 0.20919018983840942
+      },
+      "aftaab_supervisor": {
+        "name": "Aftaab Supervisor",
+        "similarity": 0.3972100615501404
+      },
+      "mohamed_yasin_ali": {
+        "name": "Mohamed Yasin-ali",
+        "similarity": 0.15718093514442444
+      },
+      "rayyan_ali_khan": {
+        "name": "Rayyan Ali Khan",
+        "similarity": 0.2360418140888214
+      },
+      "adorena_ishtar_hossain": {
+        "name": "Adorena Ishtar Hossain",
+        "similarity": 0.4135758876800537
+      },
+      "waris_sales_controllers": {
+        "name": "Waris Sales Controllers",
+        "similarity": 0.4488987922668457
+      },
+      "jenifer_bajrami": {
+        "name": "Jenifer Bajrami",
+        "similarity": 0.11614944785833359
+      },
+      "kacper_barnet": {
+        "name": "Kacper Barnet",
+        "similarity": 0.156137153506279
+      },
+      "dinosh_sinnathamby": {
+        "name": "Dinosh Sinnathamby",
+        "similarity": 0.32969433069229126
+      },
+      "zak_raissi_barnet": {
+        "name": "Zak Raissi Barnet",
+        "similarity": 0.6793304681777954
+      },
+      "hussein_mohamed": {
+        "name": "Hussein Mohamed",
+        "similarity": 0.29074427485466003
+      }
+    },
+    "SPEAKER_02": {
+      "omar_el_harchaoui": {
+        "name": "Omar El Harchaoui",
+        "similarity": 0.07579685747623444
+      },
+      "haris_bajwa": {
+        "name": "Haris Bajwa",
+        "similarity": 0.18342573940753937
+      },
+      "shuahib_miah": {
+        "name": "Shuahib Miah",
+        "similarity": 0.11218642443418503
+      },
+      "mohammed_malik": {
+        "name": "Mohammed Malik",
+        "similarity": 0.12237909436225891
+      },
+      "mohammed_hussein_al_khwildi": {
+        "name": "Mohammed-Hussein  Al-Khwildi",
+        "similarity": 0.020856918767094612
+      },
+      "allan_johnson": {
+        "name": "Allan Johnson",
+        "similarity": 0.08191351592540741
+      },
+      "sababa_hossain": {
+        "name": "Sababa Hossain",
+        "similarity": 0.13953500986099243
+      },
+      "benjamin_ahmadi": {
+        "name": "Benjamin Ahmadi",
+        "similarity": 0.03180735558271408
+      },
+      "niloufar_dastbaz": {
+        "name": "Niloufar Dastbaz",
+        "similarity": -0.011189296841621399
+      },
+      "rafik_saleh": {
+        "name": "Rafik Saleh",
+        "similarity": 0.09364289045333862
+      },
+      "talha_azam": {
+        "name": "Talha Azam",
+        "similarity": -0.029387585818767548
+      },
+      "gabriel_bighiu": {
+        "name": "Gabriel Bighiu",
+        "similarity": 0.15086729824543
+      },
+      "nirvan_nagra": {
+        "name": "Nirvan Nagra",
+        "similarity": -0.04640774056315422
+      },
+      "mohammad_malki": {
+        "name": "Mohammad Malki",
+        "similarity": 0.06184512376785278
+      },
+      "arfat_barnet": {
+        "name": "Arfat Barnet",
+        "similarity": 0.046326346695423126
+      },
+      "dilayda_barnet": {
+        "name": "Dilayda Barnet",
+        "similarity": 0.004750694148242474
+      },
+      "kleo_gurra": {
+        "name": "Kleo Gurra",
+        "similarity": 0.04165232181549072
+      },
+      "sylwia_recruitment": {
+        "name": "Sylwia Recruitment",
+        "similarity": 0.059716176241636276
+      },
+      "ideal_dacaj": {
+        "name": "Ideal Dacaj",
+        "similarity": 0.02701355516910553
+      },
+      "harrison_morgan": {
+        "name": "Harrison Morgan",
+        "similarity": -0.15076878666877747
+      },
+      "adil_al_sammerai": {
+        "name": "Adil Al- Sammerai",
+        "similarity": 0.023535462096333504
+      },
+      "angeline_packiyaseelan": {
+        "name": "Angeline Packiyaseelan",
+        "similarity": 0.028051478788256645
+      },
+      "jason_kurti": {
+        "name": "Jason Kurti",
+        "similarity": 0.022288406267762184
+      },
+      "anoush_sefatzadeh": {
+        "name": "Anoush Sefatzadeh",
+        "similarity": -0.045263662934303284
+      },
+      "kowsar_alam": {
+        "name": "Kowsar Alam",
+        "similarity": 0.0321122445166111
+      },
+      "georgi_angelov": {
+        "name": "Georgi Angelov",
+        "similarity": -0.03716114163398743
+      },
+      "janusaan_jeyachandran": {
+        "name": "Janusaan Jeyachandran",
+        "similarity": 0.1598108410835266
+      },
+      "aftaab_supervisor": {
+        "name": "Aftaab Supervisor",
+        "similarity": 0.19066789746284485
+      },
+      "mohamed_yasin_ali": {
+        "name": "Mohamed Yasin-ali",
+        "similarity": 0.09351292997598648
+      },
+      "rayyan_ali_khan": {
+        "name": "Rayyan Ali Khan",
+        "similarity": 0.15471963584423065
+      },
+      "adorena_ishtar_hossain": {
+        "name": "Adorena Ishtar Hossain",
+        "similarity": 0.25127407908439636
+      },
+      "waris_sales_controllers": {
+        "name": "Waris Sales Controllers",
+        "similarity": 0.07879164814949036
+      },
+      "jenifer_bajrami": {
+        "name": "Jenifer Bajrami",
+        "similarity": -0.00831431895494461
+      },
+      "kacper_barnet": {
+        "name": "Kacper Barnet",
+        "similarity": 0.07632085680961609
+      },
+      "dinosh_sinnathamby": {
+        "name": "Dinosh Sinnathamby",
+        "similarity": -0.005828326568007469
+      },
+      "zak_raissi_barnet": {
+        "name": "Zak Raissi Barnet",
+        "similarity": 0.3277844786643982
+      },
+      "hussein_mohamed": {
+        "name": "Hussein Mohamed",
+        "similarity": 0.2779145836830139
+      }
+    },
+    "SPEAKER_03": {
+      "omar_el_harchaoui": {
+        "name": "Omar El Harchaoui",
+        "similarity": 0.13765746355056763
+      },
+      "haris_bajwa": {
+        "name": "Haris Bajwa",
+        "similarity": 0.39272117614746094
+      },
+      "shuahib_miah": {
+        "name": "Shuahib Miah",
+        "similarity": 0.2478933185338974
+      },
+      "mohammed_malik": {
+        "name": "Mohammed Malik",
+        "similarity": 0.2636584937572479
+      },
+      "mohammed_hussein_al_khwildi": {
+        "name": "Mohammed-Hussein  Al-Khwildi",
+        "similarity": 0.17995917797088623
+      },
+      "allan_johnson": {
+        "name": "Allan Johnson",
+        "similarity": 0.27172648906707764
+      },
+      "sababa_hossain": {
+        "name": "Sababa Hossain",
+        "similarity": 0.13134272396564484
+      },
+      "benjamin_ahmadi": {
+        "name": "Benjamin Ahmadi",
+        "similarity": 0.18128108978271484
+      },
+      "niloufar_dastbaz": {
+        "name": "Niloufar Dastbaz",
+        "similarity": 0.15903769433498383
+      },
+      "rafik_saleh": {
+        "name": "Rafik Saleh",
+        "similarity": 0.3160831332206726
+      },
+      "talha_azam": {
+        "name": "Talha Azam",
+        "similarity": 0.1358335316181183
+      },
+      "gabriel_bighiu": {
+        "name": "Gabriel Bighiu",
+        "similarity": 0.11895105242729187
+      },
+      "nirvan_nagra": {
+        "name": "Nirvan Nagra",
+        "similarity": 0.09059541672468185
+      },
+      "mohammad_malki": {
+        "name": "Mohammad Malki",
+        "similarity": 0.14240527153015137
+      },
+      "arfat_barnet": {
+        "name": "Arfat Barnet",
+        "similarity": 0.18260088562965393
+      },
+      "dilayda_barnet": {
+        "name": "Dilayda Barnet",
+        "similarity": 0.09001091122627258
+      },
+      "kleo_gurra": {
+        "name": "Kleo Gurra",
+        "similarity": 0.08390122652053833
+      },
+      "sylwia_recruitment": {
+        "name": "Sylwia Recruitment",
+        "similarity": 0.14851169288158417
+      },
+      "ideal_dacaj": {
+        "name": "Ideal Dacaj",
+        "similarity": 0.3270750343799591
+      },
+      "harrison_morgan": {
+        "name": "Harrison Morgan",
+        "similarity": 0.008074792101979256
+      },
+      "adil_al_sammerai": {
+        "name": "Adil Al- Sammerai",
+        "similarity": 0.17149168252944946
+      },
+      "angeline_packiyaseelan": {
+        "name": "Angeline Packiyaseelan",
+        "similarity": 0.11563025414943695
+      },
+      "jason_kurti": {
+        "name": "Jason Kurti",
+        "similarity": 0.2179601788520813
+      },
+      "anoush_sefatzadeh": {
+        "name": "Anoush Sefatzadeh",
+        "similarity": 0.2650032341480255
+      },
+      "kowsar_alam": {
+        "name": "Kowsar Alam",
+        "similarity": 0.32066798210144043
+      },
+      "georgi_angelov": {
+        "name": "Georgi Angelov",
+        "similarity": 0.07993710041046143
+      },
+      "janusaan_jeyachandran": {
+        "name": "Janusaan Jeyachandran",
+        "similarity": 0.3013150691986084
+      },
+      "aftaab_supervisor": {
+        "name": "Aftaab Supervisor",
+        "similarity": 0.3023967146873474
+      },
+      "mohamed_yasin_ali": {
+        "name": "Mohamed Yasin-ali",
+        "similarity": 0.127915620803833
+      },
+      "rayyan_ali_khan": {
+        "name": "Rayyan Ali Khan",
+        "similarity": 0.1873750537633896
+      },
+      "adorena_ishtar_hossain": {
+        "name": "Adorena Ishtar Hossain",
+        "similarity": 0.3992340564727783
+      },
+      "waris_sales_controllers": {
+        "name": "Waris Sales Controllers",
+        "similarity": 0.4244917929172516
+      },
+      "jenifer_bajrami": {
+        "name": "Jenifer Bajrami",
+        "similarity": 0.04235122352838516
+      },
+      "kacper_barnet": {
+        "name": "Kacper Barnet",
+        "similarity": 0.2270919531583786
+      },
+      "dinosh_sinnathamby": {
+        "name": "Dinosh Sinnathamby",
+        "similarity": 0.19306090474128723
+      },
+      "zak_raissi_barnet": {
+        "name": "Zak Raissi Barnet",
+        "similarity": 0.4862940013408661
+      },
+      "hussein_mohamed": {
+        "name": "Hussein Mohamed",
+        "similarity": 0.3739165961742401
+      }
+    }
+  },
+  "cluster_segment_counts": {
+    "SPEAKER_00": 239,
+    "SPEAKER_01": 250,
+    "SPEAKER_02": 2,
+    "SPEAKER_03": 4
+  },
+  "per_speaker": {
+    "Customer 1": {
+      "turns": 313,
+      "seconds": 635.8400000000008
+    },
+    "Zak Raissi Barnet": {
+      "turns": 311,
+      "seconds": 631.5200000000013
+    },
+    "Customer 2": {
+      "turns": 6,
+      "seconds": 2.9600000000001714
+    },
+    "Customer 3": {
+      "turns": 9,
+      "seconds": 7.680000000000064
+    }
+  },
+  "speaker_mode": "speaker_first_voiceprint",
+  "speaker_id_backend": "sortformer",
+  "matched_backend_dim": 512,
+  "voiceprint_dims": {
+    "192": 1,
+    "512": 6
+  },
+  "backend": "sortformer"
+}

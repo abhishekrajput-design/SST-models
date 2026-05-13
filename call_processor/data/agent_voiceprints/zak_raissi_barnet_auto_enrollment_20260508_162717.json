@@ -1,0 +1,702 @@
+{
+  "agent_slug": "zak_raissi_barnet",
+  "agent_name": "Zak Raissi Barnet",
+  "audio_root": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "label_source": "training-json",
+  "offset_mode": "detected",
+  "activate_requested": true,
+  "min_loco_accuracy": 95.0,
+  "min_activation_accuracy": 96.0,
+  "loco_report": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_raissi_barnet_auto_loco_20260508_162717.json",
+  "training_report": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_raissi_barnet_auto_training_20260508_162717.json",
+  "clean_clip_export": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_clean_clips\\zak_raissi_barnet_auto_20260508_162717",
+  "commands": {
+    "loco": [
+      "C:\\Users\\abhis\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\scripts\\evaluate_agent_loco.py",
+      "--agent-slug",
+      "zak_raissi_barnet",
+      "--audio-root",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+      "--labels-dir",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training",
+      "--label-source",
+      "training-json",
+      "--offset-mode",
+      "detected",
+      "--clusters",
+      "5",
+      "--min-eval-dur",
+      "0.8",
+      "--min-train-dur",
+      "1.5",
+      "--max-train-dur",
+      "18.0",
+      "--train-guard-s",
+      "0.35",
+      "--opposite-gap-s",
+      "0.05",
+      "--agent-filter",
+      "all",
+      "--threshold-margin",
+      "0.06",
+      "--min-agent-accuracy",
+      "95.0",
+      "--min-customer-accuracy",
+      "95.0",
+      "--out",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_raissi_barnet_auto_loco_20260508_162717.json"
+    ]
+  },
+  "loco_passed": false,
+  "training_started": false,
+  "activation_requested_to_trainer": false,
+  "loco_calibrated": {
+    "overall_accuracy": 53.01,
+    "agent_accuracy": 0.0,
+    "customer_accuracy": 100.0,
+    "correct": 88,
+    "total": 166,
+    "agent_correct": 0,
+    "agent_total": 78,
+    "customer_correct": 88,
+    "customer_total": 88,
+    "per_call": {
+      "call_01": {
+        "threshold": 0.92,
+        "segments": 31,
+        "overall_accuracy": 51.61,
+        "agent_accuracy": 0.0,
+        "customer_accuracy": 100.0,
+        "correct": 16,
+        "total": 31,
+        "agent_correct": 0,
+        "agent_total": 15,
+        "customer_correct": 16,
+        "customer_total": 16
+      },
+      "call_02": {
+        "threshold": 0.92,
+        "segments": 45,
+        "overall_accuracy": 53.33,
+        "agent_accuracy": 0.0,
+        "customer_accuracy": 100.0,
+        "correct": 24,
+        "total": 45,
+        "agent_correct": 0,
+        "agent_total": 21,
+        "customer_correct": 24,
+        "customer_total": 24
+      },
+      "call_03": {
+        "threshold": 0.8697,
+        "segments": 51,
+        "overall_accuracy": 50.98,
+        "agent_accuracy": 0.0,
+        "customer_accuracy": 100.0,
+        "correct": 26,
+        "total": 51,
+        "agent_correct": 0,
+        "agent_total": 25,
+        "customer_correct": 26,
+        "customer_total": 26
+      },
+      "call_04": {
+        "threshold": 0.92,
+        "segments": 39,
+        "overall_accuracy": 56.41,
+        "agent_accuracy": 0.0,
+        "customer_accuracy": 100.0,
+        "correct": 22,
+        "total": 39,
+        "agent_correct": 0,
+        "agent_total": 17,
+        "customer_correct": 22,
+        "customer_total": 22
+      }
+    },
+    "errors": [
+      {
+        "call": "call_01",
+        "segment": 2,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3966,
+        "text": "Hello, good afternoon, my friend Samuel."
+      },
+      {
+        "call": "call_01",
+        "segment": 4,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4761,
+        "text": "Calling you from Car Planet, I hope you're doing well."
+      },
+      {
+        "call": "call_01",
+        "segment": 6,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7616,
+        "text": "Just calling you to let you know we did receive your 250 yesterday and I did go ahead and mark the car and deposit and bring it down to Barnet. As well as that "
+      },
+      {
+        "call": "call_01",
+        "segment": 8,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.8204,
+        "text": "Alright perfect. Yeah, so I did a hard search with our prime lenders yesterday and obviously I didn't have a response for you yesterday before 9 so just coming "
+      },
+      {
+        "call": "call_01",
+        "segment": 10,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.8066,
+        "text": "Which means there is no balloon payment at the end. And if you give me one second I'll tell you something else. So yeah, and then I have 16.9 with Zopa at 412 p"
+      },
+      {
+        "call": "call_01",
+        "segment": 14,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7588,
+        "text": "Close brothers have accepted you at 411 pounds a month at 90 pence with only a 500 pound deposit. But yeah they are one of the best lenders that we work with so"
+      },
+      {
+        "call": "call_01",
+        "segment": 16,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7643,
+        "text": "Yeah, I hear it. But bear in mind, you just gotta take into consideration, numbers go up, that's all it is really. I can give you a quote for that. Now that I h"
+      },
+      {
+        "call": "call_01",
+        "segment": 18,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.8019,
+        "text": "Yeah bear with me right now I'll tell you but bear in mind SR72 considering it's a little bit cheaper it still has, let me tell you cos I'm just looking at a vi"
+      },
+      {
+        "call": "call_02",
+        "segment": 4,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4001,
+        "text": "Okay, no worries. And that was on uh it was Jason that sold you the car correct? HJ72."
+      },
+      {
+        "call": "call_02",
+        "segment": 6,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.5928,
+        "text": "And how many years warranty did you go for?"
+      },
+      {
+        "call": "call_02",
+        "segment": 8,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7112,
+        "text": "Five years. Alright, and uh, give me one second, I'll sort this out for you. So I'm just gonna check that you're still within the right cooling-off period, whic"
+      },
+      {
+        "call": "call_02",
+        "segment": 10,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4049,
+        "text": "Okay, so that means we have to solve it today."
+      },
+      {
+        "call": "call_02",
+        "segment": 12,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3873,
+        "text": "No stress, no stress, no stress. I'm going to leave a note now. Um, you should receive an email to confirm that your warranty has been refunded, bear with me."
+      },
+      {
+        "call": "call_02",
+        "segment": 14,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.1552,
+        "text": "Bear with me, I'm just, give me one second please."
+      },
+      {
+        "call": "call_02",
+        "segment": 16,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.5446,
+        "text": "And was it the full five years you wanted to cancel?"
+      },
+      {
+        "call": "call_02",
+        "segment": 18,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.6608,
+        "text": "So you don't want no protection on your car?"
+      },
+      {
+        "call": "call_03",
+        "segment": 4,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.6652,
+        "text": "Okay, yeah, no worries. And that was on uh... it was Jason that sold you the car correct? HJ72."
+      },
+      {
+        "call": "call_03",
+        "segment": 6,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3071,
+        "text": "And how many years warranty did you go for?"
+      },
+      {
+        "call": "call_03",
+        "segment": 8,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.469,
+        "text": "Five years. Alright, and uh... give me one second. I'll sort this out for you. So I'm just gonna check that you're still within the right cooling-off period, wh"
+      },
+      {
+        "call": "call_03",
+        "segment": 10,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.425,
+        "text": "Okay, so that means we have to solve it today."
+      },
+      {
+        "call": "call_03",
+        "segment": 12,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.8468,
+        "text": "No stress, no stress, no stress. I'm gonna leave a note now. Um, you should receive an email to confirm that your warranty has been refunded, bear with me."
+      },
+      {
+        "call": "call_03",
+        "segment": 14,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.6262,
+        "text": "Bear with me, I'm just... give me one second please."
+      },
+      {
+        "call": "call_03",
+        "segment": 16,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.5239,
+        "text": "And was it the full five years you wanted to cancel?"
+      },
+      {
+        "call": "call_03",
+        "segment": 18,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.6803,
+        "text": "So you don't want no protection on your on your car here?"
+      },
+      {
+        "call": "call_04",
+        "segment": 2,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3029,
+        "text": "Hello, is my user Cerise?"
+      },
+      {
+        "call": "call_04",
+        "segment": 4,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7535,
+        "text": "Hi Cerise. My colleague just essentially told me I missed a call from yourself, um, about the Vauxhall Grandland X. You was looking to come down?"
+      },
+      {
+        "call": "call_04",
+        "segment": 6,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.1667,
+        "text": "No worries."
+      },
+      {
+        "call": "call_04",
+        "segment": 8,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.6008,
+        "text": "The MOT expires on the 4th of October 2026."
+      },
+      {
+        "call": "call_04",
+        "segment": 10,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7324,
+        "text": "Yeah. But obviously look, if he has any problems you have or you want us to do a fresh MOT on the car, all you have to do is ask."
+      },
+      {
+        "call": "call_04",
+        "segment": 12,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.8185,
+        "text": "You have to ask me specifically. Cause look, our cars, if the MOT expires in three months, we don't really do it. Because it means essentially it's eligible to "
+      },
+      {
+        "call": "call_04",
+        "segment": 14,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4823,
+        "text": "Okay. Do you want me to send you over the service history?"
+      },
+      {
+        "call": "call_04",
+        "segment": 16,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.8245,
+        "text": "We wouldn't know the reason. You to bear in mind, obviously we buy 4-500 cars a month. So it could be a million reasons is the truth. They were... they could be"
+      }
+    ]
+  },
+  "loco_train_tuned": {
+    "overall_accuracy": 56.63,
+    "agent_accuracy": 21.79,
+    "customer_accuracy": 87.5,
+    "correct": 94,
+    "total": 166,
+    "agent_correct": 17,
+    "agent_total": 78,
+    "customer_correct": 77,
+    "customer_total": 88,
+    "per_call": {
+      "call_01": {
+        "threshold": 0.78,
+        "segments": 31,
+        "overall_accuracy": 61.29,
+        "agent_accuracy": 20.0,
+        "customer_accuracy": 100.0,
+        "correct": 19,
+        "total": 31,
+        "agent_correct": 3,
+        "agent_total": 15,
+        "customer_correct": 16,
+        "customer_total": 16
+      },
+      "call_02": {
+        "threshold": 0.8,
+        "segments": 45,
+        "overall_accuracy": 53.33,
+        "agent_accuracy": 0.0,
+        "customer_accuracy": 100.0,
+        "correct": 24,
+        "total": 45,
+        "agent_correct": 0,
+        "agent_total": 21,
+        "customer_correct": 24,
+        "customer_total": 24
+      },
+      "call_03": {
+        "threshold": 0.775,
+        "segments": 51,
+        "overall_accuracy": 52.94,
+        "agent_accuracy": 20.0,
+        "customer_accuracy": 84.62,
+        "correct": 27,
+        "total": 51,
+        "agent_correct": 5,
+        "agent_total": 25,
+        "customer_correct": 22,
+        "customer_total": 26
+      },
+      "call_04": {
+        "threshold": 0.62,
+        "segments": 39,
+        "overall_accuracy": 61.54,
+        "agent_accuracy": 52.94,
+        "customer_accuracy": 68.18,
+        "correct": 24,
+        "total": 39,
+        "agent_correct": 9,
+        "agent_total": 17,
+        "customer_correct": 15,
+        "customer_total": 22
+      }
+    },
+    "errors": [
+      {
+        "call": "call_01",
+        "segment": 2,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3966,
+        "text": "Hello, good afternoon, my friend Samuel."
+      },
+      {
+        "call": "call_01",
+        "segment": 4,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4761,
+        "text": "Calling you from Car Planet, I hope you're doing well."
+      },
+      {
+        "call": "call_01",
+        "segment": 6,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7616,
+        "text": "Just calling you to let you know we did receive your 250 yesterday and I did go ahead and mark the car and deposit and bring it down to Barnet. As well as that "
+      },
+      {
+        "call": "call_01",
+        "segment": 14,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7588,
+        "text": "Close brothers have accepted you at 411 pounds a month at 90 pence with only a 500 pound deposit. But yeah they are one of the best lenders that we work with so"
+      },
+      {
+        "call": "call_01",
+        "segment": 16,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7643,
+        "text": "Yeah, I hear it. But bear in mind, you just gotta take into consideration, numbers go up, that's all it is really. I can give you a quote for that. Now that I h"
+      },
+      {
+        "call": "call_01",
+        "segment": 22,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7348,
+        "text": "Yes obviously LV22 is around 2,900 pounds more than the other one which equates to around every thousand pounds usually increases your monthly payments around 2"
+      },
+      {
+        "call": "call_01",
+        "segment": 36,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7047,
+        "text": "Obviously when you come down I'll make sure you actually get a chance to look at the car and tell me what you think in real life. When was you looking to come d"
+      },
+      {
+        "call": "call_01",
+        "segment": 38,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.713,
+        "text": "Uh I don't see any reason why I can't bring it down today so it's already on its way to Barnet since I received your 250 yesterday I requested it yesterday nigh"
+      },
+      {
+        "call": "call_02",
+        "segment": 4,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4001,
+        "text": "Okay, no worries. And that was on uh it was Jason that sold you the car correct? HJ72."
+      },
+      {
+        "call": "call_02",
+        "segment": 6,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.5928,
+        "text": "And how many years warranty did you go for?"
+      },
+      {
+        "call": "call_02",
+        "segment": 8,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.7112,
+        "text": "Five years. Alright, and uh, give me one second, I'll sort this out for you. So I'm just gonna check that you're still within the right cooling-off period, whic"
+      },
+      {
+        "call": "call_02",
+        "segment": 10,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4049,
+        "text": "Okay, so that means we have to solve it today."
+      },
+      {
+        "call": "call_02",
+        "segment": 12,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3873,
+        "text": "No stress, no stress, no stress. I'm going to leave a note now. Um, you should receive an email to confirm that your warranty has been refunded, bear with me."
+      },
+      {
+        "call": "call_02",
+        "segment": 14,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.1552,
+        "text": "Bear with me, I'm just, give me one second please."
+      },
+      {
+        "call": "call_02",
+        "segment": 16,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.5446,
+        "text": "And was it the full five years you wanted to cancel?"
+      },
+      {
+        "call": "call_02",
+        "segment": 18,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.6608,
+        "text": "So you don't want no protection on your car?"
+      },
+      {
+        "call": "call_03",
+        "segment": 4,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.6652,
+        "text": "Okay, yeah, no worries. And that was on uh... it was Jason that sold you the car correct? HJ72."
+      },
+      {
+        "call": "call_03",
+        "segment": 6,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3071,
+        "text": "And how many years warranty did you go for?"
+      },
+      {
+        "call": "call_03",
+        "segment": 8,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.469,
+        "text": "Five years. Alright, and uh... give me one second. I'll sort this out for you. So I'm just gonna check that you're still within the right cooling-off period, wh"
+      },
+      {
+        "call": "call_03",
+        "segment": 10,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.425,
+        "text": "Okay, so that means we have to solve it today."
+      },
+      {
+        "call": "call_03",
+        "segment": 11,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.806,
+        "text": "Yes, 'cause I tried to call you yesterday, but for some reason that called it didn't went through, and then my partner tried. So yeah..."
+      },
+      {
+        "call": "call_03",
+        "segment": 13,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.7809,
+        "text": "Okay, one question please, very quick. So this was added on my finance. How this is gonna affect my finance?"
+      },
+      {
+        "call": "call_03",
+        "segment": 14,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.6262,
+        "text": "Bear with me, I'm just... give me one second please."
+      },
+      {
+        "call": "call_03",
+        "segment": 16,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.5239,
+        "text": "And was it the full five years you wanted to cancel?"
+      },
+      {
+        "call": "call_04",
+        "segment": 2,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.3029,
+        "text": "Hello, is my user Cerise?"
+      },
+      {
+        "call": "call_04",
+        "segment": 6,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.1667,
+        "text": "No worries."
+      },
+      {
+        "call": "call_04",
+        "segment": 8,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.6008,
+        "text": "The MOT expires on the 4th of October 2026."
+      },
+      {
+        "call": "call_04",
+        "segment": 14,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.4823,
+        "text": "Okay. Do you want me to send you over the service history?"
+      },
+      {
+        "call": "call_04",
+        "segment": 20,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.2016,
+        "text": "Okay. You just want some peace of mind before you make your jump, yeah?"
+      },
+      {
+        "call": "call_04",
+        "segment": 22,
+        "truth": "agent",
+        "predicted": "customer",
+        "similarity": 0.1248,
+        "text": "Yes, of course. Of course, of course, of course."
+      },
+      {
+        "call": "call_04",
+        "segment": 23,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.7612,
+        "text": "And she's obviously gonna be driving in the car a lot with me. And like I said before, I had a... I, I just, um, gave a car back last month... last month, becau"
+      },
+      {
+        "call": "call_04",
+        "segment": 25,
+        "truth": "customer",
+        "predicted": "agent",
+        "similarity": 0.7855,
+        "text": "Okay. And um, how long will I have to get back to you to let you know?"
+      }
+    ]
+  },
+  "training_allowed": false,
+  "decision": "blocked: leave-one-call-out accuracy did not meet gate"
+}
