@@ -1382,6 +1382,103 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "promoted_segments": promoted_segments,
         }
 
+    def _repair_agent_roles_from_voiceprint_clusters(
+        text_segments: list,
+        agent_name: str | None,
+        agent_slug: str | None,
+        cluster_match_table: dict | None,
+    ) -> dict:
+        """Promote split advisor clusters that strongly match the selected agent.
+
+        Sortformer often splits one nearby desk advisor into several clusters.
+        Voice matching initially picks only the strongest cluster as AGENT. This
+        pass repairs the other same-agent clusters, but only when the target
+        agent is the cluster's top acoustic match and the cluster has enough
+        transcribed duration to avoid promoting short background speech.
+        """
+        enabled = os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR", "1").strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return {"enabled": False, "promoted_speakers": [], "promoted_segments": 0}
+        if not agent_slug or not agent_name or agent_name in {"None", "Unknown Agent"}:
+            return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "no_identified_agent"}
+        if not cluster_match_table:
+            return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "no_cluster_match_table"}
+
+        min_sim = float(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_SIM", "0.62") or "0.62")
+        min_margin = float(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_MARGIN", "0.03") or "0.03")
+        min_seconds = float(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_TEXT_S", "12.0") or "12.0")
+        min_segments = int(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_SEGMENTS", "2") or "2")
+
+        speakers: dict[str, dict] = {}
+        for seg in text_segments:
+            if seg.get("speech_only"):
+                continue
+            if seg.get("identified_speaker") != "CUSTOMER":
+                continue
+            spk = str(seg.get("speaker") or "")
+            if not spk or spk == "SPEAKER_99":
+                continue
+            text = str(seg.get("text") or "").strip()
+            if not text:
+                continue
+            bucket = speakers.setdefault(spk, {"segments": [], "seconds": 0.0})
+            bucket["segments"].append(seg)
+            bucket["seconds"] += max(float(seg.get("end", 0.0)) - float(seg.get("start", 0.0)), 0.0)
+
+        promoted_speakers = []
+        promoted_segments = 0
+        for spk, bucket in speakers.items():
+            matches = cluster_match_table.get(spk) or {}
+            if not isinstance(matches, dict) or agent_slug not in matches:
+                continue
+            scored = sorted(
+                (
+                    (slug, float((data or {}).get("similarity") or 0.0))
+                    for slug, data in matches.items()
+                ),
+                key=lambda item: item[1],
+                reverse=True,
+            )
+            if not scored:
+                continue
+            top_slug, top_sim = scored[0]
+            target_sim = float((matches.get(agent_slug) or {}).get("similarity") or 0.0)
+            best_other = max((sim for slug, sim in scored if slug != agent_slug), default=0.0)
+            margin = target_sim - best_other
+            if top_slug != agent_slug:
+                continue
+            if target_sim < min_sim or margin < min_margin:
+                continue
+            if bucket["seconds"] < min_seconds or len(bucket["segments"]) < min_segments:
+                continue
+
+            for seg in bucket["segments"]:
+                seg["identified_speaker"] = "AGENT"
+                seg["display_speaker"] = agent_name
+                seg["agent_name"] = agent_name
+                seg["agent_slug"] = agent_slug
+                seg["role_voiceprint_repair"] = "same_agent_split_cluster"
+                promoted_segments += 1
+            promoted_speakers.append(
+                {
+                    "speaker": spk,
+                    "segments": len(bucket["segments"]),
+                    "seconds": round(float(bucket["seconds"]), 2),
+                    "target_similarity": round(float(target_sim), 3),
+                    "margin": round(float(margin), 3),
+                    "top_slug": top_slug,
+                }
+            )
+
+        return {
+            "enabled": True,
+            "promoted_speakers": promoted_speakers,
+            "promoted_segments": promoted_segments,
+            "min_similarity": min_sim,
+            "min_margin": min_margin,
+            "min_seconds": min_seconds,
+        }
+
     # Free unused memory before speaker identification. diar_multi can use CUDA
     # for supported embedding backends; CAM++ remains CPU inside WeSpeaker.
     try:
@@ -1493,17 +1590,31 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 f"[UI] Marked {unknown_segments_customer_fallback} unmatched text snippets as customer",
                 flush=True,
             )
+        cluster_match_table = (
+            diar_result.get("cluster_report")
+            or diar_result.get("cluster_match_table")
+            or {}
+        )
+        agent_role_voiceprint_repair = _repair_agent_roles_from_voiceprint_clusters(
+            segments,
+            agent_name_id,
+            diar_result.get("agent_slug"),
+            cluster_match_table,
+        )
+        if agent_role_voiceprint_repair.get("promoted_segments"):
+            print(
+                f"[UI] Voiceprint role repair promoted "
+                f"{agent_role_voiceprint_repair['promoted_segments']} segment(s) across "
+                f"{len(agent_role_voiceprint_repair.get('promoted_speakers') or [])} same-agent speaker(s)",
+                flush=True,
+            )
         agent_role_text_repair = _repair_agent_roles_from_text_cues(
             segments,
             agent_name_id,
             dur_s,
             int(diar_result.get("speaker_count") or 0),
             agent_slug=diar_result.get("agent_slug"),
-            cluster_match_table=(
-                diar_result.get("cluster_report")
-                or diar_result.get("cluster_match_table")
-                or {}
-            ),
+            cluster_match_table=cluster_match_table,
         )
         if agent_role_text_repair.get("promoted_segments"):
             print(
@@ -1662,6 +1773,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "transcript_coverage": transcript_coverage,
         "unknown_segments_smoothed": locals().get("unknown_segments_smoothed", 0),
         "unknown_segments_customer_fallback": locals().get("unknown_segments_customer_fallback", 0),
+        "agent_role_voiceprint_repair": locals().get("agent_role_voiceprint_repair", {}),
         "agent_role_text_repair": locals().get("agent_role_text_repair", {}),
         "note": (
             f"Requested {requested_model}; transcribed with {whisper_model}"
