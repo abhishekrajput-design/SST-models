@@ -68,16 +68,47 @@ if sys.platform == "win32" and os.path.isdir(_FFMPEG_BIN):
         _ENV["PATH"] = _FFMPEG_BIN + os.pathsep + _ENV.get("PATH", "")
 
 # FFmpeg filter chain for call-center audio with background noise.
-# silenceremove intentionally removed — it cuts quiet/distant voices near the
-# noise floor. dynaudnorm boosts quiet segments locally so Whisper/Parakeet
-# can hear them without over-amplifying loud peaks.
-AUDIO_FILTER = (
+# Two profiles available:
+#   * default  — original mild chain, safe for already-clean phone audio
+#   * deep     — adds lowpass to cut high-freq radio/music, stronger afftdn
+#                pass, and silenceremove to drop dead air (≥2.5 s of silence
+#                below -50 dB). Turned on by SST_DEEP_ENHANCE=1.
+# silenceremove parameters are deliberately conservative so quiet but real
+# speech (which holds energy above -45 dB) is never cut — only dead-air.
+_DEEP_ENHANCE = os.environ.get("SST_DEEP_ENHANCE", "").strip().lower() in (
+    "1", "true", "yes", "on",
+)
+
+AUDIO_FILTER_DEFAULT = (
     "aresample=44100,"                        # upsample first — loudnorm needs ≥44.1k
     "highpass=f=80,"                          # strip low-freq HVAC/rumble
     "afftdn=nf=-25:nt=w,"                     # FFmpeg spectral denoiser pass
     "loudnorm=I=-16:TP=-1.5:LRA=11,"          # bring quiet phone audio up to standard level
     "dynaudnorm=p=0.9:m=100:s=5:g=15"         # boost quiet passages locally
 )
+
+AUDIO_FILTER_DEEP = (
+    # DO NOT stack extra denoising before ASR (extra afftdn passes / narrow
+    # lowpass cuts speech sibilants and makes Parakeet skip words). DFN3
+    # (after this chain) handles radio/background noise.
+    "aresample=44100,"
+    "highpass=f=80,"
+    "afftdn=nf=-25:nt=w,"
+    # silenceremove BEFORE loudnorm/dynaudnorm — those would normalize the
+    # silent regions up above the -50 dB threshold and the silence detector
+    # would never fire. Drop ≥2.0 s runs where peak stays below -50 dB.
+    # Conversational pauses are <2 s; quiet speech holds energy above -45 dB,
+    # so this only ever cuts true dead air / radio-only sections.
+    "silenceremove=stop_periods=-1"
+    ":stop_duration=2.0"
+    ":stop_threshold=-50dB"
+    ":detection=peak,"
+    "loudnorm=I=-16:TP=-1.5:LRA=11,"
+    "dynaudnorm=p=0.9:m=100:s=5:g=15"
+)
+
+AUDIO_FILTER = AUDIO_FILTER_DEEP if _DEEP_ENHANCE else AUDIO_FILTER_DEFAULT
+print(f"[UI] enhance profile: {'DEEP' if _DEEP_ENHANCE else 'default'}", flush=True)
 
 # ── Pipeline status (shared) ──────────────────────────────────────────────────
 _status = {
@@ -981,65 +1012,94 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "too_few_speakers"}
 
         strong_agent_cues = {
-            "option one": 2.5,
-            "option two": 2.5,
-            "you can pay": 2.5,
-            "you can split": 2.5,
-            "split any plan": 2.5,
-            "split over": 2.0,
+            # ── Finance / payment plan talk ─────────────────────────────────
+            "option one": 2.5, "option two": 2.5,
+            "you can pay": 2.5, "you can split": 2.5,
+            "split any plan": 2.5, "split over": 2.0,
             "covers you for": 2.5,
             "monthly payments": 2.5,
             "over ten monthly payments": 2.5,
             "pay for it monthly": 2.5,
             "you can pay for it monthly": 2.5,
-            "using this example": 2.0,
-            "same example": 1.5,
+            "using this example": 2.0, "same example": 1.5,
             "seven pounds a month": 2.5,
-            "five years warranty": 2.5,
-            "five year warranty": 2.5,
-            "60 month warranty": 2.5,
-            "sixty month warranty": 2.5,
-            "60 month term": 2.0,
-            "sixty month term": 2.0,
-            "60 months": 1.5,
-            "sixty months": 1.5,
-            "three year service plan": 2.0,
-            "three-year service plan": 2.0,
-            "3 year service plan": 2.0,
-            "five year service plan": 2.0,
-            "i'll tell you exactly": 3.0,
-            "ill tell you exactly": 3.0,
-            "this is based on": 2.0,
-            "so this is based on": 2.0,
-            "cooling off period": 2.5,
-            "pay zero interest": 2.5,
+            "five years warranty": 2.5, "five year warranty": 2.5,
+            "60 month warranty": 2.5, "sixty month warranty": 2.5,
+            "60 month term": 2.0, "sixty month term": 2.0,
+            "60 months": 1.5, "sixty months": 1.5,
+            "three year service plan": 2.0, "three-year service plan": 2.0,
+            "3 year service plan": 2.0, "five year service plan": 2.0,
+            "i'll tell you exactly": 3.0, "ill tell you exactly": 3.0,
+            "this is based on": 2.0, "so this is based on": 2.0,
+            "cooling off period": 2.5, "pay zero interest": 2.5,
+            "balloon payment": 2.0, "close brothers": 2.0,
+            "finance company": 2.0, "payment for the warranty": 2.0,
+            "won't affect the finance": 2.5, "wont affect the finance": 2.5,
+            # ── Car Planet brand / closing ─────────────────────────────────
             "i spoke to my manager": 3.0,
+            "i'm speaking to my manager": 3.0, "im speaking to my manager": 3.0,
+            "speaking to my manager": 3.0, "speak to my manager": 3.0,
             "calling you from car planet": 3.0,
             "from car planet": 2.5,
             "sold you the car": 2.0,
             "how many years warranty": 2.5,
-            "sort this out": 2.0,
-            "bear with me": 2.0,
-            "leave a note": 2.0,
-            "you should receive an email": 2.5,
+            # ── Warranty / coverage description (agent-side explanation) ───
+            "warranty covers everything": 3.0,
+            "warranty covers": 2.5, "warranty cover": 2.5,
+            "covers everything mechanical": 3.0,
+            "covers everything mechanical and electrical": 3.5,
+            "engine gearbox": 2.5, "engine and gearbox": 2.5,
+            "engine gearbox suspension": 3.0,
+            "breakdown cover": 2.5, "break down cover": 2.5,
+            "peace of mind": 2.5,
+            "replacement vehicle": 2.5, "courtesy car": 2.5,
+            "courtesy vehicle": 2.5, "hire car": 2.0,
+            "make sure when you're": 1.5,
+            "to keep it valid": 2.0, "stays valid": 2.0,
+            "keep it valid": 1.5,
+            "the only requirement": 2.0,
             "warranty has been refunded": 3.0,
-            "direct refund": 2.5,
-            "won't affect the finance": 2.5,
-            "wont affect the finance": 2.5,
-            "finance company": 2.0,
-            "payment for the warranty": 2.0,
-            "confirm your email": 2.0,
-            "refund usually takes": 2.0,
-            "balloon payment": 2.0,
-            "close brothers": 2.0,
-            "fresh mot": 2.0,
+            "direct refund": 2.5, "refund usually takes": 2.0,
+            "fresh mot": 2.0, "freshly serviced": 2.0,
+            "service history": 1.0, "full service history": 2.0,
             "send you over the service history": 2.5,
             "take the car away": 2.5,
-            "drive away the vehicle": 2.5,
-            "give me a second": 2.0,
-            "let me confirm": 2.0,
-            "let's use": 1.5,
-            "so basically": 1.5,
+            "drive away the vehicle": 2.5, "drive away today": 2.5,
+            # ── Dealer-side conversational fillers (sales mode) ────────────
+            "bear with me": 2.0, "leave a note": 2.0,
+            "sort this out": 2.0, "sort that out for you": 2.5,
+            "give me a second": 2.0, "let me confirm": 2.0,
+            "let me check": 1.5, "one second": 1.0,
+            "let me show you": 2.0, "i'll show you": 2.0,
+            "you should receive an email": 2.5,
+            "confirm your email": 2.0,
+            "let's use": 1.5, "so basically": 1.5,
+            # ── Pitch / inventory / car description (dealer-side) ──────────
+            "we've got a total of": 2.5, "we have a total of": 2.5,
+            "we've got": 1.5, "we have got": 1.5,
+            "we've had": 1.0,
+            "we'll share": 1.5, "we share": 1.0,
+            "we sell": 1.5,
+            "i'd recommend": 2.0, "id recommend": 2.0,
+            "this one's a": 1.5, "this one is a": 1.5,
+            "this car comes with": 2.0,
+            "you'll get sort of the same": 1.5,
+            "you'll get": 1.0,
+            "volkswagen group": 2.0, "audi group": 2.0,
+            "part of the": 1.0,
+            "estates": 1.5, "hatchbacks": 1.5, "saloons": 1.5,
+            "trim levels": 2.0,
+            "adaptive cruise control": 1.5,
+            "lane assist": 1.5,
+            "low mileage": 1.5,
+            "great condition": 1.5,
+            # ── Booking / appointment (dealer-side) ────────────────────────
+            "bring it over": 1.5, "bring it in": 1.5,
+            "do you wanna bring it": 2.0, "do you want to bring it": 2.0,
+            "we close at": 2.0, "we open at": 2.0,
+            "what day works": 2.0,
+            "book you in": 2.5, "get you booked": 2.5,
+            "got an appointment": 1.5,
         }
         weak_agent_cues = {
             "warranty": 0.5,
@@ -1118,6 +1178,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
 
         min_seconds = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SPEAKER_S", "8") or "8")
         min_score = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SCORE", "5.0") or "5.0")
+        min_strong_hits = int(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_STRONG", "2") or "2")
+        ratio_mult = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_RATIO_MULT", "1.8") or "1.8")
+        ratio_add = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_RATIO_ADD", "2.0") or "2.0")
         promoted_speakers = []
         promoted_segments = 0
         display_name = agent_name if agent_name and agent_name not in {"None", "Unknown Agent"} else "Agent"
@@ -1127,11 +1190,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             strong_hits = sorted(bucket["strong_hits"])
             if bucket["seconds"] < min_seconds:
                 continue
-            if len(strong_hits) < 2:
+            if len(strong_hits) < min_strong_hits:
                 continue
             if agent_score < min_score:
                 continue
-            if agent_score < (customer_score * 1.8 + 2.0):
+            if agent_score < (customer_score * ratio_mult + ratio_add):
                 continue
             for seg in bucket["segments"]:
                 seg["identified_speaker"] = "AGENT"
@@ -1516,6 +1579,10 @@ def _run_pipeline(
             # ── 0b DeepFilterNet3 — neural denoising (full audio) ────────────
             # Skip on already-clean audio (synthetic test files, broadcast-grade
             # recordings) since DFN3 can over-process them into silence.
+            # IMPORTANT: DFN3 on Parakeet ASR input DROPS WORDS (the model is
+            # tuned for stationary noise and tends to remove quiet speech).
+            # That's why SST_PARAKEET_SKIP_DFN defaults to 1 and we no longer
+            # let SST_DEEP_ENHANCE override it.
             pipeline_audio = paths["ffmpeg"]   # fallback
             skip_dfn_for_parakeet = (
                 whisper_model == "parakeet-tdt-0.6b-v3"
@@ -1541,6 +1608,11 @@ def _run_pipeline(
                 except Exception as e:
                     print(f"[UI] DeepFilterNet3 failed: {e} — using FFmpeg output.")
 
+            # ASR continues to use the raw upload for Parakeet — feeding the
+            # enhanced (silenceremove'd) audio to ASR would shift timestamps
+            # and the silenceremove threshold has been observed dropping real
+            # words from quiet speakers. Silence removal therefore only
+            # affects the BROWSER PLAYBACK file, not the transcription input.
             prefer_original_parakeet = (
                 whisper_model == "parakeet-tdt-0.6b-v3"
                 and os.getenv("SST_PARAKEET_ORIGINAL_SOURCE", "1").strip().lower()
