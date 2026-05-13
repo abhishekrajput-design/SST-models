@@ -9,6 +9,12 @@ PORT="${PORT:-8080}"
 STATUS_URL="${STATUS_URL:-http://127.0.0.1:$PORT/api/status}"
 TAIL_LINES="${TAIL_LINES:-120}"
 
+# UI is gated by HTTP Basic Auth (see ui.py). The status probe below has to
+# pass creds or it gets 401, which looks like a failure to the user.
+CALLPROC_USER="${CALLPROC_USER:-abhishek}"
+CALLPROC_PASS="${CALLPROC_PASS:-123456}"
+CURL_AUTH="-u ${CALLPROC_USER}:${CALLPROC_PASS}"
+
 find_python() {
     if [ -n "${PYTHON:-}" ]; then
         printf '%s\n' "$PYTHON"
@@ -46,7 +52,7 @@ is_running() {
 }
 
 status_ok() {
-    command -v curl >/dev/null 2>&1 && curl -fsS "$STATUS_URL" >/dev/null 2>&1
+    command -v curl >/dev/null 2>&1 && curl -fsS $CURL_AUTH "$STATUS_URL" >/dev/null 2>&1
 }
 
 port_pid() {
@@ -86,7 +92,7 @@ status() {
     fi
 
     if command -v curl >/dev/null 2>&1; then
-        curl -fsS "$STATUS_URL" || true
+        curl -fsS $CURL_AUTH "$STATUS_URL" || true
         echo
     else
         echo "curl not found; skipped $STATUS_URL"
