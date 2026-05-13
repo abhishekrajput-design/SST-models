@@ -157,6 +157,52 @@
             margin-right: 5px;
         }
 
+        .call-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .call-action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .call-icon-btn {
+            width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        .call-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        .call-icon-btn.copied {
+            color: var(--green);
+            border-color: rgba(34, 197, 94, 0.28);
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .call-icon-btn.delete:hover {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.22);
+            background: rgba(239, 68, 68, 0.08);
+        }
+
         /* Upload */
         .upload-section {
             padding: 14px 16px;
@@ -1844,6 +1890,38 @@
             return map[m] || (m || 'unknown');
         }
 
+        function jsArg(value) {
+            return JSON.stringify(String(value ?? '')).replace(/</g, '\\u003c');
+        }
+
+        function requestedCallId() {
+            const params = new URLSearchParams(window.location.search);
+            const fromQuery = params.get('call') || params.get('result_id') || params.get('result');
+            if (fromQuery) return fromQuery;
+            if (window.location.hash.startsWith('#call=')) {
+                return decodeURIComponent(window.location.hash.slice('#call='.length));
+            }
+            if (window.location.hash.startsWith('#/call/')) {
+                return decodeURIComponent(window.location.hash.slice('#/call/'.length));
+            }
+            return '';
+        }
+
+        function callShareUrl(id) {
+            const url = new URL(window.location.href);
+            url.search = '';
+            url.hash = '';
+            url.searchParams.set('call', id);
+            return url.toString();
+        }
+
+        function setCallUrl(id) {
+            const next = callShareUrl(id);
+            if (window.location.href !== next) {
+                window.history.replaceState(null, '', next);
+            }
+        }
+
         function resolveRole(seg) {
             const spk = seg.identified_speaker || seg.speaker || 'Unknown';
             if (spk === 'AGENT' || spk.startsWith('agent_')) return 'AGENT';
@@ -1924,6 +2002,8 @@
                 });
                 DOM.callList.innerHTML = calls.map((c, idx) => {
                     const id = typeof c === 'string' ? c : c.id;
+                    const idText = escapeHtml(id);
+                    const idArg = escapeHtml(jsArg(id));
                     const model = typeof c === 'object' ? (c.model || 'unknown') : 'unknown';
                     const segs = typeof c === 'object' ? (c.segments || 0) : 0;
                     const meta = typeof c === 'object' ? (c.orig_meta || {}) : {};
@@ -1934,11 +2014,11 @@
                     const ch = meta.channels === 1 ? 'Mono' : meta.channels === 2 ? 'Stereo' : '—';
                     const proc = procT ? fmtDur(procT) : '—';
                     const ago = procAt ? timeAgo(procAt) : '';
-                    return `<div class="call-card" onclick="loadCall('${id}', this)">
+                    return `<div class="call-card" data-call-id="${idText}" onclick="loadCall(${idArg}, this)">
                 <div class="call-title">
                     <span class="badge-num">#${idx + 1}</span>
                     ${idx === 0 ? '<span class="badge-latest">LATEST</span>' : ''}
-                    📞 ${id}
+                    📞 ${idText}
                 </div>
                 <div class="call-meta" style="margin-bottom:4px;">
                     <span class="model-tag" style="background:${modelColor(model)}">${shortModel(model)}</span>
@@ -1947,19 +2027,40 @@
                 </div>
                 <div class="call-meta">Proc ${proc} &nbsp;|&nbsp; Audio ${dur}</div>
                 <div class="call-meta">📦 ${size} &nbsp;·&nbsp; ${ch}</div>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                <div class="call-actions">
                     <span style="font-size:.68rem;color:var(--muted)">Click to view</span>
-                    <button onclick="deleteCall(event,'${id}')" style="background:transparent;border:none;color:#ef4444;cursor:pointer;padding:2px;" title="Delete">
+                    <div class="call-action-buttons">
+                    <button class="call-icon-btn" onclick="copyCallLink(event, ${idArg})" title="Copy share link" aria-label="Copy share link">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                    </button>
+                    <button class="call-icon-btn delete" onclick="deleteCall(event, ${idArg})" title="Delete" aria-label="Delete">
                         <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                     </button>
+                    </div>
                 </div>
             </div>`;
                 }).join('');
 
+                const sharedId = requestedCallId();
+                if (sharedId && currentCallId !== sharedId) {
+                    const sharedCard = Array.from(DOM.callList.querySelectorAll('.call-card'))
+                        .find(card => card.dataset.callId === sharedId);
+                    try {
+                        await loadCall(sharedId, sharedCard || null, { updateUrl: true });
+                        if (sharedCard) sharedCard.scrollIntoView({ block: 'center' });
+                        return;
+                    } catch (_) {
+                        DOM.chat.innerHTML = `<div class="chat-placeholder"><span style="color:#ef4444;font-size:.9rem;">Shared call not found.</span></div>`;
+                        DOM.audioBar.style.display = 'none';
+                        DOM.spkStrip.style.display = 'none';
+                        return;
+                    }
+                }
+
                 if (calls.length && !DOM.chat.querySelector('.bubble')) {
                     const firstId = typeof calls[0] === 'string' ? calls[0] : calls[0].id;
                     const firstCard = DOM.callList.querySelector('.call-card');
-                    if (firstCard) loadCall(firstId, firstCard);
+                    if (firstCard) loadCall(firstId, firstCard, { updateUrl: false });
                 }
             } catch (e) {
                 DOM.callList.innerHTML = `<div style="color:#ef4444;padding:16px;">Failed to load calls.</div>`;
@@ -1967,11 +2068,14 @@
         }
 
         // ── Load a single call ──────────────────────────────────────────────────────
-        async function loadCall(callId, el) {
+        async function loadCall(callId, el, opts = {}) {
             document.querySelectorAll('.call-card').forEach(n => n.classList.remove('active'));
             if (el) el.classList.add('active');
 
-            const res = await fetch(`/data/processed/${encodeURIComponent(callId)}/result.json`);
+            const res = await fetch(`/api/call/${encodeURIComponent(callId)}`);
+            if (!res.ok) {
+                throw new Error(`Call not found: ${callId}`);
+            }
             const data = await res.json();
 
             currentSegments = data.segments || [];
@@ -1979,6 +2083,7 @@
             currentIdentifiedAgent = data.identified_agent || 'Agent';
             _activeSegIdx = -1;
             _autoScroll = true;
+            if (opts.updateUrl !== false) setCallUrl(callId);
 
             // Audio URLs
             function toUrl(raw) {
@@ -2226,10 +2331,47 @@
             }
         });
 
+        async function copyText(text) {
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(text);
+                return;
+            }
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+
+        async function copyCallLink(e, id) {
+            e.stopPropagation();
+            const btn = e.currentTarget;
+            const link = callShareUrl(id);
+            try {
+                await copyText(link);
+                const original = btn.innerHTML;
+                const originalTitle = btn.title;
+                btn.classList.add('copied');
+                btn.title = 'Link copied';
+                btn.innerHTML = '<svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                window.setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.title = originalTitle;
+                    btn.innerHTML = original;
+                }, 1400);
+            } catch (_) {
+                window.prompt('Copy call link', link);
+            }
+        }
+
         // ── Delete call ─────────────────────────────────────────────────────────────
         function deleteCall(e, id) {
             e.stopPropagation();
-            showConfirm(`Delete <strong style="color:#f87171;">${id}</strong>?`, async () => {
+            showConfirm(`Delete <strong style="color:#f87171;">${escapeHtml(id)}</strong>?`, async () => {
                 const r = await fetch(`/api/call/${encodeURIComponent(id)}`, { method: 'DELETE' });
                 if (r.ok) { DOM.chat.innerHTML = '<div class="chat-placeholder">Deleted.</div>'; DOM.audioBar.style.display = 'none'; DOM.spkStrip.style.display = 'none'; loadCalls(); }
             });
