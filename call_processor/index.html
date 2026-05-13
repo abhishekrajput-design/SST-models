@@ -1043,6 +1043,27 @@
             font-weight: 700;
             margin-bottom: 24px;
             color: var(--text);
+            justify-content: space-between;
+        }
+
+        .progress-min-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(148, 163, 184, .28);
+            border-radius: 8px;
+            background: rgba(15, 23, 42, .72);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-left: auto;
+            order: 3;
+        }
+
+        .progress-min-btn:hover {
+            border-color: rgba(59, 130, 246, .55);
+            background: rgba(30, 41, 59, .95);
         }
 
         .progress-spinner {
@@ -1140,6 +1161,96 @@
             font-weight: 600;
             margin-top: 8px;
             letter-spacing: .5px;
+        }
+
+        .progress-mini {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 1001;
+            align-items: center;
+            gap: 10px;
+            max-width: min(360px, calc(100vw - 32px));
+            padding: 12px 14px;
+            border: 1px solid rgba(59, 130, 246, .36);
+            border-radius: 10px;
+            background: #1e293b;
+            color: var(--text);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, .42);
+            cursor: pointer;
+        }
+
+        .progress-mini:hover {
+            border-color: rgba(59, 130, 246, .7);
+            background: #24334a;
+        }
+
+        .progress-mini-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #3b82f6;
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, .55);
+            animation: progressMiniPulse 1.4s ease-out infinite;
+            flex-shrink: 0;
+        }
+
+        .progress-mini.done .progress-mini-dot {
+            background: #10b981;
+            animation: none;
+            box-shadow: none;
+        }
+
+        .progress-mini.error .progress-mini-dot {
+            background: #ef4444;
+            animation: none;
+            box-shadow: none;
+        }
+
+        .progress-mini-stage {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: .82rem;
+            font-weight: 600;
+        }
+
+        .progress-mini-time {
+            margin-left: auto;
+            color: var(--accent);
+            font-size: .82rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            flex-shrink: 0;
+        }
+
+        @keyframes progressMiniPulse {
+            70% {
+                box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .progress-box {
+                width: calc(100vw - 32px);
+                padding: 24px 20px;
+            }
+
+            .progress-title {
+                align-items: flex-start;
+            }
+
+            .progress-mini {
+                left: 16px;
+                right: 16px;
+                bottom: 16px;
+                max-width: none;
+            }
         }
 
         /* Confirm modal */
@@ -1619,6 +1730,8 @@
         <div class="progress-box">
             <div class="progress-title">
                 <div class="progress-spinner"></div>
+                <button id="progressMinBtn" class="progress-min-btn" type="button" onclick="minimizeProgress()"
+                    title="Minimize progress popup" aria-label="Minimize progress popup">-</button>
                 Processing Call…
             </div>
             <div class="progress-steps">
@@ -1656,6 +1769,13 @@
             </div>
         </div>
     </div>
+
+    <button id="progressMini" class="progress-mini" type="button" onclick="restoreProgress()" style="display:none"
+        title="Show progress popup" aria-label="Show progress popup" aria-live="polite">
+        <span class="progress-mini-dot"></span>
+        <span class="progress-mini-stage" id="progressMiniStage">Processing</span>
+        <span class="progress-mini-time" id="progressMiniTime">0:00</span>
+    </button>
 
     <script>
         // ── DOM refs ────────────────────────────────────────────────────────────────
@@ -2160,11 +2280,14 @@
 
         // ── Progress modal ───────────────────────────────────────────────────────────
         const STAGE_PCTS = [8, 30, 58, 80, 100];
+        const STAGE_LABELS = ['Audio Enhancement', 'Speaker Diarization', 'Speaker Identification', 'Transcription', 'Done'];
         const POLL_MS = 1200;
         let _pollTimer = null;
         let _elapsedTimer = null;
         let _elapsedStart = 0;
         let _pollFailCount = 0;
+        let _progressMinimized = false;
+        let _lastProgressStageText = 'Processing';
 
         function _fmtElapsed(sec) {
             sec = Math.max(0, Math.floor(sec));
@@ -2175,8 +2298,55 @@
         }
 
         function _setProgressElapsed(sec) {
+            const text = _fmtElapsed(sec || 0);
             const el = document.getElementById('progressTimer');
-            if (el) el.textContent = _fmtElapsed(sec || 0);
+            if (el) el.textContent = text;
+            const mini = document.getElementById('progressMiniTime');
+            if (mini) mini.textContent = text;
+        }
+
+        function _setProgressModalVisible(visible) {
+            const modal = document.getElementById('progressModal');
+            if (modal) modal.style.display = visible ? 'flex' : 'none';
+        }
+
+        function _setProgressMiniVisible(visible) {
+            const mini = document.getElementById('progressMini');
+            if (mini) mini.style.display = visible ? 'flex' : 'none';
+        }
+
+        function _setProgressMiniState(state) {
+            const mini = document.getElementById('progressMini');
+            if (!mini) return;
+            mini.classList.toggle('done', state === 'done');
+            mini.classList.toggle('error', state === 'error');
+        }
+
+        function _syncProgressMini(status) {
+            const s = status || {};
+            let label = s.message || s.stage || _lastProgressStageText || 'Processing';
+            if (s.error) label = 'Failed';
+            else if (s.stage === 'Cancelled') label = 'Cancelled';
+            else if (s.cancel_requested && s.running) label = 'Cancelling';
+            else if (s.done && !s.running) label = 'Done';
+
+            _lastProgressStageText = label;
+            const stage = document.getElementById('progressMiniStage');
+            if (stage) stage.textContent = label;
+            if (typeof s.elapsed_seconds === 'number') _setProgressElapsed(s.elapsed_seconds);
+            _setProgressMiniState(s.error ? 'error' : (s.done && !s.running ? 'done' : 'running'));
+        }
+
+        function minimizeProgress() {
+            _progressMinimized = true;
+            _setProgressModalVisible(false);
+            _setProgressMiniVisible(true);
+        }
+
+        function restoreProgress() {
+            _progressMinimized = false;
+            _setProgressMiniVisible(false);
+            _setProgressModalVisible(true);
         }
 
         function _resetFileInput() {
@@ -2258,12 +2428,16 @@
         }
 
         function showProgress() {
-            document.getElementById('progressModal').style.display = 'flex';
+            _setProgressModalVisible(!_progressMinimized);
+            _setProgressMiniVisible(_progressMinimized);
             setStage(0, 'Uploading…');
             _startElapsed();
         }
         function hideProgress() {
-            document.getElementById('progressModal').style.display = 'none';
+            _progressMinimized = false;
+            _setProgressModalVisible(false);
+            _setProgressMiniVisible(false);
+            _setProgressMiniState('running');
             _stopElapsed();
             const btn = document.getElementById('cancelBtn');
             if (btn) { btn.disabled = false; btn.textContent = 'Cancel'; }
@@ -2306,15 +2480,17 @@
         // Hardened state handlers. These override the earlier simple handlers
         // so upload controls follow the actual server job state.
         function showProgress(message = 'Preparing...') {
-            const modal = document.getElementById('progressModal');
-            if (modal) modal.style.display = 'flex';
+            _setProgressModalVisible(!_progressMinimized);
+            _setProgressMiniVisible(_progressMinimized);
             setStage(0, message);
             _startElapsed();
         }
 
         function hideProgress() {
-            const modal = document.getElementById('progressModal');
-            if (modal) modal.style.display = 'none';
+            _progressMinimized = false;
+            _setProgressModalVisible(false);
+            _setProgressMiniVisible(false);
+            _setProgressMiniState('running');
             _stopElapsed();
             const btn = document.getElementById('cancelBtn');
             if (btn) { btn.disabled = false; btn.textContent = 'Cancel'; }
@@ -2331,6 +2507,10 @@
 
         function setStage(n, msg) {
             n = Math.max(0, Math.min(4, Number(n) || 0));
+            _lastProgressStageText = msg || STAGE_LABELS[n] || 'Processing';
+            const miniStage = document.getElementById('progressMiniStage');
+            if (miniStage) miniStage.textContent = _lastProgressStageText;
+            _setProgressMiniState('running');
             for (let i = 0; i < 4; i++) {
                 const el = document.getElementById(`pstep-${i}`);
                 if (!el) continue;
@@ -2358,6 +2538,7 @@
                     const s = await fetchStatus();
                     _pollFailCount = 0;
                     updateProcessTiming(s);
+                    _syncProgressMini(s);
                     if (typeof s.elapsed_seconds === 'number') _setProgressElapsed(s.elapsed_seconds);
 
                     if (s.cancel_requested && s.running) {
