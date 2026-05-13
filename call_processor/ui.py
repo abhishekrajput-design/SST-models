@@ -1,4 +1,10 @@
-﻿import os
+﻿# `from __future__ import annotations` MUST be the first real statement.
+# It treats every type annotation in this file as a string, so PEP 604 (`X | Y`)
+# and PEP 585 (`list[T]`) syntax used below work on Python 3.9 as well as 3.10+
+# (the production AWS box runs 3.9, the dev box runs 3.11).
+from __future__ import annotations
+
+import os
 import re
 import sys
 import gc
