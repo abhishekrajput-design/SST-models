@@ -14,12 +14,12 @@ REPO = Path(__file__).resolve().parents[2]
 SCRIPTS = REPO / "call_processor" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-for line in (REPO / ".env").read_text(encoding="utf-8").splitlines():
-    if line and not line.startswith("#") and "=" in line:
-        k, v = line.split("=", 1)
-        os.environ.setdefault(k.strip(), v.strip())
-os.environ.setdefault("AUDIOFY_USERNAME", "abhishek")
-os.environ.setdefault("AUDIOFY_PASSWORD", "123456")
+env_path = REPO / ".env"
+if env_path.exists():
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip())
 
 import daily_training_daemon as dtd  # noqa: E402
 

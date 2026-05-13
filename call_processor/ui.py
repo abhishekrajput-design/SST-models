@@ -756,8 +756,26 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         reason: str,
     ) -> list:
         nonlocal transcriber, whisper_model
-        # No fallback - use Parakeet only
-        return current_segments or []
+        if current_segments:
+            return current_segments
+        fallback_model = os.getenv("SST_EMPTY_TRANSCRIPT_FALLBACK", "whisper-large-v3-turbo").strip()
+        if not fallback_model or fallback_model.lower() in {"0", "false", "no", "off", "none"}:
+            return []
+        if fallback_model == whisper_model:
+            return []
+
+        _set_status(3, "Transcription", f"{reason}; retrying with {fallback_model}...")
+        print(f"[UI] {reason}; retrying with {fallback_model}", flush=True)
+        if transcriber is not None:
+            try:
+                transcriber.unload()
+            except Exception:
+                pass
+        whisper_model = fallback_model
+        retry_device = "cuda" if _cuda_available() else "cpu"
+        transcriber = get_transcriber(whisper_model, device=retry_device)
+        transcriber.load()
+        return transcriber.transcribe(wav_path, language="en") or []
 
     t0 = time.time()
     diarization_applied = False
@@ -1093,6 +1111,56 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "lane assist": 1.5,
             "low mileage": 1.5,
             "great condition": 1.5,
+            # Desk coaching / training sessions. These often contain advisor
+            # process language instead of direct phone-call sales wording.
+            "present the product correctly": 3.0,
+            "product correctly": 2.5,
+            "sell the product": 2.0,
+            "like the product": 1.5,
+            "protective products": 2.0,
+            "rank those products": 2.0,
+            "buy products": 2.5,
+            "buy a car without warranty": 2.5,
+            "not every single customer": 2.0,
+            "what your customers actually say": 2.5,
+            "listen to the customer": 2.5,
+            "listening to what your customers": 2.5,
+            "when i'm with customers": 2.5,
+            "when im with customers": 2.5,
+            "customers that come from": 2.0,
+            "customer will come back": 2.0,
+            "the customer will come back": 2.0,
+            "customer won't believe": 2.0,
+            "customer wont believe": 2.0,
+            "customer options": 2.0,
+            "giving the customer options": 2.0,
+            "tailored packages for the customer": 2.5,
+            "tailoring it": 1.5,
+            "tailored it towards yourself": 1.5,
+            "customer is just looking": 2.0,
+            "customer's just looking": 2.0,
+            "salesman": 1.5,
+            "force rep": 1.5,
+            "process": 1.0,
+            "format": 1.0,
+            "fill up the sheet": 2.0,
+            "different numbers": 1.5,
+            "personalise it for yourself": 2.0,
+            "personalize it for yourself": 2.0,
+            "what works perfectly": 2.0,
+            "keep trying": 1.5,
+            "worked with mechanics": 2.0,
+            "mechanical technician": 1.5,
+            "electrical technician": 1.5,
+            "big motoring world": 2.5,
+            "big motoring road": 2.0,
+            "big motoring": 2.0,
+            "massive discount": 2.0,
+            "tax the vehicle": 2.5,
+            "handover team": 2.5,
+            "assign the logbook": 2.5,
+            "come to collect the car": 2.0,
+            "collect the car": 2.0,
             # ── Booking / appointment (dealer-side) ────────────────────────
             "bring it over": 1.5, "bring it in": 1.5,
             "do you wanna bring it": 2.0, "do you want to bring it": 2.0,
@@ -1100,6 +1168,47 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "what day works": 2.0,
             "book you in": 2.5, "get you booked": 2.5,
             "got an appointment": 1.5,
+        }
+        desk_process_cues = {
+            "present the product correctly",
+            "product correctly",
+            "sell the product",
+            "like the product",
+            "protective products",
+            "rank those products",
+            "buy products",
+            "buy a car without warranty",
+            "not every single customer",
+            "what your customers actually say",
+            "listen to the customer",
+            "listening to what your customers",
+            "when i'm with customers",
+            "when im with customers",
+            "customers that come from",
+            "customer will come back",
+            "the customer will come back",
+            "customer won't believe",
+            "customer wont believe",
+            "customer options",
+            "giving the customer options",
+            "tailored packages for the customer",
+            "tailoring it",
+            "tailored it towards yourself",
+            "customer is just looking",
+            "customer's just looking",
+            "salesman",
+            "force rep",
+            "process",
+            "format",
+            "fill up the sheet",
+            "different numbers",
+            "personalise it for yourself",
+            "personalize it for yourself",
+            "what works perfectly",
+            "keep trying",
+            "worked with mechanics",
+            "mechanical technician",
+            "electrical technician",
         }
         weak_agent_cues = {
             "warranty": 0.5,
@@ -1114,6 +1223,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "mot": 0.5,
             "lender": 0.5,
             "lenders": 0.5,
+            "customers": 0.25,
+            "products": 0.25,
+            "sheet": 0.25,
+            "tax it": 0.5,
+            "logbook": 0.5,
             "zopa": 0.5,
         }
         customer_cues = {
@@ -1158,6 +1272,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     "agent_score": 0.0,
                     "customer_score": 0.0,
                     "strong_hits": set(),
+                    "desk_hits": set(),
                 },
             )
             bucket["segments"].append(seg)
@@ -1167,6 +1282,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 if cue in low:
                     bucket["agent_score"] += weight
                     bucket["strong_hits"].add(cue)
+                    if cue in desk_process_cues:
+                        bucket["desk_hits"].add(cue)
             for cue, weight in weak_agent_cues.items():
                 if cue in low:
                     bucket["agent_score"] += weight
@@ -1181,6 +1298,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         min_strong_hits = int(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_STRONG", "2") or "2")
         ratio_mult = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_RATIO_MULT", "1.8") or "1.8")
         ratio_add = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_RATIO_ADD", "2.0") or "2.0")
+        desk_min_hits = int(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_DESK_MIN_STRONG", "4") or "4")
+        desk_min_score = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_DESK_MIN_SCORE", "12.0") or "12.0")
+        desk_margin = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_DESK_MARGIN", "6.0") or "6.0")
         promoted_speakers = []
         promoted_segments = 0
         display_name = agent_name if agent_name and agent_name not in {"None", "Unknown Agent"} else "Agent"
@@ -1188,19 +1308,29 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             agent_score = float(bucket["agent_score"])
             customer_score = float(bucket["customer_score"])
             strong_hits = sorted(bucket["strong_hits"])
+            desk_hits = sorted(bucket["desk_hits"])
             if bucket["seconds"] < min_seconds:
                 continue
             if len(strong_hits) < min_strong_hits:
                 continue
             if agent_score < min_score:
                 continue
-            if agent_score < (customer_score * ratio_mult + ratio_add):
+            desk_training_override = (
+                len(desk_hits) >= desk_min_hits
+                and agent_score >= desk_min_score
+                and agent_score >= (customer_score + desk_margin)
+            )
+            if agent_score < (customer_score * ratio_mult + ratio_add) and not desk_training_override:
                 continue
             for seg in bucket["segments"]:
                 seg["identified_speaker"] = "AGENT"
                 seg["display_speaker"] = display_name
                 seg["agent_name"] = display_name
-                seg["role_text_repair"] = "agent_side_sales_explanation"
+                seg["role_text_repair"] = (
+                    "agent_side_desk_process_explanation"
+                    if desk_training_override
+                    else "agent_side_sales_explanation"
+                )
                 promoted_segments += 1
             promoted_speakers.append(
                 {
@@ -1210,6 +1340,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     "agent_score": round(agent_score, 2),
                     "customer_score": round(customer_score, 2),
                     "strong_hits": strong_hits[:12],
+                    "desk_hits": desk_hits[:12],
+                    "desk_training_override": desk_training_override,
                 }
             )
         return {
@@ -1479,7 +1611,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         ),
         "target_agent_slug":        target_agent_slug,
         "speaker_id_presence_floor": presence_floor,
-        "speaker_id_cluster_report": diar_result.get("cluster_report", {}),
+        "speaker_id_cluster_report": (
+            diar_result.get("cluster_report")
+            or diar_result.get("cluster_match_table")
+            or {}
+        ),
         "speaker_boundary_refinement": diar_result.get("boundary_refinement", {}),
         "speech_only_segments_added": speech_only_added,
         "transcript_coverage": transcript_coverage,
