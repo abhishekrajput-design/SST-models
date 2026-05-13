@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 """Train a production CAM++ voiceprint for ANY agent from API-labelled calls.
 
 Generalized from train_omar_pure_embeddings.py. Works for any agent_name
@@ -566,7 +566,7 @@ def main() -> int:
         print(f"[error] Not enough pure agent embeddings ({len(agent_candidates)})")
         return 1
 
-    # â”€â”€ Leave-one-call-out validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Leave-one-call-out validation ────────────────────────────────────────
     loco_result = {}
     if not args.skip_loco and len(set(r.call_name for r in label_rows)) >= 2:
         print("[loco] Running leave-one-call-out validation...")
@@ -575,7 +575,7 @@ def main() -> int:
         for fold in loco_result.get("per_call", []):
             print(f"  held_out={fold['held_out']} accuracy={fold['accuracy']}%")
 
-    # â”€â”€ Purity filtering â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Purity filtering ─────────────────────────────────────────────────────
     initial = build_centroids([row.embedding for row in agent_candidates], n_clusters=args.clusters)
     for row in agent_candidates:
         row.similarity = best_sim(row.embedding, initial)
@@ -585,7 +585,7 @@ def main() -> int:
     pure_label_rows = [row for row in agent_candidates if row.similarity >= purity_floor]
     train_rows = pure_label_rows
 
-    # â”€â”€ Build final centroids â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Build final centroids ────────────────────────────────────────────────
     final_centroids = build_centroids([row.embedding for row in train_rows], n_clusters=args.clusters)
     customer_sims = [best_sim(row.embedding, final_centroids) for row in customer_rows]
     customer_p95 = float(np.percentile(customer_sims, 95)) if customer_sims else 0.50
@@ -595,7 +595,7 @@ def main() -> int:
     same_data = score(eval_rows, final_centroids, calibrated_threshold)
     best_same = best_threshold(eval_rows, final_centroids)
 
-    # â”€â”€ Activation gate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Activation gate ──────────────────────────────────────────────────────
     loco_ok = True
     if loco_result and int(loco_result.get("n_folds") or 0) > 0:
         loco_ok = float(loco_result.get("overall_accuracy") or 0.0) >= args.min_activation_accuracy
@@ -679,7 +679,7 @@ def main() -> int:
         f"(eligible={activation_eligible}, requested={args.activate})"
     )
     if artifacts.get("blocked_by_existing"):
-        print("  âš  blocked: existing voiceprint has equal or better metrics")
+        print("  ⚠ blocked: existing voiceprint has equal or better metrics")
     print(f"  report={report_path if not args.dry_run else '<dry-run>'}")
     return 0
 

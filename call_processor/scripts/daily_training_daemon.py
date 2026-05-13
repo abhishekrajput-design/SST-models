@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 """Daily automated agent voiceprint training daemon.
 
 Orchestrates the full pipeline:
@@ -729,7 +729,7 @@ def main() -> int:
     print(f"  activate={args.activate} dry_run={args.dry_run}")
     print("=" * 80)
 
-    # â”€â”€ Step 1: Scrape API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Step 1: Scrape API ───────────────────────────────────────────────────
     if args.skip_scrape:
         print("\n[step 1] SKIPPED (--skip-scrape)")
         records = []
@@ -749,7 +749,7 @@ def main() -> int:
             print(f"[error] Scrape failed: {LAST_SCRAPE_ERROR}", file=sys.stderr)
             return 2
 
-    # â”€â”€ Step 2: Group and filter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Step 2: Group and filter ─────────────────────────────────────────────
     print("\n[step 2] Filtering and grouping by agent...")
     if not records and args.skip_scrape:
         # Use existing data dirs
@@ -777,7 +777,7 @@ def main() -> int:
         print("[done] No agents qualified for training.")
         return 0
 
-    # â”€â”€ Step 3: Prepare data and train â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Step 3: Prepare data and train ───────────────────────────────────────
     history = load_training_history()
     daily_report: dict = {
         "date": today,
@@ -884,7 +884,7 @@ def main() -> int:
             status = "GATED (validation below activation threshold)"
         print(f"  [result] {status}")
 
-    # â”€â”€ Step 4: Save reports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Step 4: Save reports ─────────────────────────────────────────────────
     if not args.dry_run:
         save_training_history(history)
         report_path = DAILY_REPORTS_DIR / f"{today}_{run_tag}.json"
@@ -895,7 +895,7 @@ def main() -> int:
         print(f"\n[saved] history -> {TRAINING_HISTORY_PATH}")
         print(f"[saved] report  -> {report_path}")
 
-    # â”€â”€ Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Summary ──────────────────────────────────────────────────────────────
     print(f"\n{'='*80}")
     print(f"DAILY TRAINING SUMMARY - {today}")
     print(f"{'='*80}")

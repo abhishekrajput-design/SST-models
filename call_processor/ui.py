@@ -1,4 +1,4 @@
-﻿# `from __future__ import annotations` MUST be the first real statement.
+# `from __future__ import annotations` MUST be the first real statement.
 # It treats every type annotation in this file as a string, so PEP 604 (`X | Y`)
 # and PEP 585 (`list[T]`) syntax used below work on Python 3.9 as well as 3.10+
 # (the production AWS box runs 3.9, the dev box runs 3.11).
@@ -23,13 +23,13 @@ from pathlib import Path
 # Use expandable CUDA segments to prevent memory fragmentation.
 # Without this, after the first Parakeet/ECAPA run, PyTorch's reserved CUDA
 # pool becomes fragmented and DeepFilterNet3 (needs 4 GB contiguous) fails on
-# subsequent runs â€” even though enough VRAM is nominally free.
+# subsequent runs — even though enough VRAM is nominally free.
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
 # SpeechBrain 1.1.0 has a Windows bug: importutils.py checks for "/inspect.py"
 # (Unix path) but Windows uses "\\inspect.py".  We patch it once at startup
 # in site-packages (see call_processor/src/transcribers/__init__.py comments).
-# No runtime patch needed here â€” the file is fixed on this machine.
+# No runtime patch needed here — the file is fixed on this machine.
 
 # Load .env file
 env_path = Path(__file__).parent.parent / ".env"
@@ -49,7 +49,12 @@ PORT = 8080
 PROCESSED_DIR = "data/processed"
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
 
-# Basic auth for the UI. Override via CALLPROC_USER / CALLPROC_PASS env vars.
+# Basic auth for the UI. OFF by default — the browser would otherwise pop a
+# login prompt every visit. Enable by setting CALLPROC_AUTH_REQUIRED=1 (any
+# non-empty truthy value) and optionally CALLPROC_USER / CALLPROC_PASS to
+# override the defaults.
+_AUTH_REQUIRED_RAW = os.environ.get("CALLPROC_AUTH_REQUIRED", "").strip().lower()
+AUTH_REQUIRED = _AUTH_REQUIRED_RAW in ("1", "true", "yes", "on")
 AUTH_USER = os.environ.get("CALLPROC_USER", "abhishek")
 AUTH_PASS = os.environ.get("CALLPROC_PASS", "123456")
 _AUTH_EXPECTED = "Basic " + base64.b64encode(f"{AUTH_USER}:{AUTH_PASS}".encode()).decode()
@@ -63,18 +68,18 @@ if sys.platform == "win32" and os.path.isdir(_FFMPEG_BIN):
         _ENV["PATH"] = _FFMPEG_BIN + os.pathsep + _ENV.get("PATH", "")
 
 # FFmpeg filter chain for call-center audio with background noise.
-# silenceremove intentionally removed â€” it cuts quiet/distant voices near the
+# silenceremove intentionally removed — it cuts quiet/distant voices near the
 # noise floor. dynaudnorm boosts quiet segments locally so Whisper/Parakeet
 # can hear them without over-amplifying loud peaks.
 AUDIO_FILTER = (
-    "aresample=44100,"                        # upsample first â€” loudnorm needs â‰¥44.1k
+    "aresample=44100,"                        # upsample first — loudnorm needs ≥44.1k
     "highpass=f=80,"                          # strip low-freq HVAC/rumble
     "afftdn=nf=-25:nt=w,"                     # FFmpeg spectral denoiser pass
     "loudnorm=I=-16:TP=-1.5:LRA=11,"          # bring quiet phone audio up to standard level
     "dynaudnorm=p=0.9:m=100:s=5:g=15"         # boost quiet passages locally
 )
 
-# â”€â”€ Pipeline status (shared) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Pipeline status (shared) ──────────────────────────────────────────────────
 _status = {
     "running": False,
     "stage_num": 0,
@@ -104,11 +109,11 @@ def _check_cancelled():
         if _status.get("cancel_requested"):
             raise PipelineCancelled("user requested cancel")
 
-# â”€â”€ Enhancement job status (separate from main pipeline) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Enhancement job status (separate from main pipeline) ─────────────────────
 _enhance_status: dict = {}          # call_id -> {"running", "done", "error", "paths"}
 _enhance_lock = threading.Lock()
 
-# â”€â”€ Agent enrollment status â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Agent enrollment status ───────────────────────────────────────────────────
 _enroll_status: dict = {"running": False, "done": False, "error": None, "message": ""}
 _enroll_lock   = threading.Lock()
 # Directory of known-agent recordings used for voice enrollment
@@ -291,7 +296,7 @@ def _is_clean_audio(path: str, sample_seconds: int = 30) -> bool:
 
     DFN3 over-enhances pristine sources and can mute synthetic test files.
     We sniff the first 30s, compute RMS and spectral flatness; high RMS +
-    low flatness â‡’ clean speech, skip DFN3.
+    low flatness ⇒ clean speech, skip DFN3.
     """
     try:
         import soundfile as sf
@@ -305,11 +310,11 @@ def _is_clean_audio(path: str, sample_seconds: int = 30) -> bool:
             return False
         rms = float(np.sqrt((a ** 2).mean()))
         # Spectral flatness: geometric / arithmetic mean of power spectrum.
-        # Speech â‰ˆ 0.05-0.20, white noise â†’ 1.0, tone â†’ 0.0.
+        # Speech ≈ 0.05-0.20, white noise → 1.0, tone → 0.0.
         spec = np.abs(np.fft.rfft(a[:sr * 5])) ** 2 + 1e-12
         flat = float(np.exp(np.log(spec).mean()) / spec.mean())
         clean = rms > 0.10 and flat < 0.20
-        print(f"[UI] clean-audio check: RMS={rms:.3f} flatness={flat:.3f} â†’ {'CLEAN' if clean else 'NOISY'}", flush=True)
+        print(f"[UI] clean-audio check: RMS={rms:.3f} flatness={flat:.3f} → {'CLEAN' if clean else 'NOISY'}", flush=True)
         return clean
     except Exception as e:
         print(f"[UI] clean-audio check failed ({e}); assuming noisy.", flush=True)
@@ -317,7 +322,7 @@ def _is_clean_audio(path: str, sample_seconds: int = 30) -> bool:
 
 
 def _to_wav(input_path: str, max_seconds: int = None) -> str:
-    """Convert any audio â†’ 16 kHz mono WAV (optionally clipped)."""
+    """Convert any audio → 16 kHz mono WAV (optionally clipped)."""
     wav = input_path + f"_tmp{os.getpid()}.wav"
     cmd = ["ffmpeg", "-y", "-i", input_path]
     if max_seconds:
@@ -328,14 +333,14 @@ def _to_wav(input_path: str, max_seconds: int = None) -> str:
 
 
 def _wav_to_mp3(wav_path: str, out_mp3: str):
-    """44.1 kHz / 128 kbps / mono MP3 â€” browser-compatible."""
+    """44.1 kHz / 128 kbps / mono MP3 — browser-compatible."""
     _run_ffmpeg([
         "ffmpeg", "-y", "-i", wav_path,
         "-ac", "1", "-ar", "44100", "-b:a", "128k", out_mp3,
     ])
 
 
-# â”€â”€ Pipeline 1: FFmpeg (highpass + afftdn + dynaudnorm) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Pipeline 1: FFmpeg (highpass + afftdn + dynaudnorm) ─────────────────────
 def _make_playback_loud_mp3(input_path: str, output_path: str):
     """Louder browser-playback copy only; never use this for ASR input."""
     af = (
@@ -356,7 +361,7 @@ def _make_playback_loud_mp3(input_path: str, output_path: str):
 
 
 def _enhance_ffmpeg(input_path: str, output_path: str, max_seconds: int = 300):
-    """FFmpeg DSP chain â€” fast, always works, full audio for main pipeline."""
+    """FFmpeg DSP chain — fast, always works, full audio for main pipeline."""
     cmd = ["ffmpeg", "-y", "-i", input_path]
     if max_seconds:
         cmd += ["-t", str(max_seconds)]
@@ -364,7 +369,7 @@ def _enhance_ffmpeg(input_path: str, output_path: str, max_seconds: int = 300):
     _run_ffmpeg(cmd)
 
 
-# â”€â”€ Pipeline 2: noisereduce â€” spectral gating (CPU, scipy-based) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Pipeline 2: noisereduce — spectral gating (CPU, scipy-based) ─────────────
 def _enhance_noisereduce(input_path: str, output_path: str, max_seconds: int = 300):
     """
     noisereduce spectral gating.
@@ -389,12 +394,12 @@ def _enhance_noisereduce(input_path: str, output_path: str, max_seconds: int = 3
                 os.remove(p)
 
 
-# â”€â”€ Pipeline 3: angelina 10-stage desk-recording cleanup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Pipeline 3: angelina 10-stage desk-recording cleanup ─────────────────────
 def _enhance_angelina(input_path: str, output_path: str, max_seconds: int = 300):
     """
     Run the angelina cleanup pipeline (src/audio_cleanup.py):
-    two-pass noise gate Â· bandpass 85-6500 Hz Â· VAD Â· energy gate Â·
-    clarity gate Â· per-segment normalization Â· DRC Â· crossfade
+    two-pass noise gate · bandpass 85-6500 Hz · VAD · energy gate ·
+    clarity gate · per-segment normalization · DRC · crossfade
     Outputs 16 kHz mono WAV (re-encoded to MP3 for browser preview).
     """
     import sys as _sys
@@ -412,7 +417,7 @@ def _enhance_angelina(input_path: str, output_path: str, max_seconds: int = 300)
             _os.remove(wav)
 
 
-# â”€â”€ Pipeline 3b: DeepFilterNet3 â€” neural (GPU, soundfile I/O) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Pipeline 3b: DeepFilterNet3 — neural (GPU, soundfile I/O) ────────────────
 def _enhance_deepfilternet(input_path: str, output_path: str,
                            max_seconds: int = None, chunk_seconds: int = 300):
     """
@@ -474,11 +479,11 @@ def _enhance_deepfilternet(input_path: str, output_path: str,
                 os.remove(p)
 
 
-# â”€â”€ Pipeline 4: SpeechBrain MetricGAN+ â€” GAN trained on PESQ metric â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Pipeline 4: SpeechBrain MetricGAN+ — GAN trained on PESQ metric ──────────
 def _enhance_metricgan(input_path: str, output_path: str, max_seconds: int = 300):
     """
     SpeechBrain MetricGAN-Plus-VoiceBank.
-    PESQ 3.15 / STOI 93.0 â€” trained specifically to maximise speech quality score.
+    PESQ 3.15 / STOI 93.0 — trained specifically to maximise speech quality score.
     pip install speechbrain  (already installed for speaker recognition)
     Model auto-downloads from HuggingFace on first run (~50 MB).
     """
@@ -539,7 +544,7 @@ def _derive_paths(original_path: str) -> dict:
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-#  Audio trimming â€” remove gaps where no speech was detected
+#  Audio trimming — remove gaps where no speech was detected
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 def _trim_to_speech(audio_path: str, segments: list, out_path: str,
@@ -552,7 +557,7 @@ def _trim_to_speech(audio_path: str, segments: list, out_path: str,
     """
     import tempfile
     if not segments:
-        print("[UI] Trim: no segments â€” skipped.", flush=True)
+        print("[UI] Trim: no segments — skipped.", flush=True)
         return False
 
     # 1. Build merged speech blocks
@@ -571,7 +576,7 @@ def _trim_to_speech(audio_path: str, segments: list, out_path: str,
     blocks.append((cur_start, cur_end))
 
     if not blocks:
-        print("[UI] Trim: no blocks built â€” skipped.", flush=True)
+        print("[UI] Trim: no blocks built — skipped.", flush=True)
         return False
 
     total_speech = sum(e - s for s, e in blocks)
@@ -584,7 +589,7 @@ def _trim_to_speech(audio_path: str, segments: list, out_path: str,
     try:
         fd, filter_script = tempfile.mkstemp(suffix=".txt", prefix="trim_filter_")
         with os.fdopen(fd, "w", encoding="ascii") as f:
-            # complex filtergraph: label input â†’ aselect â†’ output
+            # complex filtergraph: label input → aselect → output
             f.write(f"[0:a]aselect='{expr}',asetpts=N/SR/TB[aout]\n")
 
         result = subprocess.run(
@@ -671,11 +676,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     os.makedirs(out_dir, exist_ok=True)
 
 
-    # â”€â”€ Normalize helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Normalize helper ──────────────────────────────────────────────────────
     norm_dir = os.path.join("data", "processed", base)
     os.makedirs(norm_dir, exist_ok=True)
 
-    # Upsample to 44.1k before loudnorm â€” single-pass loudnorm on 8 kHz phone
+    # Upsample to 44.1k before loudnorm — single-pass loudnorm on 8 kHz phone
     # sources produces a silent WAV. After loudnorm we resample down to 16 kHz
     # for the transcriber via the -ar arg below.
     _NORM_AF = "aresample=44100,loudnorm=I=-16:TP=-1.5:LRA=11,dynaudnorm=p=0.9:m=100:s=5"
@@ -696,7 +701,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             timeout=600,
         )
 
-    # â”€â”€ Load transcriber (shared for both channels) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Load transcriber (shared for both channels) ───────────────────────────
     cuda_ok = _cuda_available()
     transcriber_device = "cuda" if cuda_ok else "cpu"
     isolated_transcriber = whisper_model == "parakeet-tdt-0.6b-v3"
@@ -728,7 +733,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     speaker_stats: dict   = {}
     diar_result: dict = {}
 
-    # â”€â”€ Mono path: voiceprint-first multi-speaker diarization â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Mono path: voiceprint-first multi-speaker diarization ────────────────
     norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
     if not os.path.exists(norm_wav):
         _set_status(1, "Transcription", "Normalizing audio to 16 kHz mono...")
@@ -1324,7 +1329,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             },
         }
         print(
-            f"[UI] Speaker ID done â€” agent={agent_time:.0f}s/{agent_turns}t  "
+            f"[UI] Speaker ID done — agent={agent_time:.0f}s/{agent_turns}t  "
             f"customer={customer_time:.0f}s/{customer_turns}t",
             flush=True,
         )
@@ -1365,17 +1370,17 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "agent_name": seg.get("agent_name"),
         })
 
-    # â”€â”€ Trim audio to speech-only regions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Trim audio to speech-only regions ────────────────────────────────────
     _set_status(3, "Transcription", "Trimming audio to speech regions...")
     trimmed_path = os.path.join(out_dir, "trimmed_audio.mp3")
     # pad_s=1.0: keep 1 s around each block so word edges aren't clipped
-    # merge_gap_s=5.0: join blocks separated by â‰¤5 s â€” avoids many tiny cuts
+    # merge_gap_s=5.0: join blocks separated by ≤5 s — avoids many tiny cuts
     #   in noisy recordings where VAD fires in short bursts
     trim_ok = _trim_to_speech(audio_path, segments, trimmed_path,
                                pad_s=1.0, merge_gap_s=5.0)
     trimmed_audio_file = trimmed_path.replace("\\", "/") if trim_ok else None
     if not trim_ok:
-        print("[UI] Trim skipped â€” using original enhanced audio.", flush=True)
+        print("[UI] Trim skipped — using original enhanced audio.", flush=True)
 
     # Collect identified agent name (set on segments during multi-agent ID)
     _identified_agent = identified_agent_name
@@ -1429,7 +1434,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     result_path = os.path.join(out_dir, "result.json")
     with open(result_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
-    print(f"[UI] result.json saved â†’ {result_path} ({len(segments)} segs, {elapsed:.0f}s)")
+    print(f"[UI] result.json saved → {result_path} ({len(segments)} segs, {elapsed:.0f}s)")
     return dir_name
 
 
@@ -1442,7 +1447,7 @@ def _flush_result(path: str, audio_path: str, segments: list, elapsed: float):
         "processing_time_seconds": round(elapsed, 2),
         "total_segments":          len(segments),
         "segments":                segments,
-        "note": "Partial â€” transcription in progress",
+        "note": "Partial — transcription in progress",
     }
     try:
         with open(path, "w", encoding="utf-8") as f:
@@ -1462,11 +1467,11 @@ def _run_pipeline(
     target_agent_slug: str | None = None,
 ):
     """
-    Stage 0a â€” FFmpeg enhancement  (full audio, used by AI pipeline)
-    Stage 0b â€” noisereduce          (first 5 min)
-    Stage 0c â€” DeepFilterNet3       (first 5 min)
-    Stage 0d â€” SpeechBrain MetricGAN+ (first 5 min)
-    Stages 1-3 â€” diarize â†’ speaker ID â†’ transcribe
+    Stage 0a — FFmpeg enhancement  (full audio, used by AI pipeline)
+    Stage 0b — noisereduce          (first 5 min)
+    Stage 0c — DeepFilterNet3       (first 5 min)
+    Stage 0d — SpeechBrain MetricGAN+ (first 5 min)
+    Stages 1-3 — diarize → speaker ID → transcribe
     Patch result.json with all enhancement paths.
     """
     pipeline_started_at = time.time()
@@ -1490,14 +1495,14 @@ def _run_pipeline(
         already_enhanced = os.path.basename(upload_path).startswith("enhanced_")
 
         if already_enhanced:
-            _set_status(0, "Enhancing Audio", "File already enhanced â€” skipping re-processing...")
+            _set_status(0, "Enhancing Audio", "File already enhanced — skipping re-processing...")
             print("[UI] Skipping enhancement: file already starts with 'enhanced_'.")
             paths["ffmpeg"] = upload_path.replace("\\", "/")
             enhancement_paths["ffmpeg"] = upload_path.replace("\\", "/")
             pipeline_audio = paths["ffmpeg"]
         else:
-            # â”€â”€ 0a FFmpeg â€” LIGHT format normalisation (highpass + loudnorm) â”€
-            _set_status(0, "Enhancing Audio", "[1/2] FFmpeg Â· format normalisation...")
+            # ── 0a FFmpeg — LIGHT format normalisation (highpass + loudnorm) ─
+            _set_status(0, "Enhancing Audio", "[1/2] FFmpeg · format normalisation...")
             print("[UI] Stage 0a: FFmpeg (light)...")
             try:
                 _enhance_ffmpeg(upload_path, paths["ffmpeg"], max_seconds=None)
@@ -1508,7 +1513,7 @@ def _run_pipeline(
                 paths["ffmpeg"] = upload_path
                 enhancement_paths["ffmpeg"] = upload_path.replace("\\", "/")
 
-            # â”€â”€ 0b DeepFilterNet3 â€” neural denoising (full audio) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+            # ── 0b DeepFilterNet3 — neural denoising (full audio) ────────────
             # Skip on already-clean audio (synthetic test files, broadcast-grade
             # recordings) since DFN3 can over-process them into silence.
             pipeline_audio = paths["ffmpeg"]   # fallback
@@ -1521,10 +1526,10 @@ def _run_pipeline(
                 _set_status(0, "Enhancing Audio", "[2/2] Parakeet DS mode - skipping neural denoise")
                 print("[UI] Stage 0b: skipped DeepFilterNet3 for Parakeet ASR.")
             elif _is_clean_audio(paths["ffmpeg"]):
-                _set_status(0, "Enhancing Audio", "[2/2] Source already clean â€” skipping DFN3")
+                _set_status(0, "Enhancing Audio", "[2/2] Source already clean — skipping DFN3")
                 print("[UI] Stage 0b: skipped (audio already clean)")
             else:
-                _set_status(0, "Enhancing Audio", "[2/2] DeepFilterNet3 Â· neural denoising...")
+                _set_status(0, "Enhancing Audio", "[2/2] DeepFilterNet3 · neural denoising...")
                 print("[UI] Stage 0b: DeepFilterNet3...")
                 try:
                     _enhance_deepfilternet(paths["ffmpeg"], paths["deepfilter"])
@@ -1532,9 +1537,9 @@ def _run_pipeline(
                     pipeline_audio = paths["deepfilter"]
                     print("[UI] DeepFilterNet3 done.")
                 except ImportError:
-                    print("[UI] deepfilternet not installed â€” using FFmpeg output.")
+                    print("[UI] deepfilternet not installed — using FFmpeg output.")
                 except Exception as e:
-                    print(f"[UI] DeepFilterNet3 failed: {e} â€” using FFmpeg output.")
+                    print(f"[UI] DeepFilterNet3 failed: {e} — using FFmpeg output.")
 
             prefer_original_parakeet = (
                 whisper_model == "parakeet-tdt-0.6b-v3"
@@ -1564,7 +1569,7 @@ def _run_pipeline(
             "large-v3-turbo", "large-v3",
             "distil-large-v3", "distil-large-v3.5",
         }
-        # Always use the inline path â€” it has our improved pipeline:
+        # Always use the inline path — it has our improved pipeline:
         #   light FFmpeg + DeepFilterNet3 + ECAPA/pyannote hybrid diarization.
         # The run_e2e.py subprocess path used the old over-processing chain
         # and enrolled-agent matching which produces CUSTOMER/AGENT labels
@@ -1584,7 +1589,7 @@ def _run_pipeline(
             _check_cancelled()
         else:
             # Full pipeline via run_e2e.py subprocess (Whisper + pyannote diarization)
-            _set_status(1, "Speaker Diarization", "Loading pyannote Â· detecting who speaks when...")
+            _set_status(1, "Speaker Diarization", "Loading pyannote · detecting who speaks when...")
             print("[UI] Stage 1: AI pipeline...")
             cmd = [
                 "python", "run_e2e.py",
@@ -1622,7 +1627,7 @@ def _run_pipeline(
 
             result_id   = os.path.splitext(os.path.basename(paths["ffmpeg"]))[0]
 
-        # â”€â”€ Patch result.json â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        # ── Patch result.json ─────────────────────────────────────────────
         result_path = os.path.join("data", "processed", result_id, "result.json")
         if os.path.isfile(result_path):
             try:
@@ -1960,6 +1965,19 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header("Expires", "0")
         super().end_headers()
 
+    def guess_type(self, path):
+        """Add `charset=utf-8` to text MIME types so browsers don't fall back
+        to Latin-1 and render UTF-8 characters (emoji, em-dash, ellipsis) as
+        mojibake. The HTML's <meta charset> tag is also respected, but the
+        HTTP header takes precedence and some browsers stick with the first
+        bytes before parsing the meta tag."""
+        ctype = super().guess_type(path)
+        if isinstance(ctype, str) and ctype.startswith("text/") and "charset" not in ctype:
+            return f"{ctype}; charset=utf-8"
+        if ctype == "application/javascript" and "charset" not in (ctype or ""):
+            return "application/javascript; charset=utf-8"
+        return ctype
+
     def _json(self, data: dict, code: int = 200):
         body = json.dumps(data).encode()
         self.send_response(code)
@@ -1969,9 +1987,14 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def _check_auth(self) -> bool:
         """HTTP Basic Auth gate. Returns True if authorized.
-        On failure, sends 401 with WWW-Authenticate and returns False so
-        callers can `return` immediately.
+
+        No-op (always True) unless CALLPROC_AUTH_REQUIRED is set, so the
+        browser does not pop a login prompt by default. When enabled, sends
+        401 + WWW-Authenticate on missing/incorrect credentials and returns
+        False so callers can `return` immediately.
         """
+        if not AUTH_REQUIRED:
+            return True
         if self.headers.get("Authorization", "") == _AUTH_EXPECTED:
             return True
         self.send_response(401)
@@ -2006,7 +2029,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                         audio_file = rdata.get("audio_file", "")
                         orig_file = audio_file.replace("enhanced_", "").replace("\\", "/")
                         # orig_meta is written into result.json by _run_pipeline at
-                        # completion â€” never computed here to keep this endpoint fast.
+                        # completion — never computed here to keep this endpoint fast.
                         orig_meta = rdata.get("orig_meta") or {}
                         calls.append({
                             "id": d,
@@ -2071,7 +2094,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
             return
 
-        # /api/enhance/<call_id>  â€” start async job
+        # /api/enhance/<call_id>  — start async job
         if path.startswith("/api/enhance/"):
             call_id     = unquote(path.split("/api/enhance/")[1])
             result_path = os.path.join(PROCESSED_DIR, call_id, "result.json")
@@ -2093,7 +2116,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self._json({"status": "started"})
             return
 
-        # /api/enhance_status/<call_id>  â€” poll job
+        # /api/enhance_status/<call_id>  — poll job
         if path.startswith("/api/enhance_status/"):
             call_id = unquote(path.split("/api/enhance_status/")[1])
             with _enhance_lock:
@@ -2101,7 +2124,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self._json(st if st else {"status": "not_started"})
             return
 
-        # /api/test-results â€” Load actual test results from file if available
+        # /api/test-results — Load actual test results from file if available
         if path == "/api/test-results":
             test_results = None
             # Use absolute path relative to the call_processor directory
@@ -2155,7 +2178,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self._json(st)
             return
 
-        # /api/agents â€” list all enrolled agents from agents.json
+        # /api/agents — list all enrolled agents from agents.json
         if path == "/api/agents":
             agents_data = _read_agents_json()
             last_reports = _read_last_training_reports()
@@ -2191,12 +2214,12 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self._json(result)
             return
 
-        # /api/training-history â€” day-by-day quality tracking
+        # /api/training-history — day-by-day quality tracking
         if path == "/api/training-history":
             self._json(_read_training_history())
             return
 
-        # /api/auto-train-status â€” poll training daemon status
+        # /api/auto-train-status — poll training daemon status
         if path == "/api/auto-train-status":
             with _train_lock:
                 st = {
@@ -2214,7 +2237,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self._json(st)
             return
 
-        # /api/enroll-agent  â€” start enrollment in background
+        # /api/enroll-agent  — start enrollment in background
         if path == "/api/enroll-agent":
             with _enroll_lock:
                 if _enroll_status.get("running"):
@@ -2238,7 +2261,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         if path == "/" or path == "/index.html":
-            # Serve fresh HTML/JS â€” disable browser cache so UI fixes hit immediately.
+            # Serve fresh HTML/JS — disable browser cache so UI fixes hit immediately.
             try:
                 with open("index.html", "rb") as f:
                     body = f.read()
@@ -2300,7 +2323,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             return
         parsed = urlparse(self.path)
 
-        # POST /api/call/<id>/swap-roles â€” flip AGENT â†” CUSTOMER in result.json
+        # POST /api/call/<id>/swap-roles — flip AGENT ↔ CUSTOMER in result.json
         if parsed.path.startswith("/api/call/") and parsed.path.endswith("/swap-roles"):
             call_id     = unquote(parsed.path[len("/api/call/"):-len("/swap-roles")])
             result_path = os.path.join(PROCESSED_DIR, call_id, "result.json")
@@ -2396,12 +2419,12 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 with open(os.path.join("data", "enrolled_agent_name.txt"), "w") as _nf:
                     _nf.write(agent_name)
 
-            # Trigger enrollment â€” uses KMeans to isolate the agent voice from
+            # Trigger enrollment — uses KMeans to isolate the agent voice from
             # call recordings that contain both the agent and customers.
             def _clean_enroll_worker():
                 with _enroll_lock:
                     _enroll_status.update(running=True, done=False, error=None,
-                                          message=f"Enrolling {agent_name or 'agent'}â€¦")
+                                          message=f"Enrolling {agent_name or 'agent'}…")
                 try:
                     from src.speaker_role import enroll_agent
                     def _prog(i, tot, fname):
@@ -2428,7 +2451,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             self._json({"status": "cancelling" if running else "idle"})
             return
 
-        # POST /api/auto-train â€” trigger daily training daemon
+        # POST /api/auto-train — trigger daily training daemon
         if parsed.path == "/api/auto-train":
             with _train_lock:
                 if _train_status["running"]:
@@ -2523,20 +2546,20 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
 
-# â”€â”€ Auto-enrollment at startup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Auto-enrollment at startup ────────────────────────────────────────────────
 _enrolled_path = os.path.join("data", "enrolled_agent.npy")
 if os.path.isdir(AGENT_RECORDINGS_DIR) and not os.path.exists(_enrolled_path):
-    print("[Startup] Agent voiceprint not found â€” auto-enrolling from recordings...", flush=True)
+    print("[Startup] Agent voiceprint not found — auto-enrolling from recordings...", flush=True)
     threading.Thread(target=_enroll_worker, args=(AGENT_RECORDINGS_DIR,), daemon=True).start()
 elif os.path.exists(_enrolled_path):
-    print("[Startup] Agent voiceprint loaded â€” cosine similarity active.", flush=True)
+    print("[Startup] Agent voiceprint loaded — cosine similarity active.", flush=True)
 
-# â”€â”€ Startup: garbage-collect orphan / half-finished result dirs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Startup: garbage-collect orphan / half-finished result dirs ──────────────
 def _gc_orphan_processed_dirs() -> None:
     """Remove data/processed/* dirs that have no result.json (failed runs).
 
     Keeps norm_*.wav directories (data/processed/<base>/) since those are
-    intermediate artifacts shared across model runs â€” they have no result.json
+    intermediate artifacts shared across model runs — they have no result.json
     by design. Only deletes per-model dirs (suffix '__<model>') with no result.
     """
     if not os.path.isdir(PROCESSED_DIR):
@@ -2561,7 +2584,7 @@ def _gc_orphan_processed_dirs() -> None:
 
 _gc_orphan_processed_dirs()
 
-# â”€â”€ Server startup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Server startup ────────────────────────────────────────────────────────────
 import faulthandler as _fh
 _fh.enable()   # dump traceback to stderr on SIGSEGV / fatal Python errors
 
@@ -2569,7 +2592,7 @@ socketserver.ThreadingTCPServer.allow_reuse_address = True
 
 with socketserver.ThreadingTCPServer(("", PORT), RequestHandler) as httpd:
     print(f"\n{'='*50}")
-    print(f"  UI Dashboard  â†’  http://localhost:{PORT}")
+    print(f"  UI Dashboard  →  http://localhost:{PORT}")
     print(f"{'='*50}\n")
     try:
         httpd.serve_forever()
