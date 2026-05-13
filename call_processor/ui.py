@@ -1013,6 +1013,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         agent_name: str | None,
         audio_duration_s: float,
         speaker_count: int,
+        agent_slug: str | None = None,
+        cluster_match_table: dict | None = None,
     ) -> dict:
         """Promote clear advisor-side DS speakers that voice matching split off.
 
@@ -1024,6 +1026,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         enabled = os.getenv("SST_AGENT_TEXT_ROLE_REPAIR", "1").strip().lower()
         if enabled in {"0", "false", "no", "off"}:
             return {"enabled": False, "promoted_speakers": [], "promoted_segments": 0}
+        if not agent_name or agent_name in {"None", "Unknown Agent"}:
+            return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "no_identified_agent"}
         if audio_duration_s < float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_AUDIO_S", "300") or "300"):
             return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "short_audio"}
         if speaker_count < int(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SPEAKERS", "3") or "3"):
@@ -1301,6 +1305,30 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         desk_min_hits = int(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_DESK_MIN_STRONG", "4") or "4")
         desk_min_score = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_DESK_MIN_SCORE", "12.0") or "12.0")
         desk_margin = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_DESK_MARGIN", "6.0") or "6.0")
+        min_repair_sim = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SIM", "0.45") or "0.45")
+        min_repair_margin = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_MARGIN", "0.03") or "0.03")
+
+        def _match_gate(spk: str) -> dict:
+            if not agent_slug or not cluster_match_table:
+                return {"passes": True, "similarity": None, "margin": None, "reason": "no_match_gate"}
+            matches = cluster_match_table.get(spk) or {}
+            if agent_slug not in matches:
+                return {"passes": False, "similarity": 0.0, "margin": 0.0, "reason": "agent_not_in_match_table"}
+            sim = float((matches.get(agent_slug) or {}).get("similarity") or 0.0)
+            others = [
+                float((data or {}).get("similarity") or 0.0)
+                for slug, data in matches.items()
+                if slug != agent_slug
+            ]
+            margin = sim - (max(others) if others else 0.0)
+            passes = sim >= min_repair_sim and margin >= min_repair_margin
+            return {
+                "passes": passes,
+                "similarity": round(sim, 3),
+                "margin": round(margin, 3),
+                "reason": "" if passes else "weak_agent_voiceprint_match",
+            }
+
         promoted_speakers = []
         promoted_segments = 0
         display_name = agent_name if agent_name and agent_name not in {"None", "Unknown Agent"} else "Agent"
@@ -1314,6 +1342,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             if len(strong_hits) < min_strong_hits:
                 continue
             if agent_score < min_score:
+                continue
+            match_gate = _match_gate(spk)
+            if not match_gate["passes"]:
                 continue
             desk_training_override = (
                 len(desk_hits) >= desk_min_hits
@@ -1342,6 +1373,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     "strong_hits": strong_hits[:12],
                     "desk_hits": desk_hits[:12],
                     "desk_training_override": desk_training_override,
+                    "match_gate": match_gate,
                 }
             )
         return {
@@ -1466,6 +1498,12 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             agent_name_id,
             dur_s,
             int(diar_result.get("speaker_count") or 0),
+            agent_slug=diar_result.get("agent_slug"),
+            cluster_match_table=(
+                diar_result.get("cluster_report")
+                or diar_result.get("cluster_match_table")
+                or {}
+            ),
         )
         if agent_role_text_repair.get("promoted_segments"):
             print(
@@ -1599,6 +1637,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "diarization":              "diar_multi_voiceprint" if diarization_applied else "none",
         "speaker_stats":            speaker_stats,
         "identified_agent":         _identified_agent,
+        "identified_agent_slug":    diar_result.get("agent_slug") if diarization_applied else None,
         "speaker_id_backend_dim":   diar_result.get("matched_backend_dim"),
         "voiceprint_dims":          diar_result.get("voiceprint_dims", {}),
         "speaker_id_warning":       (
@@ -1616,6 +1655,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             or diar_result.get("cluster_match_table")
             or {}
         ),
+        "agent_cluster_decision": diar_result.get("agent_cluster_decision", {}),
+        "cluster_durations": diar_result.get("cluster_durations", {}),
         "speaker_boundary_refinement": diar_result.get("boundary_refinement", {}),
         "speech_only_segments_added": speech_only_added,
         "transcript_coverage": transcript_coverage,

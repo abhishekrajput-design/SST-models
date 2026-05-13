@@ -24,37 +24,90 @@ REPO = Path(__file__).resolve().parents[2]
 SCRIPTS = REPO / "call_processor" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-for line in (REPO / ".env").read_text(encoding="utf-8").splitlines():
-    if line and not line.startswith("#") and "=" in line:
-        k, v = line.split("=", 1)
-        os.environ.setdefault(k.strip(), v.strip())
-os.environ.setdefault("AUDIOFY_USERNAME", "abhishek")
-os.environ.setdefault("AUDIOFY_PASSWORD", "123456")
+env_path = REPO / ".env"
+if env_path.exists():
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip())
 
 import daily_training_daemon as dtd  # noqa: E402
 
 UI = "http://localhost:8080"
-UI_AUTH = ("abhishek", "123456")
+UI_AUTH = (
+    (os.environ.get("CALLPROC_USER", ""), os.environ.get("CALLPROC_PASS", ""))
+    if os.environ.get("CALLPROC_AUTH_REQUIRED", "").strip().lower() in {"1", "true", "yes", "on"}
+    else None
+)
 
 
-def fetch_one_outside_recent(agent: str, days_old_min: int = 30, days_old_max: int = 60) -> dict:
+def _recording_quality(rec: dict, agent: str) -> tuple[float, dict]:
+    sj = rec.get("speaker_json") or []
+    duration = float(rec.get("duration") or 0.0)
+    agent_rows = [
+        s for s in sj
+        if dtd.speaker_role_from_api_label(str(s.get("speaker") or ""), agent) == "agent"
+    ]
+    customer_rows = [
+        s for s in sj
+        if dtd.speaker_role_from_api_label(str(s.get("speaker") or ""), agent) == "customer"
+    ]
+    agent_scores = [float(s.get("avg_score") or 0.0) for s in agent_rows]
+    customer_scores = [float(s.get("avg_score") or 0.0) for s in customer_rows]
+    mean_agent_score = sum(agent_scores) / len(agent_scores) if agent_scores else 0.0
+    mean_customer_score = sum(customer_scores) / len(customer_scores) if customer_scores else 0.0
+    balance = min(len(agent_rows), len(customer_rows)) / max(max(len(agent_rows), len(customer_rows)), 1)
+    duration_score = 1.0 - min(abs(duration - 420.0) / 420.0, 1.0)
+    quality = (
+        len(agent_rows) * 0.8
+        + len(customer_rows) * 0.8
+        + mean_agent_score * 20.0
+        + mean_customer_score * 10.0
+        + balance * 20.0
+        + duration_score * 10.0
+    )
+    details = {
+        "duration": round(duration, 2),
+        "agent_segments": len(agent_rows),
+        "customer_segments": len(customer_rows),
+        "mean_agent_score": round(mean_agent_score, 3),
+        "mean_customer_score": round(mean_customer_score, 3),
+        "balance": round(balance, 3),
+        "quality": round(quality, 2),
+    }
+    return quality, details
+
+
+def fetch_one_outside_recent(agent: str, days_old_min: int = 30, days_old_max: int = 60, max_calls: int = 150) -> tuple[dict, dict]:
     """Find a desk recording older than days_old_min but within days_old_max
     so it is not part of our recent training scrapes."""
     end = datetime.now(timezone.utc) - timedelta(days=days_old_min)
     start = end - timedelta(days=days_old_max - days_old_min)
     recs = dtd.fetch_api_recordings(
         days=days_old_max,
-        max_calls=50,
+        max_calls=max_calls,
         start_time=start.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
         end_time=end.strftime("%Y-%m-%dT%H:%M:%S.000Z"),
         user_name=agent,
     )
     if not recs:
         raise SystemExit(f"no {agent} recordings in {days_old_min}-{days_old_max}d window")
-    # Prefer something between 60-180 segments so identification has signal
-    # but the upload + pipeline finish in reasonable time.
-    recs.sort(key=lambda r: abs(len(r.get("speaker_json") or []) - 120))
-    return recs[0]
+    candidates = []
+    for rec in recs:
+        url = rec.get("horizon_call_s3_url")
+        sj = rec.get("speaker_json") or []
+        duration = float(rec.get("duration") or 0.0)
+        if not url or not sj or duration < 90 or duration > 900:
+            continue
+        ok, reason = dtd.call_quality_check(rec, agent)
+        if not ok:
+            continue
+        score, details = _recording_quality(rec, agent)
+        candidates.append((score, rec, details))
+    if not candidates:
+        raise SystemExit(f"no quality {agent} recordings in {days_old_min}-{days_old_max}d window")
+    _, rec, details = sorted(candidates, key=lambda item: item[0], reverse=True)[0]
+    return rec, details
 
 
 def overlap(a_s: float, a_e: float, b_s: float, b_e: float) -> float:
@@ -143,13 +196,15 @@ def main():
     p.add_argument("--model", default="parakeet-tdt-0.6b-v3")
     p.add_argument("--days-old-min", type=int, default=30)
     p.add_argument("--days-old-max", type=int, default=60)
+    p.add_argument("--max-calls", type=int, default=150)
     args = p.parse_args()
 
-    pick = fetch_one_outside_recent(args.agent, args.days_old_min, args.days_old_max)
+    pick, quality = fetch_one_outside_recent(args.agent, args.days_old_min, args.days_old_max, args.max_calls)
     call_id = str(pick.get("_id") or "")[:12]
     sj = pick.get("speaker_json") or []
     duration = pick.get("duration", "?")
     print(f"[pick] {args.agent}  call_id={call_id}  duration={duration}s  sj_segments={len(sj)}")
+    print(f"[pick-quality] {quality}")
 
     agents = sum(1 for s in sj if dtd.speaker_role_from_api_label(str(s.get("speaker") or ""), args.agent) == "agent")
     customers = sum(1 for s in sj if dtd.speaker_role_from_api_label(str(s.get("speaker") or ""), args.agent) == "customer")

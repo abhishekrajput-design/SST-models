@@ -406,6 +406,12 @@ def diarize_clean(
     speaker_segments = _renumber_speakers_to_canonical(speaker_segments)
 
     speaker_count = len(set(s["speaker"] for s in speaker_segments))
+    speaker_durations: Dict[str, float] = {}
+    for seg in speaker_segments:
+        speaker_durations[seg["speaker"]] = speaker_durations.get(seg["speaker"], 0.0) + max(
+            float(seg["end"]) - float(seg["start"]),
+            0.0,
+        )
     logger.info(f"Diarization detected {speaker_count} speakers across {len(speaker_segments)} segments")
 
     # ── Stage 2: Voiceprint matching ──
@@ -438,6 +444,30 @@ def diarize_clean(
         presence_floor=presence_floor,
         target_agent_slug=target_agent_slug,
     )
+    audio_duration_s = len(audio) / float(sr or 16000)
+    min_agent_seconds = float(os.getenv("SST_AGENT_CLUSTER_MIN_SECONDS", "6.0") or "6.0")
+    min_agent_ratio = float(os.getenv("SST_AGENT_CLUSTER_MIN_AUDIO_RATIO", "0.0") or "0.0")
+    required_agent_seconds = max(min_agent_seconds, audio_duration_s * min_agent_ratio)
+    agent_decision = {
+        "selected_speaker": agent_spk,
+        "selected_slug": agent_slug,
+        "similarity": float(agent_sim),
+        "required_seconds": round(float(required_agent_seconds), 3),
+        "selected_seconds": round(float(speaker_durations.get(agent_spk or "", 0.0)), 3),
+        "rejected": False,
+        "reason": "",
+    }
+    if agent_spk is not None and speaker_durations.get(agent_spk, 0.0) < required_agent_seconds:
+        agent_decision["rejected"] = True
+        agent_decision["reason"] = "agent_cluster_too_short_for_desk_recording"
+        logger.info(
+            "Rejecting agent cluster %s: %.2fs < required %.2fs",
+            agent_spk,
+            speaker_durations.get(agent_spk, 0.0),
+            required_agent_seconds,
+        )
+        agent_spk = None
+        agent_slug = None
     agent_name = voiceprints[agent_slug][0] if agent_slug else None
 
     logger.info(
@@ -472,6 +502,8 @@ def diarize_clean(
         "target_agent_slug": target_agent_slug,
         "cluster_match_table": match_table,
         "cluster_segment_counts": cluster_counts,
+        "cluster_durations": {k: round(float(v), 3) for k, v in speaker_durations.items()},
+        "agent_cluster_decision": agent_decision,
         "per_speaker": per_speaker,
         "speaker_mode": "speaker_first_voiceprint",
         "speaker_id_backend": backend,
@@ -512,29 +544,104 @@ def detect_leading_speech_offset(audio_path: str) -> float:
 
 
 def _overlay_speakers_on_text(text_segments: List[Dict], speaker_segments: List[Dict]) -> List[Dict]:
-    """For each transcribed segment, find the speaker that overlaps most with its time range."""
+    """Assign text segments to diarized speakers with padded, strict role overlap.
+
+    Desk recordings often have word-edge drift and far-field/background speech.
+    Padding helps early/late words attach to the right nearby speaker, while the
+    agent-specific overlap checks stop a weak background agent cluster from
+    claiming a full customer utterance.
+    """
+    pad_s = float(os.getenv("SST_ROLE_OVERLAY_PAD_S", "0.35") or "0.35")
+    agent_min_ratio = float(os.getenv("SST_AGENT_OVERLAY_MIN_RATIO", "0.30") or "0.30")
+    agent_min_seconds = float(os.getenv("SST_AGENT_OVERLAY_MIN_SECONDS", "0.35") or "0.35")
+    agent_margin_ratio = float(os.getenv("SST_AGENT_OVERLAY_MARGIN_RATIO", "1.25") or "1.25")
+    agent_margin_seconds = float(os.getenv("SST_AGENT_OVERLAY_MARGIN_SECONDS", "0.15") or "0.15")
+
     out = []
     for ts in text_segments:
         ts_start, ts_end = float(ts["start"]), float(ts["end"])
-        best_spk_seg = None
-        best_overlap = 0.0
+        ts_dur = max(ts_end - ts_start, 0.001)
+        speaker_scores: Dict[str, float] = {}
+        role_scores: Dict[str, float] = {}
+        speaker_best_seg: Dict[str, Dict] = {}
+        speaker_best_overlap: Dict[str, float] = {}
 
         for ss in speaker_segments:
-            ss_start, ss_end = ss["start"], ss["end"]
+            ss_start = max(0.0, float(ss["start"]) - pad_s)
+            ss_end = float(ss["end"]) + pad_s
             overlap = max(0.0, min(ts_end, ss_end) - max(ts_start, ss_start))
-            if overlap > best_overlap:
-                best_overlap = overlap
-                best_spk_seg = ss
+            if overlap <= 0:
+                continue
+            spk = str(ss.get("speaker") or LABEL_UNKNOWN)
+            role = str(ss.get("identified_speaker") or LABEL_UNKNOWN)
+            speaker_scores[spk] = speaker_scores.get(spk, 0.0) + overlap
+            role_scores[role] = role_scores.get(role, 0.0) + overlap
+            if overlap > speaker_best_overlap.get(spk, 0.0):
+                speaker_best_overlap[spk] = overlap
+                speaker_best_seg[spk] = ss
 
         seg = dict(ts)
-        if best_spk_seg:
-            seg["speaker"] = best_spk_seg["speaker"]
-            seg["identified_speaker"] = best_spk_seg.get("identified_speaker", LABEL_UNKNOWN)
-            seg["display_speaker"] = best_spk_seg.get("display_speaker", LABEL_UNKNOWN)
-            if "agent_name" in best_spk_seg:
-                seg["agent_name"] = best_spk_seg["agent_name"]
-            if "agent_slug" in best_spk_seg:
-                seg["agent_slug"] = best_spk_seg["agent_slug"]
+        if speaker_scores:
+            best_spk, best_overlap = max(speaker_scores.items(), key=lambda item: item[1])
+            best_spk_seg = speaker_best_seg[best_spk]
+            chosen_role = best_spk_seg.get("identified_speaker", LABEL_UNKNOWN)
+
+            if chosen_role == LABEL_AGENT:
+                agent_overlap = role_scores.get(LABEL_AGENT, 0.0)
+                customer_overlap = role_scores.get(LABEL_CUSTOMER, 0.0)
+                enough_agent_overlap = (
+                    agent_overlap >= min(agent_min_seconds, max(ts_dur * 0.60, 0.05))
+                    and (agent_overlap / ts_dur) >= agent_min_ratio
+                )
+                agent_dominates = agent_overlap >= (customer_overlap * agent_margin_ratio + agent_margin_seconds)
+                if not (enough_agent_overlap and agent_dominates):
+                    customer_speakers = [
+                        (spk, score)
+                        for spk, score in speaker_scores.items()
+                        if (speaker_best_seg.get(spk, {}).get("identified_speaker") == LABEL_CUSTOMER)
+                    ]
+                    if customer_speakers:
+                        best_spk, best_overlap = max(customer_speakers, key=lambda item: item[1])
+                        best_spk_seg = speaker_best_seg[best_spk]
+                        chosen_role = LABEL_CUSTOMER
+                        seg["agent_overlap_rejected"] = True
+                    else:
+                        best_spk_seg = None
+                        chosen_role = LABEL_UNKNOWN
+                        seg["agent_overlap_rejected"] = True
+
+            if best_spk_seg:
+                seg["speaker"] = best_spk_seg["speaker"]
+                seg["identified_speaker"] = chosen_role
+                seg["display_speaker"] = best_spk_seg.get("display_speaker", LABEL_UNKNOWN)
+                if chosen_role == LABEL_AGENT:
+                    if "agent_name" in best_spk_seg:
+                        seg["agent_name"] = best_spk_seg["agent_name"]
+                    if "agent_slug" in best_spk_seg:
+                        seg["agent_slug"] = best_spk_seg["agent_slug"]
+                else:
+                    seg.pop("agent_name", None)
+                    seg.pop("agent_slug", None)
+                seg["role_overlap"] = {
+                    "agent": round(float(role_scores.get(LABEL_AGENT, 0.0)), 3),
+                    "customer": round(float(role_scores.get(LABEL_CUSTOMER, 0.0)), 3),
+                    "padding_s": round(float(pad_s), 3),
+                }
+                seg["role_overlap_ratio"] = round(float(best_overlap / ts_dur), 3)
+                seg["role_assignment_reason"] = (
+                    "padded_strict_overlap"
+                    if not seg.get("agent_overlap_rejected")
+                    else "background_agent_overlap_rejected"
+                )
+            else:
+                seg["speaker"] = "SPEAKER_99"
+                seg["identified_speaker"] = LABEL_UNKNOWN
+                seg["display_speaker"] = LABEL_UNKNOWN
+                seg["role_overlap"] = {
+                    "agent": round(float(role_scores.get(LABEL_AGENT, 0.0)), 3),
+                    "customer": round(float(role_scores.get(LABEL_CUSTOMER, 0.0)), 3),
+                    "padding_s": round(float(pad_s), 3),
+                }
         else:
             seg["speaker"] = "SPEAKER_99"
             seg["identified_speaker"] = LABEL_UNKNOWN

@@ -28,19 +28,23 @@ REPO = Path(__file__).resolve().parents[2]
 SCRIPTS = REPO / "call_processor" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-for line in (REPO / ".env").read_text(encoding="utf-8").splitlines():
-    if line and not line.startswith("#") and "=" in line:
-        k, v = line.split("=", 1)
-        os.environ.setdefault(k.strip(), v.strip())
-os.environ.setdefault("AUDIOFY_USERNAME", "abhishek")
-os.environ.setdefault("AUDIOFY_PASSWORD", "123456")
+env_path = REPO / ".env"
+if env_path.exists():
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        if line and not line.startswith("#") and "=" in line:
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip())
 
 import daily_training_daemon as dtd  # noqa: E402
 
 AGENT = "Amandeep Nandra"
 SLUG = "amandeep_nandra"
 UI = "http://localhost:8080"
-UI_AUTH = ("abhishek", "123456")
+UI_AUTH = (
+    (os.environ.get("CALLPROC_USER", ""), os.environ.get("CALLPROC_PASS", ""))
+    if os.environ.get("CALLPROC_AUTH_REQUIRED", "").strip().lower() in {"1", "true", "yes", "on"}
+    else None
+)
 AGENTS_JSON = REPO / "call_processor" / "data" / "agent_voiceprints" / "agents.json"
 
 
@@ -123,7 +127,6 @@ def activate_amandeep():
         f"{UI}/api/auto-train",
         json={
             "agents": [AGENT], "days": 60, "dry_run": False, "activate": True,
-            "audiofy_username": "abhishek", "audiofy_password": "123456",
         },
         auth=UI_AUTH, timeout=30,
     )
