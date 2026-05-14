@@ -2054,7 +2054,7 @@
             }
         }
 
-        async function postRoleUpdates(indexes, role) {
+        async function postRoleUpdates(indexes, role, train = false) {
             if (!currentCallId || !indexes.length) return;
             applyRoleLocally(indexes, role);
             try {
@@ -2063,7 +2063,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         updates: indexes.map(index => ({ index, role })),
-                        train: role === 'AGENT',
+                        train: !!train && role === 'AGENT',
                         agent_name: currentIdentifiedAgent,
                         agent_slug: currentIdentifiedAgentSlug,
                     }),
@@ -2088,7 +2088,7 @@
 
         function correctSegmentRole(ev, idx, role) {
             ev?.stopPropagation?.();
-            postRoleUpdates([idx], role);
+            postRoleUpdates([idx], role, false);
         }
 
         function correctSpeakerRole(ev, idx, role) {
@@ -2098,7 +2098,7 @@
             const indexes = currentSegments
                 .map((seg, i) => seg.speaker === speaker ? i : -1)
                 .filter(i => i >= 0);
-            postRoleUpdates(indexes, role);
+            postRoleUpdates(indexes, role, role === 'AGENT');
         }
 
         // ── Render a single chat bubble ─────────────────────────────────────────────

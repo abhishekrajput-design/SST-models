@@ -1838,9 +1838,59 @@
             }
           ]
         }
+      },
+      {
+        "path": "zak_raissi_barnet_ui_corrected_20260514T183050.npy",
+        "source": "ui_role_correction",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "manual_verified": true,
+        "segment_role_voiceprint": true,
+        "source_result": "enhanced_exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm__whisper-large-v3-turbo",
+        "source_audio": "data\\processed\\enhanced_exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm\\norm_enhanced_exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm.wav",
+        "source_segment_count": 16,
+        "source_seconds": 38.12,
+        "signature": "42176deb36bdb9d3aa9ca96f8ea1787f3ddbe926",
+        "created_at_epoch": 1778763650,
+        "validation": {
+          "target_existing_similarity": 0.995,
+          "next_best_other": {
+            "agent_slug": "hussein_mohamed",
+            "agent_name": "Hussein Mohamed",
+            "similarity": 0.4284
+          },
+          "margin_to_next_best": 0.5666,
+          "top_matches": [
+            {
+              "agent_slug": "zak_raissi_barnet",
+              "agent_name": "Zak Raissi Barnet",
+              "similarity": 0.995
+            },
+            {
+              "agent_slug": "hussein_mohamed",
+              "agent_name": "Hussein Mohamed",
+              "similarity": 0.4284
+            },
+            {
+              "agent_slug": "haris_bajwa",
+              "agent_name": "Haris Bajwa",
+              "similarity": 0.3336
+            },
+            {
+              "agent_slug": "kowsar_alam",
+              "agent_name": "Kowsar Alam",
+              "similarity": 0.3063
+            },
+            {
+              "agent_slug": "waris_sales_controllers",
+              "agent_name": "Waris Sales Controllers",
+              "similarity": 0.3004
+            }
+          ]
+        }
       }
     ],
-    "n_voiceprints": 11,
+    "n_voiceprints": 12,
     "embedding_model": "cam++",
     "embedding_dim": 512,
     "source": "pure_agent_segments_plus_clean_clips",
@@ -1851,7 +1901,7 @@
     "total_training_seconds": 192.76,
     "mean_inside_sim": 0.7355,
     "max_outside_sim": 0.3482,
-    "updated_at_epoch": 1778761750,
+    "updated_at_epoch": 1778764250,
     "has_desk_voiceprints": true,
     "desk_voiceprints": [
       "zak_raissi_barnet_desk_campp_v1.npy",

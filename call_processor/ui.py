@@ -1588,13 +1588,40 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "min_seconds": min_seconds,
         }
 
-    def _foreground_customer_blocks_agent(seg: dict, seconds: float) -> bool:
+    def _foreground_customer_blocks_agent(
+        seg: dict,
+        seconds: float,
+        target_similarity: float | None = None,
+        target_margin: float | None = None,
+        trusted_segment_voiceprint: bool = False,
+    ) -> bool:
         """Block background-agent bleed from overriding a clean customer speaker slice."""
         enabled = os.getenv("SST_FOREGROUND_ROLE_GUARD", "1").strip().lower()
         if enabled in {"0", "false", "no", "off"}:
             return False
         if seg.get("identified_speaker") != "CUSTOMER":
             return False
+        if trusted_segment_voiceprint:
+            try:
+                sim = float(target_similarity)
+                margin = float(target_margin)
+            except (TypeError, ValueError):
+                sim = margin = 0.0
+            trusted_min_sim = float(
+                os.getenv(
+                    "SST_FOREGROUND_TRUSTED_VOICE_MIN_SIM",
+                    os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_SIM", "0.40"),
+                ) or "0.40"
+            )
+            trusted_min_margin = float(
+                os.getenv(
+                    "SST_FOREGROUND_TRUSTED_VOICE_MIN_MARGIN",
+                    os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_MARGIN", "0.03"),
+                ) or "0.03"
+            )
+            if sim >= trusted_min_sim and margin >= trusted_min_margin:
+                seg["foreground_role_guard_bypassed"] = "trusted_segment_voiceprint"
+                return False
         overlap = seg.get("role_overlap")
         if not isinstance(overlap, dict):
             return False
@@ -1786,7 +1813,13 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 if target_only
                 else target_sim >= min_sim and margin >= min_margin
             )
-            if is_agent and _foreground_customer_blocks_agent(seg, seconds):
+            if is_agent and _foreground_customer_blocks_agent(
+                seg,
+                seconds,
+                target_sim,
+                margin,
+                segment_role_source == "segment_role_voiceprints",
+            ):
                 is_agent = False
                 foreground_guard_blocks += 1
                 seg["foreground_role_guard"] = "customer_diarization_blocks_background_agent"
@@ -2115,7 +2148,13 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     is_agent = True
                     strong_segment_kept_agent += 1
                     seg["tsvad_segment_voice_override"] = "strong_segment_voiceprint_kept_agent"
-            if is_agent and _foreground_customer_blocks_agent(seg, seconds):
+            if is_agent and _foreground_customer_blocks_agent(
+                seg,
+                seconds,
+                decision_score,
+                decision_margin,
+                source == "segment_role_voiceprints",
+            ):
                 is_agent = False
                 foreground_guard_blocks += 1
                 seg["foreground_role_guard"] = "customer_diarization_blocks_background_agent"
