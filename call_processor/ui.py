@@ -3222,14 +3222,21 @@ def _manual_training_signature(agent_slug: str, segments: list) -> str:
     ).hexdigest()
 
 
-def _train_manual_role_voiceprint(result_path: Path, rdata: dict, agent_slug: str, agent_name: str) -> dict:
+def _train_manual_role_voiceprint(
+    result_path: Path,
+    rdata: dict,
+    agent_slug: str,
+    agent_name: str,
+    source_indexes: set[int] | None = None,
+) -> dict:
     import numpy as np
     import soundfile as sf
 
     segments = [
-        seg for seg in rdata.get("segments", [])
+        seg for idx, seg in enumerate(rdata.get("segments", []))
         if str(seg.get("identified_speaker") or "").upper() == "AGENT"
         and seg.get("manual_role_correction")
+        and (source_indexes is None or idx in source_indexes)
     ]
     min_segments = int(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_SEGMENTS", "2"))
     min_total_s = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_SECONDS", "3.0"))
@@ -3289,9 +3296,34 @@ def _train_manual_role_voiceprint(result_path: Path, rdata: dict, agent_slug: st
 
     from src.embedding_campp import get_model
 
+    existing_target_stack = None
+    existing_other_stacks: list[tuple[str, np.ndarray]] = []
+    try:
+        from src.diar_multi import _load_voiceprints
+
+        loaded_voiceprints = _load_voiceprints()
+        target = loaded_voiceprints.get(agent_slug)
+        if target and getattr(target[1], "ndim", 0) == 2 and len(target[1]):
+            existing_target_stack = np.asarray(target[1], dtype=np.float32)
+            existing_other_stacks = [
+                (slug, np.asarray(stack, dtype=np.float32))
+                for slug, (_name, stack) in loaded_voiceprints.items()
+                if slug != agent_slug
+                and getattr(stack, "ndim", 0) == 2
+                and stack.shape[1] == existing_target_stack.shape[1]
+                and len(stack)
+            ]
+    except Exception:
+        existing_target_stack = None
+        existing_other_stacks = []
+
     embedder = get_model(force_cpu=True)
     embedder.load(force_cpu=True)
     embs = []
+    rejected_by_existing_voiceprint = 0
+    train_min_existing_sim = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_EXISTING_SIM", "0.40") or "0.40")
+    train_min_existing_margin = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_EXISTING_MARGIN", "0.03") or "0.03")
+    segment_quality_samples = []
     for start, end, _dur, _seg in selected:
         s0 = max(0, int((start - pad_s) * sr))
         s1 = min(len(mono), int((end + pad_s) * sr))
@@ -3302,13 +3334,54 @@ def _train_manual_role_voiceprint(result_path: Path, rdata: dict, agent_slug: st
         except Exception:
             emb = None
         if emb is not None:
-            embs.append(_l2_norm_np(emb))
+            emb = _l2_norm_np(emb)
+            target_sim = None
+            margin = None
+            if (
+                existing_target_stack is not None
+                and emb.shape[0] == existing_target_stack.shape[1]
+            ):
+                target_sim = float(np.max(existing_target_stack @ emb))
+                best_other = 0.0
+                best_other_slug = None
+                for slug, stack in existing_other_stacks:
+                    sim = float(np.max(stack @ emb))
+                    if sim > best_other:
+                        best_other = sim
+                        best_other_slug = slug
+                margin = target_sim - best_other
+                if target_sim < train_min_existing_sim or (
+                    existing_other_stacks and margin < train_min_existing_margin
+                ):
+                    rejected_by_existing_voiceprint += 1
+                    if len(segment_quality_samples) < 20:
+                        segment_quality_samples.append({
+                            "start": round(start, 2),
+                            "end": round(end, 2),
+                            "accepted": False,
+                            "target_similarity": round(target_sim, 4),
+                            "margin": round(margin, 4),
+                            "best_other_slug": best_other_slug,
+                            "text": str(_seg.get("text") or "")[:120],
+                        })
+                    continue
+            embs.append(emb)
+            if len(segment_quality_samples) < 20:
+                segment_quality_samples.append({
+                    "start": round(start, 2),
+                    "end": round(end, 2),
+                    "accepted": True,
+                    "target_similarity": round(target_sim, 4) if target_sim is not None else None,
+                    "margin": round(margin, 4) if margin is not None else None,
+                    "text": str(_seg.get("text") or "")[:120],
+                })
 
     if len(embs) < min_segments:
         return {
             "trained": False,
             "reason": "embedding_failed_for_verified_audio",
             "embedded_segments": len(embs),
+            "rejected_by_existing_voiceprint": rejected_by_existing_voiceprint,
             "required_segments": min_segments,
         }
 
@@ -3375,6 +3448,10 @@ def _train_manual_role_voiceprint(result_path: Path, rdata: dict, agent_slug: st
         "corrected_agent_segments": len(selected),
         "corrected_agent_seconds": round(sum(row[2] for row in selected), 2),
         "embedded_segments": len(embs),
+        "rejected_by_existing_voiceprint": rejected_by_existing_voiceprint,
+        "train_min_existing_similarity": train_min_existing_sim,
+        "train_min_existing_margin": train_min_existing_margin,
+        "segment_quality_samples": segment_quality_samples,
         "signature": signature,
         "agents_backup": str(backup) if backup else None,
         "validation": validation,
@@ -3949,8 +4026,17 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 training_report = {"trained": False, "reason": "training_not_requested"}
                 if payload.get("train", True):
                     try:
+                        train_indexes = {
+                            int(item["index"])
+                            for item in applied
+                            if item.get("role") == "AGENT"
+                        }
                         training_report = _train_manual_role_voiceprint(
-                            result_path, rdata, agent_slug, agent_name
+                            result_path,
+                            rdata,
+                            agent_slug,
+                            agent_name,
+                            train_indexes,
                         )
                     except Exception as exc:
                         training_report = {"trained": False, "reason": f"training_failed: {exc}"}
