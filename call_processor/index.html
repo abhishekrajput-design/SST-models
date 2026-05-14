@@ -2137,10 +2137,10 @@
             const speakerId = escapeHtml(seg.speaker || 'speaker');
             const fixedBadge = seg.manual_role_correction ? '<span class="role-fixed">FIXED</span>' : '';
             const roleTools = `<span class="role-tools">
-                <button class="role-btn ${role === 'AGENT' ? 'active' : ''}" type="button" title="Mark this segment as ${fullAgent}" onclick="correctSegmentRole(event, ${idx}, 'AGENT')">${agentLabel}</button>
-                <button class="role-btn ${role === 'CUSTOMER' ? 'active' : ''}" type="button" title="Mark this segment as Customer" onclick="correctSegmentRole(event, ${idx}, 'CUSTOMER')">Cust</button>
-                <button class="role-btn" type="button" title="Mark all ${speakerId} segments as ${fullAgent}" onclick="correctSpeakerRole(event, ${idx}, 'AGENT')">Spk ${agentLabel}</button>
-                <button class="role-btn" type="button" title="Mark all ${speakerId} segments as Customer" onclick="correctSpeakerRole(event, ${idx}, 'CUSTOMER')">Spk Cust</button>
+                <button class="role-btn ${role === 'AGENT' ? 'active' : ''}" type="button" title="Only this line becomes ${fullAgent}" onclick="correctSegmentRole(event, ${idx}, 'AGENT')">Line ${agentLabel}</button>
+                <button class="role-btn ${role === 'CUSTOMER' ? 'active' : ''}" type="button" title="Only this line becomes Customer" onclick="correctSegmentRole(event, ${idx}, 'CUSTOMER')">Line Customer</button>
+                <button class="role-btn" type="button" title="All ${speakerId} lines with the same voice become ${fullAgent}" onclick="correctSpeakerRole(event, ${idx}, 'AGENT')">Voice ${agentLabel}</button>
+                <button class="role-btn" type="button" title="All ${speakerId} lines with the same voice become Customer" onclick="correctSpeakerRole(event, ${idx}, 'CUSTOMER')">Voice Customer</button>
             </span>`;
 
             return `<div class="bubble ${css}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
