@@ -1788,9 +1788,59 @@
         "source_file": "zak_raissi_barnet_06_audio_03_15_2026_13_08_04_wshqao.mp3",
         "source_speaker": "SPEAKER_00",
         "source_similarity_to_phone_vp": 0.4117
+      },
+      {
+        "path": "zak_raissi_barnet_ui_corrected_20260514T175910.npy",
+        "source": "ui_role_correction",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "manual_verified": true,
+        "segment_role_voiceprint": true,
+        "source_result": "exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm__parakeet-tdt-0.6b-v3",
+        "source_audio": "data\\processed\\exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm\\norm_exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm.wav",
+        "source_segment_count": 11,
+        "source_seconds": 20.16,
+        "signature": "7a1267642612991814c916c7fab40b30f9d32d58",
+        "created_at_epoch": 1778761750,
+        "validation": {
+          "target_existing_similarity": 0.7025,
+          "next_best_other": {
+            "agent_slug": "hussein_mohamed",
+            "agent_name": "Hussein Mohamed",
+            "similarity": 0.3632
+          },
+          "margin_to_next_best": 0.3393,
+          "top_matches": [
+            {
+              "agent_slug": "zak_raissi_barnet",
+              "agent_name": "Zak Raissi Barnet",
+              "similarity": 0.7025
+            },
+            {
+              "agent_slug": "hussein_mohamed",
+              "agent_name": "Hussein Mohamed",
+              "similarity": 0.3632
+            },
+            {
+              "agent_slug": "waris_sales_controllers",
+              "agent_name": "Waris Sales Controllers",
+              "similarity": 0.3013
+            },
+            {
+              "agent_slug": "aftaab_supervisor",
+              "agent_name": "Aftaab Supervisor",
+              "similarity": 0.2931
+            },
+            {
+              "agent_slug": "haris_bajwa",
+              "agent_name": "Haris Bajwa",
+              "similarity": 0.2834
+            }
+          ]
+        }
       }
     ],
-    "n_voiceprints": 10,
+    "n_voiceprints": 11,
     "embedding_model": "cam++",
     "embedding_dim": 512,
     "source": "pure_agent_segments_plus_clean_clips",
@@ -1801,7 +1851,7 @@
     "total_training_seconds": 192.76,
     "mean_inside_sim": 0.7355,
     "max_outside_sim": 0.3482,
-    "updated_at_epoch": 1778096232,
+    "updated_at_epoch": 1778761750,
     "has_desk_voiceprints": true,
     "desk_voiceprints": [
       "zak_raissi_barnet_desk_campp_v1.npy",

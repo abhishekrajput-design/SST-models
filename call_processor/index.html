@@ -956,6 +956,73 @@
             color: rgba(255, 255, 255, 0.7) !important;
         }
 
+        .bubble-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .role-tools {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            opacity: .72;
+        }
+
+        .bubble:hover .role-tools {
+            opacity: 1;
+        }
+
+        .role-btn {
+            height: 20px;
+            padding: 0 6px;
+            border-radius: 5px;
+            border: 1px solid rgba(148, 163, 184, .24);
+            background: rgba(15, 23, 42, .24);
+            color: rgba(226, 232, 240, .86);
+            font-size: .56rem;
+            line-height: 18px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .role-btn:hover {
+            border-color: rgba(226, 232, 240, .45);
+            background: rgba(15, 23, 42, .42);
+        }
+
+        .role-btn.active {
+            border-color: rgba(34, 197, 94, .55);
+            color: #bbf7d0;
+        }
+
+        .role-fixed {
+            font-size: .52rem;
+            font-weight: 800;
+            color: #bbf7d0;
+            border: 1px solid rgba(34, 197, 94, .35);
+            border-radius: 5px;
+            padding: 1px 4px;
+        }
+
+        @media (max-width: 640px) {
+            .bubble-head {
+                align-items: flex-start;
+            }
+
+            .bubble-actions {
+                max-width: 100%;
+            }
+
+            .role-tools {
+                order: 2;
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
         /* Text */
         .bubble-text {
             font-size: .88rem;
@@ -1839,6 +1906,7 @@
         let currentSegments = [];
         let currentCallId = null;
         let currentIdentifiedAgent = 'Agent';
+        let currentIdentifiedAgentSlug = null;
         let agentSpkId = null;
         let _activeSegIdx = -1;
         let _isPlaying = false;
@@ -1938,6 +2006,101 @@
             return seg.display_speaker || seg.speaker || 'Unknown';
         }
 
+        function shortAgentLabel() {
+            const clean = String(currentIdentifiedAgent || 'Agent').trim();
+            return clean.split(/\s+/).filter(Boolean)[0] || 'Agent';
+        }
+
+        function applyRoleLocally(indexes, role) {
+            const agentName = currentIdentifiedAgent || 'Agent';
+            indexes.forEach(idx => {
+                const seg = currentSegments[idx];
+                if (!seg) return;
+                seg.identified_speaker = role;
+                seg.manual_role_correction = true;
+                seg.role_correction_source = 'ui_voiceprint_feedback';
+                if (role === 'AGENT') {
+                    seg.agent_name = agentName;
+                    seg.display_speaker = agentName;
+                } else {
+                    delete seg.agent_name;
+                    seg.display_speaker = 'Customer';
+                }
+            });
+            renderCurrentTranscript();
+            refreshRoleStats();
+        }
+
+        function refreshRoleStats(serverStats = null) {
+            const ss = serverStats || {};
+            const agT = ss.AGENT?.time_s ?? currentSegments.filter(s => resolveRole(s) === 'AGENT').reduce((a, s) => a + ((s.end || 0) - (s.start || 0)), 0);
+            const cuT = ss.CUSTOMER?.time_s ?? currentSegments.filter(s => resolveRole(s) === 'CUSTOMER').reduce((a, s) => a + ((s.end || 0) - (s.start || 0)), 0);
+            const agTu = ss.AGENT?.turns ?? currentSegments.filter(s => resolveRole(s) === 'AGENT').length;
+            const cuTu = ss.CUSTOMER?.turns ?? currentSegments.filter(s => resolveRole(s) === 'CUSTOMER').length;
+            const total = agT + cuT || 1;
+            const agPct = Math.round(agT / total * 100);
+            document.getElementById('spkFillAgent').style.width = agPct + '%';
+            document.getElementById('spkFillCust').style.width = (100 - agPct) + '%';
+            document.getElementById('spkInfoAgent').textContent = `${Math.round(agT)}s (${agPct}%)`;
+            document.getElementById('spkInfoCust').textContent = `${Math.round(cuT)}s (${100 - agPct}%)`;
+            document.getElementById('spkTurnsAgent').textContent = agTu + ' turns';
+            document.getElementById('spkTurnsCust').textContent = cuTu + ' turns';
+        }
+
+        function renderCurrentTranscript() {
+            DOM.chat.innerHTML = currentSegments.map((seg, idx) => renderBubble(seg, idx)).join('');
+            if (!DOM.chat.querySelector('.bubble')) {
+                DOM.chat.innerHTML = `<div class="chat-placeholder"><span style="color:var(--muted);font-size:.9rem;">No transcript segments found.</span></div>`;
+            }
+        }
+
+        async function postRoleUpdates(indexes, role) {
+            if (!currentCallId || !indexes.length) return;
+            applyRoleLocally(indexes, role);
+            try {
+                const r = await fetch(`/api/call/${encodeURIComponent(currentCallId)}/role-corrections`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        updates: indexes.map(index => ({ index, role })),
+                        train: role === 'AGENT',
+                        agent_name: currentIdentifiedAgent,
+                        agent_slug: currentIdentifiedAgentSlug,
+                    }),
+                });
+                const st = await r.json();
+                if (!r.ok || st.status !== 'ok') {
+                    throw new Error(st.message || 'role correction failed');
+                }
+                currentSegments = st.segments || currentSegments;
+                currentIdentifiedAgent = st.identified_agent || currentIdentifiedAgent;
+                currentIdentifiedAgentSlug = st.identified_agent_slug || currentIdentifiedAgentSlug;
+                renderCurrentTranscript();
+                refreshRoleStats(st.speaker_stats || null);
+                if (st.training_report?.trained) {
+                    console.log('Voiceprint trained from role correction', st.training_report);
+                }
+            } catch (e) {
+                alert(`Role correction failed: ${e.message || e}`);
+                loadCall(currentCallId, null, { updateUrl: false });
+            }
+        }
+
+        function correctSegmentRole(ev, idx, role) {
+            ev?.stopPropagation?.();
+            postRoleUpdates([idx], role);
+        }
+
+        function correctSpeakerRole(ev, idx, role) {
+            ev?.stopPropagation?.();
+            const speaker = currentSegments[idx]?.speaker;
+            if (!speaker) return postRoleUpdates([idx], role);
+            const indexes = currentSegments
+                .map((seg, i) => seg.speaker === speaker ? i : -1)
+                .filter(i => i >= 0);
+            postRoleUpdates(indexes, role);
+        }
+
         // ── Render a single chat bubble ─────────────────────────────────────────────
         function renderBubble(seg, idx) {
             if (!seg.text?.trim()) return '';
@@ -1969,6 +2132,16 @@
                 wordTime = wEnd;
                 return `<span class="transcript-word" data-start="${wStart.toFixed(3)}" data-end="${wEnd.toFixed(3)}">${word}</span>`;
             }).join('');
+            const agentLabel = escapeHtml(shortAgentLabel());
+            const fullAgent = escapeHtml(currentIdentifiedAgent || 'Agent');
+            const speakerId = escapeHtml(seg.speaker || 'speaker');
+            const fixedBadge = seg.manual_role_correction ? '<span class="role-fixed">FIXED</span>' : '';
+            const roleTools = `<span class="role-tools">
+                <button class="role-btn ${role === 'AGENT' ? 'active' : ''}" type="button" title="Mark this segment as ${fullAgent}" onclick="correctSegmentRole(event, ${idx}, 'AGENT')">${agentLabel}</button>
+                <button class="role-btn ${role === 'CUSTOMER' ? 'active' : ''}" type="button" title="Mark this segment as Customer" onclick="correctSegmentRole(event, ${idx}, 'CUSTOMER')">Cust</button>
+                <button class="role-btn" type="button" title="Mark all ${speakerId} segments as ${fullAgent}" onclick="correctSpeakerRole(event, ${idx}, 'AGENT')">Spk ${agentLabel}</button>
+                <button class="role-btn" type="button" title="Mark all ${speakerId} segments as Customer" onclick="correctSpeakerRole(event, ${idx}, 'CUSTOMER')">Spk Cust</button>
+            </span>`;
 
             return `<div class="bubble ${css}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
         <div class="seg-progress"></div>
@@ -1977,8 +2150,12 @@
                 <span class="spk-dot"></span>
                 ${name}
                 <span class="live-badge">LIVE</span>
+                ${fixedBadge}
             </span>
-            <span class="bubble-time" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
+            <span class="bubble-actions">
+                ${roleTools}
+                <span class="bubble-time" onclick="playFrom(${seg.start})">${fmt(seg.start)} – ${fmt(seg.end)}</span>
+            </span>
         </div>
         <div class="bubble-text">${wordSpans}</div>
         <div class="conf-bar" title="${confTitle}" style="height:2px;margin-top:6px;background:rgba(148,163,184,0.10);border-radius:2px;overflow:hidden;">
@@ -2082,6 +2259,7 @@
             currentSegments = data.segments || [];
             currentCallId = callId;
             currentIdentifiedAgent = data.identified_agent || 'Agent';
+            currentIdentifiedAgentSlug = data.identified_agent_slug || data.target_agent_slug || null;
             _activeSegIdx = -1;
             _autoScroll = true;
             if (opts.updateUrl !== false) setCallUrl(callId);

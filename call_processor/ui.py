@@ -8,6 +8,7 @@ import os
 import re
 import sys
 import gc
+import hashlib
 import json
 import base64
 import shutil
@@ -2992,6 +2993,369 @@ def _read_last_training_reports() -> dict:
     return reports
 
 
+_role_correction_lock = threading.Lock()
+
+
+def _result_path_for_call(call_id: str) -> Path:
+    safe_id = str(call_id or "").replace("\\", "/").strip("/")
+    base_dir = Path(__file__).resolve().parent
+    candidates = [
+        Path(PROCESSED_DIR) / safe_id / "result.json",
+        base_dir / PROCESSED_DIR / safe_id / "result.json",
+        base_dir / "data" / "processed" / safe_id / "result.json",
+    ]
+    for path in candidates:
+        if path.is_file():
+            return path
+    return candidates[0]
+
+
+def _fmt_ts_seconds(seconds: float) -> str:
+    s = max(0.0, float(seconds or 0.0))
+    h = int(s // 3600)
+    m = int((s % 3600) // 60)
+    sec = s - (h * 3600 + m * 60)
+    return f"{h:02d}:{m:02d}:{sec:06.3f}"
+
+
+def _normalise_manual_role(role: str) -> str:
+    value = str(role or "").strip().upper()
+    if value in {"AGENT", "CUSTOMER"}:
+        return value
+    raise ValueError("role must be AGENT or CUSTOMER")
+
+
+def _display_for_role(role: str, agent_name: str) -> str:
+    return agent_name if role == "AGENT" else "Customer"
+
+
+def _apply_manual_role(item: dict, role: str, agent_name: str, stamp: str) -> None:
+    item["identified_speaker"] = role
+    item["display_speaker"] = _display_for_role(role, agent_name)
+    item["manual_role_correction"] = True
+    item["role_correction_source"] = "ui_voiceprint_feedback"
+    item["role_correction_at"] = stamp
+    if role == "AGENT":
+        item["agent_name"] = agent_name
+    else:
+        item.pop("agent_name", None)
+
+
+def _sync_transcription_role(rdata: dict, idx: int, role: str, agent_name: str, stamp: str) -> None:
+    rows = rdata.get("transcription_json")
+    if not isinstance(rows, list) or not (0 <= idx < len(rows)):
+        return
+    _apply_manual_role(rows[idx], role, agent_name, stamp)
+
+
+def _recompute_role_stats(segments: list) -> dict:
+    stats = {
+        "AGENT": {"time_s": 0.0, "turns": 0, "first_words": ""},
+        "CUSTOMER": {"time_s": 0.0, "turns": 0, "first_words": ""},
+    }
+    for seg in segments or []:
+        role = str(seg.get("identified_speaker") or "").upper()
+        if role not in stats:
+            continue
+        try:
+            dur = max(0.0, float(seg.get("end", 0)) - float(seg.get("start", 0)))
+        except Exception:
+            dur = 0.0
+        stats[role]["time_s"] += dur
+        stats[role]["turns"] += 1
+        if not stats[role]["first_words"]:
+            text = str(seg.get("text") or seg.get("phrase") or "").strip()
+            stats[role]["first_words"] = text[:120]
+    for role in stats:
+        stats[role]["time_s"] = round(stats[role]["time_s"], 1)
+    return stats
+
+
+def _resolve_result_audio_path(rdata: dict, result_path: Path) -> Path | None:
+    base_dir = Path(__file__).resolve().parent
+    roots = [Path.cwd(), base_dir, base_dir.parent, result_path.parent]
+    for key in (
+        "diarization_audio_file",
+        "asr_audio_file",
+        "playback_audio_file",
+        "enhanced_file",
+        "audio_file",
+    ):
+        raw = rdata.get(key)
+        if not raw:
+            continue
+        text = str(raw).replace("\\", "/")
+        candidates: list[Path] = [Path(text)]
+        if "call_processor/" in text:
+            tail = text.split("call_processor/", 1)[1]
+            candidates.extend(root / tail for root in roots)
+        candidates.extend(root / text for root in roots)
+        candidates.append(result_path.parent / Path(text).name)
+        for path in candidates:
+            try:
+                if path.is_file():
+                    return path
+            except OSError:
+                continue
+    return None
+
+
+def _l2_norm_np(vec):
+    import numpy as np
+
+    arr = np.asarray(vec, dtype=np.float32).squeeze()
+    norm = float(np.linalg.norm(arr))
+    return arr / norm if norm > 0 else arr
+
+
+def _resolve_voiceprint_file(raw: str) -> Path:
+    path = Path(str(raw or ""))
+    if path.is_file():
+        return path
+    return Path(_VOICEPRINT_DIR) / str(raw or "")
+
+
+def _existing_voiceprint_matches(centroid, agent_slug: str) -> dict:
+    import numpy as np
+
+    matches = []
+    agents = _read_agents_json()
+    for slug, info in agents.items():
+        if not isinstance(info, dict):
+            continue
+        raw_paths = []
+        vps = info.get("voiceprints")
+        if isinstance(vps, list):
+            for entry in vps:
+                raw = entry.get("path") if isinstance(entry, dict) else entry
+                if raw:
+                    raw_paths.append(raw)
+        if not raw_paths:
+            raw = info.get("voiceprint_path") or info.get("voiceprint")
+            if raw:
+                raw_paths.append(raw)
+        best = None
+        for raw in raw_paths:
+            path = _resolve_voiceprint_file(raw)
+            if not path.is_file():
+                continue
+            try:
+                vp = _l2_norm_np(np.load(path))
+            except Exception:
+                continue
+            if vp.shape != centroid.shape:
+                continue
+            sim = float(np.dot(vp, centroid))
+            best = sim if best is None else max(best, sim)
+        if best is not None:
+            matches.append({
+                "agent_slug": slug,
+                "agent_name": info.get("agent_name") or info.get("name") or slug,
+                "similarity": round(best, 4),
+            })
+    matches.sort(key=lambda row: row["similarity"], reverse=True)
+    target = next((row for row in matches if row["agent_slug"] == agent_slug), None)
+    other = next((row for row in matches if row["agent_slug"] != agent_slug), None)
+    return {
+        "target_existing_similarity": target["similarity"] if target else None,
+        "next_best_other": other,
+        "margin_to_next_best": (
+            round((target["similarity"] - other["similarity"]), 4)
+            if target and other else None
+        ),
+        "top_matches": matches[:5],
+    }
+
+
+def _manual_training_signature(agent_slug: str, segments: list) -> str:
+    payload = [
+        {
+            "agent_slug": agent_slug,
+            "start": round(float(seg.get("start", 0.0)), 3),
+            "end": round(float(seg.get("end", 0.0)), 3),
+            "speaker": seg.get("speaker"),
+            "text": str(seg.get("text") or seg.get("phrase") or "").strip(),
+        }
+        for seg in segments
+    ]
+    return hashlib.sha1(
+        json.dumps(payload, sort_keys=True, ensure_ascii=True).encode("utf-8")
+    ).hexdigest()
+
+
+def _train_manual_role_voiceprint(result_path: Path, rdata: dict, agent_slug: str, agent_name: str) -> dict:
+    import numpy as np
+    import soundfile as sf
+
+    segments = [
+        seg for seg in rdata.get("segments", [])
+        if str(seg.get("identified_speaker") or "").upper() == "AGENT"
+        and seg.get("manual_role_correction")
+    ]
+    min_segments = int(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_SEGMENTS", "2"))
+    min_total_s = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_SECONDS", "3.0"))
+    min_seg_s = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_SEGMENT_SECONDS", "0.45"))
+    max_total_s = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MAX_SECONDS", "90.0"))
+    pad_s = float(os.getenv("SST_MANUAL_ROLE_TRAIN_PAD_SECONDS", "0.12"))
+
+    eligible = []
+    for seg in segments:
+        try:
+            start = float(seg.get("start", 0.0))
+            end = float(seg.get("end", 0.0))
+        except Exception:
+            continue
+        dur = end - start
+        if dur >= min_seg_s:
+            eligible.append((start, end, dur, seg))
+
+    total_s = sum(row[2] for row in eligible)
+    if len(eligible) < min_segments or total_s < min_total_s:
+        return {
+            "trained": False,
+            "reason": "not_enough_verified_agent_audio",
+            "corrected_agent_segments": len(eligible),
+            "corrected_agent_seconds": round(total_s, 2),
+            "required_segments": min_segments,
+            "required_seconds": min_total_s,
+        }
+
+    signature = _manual_training_signature(agent_slug, [row[3] for row in eligible])
+    previous = rdata.get("manual_role_training") or {}
+    if previous.get("signature") == signature and previous.get("voiceprint_file"):
+        return {
+            "trained": False,
+            "reason": "already_trained_for_current_corrections",
+            "voiceprint_file": previous.get("voiceprint_file"),
+            "signature": signature,
+        }
+
+    audio_path = _resolve_result_audio_path(rdata, result_path)
+    if not audio_path:
+        return {"trained": False, "reason": "source_audio_not_found"}
+
+    try:
+        audio, sr = sf.read(str(audio_path), dtype="float32", always_2d=True)
+    except Exception as exc:
+        return {"trained": False, "reason": f"source_audio_read_failed: {exc}"}
+    mono = audio.mean(axis=1)
+
+    selected = []
+    running_s = 0.0
+    for start, end, dur, seg in sorted(eligible, key=lambda row: row[0]):
+        if selected and running_s >= max_total_s:
+            break
+        selected.append((start, end, dur, seg))
+        running_s += dur
+
+    from src.embedding_campp import get_model
+
+    embedder = get_model(force_cpu=True)
+    embedder.load(force_cpu=True)
+    embs = []
+    for start, end, _dur, _seg in selected:
+        s0 = max(0, int((start - pad_s) * sr))
+        s1 = min(len(mono), int((end + pad_s) * sr))
+        if s1 <= s0:
+            continue
+        try:
+            emb = embedder.embed_chunk(mono[s0:s1], sr=sr)
+        except Exception:
+            emb = None
+        if emb is not None:
+            embs.append(_l2_norm_np(emb))
+
+    if len(embs) < min_segments:
+        return {
+            "trained": False,
+            "reason": "embedding_failed_for_verified_audio",
+            "embedded_segments": len(embs),
+            "required_segments": min_segments,
+        }
+
+    centroid = _l2_norm_np(np.mean(np.stack(embs), axis=0))
+    validation = _existing_voiceprint_matches(centroid, agent_slug)
+
+    os.makedirs(_VOICEPRINT_DIR, exist_ok=True)
+    stamp = time.strftime("%Y%m%dT%H%M%S")
+    file_name = f"{agent_slug}_ui_corrected_{stamp}.npy"
+    vp_path = Path(_VOICEPRINT_DIR) / file_name
+    np.save(vp_path, centroid.astype(np.float32))
+
+    agents = _read_agents_json()
+    info = agents.setdefault(agent_slug, {})
+    info["agent_name"] = agent_name or info.get("agent_name") or agent_slug
+    vps = info.get("voiceprints")
+    if not isinstance(vps, list):
+        vps = []
+        legacy = info.get("voiceprint_path") or info.get("voiceprint")
+        if legacy:
+            vps.append({"path": legacy, "source": "legacy"})
+        info["voiceprints"] = vps
+    entry = {
+        "path": file_name,
+        "source": "ui_role_correction",
+        "embedding_model": embedder.model_name,
+        "embedding_dim": int(centroid.shape[0]),
+        "manual_verified": True,
+        "segment_role_voiceprint": True,
+        "source_result": str(result_path.parent.name),
+        "source_audio": str(audio_path),
+        "source_segment_count": len(selected),
+        "source_seconds": round(sum(row[2] for row in selected), 2),
+        "signature": signature,
+        "created_at_epoch": int(time.time()),
+        "validation": validation,
+    }
+    vps.append(entry)
+    info["n_voiceprints"] = len(vps)
+    info["embedding_model"] = embedder.model_name
+    info["embedding_dim"] = int(centroid.shape[0])
+    info["updated_at_epoch"] = int(time.time())
+
+    if os.path.isfile(_AGENTS_JSON):
+        backup = Path(_VOICEPRINT_DIR) / f"agents.backup.{agent_slug}.ui_role_correction.{stamp}.json"
+        shutil.copy2(_AGENTS_JSON, backup)
+    else:
+        backup = None
+    with open(_AGENTS_JSON, "w", encoding="utf-8") as f:
+        json.dump(agents, f, indent=2, ensure_ascii=False)
+
+    reports_dir = Path(_VOICEPRINT_DIR) / "manual_role_reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    report_path = reports_dir / f"{agent_slug}_{result_path.parent.name}_{stamp}.json"
+    report = {
+        "trained": True,
+        "agent_slug": agent_slug,
+        "agent_name": agent_name,
+        "voiceprint_file": file_name,
+        "embedding_model": embedder.model_name,
+        "embedding_dim": int(centroid.shape[0]),
+        "source_result": str(result_path.parent.name),
+        "source_audio": str(audio_path),
+        "corrected_agent_segments": len(selected),
+        "corrected_agent_seconds": round(sum(row[2] for row in selected), 2),
+        "embedded_segments": len(embs),
+        "signature": signature,
+        "agents_backup": str(backup) if backup else None,
+        "validation": validation,
+    }
+    with open(report_path, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2, ensure_ascii=False)
+
+    rdata["manual_role_training"] = {
+        "trained_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "signature": signature,
+        "voiceprint_file": file_name,
+        "report": str(report_path),
+        "corrected_agent_segments": len(selected),
+        "corrected_agent_seconds": round(sum(row[2] for row in selected), 2),
+        "embedding_model": embedder.model_name,
+        "embedding_dim": int(centroid.shape[0]),
+    }
+    return report
+
+
 def _auto_train_worker(agents_filter: list | None, days: int,
                        activate: bool, dry_run: bool,
                        audiofy_username: str = "",
@@ -3453,6 +3817,123 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         if not self._check_auth():
             return
         parsed = urlparse(self.path)
+
+        # POST /api/call/<id>/role-corrections
+        # Persist reviewer-confirmed AGENT/CUSTOMER labels and, when requested,
+        # append corrected agent audio as a verified voiceprint for future runs.
+        role_correction_path = parsed.path.rstrip("/")
+        if role_correction_path.startswith("/api/call/") and "/role-corrections" in role_correction_path:
+            call_id = unquote(
+                role_correction_path[len("/api/call/"):].rsplit("/role-corrections", 1)[0]
+            )
+            try:
+                n = int(self.headers.get("Content-Length", 0))
+                payload = json.loads(self.rfile.read(n).decode("utf-8") or "{}")
+            except Exception as exc:
+                self._json({"status": "error", "message": f"Invalid JSON: {exc}"}, 400)
+                return
+
+            updates = payload.get("updates") or []
+            if isinstance(updates, dict):
+                updates = [updates]
+            if not isinstance(updates, list) or not updates:
+                self._json({"status": "error", "message": "No role updates supplied"}, 400)
+                return
+
+            result_path = _result_path_for_call(call_id)
+            if not result_path.is_file():
+                self._json({"status": "error", "message": "Call not found"}, 404)
+                return
+
+            with _role_correction_lock:
+                try:
+                    with open(result_path, "r", encoding="utf-8") as f:
+                        rdata = json.load(f)
+                except Exception as exc:
+                    self._json({"status": "error", "message": f"Could not read result: {exc}"}, 500)
+                    return
+
+                agent_slug = (
+                    payload.get("agent_slug")
+                    or rdata.get("identified_agent_slug")
+                    or rdata.get("target_agent_slug")
+                    or _resolve_target_agent_slug(None, rdata.get("identified_agent") or "", call_id)
+                )
+                agents = _read_agents_json()
+                agent_info = agents.get(agent_slug, {}) if agent_slug else {}
+                agent_name = (
+                    payload.get("agent_name")
+                    or rdata.get("identified_agent")
+                    or agent_info.get("agent_name")
+                    or agent_info.get("name")
+                    or "Agent"
+                )
+                if not agent_slug:
+                    agent_slug = _resolve_target_agent_slug(agent_name, call_id)
+                if not agent_slug:
+                    self._json({"status": "error", "message": "No target agent is known for this call"}, 400)
+                    return
+
+                segments = rdata.get("segments")
+                if not isinstance(segments, list):
+                    self._json({"status": "error", "message": "Result has no segment list"}, 400)
+                    return
+
+                stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                applied = []
+                for update in updates:
+                    try:
+                        idx = int(update.get("index"))
+                        role = _normalise_manual_role(update.get("role"))
+                    except Exception as exc:
+                        self._json({"status": "error", "message": f"Bad update: {exc}"}, 400)
+                        return
+                    if idx < 0 or idx >= len(segments):
+                        continue
+                    _apply_manual_role(segments[idx], role, agent_name, stamp)
+                    _sync_transcription_role(rdata, idx, role, agent_name, stamp)
+                    applied.append({"index": idx, "role": role})
+
+                if not applied:
+                    self._json({"status": "error", "message": "No matching segment indexes"}, 400)
+                    return
+
+                rdata["identified_agent"] = agent_name
+                rdata["identified_agent_slug"] = agent_slug
+                rdata["target_agent_slug"] = rdata.get("target_agent_slug") or agent_slug
+                rdata["speaker_stats"] = _recompute_role_stats(segments)
+                rdata["manual_role_corrections_count"] = sum(
+                    1 for seg in segments if seg.get("manual_role_correction")
+                )
+                rdata["manual_role_corrections_updated_at"] = stamp
+
+                training_report = {"trained": False, "reason": "training_not_requested"}
+                if payload.get("train", True):
+                    try:
+                        training_report = _train_manual_role_voiceprint(
+                            result_path, rdata, agent_slug, agent_name
+                        )
+                    except Exception as exc:
+                        training_report = {"trained": False, "reason": f"training_failed: {exc}"}
+
+                try:
+                    with open(result_path, "w", encoding="utf-8") as f:
+                        json.dump(rdata, f, indent=2, ensure_ascii=False)
+                except Exception as exc:
+                    self._json({"status": "error", "message": f"Could not write result: {exc}"}, 500)
+                    return
+
+            self._json({
+                "status": "ok",
+                "updated": len(applied),
+                "applied": applied,
+                "identified_agent": rdata.get("identified_agent"),
+                "identified_agent_slug": rdata.get("identified_agent_slug"),
+                "speaker_stats": rdata.get("speaker_stats", {}),
+                "segments": rdata.get("segments", []),
+                "training_report": training_report,
+            })
+            return
 
         # POST /api/call/<id>/swap-roles — flip AGENT ↔ CUSTOMER in result.json
         if parsed.path.startswith("/api/call/") and parsed.path.endswith("/swap-roles"):
