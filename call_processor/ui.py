@@ -736,7 +736,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     # ── Load transcriber (shared for both channels) ───────────────────────────
     cuda_ok = _cuda_available()
     transcriber_device = "cuda" if cuda_ok else "cpu"
-    isolated_transcriber = whisper_model == "parakeet-tdt-0.6b-v3"
+    is_parakeet_model = whisper_model.startswith("parakeet-tdt-")
+    isolated_transcriber = is_parakeet_model
     transcriber = None
     if isolated_transcriber:
         _set_status(2, "Transcription", f"Loading {whisper_model} on {transcriber_device.upper()} (isolated)...")
@@ -1013,7 +1014,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     raw_asr_env = os.getenv("SST_PARAKEET_RAW_ASR", "1")
     raw_asr_enabled = str(raw_asr_env).strip().lower() not in {"0", "false", "no", "off"}
     raw_asr_min_s = float(os.getenv("SST_RAW_ASR_MIN_SECONDS", "600") or "600")
-    if whisper_model == "parakeet-tdt-0.6b-v3" and raw_asr_enabled and dur_s >= raw_asr_min_s:
+    if is_parakeet_model and raw_asr_enabled and dur_s >= raw_asr_min_s:
         asr_wav = os.path.join(norm_dir, f"asr_raw_{base}.wav")
         asr_audio_mode = "minimal_resample"
         if not os.path.exists(asr_wav):
@@ -1908,8 +1909,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         This remains voiceprint-only. The transcript text is never inspected;
         segment timestamps are used only to average target-speaker VAD windows.
         """
-        role_engine = (os.getenv("SST_ROLE_ENGINE", "sortformer_campp").strip().lower()
-                       or "sortformer_campp")
+        role_engine = (os.getenv("SST_ROLE_ENGINE", "tsvad").strip().lower()
+                       or "tsvad")
         env_enabled = os.getenv("SST_TARGET_SPEAKER_VAD", "").strip().lower()
         enabled = role_engine in {"tsvad", "target_speaker_vad", "sortformer_campp_tsvad"} or env_enabled in {
             "1", "true", "yes", "on",
@@ -2540,7 +2541,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "agent_role_voiceprint_repair": locals().get("agent_role_voiceprint_repair", {}),
         "agent_role_segment_voiceprint_repair": locals().get("agent_role_segment_voiceprint_repair", {}),
         "target_speaker_vad_role_refinement": locals().get("target_speaker_vad_role_refinement", {}),
-        "role_engine": os.getenv("SST_ROLE_ENGINE", "sortformer_campp").strip().lower() or "sortformer_campp",
+        "role_engine": os.getenv("SST_ROLE_ENGINE", "tsvad").strip().lower() or "tsvad",
         "agent_role_text_repair": locals().get("agent_role_text_repair", {}),
         "customer_role_text_repair": locals().get("customer_role_text_repair", {}),
         "note": (
@@ -2642,7 +2643,7 @@ def _run_pipeline(
             # let SST_DEEP_ENHANCE override it.
             pipeline_audio = paths["ffmpeg"]   # fallback
             skip_dfn_for_parakeet = (
-                whisper_model == "parakeet-tdt-0.6b-v3"
+                whisper_model.startswith("parakeet-tdt-")
                 and os.getenv("SST_PARAKEET_SKIP_DFN", "1").strip().lower()
                 not in {"0", "false", "no", "off"}
             )
@@ -2671,7 +2672,7 @@ def _run_pipeline(
             # words from quiet speakers. Silence removal therefore only
             # affects the BROWSER PLAYBACK file, not the transcription input.
             prefer_original_parakeet = (
-                whisper_model == "parakeet-tdt-0.6b-v3"
+                whisper_model.startswith("parakeet-tdt-")
                 and os.getenv("SST_PARAKEET_ORIGINAL_SOURCE", "1").strip().lower()
                 not in {"0", "false", "no", "off"}
             )

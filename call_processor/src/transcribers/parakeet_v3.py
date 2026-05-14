@@ -1,4 +1,4 @@
-"""NVIDIA Parakeet TDT v3 — fastest non-Whisper, native word timestamps."""
+"""NVIDIA Parakeet TDT — local NeMo ASR with native timestamps."""
 from __future__ import annotations
 import gc
 import json
@@ -11,7 +11,10 @@ import time
 from typing import List, Dict, Any, Optional
 from .base import BaseTranscriber
 
-MODEL_ID = "nvidia/parakeet-tdt-0.6b-v3"
+MODEL_IDS = {
+    "parakeet-tdt-0.6b-v2": "nvidia/parakeet-tdt-0.6b-v2",
+    "parakeet-tdt-0.6b-v3": "nvidia/parakeet-tdt-0.6b-v3",
+}
 # Parakeet TDT trained on ≤60 s; use 55 s chunks to leave a small headroom
 CHUNK_S = 55
 
@@ -45,6 +48,7 @@ def _silence_nemo() -> None:
 
 class ParakeetV3Transcriber(BaseTranscriber):
     name = "parakeet-tdt-0.6b-v3"
+    model_id = MODEL_IDS[name]
     supports_word_timestamps = True
 
     def load(self) -> None:
@@ -87,18 +91,18 @@ class ParakeetV3Transcriber(BaseTranscriber):
         if not _use_cuda:
             _torch.cuda.is_available = lambda: False
         try:
-            print(f"  [Parakeet] Downloading / loading {MODEL_ID} ...", flush=True)
+            print(f"  [Parakeet] Downloading / loading {self.model_id} ...", flush=True)
             # ASRModel.from_pretrained auto-selects the right subclass
-            self.model = nemo_asr.models.ASRModel.from_pretrained(model_name=MODEL_ID)
+            self.model = nemo_asr.models.ASRModel.from_pretrained(model_name=self.model_id)
         except Exception as e1:
             print(f"  [Parakeet] ASRModel failed ({e1}) — trying EncDecRNNTBPEModel", flush=True)
             try:
                 self.model = nemo_asr.models.EncDecRNNTBPEModel.from_pretrained(
-                    model_name=MODEL_ID
+                    model_name=self.model_id
                 )
             except Exception as e2:
                 raise RuntimeError(
-                    f"Parakeet TDT v3 load failed.\n  ASRModel: {e1}\n  RNNT: {e2}"
+                    f"{self.name} load failed.\n  ASRModel: {e1}\n  RNNT: {e2}"
                 )
         finally:
             _torch.cuda.is_available = _orig_avail
@@ -118,6 +122,7 @@ class ParakeetV3Transcriber(BaseTranscriber):
             return sf.info(audio_path).duration
         except Exception:
             pass
+
         # ffprobe fallback (needs ffmpeg in PATH — _ENV has it)
         try:
             r = subprocess.run(
@@ -282,3 +287,8 @@ class ParakeetV3Transcriber(BaseTranscriber):
                 torch.cuda.ipc_collect()
         except Exception:
             pass
+
+
+class ParakeetV2Transcriber(ParakeetV3Transcriber):
+    name = "parakeet-tdt-0.6b-v2"
+    model_id = MODEL_IDS[name]

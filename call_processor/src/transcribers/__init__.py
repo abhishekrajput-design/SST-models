@@ -3,7 +3,7 @@ from __future__ import annotations
 from .base import BaseTranscriber
 from .whisper_turbo import WhisperTurboTranscriber
 from .cohere       import CohereTranscriber
-from .parakeet_v3  import ParakeetV3Transcriber
+from .parakeet_v3  import ParakeetV2Transcriber, ParakeetV3Transcriber
 from .deepgram_asr import DeepgramTranscriber
 
 # Optional / experimental models — import failures must not break the registry
@@ -49,6 +49,7 @@ TRANSCRIBERS = {
     "distil-whisper-large-v3.5":  WhisperTurboTranscriber,  # friendly alias
     # Non-Whisper local backends
     "cohere-transcribe-03-2026": CohereTranscriber,
+    "parakeet-tdt-0.6b-v2":      ParakeetV2Transcriber,
     "parakeet-tdt-0.6b-v3":      ParakeetV3Transcriber,
     **({"canary-qwen-2.5b":  CanaryQwenTranscriber}  if CanaryQwenTranscriber  else {}),
     **({"qwen3-asr-1.7b":   Qwen3AsrTranscriber}   if Qwen3AsrTranscriber   else {}),
@@ -90,6 +91,7 @@ __all__ = [
     "get_transcriber",
     "WhisperTurboTranscriber",
     "CohereTranscriber",
+    "ParakeetV2Transcriber",
     "ParakeetV3Transcriber",
     "CanaryQwenTranscriber",
     "GroqWhisperTranscriber",
