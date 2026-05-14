@@ -268,6 +268,7 @@ def _extract_marked_json(stdout: str) -> str:
 def _transcribe_isolated(audio_path: str, model_name: str, device: str, language: str, timeout_s: int) -> list:
     """Run a transcriber in a child process so native CUDA aborts do not kill the UI."""
     root = os.path.dirname(os.path.abspath(__file__))
+    audio_path = os.path.abspath(audio_path)
     code = f"""
 import gc, json, os, sys
 root = {root!r}
@@ -777,6 +778,223 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         transcriber.load()
         return transcriber.transcribe(wav_path, language="en") or []
 
+    def _split_asr_segments_on_word_slices(
+        text_segments: list,
+        model_name: str,
+        wav_path: str | None = None,
+    ) -> tuple[list, dict]:
+        """Split long Whisper segments on word-time pauses and sentence boundaries."""
+        default_enabled = "0"
+        enabled = os.getenv("SST_WORD_SLICE_SPLIT", default_enabled).strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return text_segments, {"enabled": False, "reason": "disabled"}
+
+        min_gap_s = float(os.getenv("SST_WORD_SLICE_MIN_GAP_S", "0.16") or "0.16")
+        min_words = max(1, int(os.getenv("SST_WORD_SLICE_MIN_WORDS", "2") or "2"))
+        max_words = max(min_words * 2 + 1, int(os.getenv("SST_WORD_SLICE_MAX_WORDS", "12") or "12"))
+        min_chunk_s = float(os.getenv("SST_WORD_SLICE_MIN_SECONDS", "0.55") or "0.55")
+        pause_window_s = float(os.getenv("SST_WORD_SLICE_AUDIO_PAUSE_WINDOW_S", "0.18") or "0.18")
+        pause_ratio = float(os.getenv("SST_WORD_SLICE_AUDIO_PAUSE_RATIO", "0.80") or "0.80")
+        pause_floor = float(os.getenv("SST_WORD_SLICE_AUDIO_PAUSE_FLOOR", "0.012") or "0.012")
+        audio = None
+        sr = None
+        if wav_path and os.path.isfile(wav_path):
+            try:
+                import numpy as _np
+                import soundfile as _sf
+                audio, sr = _sf.read(wav_path, dtype="float32")
+                if getattr(audio, "ndim", 1) > 1:
+                    audio = _np.mean(audio, axis=1)
+            except Exception:
+                audio = None
+                sr = None
+
+        def _word_text(word: dict) -> str:
+            return str(word.get("word") or word.get("text") or "").strip()
+
+        def _join_words(words: list[dict]) -> str:
+            text = " ".join(_word_text(w) for w in words if _word_text(w)).strip()
+            text = re.sub(r"\s+([.,!?;:%])", r"\1", text)
+            text = re.sub(r"([$£€])\s+", r"\1", text)
+            return re.sub(r"\s+", " ", text).strip()
+
+        def _usable_words(seg: dict) -> list[dict]:
+            out = []
+            for raw in seg.get("words") or []:
+                if not isinstance(raw, dict):
+                    continue
+                token = _word_text(raw)
+                if not token:
+                    continue
+                try:
+                    start = float(raw.get("start"))
+                    end = float(raw.get("end"))
+                except (TypeError, ValueError):
+                    continue
+                if end <= start:
+                    continue
+                row = dict(raw)
+                row["word"] = token
+                row["start"] = start
+                row["end"] = end
+                out.append(row)
+            return out
+
+        def _valid_cut(words: list[dict], cut_after: int) -> bool:
+            left = words[: cut_after + 1]
+            right = words[cut_after + 1 :]
+            if len(left) < min_words or len(right) < min_words:
+                return False
+            left_s = float(left[-1]["end"]) - float(left[0]["start"])
+            right_s = float(right[-1]["end"]) - float(right[0]["start"])
+            return left_s >= min_chunk_s and right_s >= min_chunk_s
+
+        def _rms(start_s: float, end_s: float) -> float | None:
+            if audio is None or not sr:
+                return None
+            start = max(0, int(start_s * sr))
+            end = min(len(audio), int(end_s * sr))
+            if end <= start:
+                return None
+            try:
+                import numpy as _np
+                chunk = audio[start:end]
+                return float(_np.sqrt(_np.mean(_np.square(chunk))))
+            except Exception:
+                return None
+
+        def _has_audio_pause(words: list[dict], cut_after: int) -> bool:
+            if audio is None or not sr:
+                return False
+            center = (float(words[cut_after]["end"]) + float(words[cut_after + 1]["start"])) / 2.0
+            local = _rms(center - pause_window_s / 2.0, center + pause_window_s / 2.0)
+            segment = _rms(float(words[0]["start"]), float(words[-1]["end"]))
+            if local is None or segment is None or segment <= 0:
+                return False
+            return local <= max(pause_floor, segment * pause_ratio)
+
+        def _boundary_reason(words: list[dict], cut_after: int) -> str | None:
+            if not _valid_cut(words, cut_after):
+                return None
+            token = _word_text(words[cut_after])
+            if re.search(r"[.!?][\"')\]]*$", token):
+                return "sentence"
+            gap = float(words[cut_after + 1]["start"]) - float(words[cut_after]["end"])
+            if gap >= min_gap_s:
+                return "pause"
+            if _has_audio_pause(words, cut_after):
+                return "audio_pause"
+            return None
+
+        def _enforce_max_words(chunks: list[tuple[int, int, str]], words: list[dict]) -> list[tuple[int, int, str]]:
+            out = []
+            for start, end, reason in chunks:
+                pending = [(start, end, reason)]
+                while pending:
+                    c_start, c_end, c_reason = pending.pop(0)
+                    count = c_end - c_start
+                    if count <= max_words:
+                        out.append((c_start, c_end, c_reason))
+                        continue
+                    sub = words[c_start:c_end]
+                    target = c_start + max(min_words, count // 2) - 1
+                    candidates = []
+                    for cut_after in range(c_start + min_words - 1, c_end - min_words):
+                        token = _word_text(words[cut_after])
+                        gap = float(words[cut_after + 1]["start"]) - float(words[cut_after]["end"])
+                        score = -abs(cut_after - target)
+                        if gap >= min_gap_s:
+                            score += 100 + gap
+                            cut_reason = "pause"
+                        elif _has_audio_pause(words[c_start:c_end], cut_after - c_start):
+                            score += 80
+                            cut_reason = "audio_pause"
+                        elif re.search(r"[,;:][\"')\]]*$", token):
+                            score += 40
+                            cut_reason = "clause"
+                        else:
+                            continue
+                        candidates.append((score, cut_after, cut_reason))
+                    if not candidates:
+                        out.append((c_start, c_end, c_reason))
+                        continue
+                    _score, cut_after, cut_reason = max(candidates, key=lambda item: item[0])
+                    pending.insert(0, (cut_after + 1, c_end, c_reason))
+                    pending.insert(0, (c_start, cut_after + 1, cut_reason))
+            return out
+
+        split_segments = []
+        original_count = len(text_segments)
+        split_count = 0
+        skipped_no_words = 0
+        for seg in text_segments:
+            words = _usable_words(seg)
+            if len(words) < (min_words * 2):
+                if not words:
+                    skipped_no_words += 1
+                split_segments.append(seg)
+                continue
+
+            chunks: list[tuple[int, int, str]] = []
+            start_idx = 0
+            reason = "original"
+            for idx in range(0, len(words) - 1):
+                boundary = _boundary_reason(words[start_idx:], idx - start_idx)
+                if boundary:
+                    chunks.append((start_idx, idx + 1, boundary))
+                    start_idx = idx + 1
+                    reason = boundary
+            chunks.append((start_idx, len(words), reason))
+            chunks = _enforce_max_words(chunks, words)
+
+            if len(chunks) <= 1:
+                split_segments.append(seg)
+                continue
+
+            parent_start = float(seg.get("start", words[0]["start"]))
+            parent_end = float(seg.get("end", words[-1]["end"]))
+            parent_text = str(seg.get("text") or "")
+            for slice_idx, (start, end, slice_reason) in enumerate(chunks):
+                chunk_words = words[start:end]
+                text = _join_words(chunk_words)
+                if not text:
+                    continue
+                child = dict(seg)
+                child["start"] = round(float(chunk_words[0]["start"]), 2)
+                child["end"] = round(float(chunk_words[-1]["end"]), 2)
+                child["text"] = text
+                child["words"] = [
+                    {
+                        **w,
+                        "start": round(float(w["start"]), 3),
+                        "end": round(float(w["end"]), 3),
+                    }
+                    for w in chunk_words
+                ]
+                child["slice_parent_start"] = round(parent_start, 2)
+                child["slice_parent_end"] = round(parent_end, 2)
+                child["slice_parent_text"] = parent_text
+                child["slice_index"] = slice_idx
+                child["slice_count"] = len(chunks)
+                child["slice_split_reason"] = slice_reason
+                split_segments.append(child)
+            split_count += len(chunks) - 1
+
+        meta = {
+            "enabled": True,
+            "original_segments": original_count,
+            "final_segments": len(split_segments),
+            "added_segments": split_count,
+            "skipped_no_word_timestamps": skipped_no_words,
+            "min_gap_s": min_gap_s,
+            "max_words": max_words,
+            "min_words": min_words,
+            "min_chunk_s": min_chunk_s,
+            "audio_pause_window_s": pause_window_s,
+            "audio_pause_ratio": pause_ratio,
+        }
+        return sorted(split_segments, key=lambda s: (float(s.get("start", 0.0)), float(s.get("end", 0.0)))), meta
+
     t0 = time.time()
     diarization_applied = False
     speaker_stats: dict   = {}
@@ -822,6 +1040,14 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         asr_wav,
         "No transcript segments returned",
     )
+    segments, asr_slice_split = _split_asr_segments_on_word_slices(segments, whisper_model, asr_wav)
+    if asr_slice_split.get("added_segments"):
+        print(
+            f"[UI] Word-slice split: {asr_slice_split['original_segments']} -> "
+            f"{asr_slice_split['final_segments']} segment(s) "
+            f"(+{asr_slice_split['added_segments']})",
+            flush=True,
+        )
     _check_cancelled()
 
     agent_time = customer_time = 0.0
@@ -937,6 +1163,210 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             row["speech_only_seconds"] = round(float(row["speech_only_seconds"]), 2)
         return merged, coverage
 
+    def _split_text_segments_on_speaker_turns(
+        text_segments: list,
+        speaker_segments: list,
+    ) -> tuple[list, dict]:
+        """Split ASR rows where diarization shows a real speaker turn inside.
+
+        This uses only timestamps and diarized speaker intervals. Text is split
+        proportionally so the UI can show one row per acoustic speaker change.
+        """
+        enabled = os.getenv("SST_SPEAKER_TURN_TEXT_SPLIT", "1").strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return text_segments, {"enabled": False, "reason": "disabled"}
+        if not text_segments or not speaker_segments:
+            return text_segments, {"enabled": True, "reason": "missing_inputs", "added_segments": 0}
+
+        min_parent_s = float(os.getenv("SST_SPEAKER_TURN_SPLIT_MIN_PARENT_SECONDS", "1.00") or "1.00")
+        min_child_s = float(os.getenv("SST_SPEAKER_TURN_SPLIT_MIN_CHILD_SECONDS", "0.45") or "0.45")
+        min_child_ratio = float(os.getenv("SST_SPEAKER_TURN_SPLIT_MIN_CHILD_RATIO", "0.12") or "0.12")
+        min_coverage_ratio = float(os.getenv("SST_SPEAKER_TURN_SPLIT_MIN_COVERAGE_RATIO", "0.55") or "0.55")
+        max_gap_s = float(os.getenv("SST_SPEAKER_TURN_SPLIT_MERGE_GAP", "0.08") or "0.08")
+        max_parts = max(2, int(os.getenv("SST_SPEAKER_TURN_SPLIT_MAX_PARTS", "5") or "5"))
+        min_words_per_child = max(1, int(os.getenv("SST_SPEAKER_TURN_SPLIT_MIN_WORDS", "2") or "2"))
+
+        def _word_slices(text: str, weights: list[float]) -> list[str] | None:
+            words = str(text or "").split()
+            if len(words) < len(weights) * min_words_per_child:
+                return None
+            total = sum(max(w, 0.001) for w in weights)
+            cuts = [0]
+            running = 0.0
+            for weight in weights[:-1]:
+                running += max(weight, 0.001)
+                cuts.append(round((running / total) * len(words)))
+            cuts.append(len(words))
+            chunks = []
+            for idx in range(len(cuts) - 1):
+                start = int(cuts[idx])
+                end = int(cuts[idx + 1])
+                min_start = idx * min_words_per_child
+                max_end = len(words) - ((len(cuts) - 2 - idx) * min_words_per_child)
+                start = max(start, min_start)
+                end = min(max(end, start + min_words_per_child), max_end)
+                chunks.append(" ".join(words[start:end]).strip())
+            if any(not chunk for chunk in chunks):
+                return None
+            return chunks
+
+        def _merge_parts(parts: list[dict]) -> list[dict]:
+            if not parts:
+                return []
+            merged = [dict(parts[0])]
+            for part in parts[1:]:
+                cur = merged[-1]
+                if (
+                    part["speaker"] == cur["speaker"]
+                    and part["start"] - cur["end"] <= max_gap_s
+                ):
+                    cur["end"] = max(cur["end"], part["end"])
+                    cur["duration"] = cur["end"] - cur["start"]
+                else:
+                    merged.append(dict(part))
+            return merged
+
+        out = []
+        original_count = len(text_segments)
+        split_parents = 0
+        added_segments = 0
+        skipped_short_text = 0
+        skipped_low_coverage = 0
+
+        for seg in text_segments:
+            if seg.get("speech_only"):
+                out.append(seg)
+                continue
+            text = str(seg.get("text") or "").strip()
+            start_s = float(seg.get("start", 0.0) or 0.0)
+            end_s = float(seg.get("end", start_s) or start_s)
+            dur_s = max(end_s - start_s, 0.0)
+            if dur_s < min_parent_s or not text:
+                out.append(seg)
+                continue
+
+            base_speaker = str(seg.get("speaker") or "")
+            overlaps = []
+            boundaries = {start_s, end_s}
+            for spk_seg in speaker_segments:
+                ss_start = float(spk_seg.get("start", 0.0) or 0.0)
+                ss_end = float(spk_seg.get("end", ss_start) or ss_start)
+                overlap_start = max(start_s, ss_start)
+                overlap_end = min(end_s, ss_end)
+                overlap = max(overlap_end - overlap_start, 0.0)
+                if overlap <= 0:
+                    continue
+                boundaries.add(overlap_start)
+                boundaries.add(overlap_end)
+                overlaps.append({
+                    "start": overlap_start,
+                    "end": overlap_end,
+                    "duration": overlap,
+                    "speaker": spk_seg.get("speaker") or "SPEAKER_99",
+                    "identified_speaker": spk_seg.get("identified_speaker") or "UNKNOWN",
+                    "display_speaker": spk_seg.get("display_speaker") or "UNKNOWN",
+                    "agent_name": spk_seg.get("agent_name"),
+                    "agent_slug": spk_seg.get("agent_slug"),
+                })
+
+            timeline_parts = []
+            points = sorted(boundaries)
+            base_prefer_ratio = float(os.getenv("SST_SPEAKER_TURN_SPLIT_BASE_PREFER_RATIO", "0.70") or "0.70")
+            for left, right in zip(points, points[1:]):
+                interval = max(right - left, 0.0)
+                if interval <= 0.04:
+                    continue
+                candidates = []
+                for item in overlaps:
+                    covered = max(0.0, min(right, item["end"]) - max(left, item["start"]))
+                    if covered > 0:
+                        candidates.append((covered, item))
+                if not candidates:
+                    continue
+                best_cover, best_item = max(candidates, key=lambda x: x[0])
+                if base_speaker:
+                    base_candidates = [
+                        (covered, item)
+                        for covered, item in candidates
+                        if str(item.get("speaker") or "") == base_speaker
+                    ]
+                    if base_candidates:
+                        base_cover, base_item = max(base_candidates, key=lambda x: x[0])
+                        if base_cover >= best_cover * base_prefer_ratio:
+                            best_item = base_item
+                timeline_parts.append({
+                    **best_item,
+                    "start": left,
+                    "end": right,
+                    "duration": interval,
+                })
+
+            parts = _merge_parts(sorted(timeline_parts, key=lambda p: (p["start"], p["end"])))
+            parts = [
+                p for p in parts
+                if p["duration"] >= min_child_s and (p["duration"] / dur_s) >= min_child_ratio
+            ]
+            if len({p["speaker"] for p in parts}) < 2:
+                out.append(seg)
+                continue
+            if len(parts) > max_parts:
+                parts = sorted(parts, key=lambda p: p["duration"], reverse=True)[:max_parts]
+                parts = sorted(parts, key=lambda p: (p["start"], p["end"]))
+            coverage = sum(p["duration"] for p in parts)
+            if (coverage / dur_s) < min_coverage_ratio:
+                skipped_low_coverage += 1
+                out.append(seg)
+                continue
+
+            chunks = _word_slices(text, [p["duration"] for p in parts])
+            if not chunks:
+                skipped_short_text += 1
+                out.append(seg)
+                continue
+
+            for idx, (part, chunk_text) in enumerate(zip(parts, chunks)):
+                child = dict(seg)
+                child["start"] = round(float(part["start"]), 3)
+                child["end"] = round(float(part["end"]), 3)
+                child["text"] = chunk_text
+                child["speaker"] = part["speaker"]
+                child["identified_speaker"] = part["identified_speaker"]
+                child["display_speaker"] = part["display_speaker"]
+                if part.get("agent_name"):
+                    child["agent_name"] = part.get("agent_name")
+                else:
+                    child.pop("agent_name", None)
+                if part.get("agent_slug"):
+                    child["agent_slug"] = part.get("agent_slug")
+                else:
+                    child.pop("agent_slug", None)
+                child["speaker_turn_split"] = True
+                child["speaker_turn_parent_start"] = round(start_s, 3)
+                child["speaker_turn_parent_end"] = round(end_s, 3)
+                child["speaker_turn_index"] = idx
+                child["speaker_turn_count"] = len(parts)
+                child["speaker_turn_source"] = "diarization_dominant_speaker_timeline"
+                out.append(child)
+
+            split_parents += 1
+            added_segments += len(parts) - 1
+
+        out.sort(key=lambda s: (float(s.get("start", 0.0)), float(s.get("end", 0.0))))
+        return out, {
+            "enabled": True,
+            "source": "diarization_timestamp_overlap",
+            "original_segments": original_count,
+            "final_segments": len(out),
+            "split_parent_segments": split_parents,
+            "added_segments": added_segments,
+            "min_parent_seconds": min_parent_s,
+            "min_child_seconds": min_child_s,
+            "min_child_ratio": min_child_ratio,
+            "min_coverage_ratio": min_coverage_ratio,
+            "skipped_short_text": skipped_short_text,
+            "skipped_low_coverage": skipped_low_coverage,
+        }
+
     def _smooth_short_unknown_segments(text_segments: list) -> int:
         """Assign tiny unknown snippets to a close known neighbor."""
         max_dur_s = float(os.getenv("SST_UNKNOWN_SMOOTH_MAX_SECONDS", "3.5") or "3.5")
@@ -1016,371 +1446,41 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         agent_slug: str | None = None,
         cluster_match_table: dict | None = None,
     ) -> dict:
-        """Promote clear advisor-side DS speakers that voice matching split off.
-
-        Desk recordings can split one advisor into multiple diarization clusters.
-        Voiceprints still pick the strongest cluster only, so long sales
-        explanation clusters can appear as Customer. This repair is intentionally
-        speaker-level and conservative; question-heavy speakers stay customer.
-        """
-        enabled = os.getenv("SST_AGENT_TEXT_ROLE_REPAIR", "1").strip().lower()
-        if enabled in {"0", "false", "no", "off"}:
-            return {"enabled": False, "promoted_speakers": [], "promoted_segments": 0}
-        if not agent_name or agent_name in {"None", "Unknown Agent"}:
-            return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "no_identified_agent"}
-        if audio_duration_s < float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_AUDIO_S", "300") or "300"):
-            return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "short_audio"}
-        if speaker_count < int(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SPEAKERS", "3") or "3"):
-            return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "too_few_speakers"}
-
-        strong_agent_cues = {
-            # ── Finance / payment plan talk ─────────────────────────────────
-            "option one": 2.5, "option two": 2.5,
-            "you can pay": 2.5, "you can split": 2.5,
-            "split any plan": 2.5, "split over": 2.0,
-            "covers you for": 2.5,
-            "monthly payments": 2.5,
-            "over ten monthly payments": 2.5,
-            "pay for it monthly": 2.5,
-            "you can pay for it monthly": 2.5,
-            "using this example": 2.0, "same example": 1.5,
-            "seven pounds a month": 2.5,
-            "five years warranty": 2.5, "five year warranty": 2.5,
-            "60 month warranty": 2.5, "sixty month warranty": 2.5,
-            "60 month term": 2.0, "sixty month term": 2.0,
-            "60 months": 1.5, "sixty months": 1.5,
-            "three year service plan": 2.0, "three-year service plan": 2.0,
-            "3 year service plan": 2.0, "five year service plan": 2.0,
-            "i'll tell you exactly": 3.0, "ill tell you exactly": 3.0,
-            "this is based on": 2.0, "so this is based on": 2.0,
-            "cooling off period": 2.5, "pay zero interest": 2.5,
-            "balloon payment": 2.0, "close brothers": 2.0,
-            "finance company": 2.0, "payment for the warranty": 2.0,
-            "won't affect the finance": 2.5, "wont affect the finance": 2.5,
-            # ── Car Planet brand / closing ─────────────────────────────────
-            "i spoke to my manager": 3.0,
-            "i'm speaking to my manager": 3.0, "im speaking to my manager": 3.0,
-            "speaking to my manager": 3.0, "speak to my manager": 3.0,
-            "calling you from car planet": 3.0,
-            "from car planet": 2.5,
-            "sold you the car": 2.0,
-            "how many years warranty": 2.5,
-            # ── Warranty / coverage description (agent-side explanation) ───
-            "warranty covers everything": 3.0,
-            "warranty covers": 2.5, "warranty cover": 2.5,
-            "covers everything mechanical": 3.0,
-            "covers everything mechanical and electrical": 3.5,
-            "engine gearbox": 2.5, "engine and gearbox": 2.5,
-            "engine gearbox suspension": 3.0,
-            "breakdown cover": 2.5, "break down cover": 2.5,
-            "peace of mind": 2.5,
-            "replacement vehicle": 2.5, "courtesy car": 2.5,
-            "courtesy vehicle": 2.5, "hire car": 2.0,
-            "make sure when you're": 1.5,
-            "to keep it valid": 2.0, "stays valid": 2.0,
-            "keep it valid": 1.5,
-            "the only requirement": 2.0,
-            "warranty has been refunded": 3.0,
-            "direct refund": 2.5, "refund usually takes": 2.0,
-            "fresh mot": 2.0, "freshly serviced": 2.0,
-            "service history": 1.0, "full service history": 2.0,
-            "send you over the service history": 2.5,
-            "take the car away": 2.5,
-            "drive away the vehicle": 2.5, "drive away today": 2.5,
-            # ── Dealer-side conversational fillers (sales mode) ────────────
-            "bear with me": 2.0, "leave a note": 2.0,
-            "sort this out": 2.0, "sort that out for you": 2.5,
-            "give me a second": 2.0, "let me confirm": 2.0,
-            "let me check": 1.5, "one second": 1.0,
-            "let me show you": 2.0, "i'll show you": 2.0,
-            "you should receive an email": 2.5,
-            "confirm your email": 2.0,
-            "let's use": 1.5, "so basically": 1.5,
-            # ── Pitch / inventory / car description (dealer-side) ──────────
-            "we've got a total of": 2.5, "we have a total of": 2.5,
-            "we've got": 1.5, "we have got": 1.5,
-            "we've had": 1.0,
-            "we'll share": 1.5, "we share": 1.0,
-            "we sell": 1.5,
-            "i'd recommend": 2.0, "id recommend": 2.0,
-            "this one's a": 1.5, "this one is a": 1.5,
-            "this car comes with": 2.0,
-            "you'll get sort of the same": 1.5,
-            "you'll get": 1.0,
-            "volkswagen group": 2.0, "audi group": 2.0,
-            "part of the": 1.0,
-            "estates": 1.5, "hatchbacks": 1.5, "saloons": 1.5,
-            "trim levels": 2.0,
-            "adaptive cruise control": 1.5,
-            "lane assist": 1.5,
-            "low mileage": 1.5,
-            "great condition": 1.5,
-            # Desk coaching / training sessions. These often contain advisor
-            # process language instead of direct phone-call sales wording.
-            "present the product correctly": 3.0,
-            "product correctly": 2.5,
-            "sell the product": 2.0,
-            "like the product": 1.5,
-            "protective products": 2.0,
-            "rank those products": 2.0,
-            "buy products": 2.5,
-            "buy a car without warranty": 2.5,
-            "not every single customer": 2.0,
-            "what your customers actually say": 2.5,
-            "listen to the customer": 2.5,
-            "listening to what your customers": 2.5,
-            "when i'm with customers": 2.5,
-            "when im with customers": 2.5,
-            "customers that come from": 2.0,
-            "customer will come back": 2.0,
-            "the customer will come back": 2.0,
-            "customer won't believe": 2.0,
-            "customer wont believe": 2.0,
-            "customer options": 2.0,
-            "giving the customer options": 2.0,
-            "tailored packages for the customer": 2.5,
-            "tailoring it": 1.5,
-            "tailored it towards yourself": 1.5,
-            "customer is just looking": 2.0,
-            "customer's just looking": 2.0,
-            "salesman": 1.5,
-            "force rep": 1.5,
-            "process": 1.0,
-            "format": 1.0,
-            "fill up the sheet": 2.0,
-            "different numbers": 1.5,
-            "personalise it for yourself": 2.0,
-            "personalize it for yourself": 2.0,
-            "what works perfectly": 2.0,
-            "keep trying": 1.5,
-            "worked with mechanics": 2.0,
-            "mechanical technician": 1.5,
-            "electrical technician": 1.5,
-            "big motoring world": 2.5,
-            "big motoring road": 2.0,
-            "big motoring": 2.0,
-            "massive discount": 2.0,
-            "tax the vehicle": 2.5,
-            "handover team": 2.5,
-            "assign the logbook": 2.5,
-            "come to collect the car": 2.0,
-            "collect the car": 2.0,
-            # ── Booking / appointment (dealer-side) ────────────────────────
-            "bring it over": 1.5, "bring it in": 1.5,
-            "do you wanna bring it": 2.0, "do you want to bring it": 2.0,
-            "we close at": 2.0, "we open at": 2.0,
-            "what day works": 2.0,
-            "book you in": 2.5, "get you booked": 2.5,
-            "got an appointment": 1.5,
-        }
-        desk_process_cues = {
-            "present the product correctly",
-            "product correctly",
-            "sell the product",
-            "like the product",
-            "protective products",
-            "rank those products",
-            "buy products",
-            "buy a car without warranty",
-            "not every single customer",
-            "what your customers actually say",
-            "listen to the customer",
-            "listening to what your customers",
-            "when i'm with customers",
-            "when im with customers",
-            "customers that come from",
-            "customer will come back",
-            "the customer will come back",
-            "customer won't believe",
-            "customer wont believe",
-            "customer options",
-            "giving the customer options",
-            "tailored packages for the customer",
-            "tailoring it",
-            "tailored it towards yourself",
-            "customer is just looking",
-            "customer's just looking",
-            "salesman",
-            "force rep",
-            "process",
-            "format",
-            "fill up the sheet",
-            "different numbers",
-            "personalise it for yourself",
-            "personalize it for yourself",
-            "what works perfectly",
-            "keep trying",
-            "worked with mechanics",
-            "mechanical technician",
-            "electrical technician",
-        }
-        weak_agent_cues = {
-            "warranty": 0.5,
-            "service plan": 0.5,
-            "warranty plan": 0.5,
-            "service package": 0.5,
-            "warranty package": 0.5,
-            "finance": 0.5,
-            "deposit": 0.5,
-            "monthly payment": 0.5,
-            "service history": 0.5,
-            "mot": 0.5,
-            "lender": 0.5,
-            "lenders": 0.5,
-            "customers": 0.25,
-            "products": 0.25,
-            "sheet": 0.25,
-            "tax it": 0.5,
-            "logbook": 0.5,
-            "zopa": 0.5,
-        }
-        customer_cues = {
-            "can i": 2.5,
-            "could i": 2.5,
-            "would i": 2.5,
-            "do i": 2.0,
-            "how would": 2.5,
-            "what if": 2.0,
-            "if i": 2.0,
-            "i wanted": 2.5,
-            "i just": 1.5,
-            "i don't": 1.5,
-            "i dont": 1.5,
-            "i mean": 1.5,
-            "about if": 2.0,
-            "can you": 2.0,
-            "could you": 2.0,
-            "my car": 1.5,
-        }
-
-        def _norm(text: str) -> str:
-            return " ".join(re.sub(r"[^a-z0-9']+", " ", text.lower()).split())
-
-        speakers: dict[str, dict] = {}
-        for seg in text_segments:
-            if seg.get("speech_only"):
-                continue
-            if seg.get("identified_speaker") != "CUSTOMER":
-                continue
-            spk = str(seg.get("speaker") or "")
-            if not spk or spk == "SPEAKER_99":
-                continue
-            text = str(seg.get("text") or "").strip()
-            if not text:
-                continue
-            bucket = speakers.setdefault(
-                spk,
-                {
-                    "segments": [],
-                    "seconds": 0.0,
-                    "agent_score": 0.0,
-                    "customer_score": 0.0,
-                    "strong_hits": set(),
-                    "desk_hits": set(),
-                },
-            )
-            bucket["segments"].append(seg)
-            bucket["seconds"] += max(float(seg.get("end", 0.0)) - float(seg.get("start", 0.0)), 0.0)
-            low = _norm(text)
-            for cue, weight in strong_agent_cues.items():
-                if cue in low:
-                    bucket["agent_score"] += weight
-                    bucket["strong_hits"].add(cue)
-                    if cue in desk_process_cues:
-                        bucket["desk_hits"].add(cue)
-            for cue, weight in weak_agent_cues.items():
-                if cue in low:
-                    bucket["agent_score"] += weight
-            for cue, weight in customer_cues.items():
-                if cue in low:
-                    bucket["customer_score"] += weight
-            if "?" in text:
-                bucket["customer_score"] += 1.0
-
-        min_seconds = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SPEAKER_S", "8") or "8")
-        min_score = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SCORE", "5.0") or "5.0")
-        min_strong_hits = int(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_STRONG", "2") or "2")
-        ratio_mult = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_RATIO_MULT", "1.8") or "1.8")
-        ratio_add = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_RATIO_ADD", "2.0") or "2.0")
-        desk_min_hits = int(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_DESK_MIN_STRONG", "4") or "4")
-        desk_min_score = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_DESK_MIN_SCORE", "12.0") or "12.0")
-        desk_margin = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_DESK_MARGIN", "6.0") or "6.0")
-        min_repair_sim = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_SIM", "0.45") or "0.45")
-        min_repair_margin = float(os.getenv("SST_AGENT_TEXT_ROLE_REPAIR_MIN_MARGIN", "0.03") or "0.03")
-
-        def _match_gate(spk: str) -> dict:
-            if not agent_slug or not cluster_match_table:
-                return {"passes": True, "similarity": None, "margin": None, "reason": "no_match_gate"}
-            matches = cluster_match_table.get(spk) or {}
-            if agent_slug not in matches:
-                return {"passes": False, "similarity": 0.0, "margin": 0.0, "reason": "agent_not_in_match_table"}
-            sim = float((matches.get(agent_slug) or {}).get("similarity") or 0.0)
-            others = [
-                float((data or {}).get("similarity") or 0.0)
-                for slug, data in matches.items()
-                if slug != agent_slug
-            ]
-            margin = sim - (max(others) if others else 0.0)
-            passes = sim >= min_repair_sim and margin >= min_repair_margin
-            return {
-                "passes": passes,
-                "similarity": round(sim, 3),
-                "margin": round(margin, 3),
-                "reason": "" if passes else "weak_agent_voiceprint_match",
-            }
-
-        promoted_speakers = []
-        promoted_segments = 0
-        display_name = agent_name if agent_name and agent_name not in {"None", "Unknown Agent"} else "Agent"
-        for spk, bucket in speakers.items():
-            agent_score = float(bucket["agent_score"])
-            customer_score = float(bucket["customer_score"])
-            strong_hits = sorted(bucket["strong_hits"])
-            desk_hits = sorted(bucket["desk_hits"])
-            if bucket["seconds"] < min_seconds:
-                continue
-            if len(strong_hits) < min_strong_hits:
-                continue
-            if agent_score < min_score:
-                continue
-            match_gate = _match_gate(spk)
-            if not match_gate["passes"]:
-                continue
-            desk_training_override = (
-                len(desk_hits) >= desk_min_hits
-                and agent_score >= desk_min_score
-                and agent_score >= (customer_score + desk_margin)
-            )
-            if agent_score < (customer_score * ratio_mult + ratio_add) and not desk_training_override:
-                continue
-            for seg in bucket["segments"]:
-                seg["identified_speaker"] = "AGENT"
-                seg["display_speaker"] = display_name
-                seg["agent_name"] = display_name
-                seg["role_text_repair"] = (
-                    "agent_side_desk_process_explanation"
-                    if desk_training_override
-                    else "agent_side_sales_explanation"
-                )
-                promoted_segments += 1
-            promoted_speakers.append(
-                {
-                    "speaker": spk,
-                    "segments": len(bucket["segments"]),
-                    "seconds": round(bucket["seconds"], 2),
-                    "agent_score": round(agent_score, 2),
-                    "customer_score": round(customer_score, 2),
-                    "strong_hits": strong_hits[:12],
-                    "desk_hits": desk_hits[:12],
-                    "desk_training_override": desk_training_override,
-                    "match_gate": match_gate,
-                }
-            )
+        """Disabled: role identity must come from voiceprint matching only."""
         return {
-            "enabled": True,
-            "promoted_speakers": promoted_speakers,
-            "promoted_segments": promoted_segments,
+            "enabled": False,
+            "promoted_speakers": [],
+            "promoted_segments": 0,
+            "reason": "voiceprint_only",
         }
+
+    def _uses_segment_role_voiceprint(entry: dict) -> bool:
+        """Return True only for voiceprints allowed in segment-role scoring."""
+        explicit = entry.get("use_for_segment_role")
+        if isinstance(explicit, str):
+            explicit_norm = explicit.strip().lower()
+            if explicit_norm in {"0", "false", "no", "off"}:
+                return False
+            if explicit_norm in {"1", "true", "yes", "on"}:
+                return True
+        elif explicit is False:
+            return False
+        elif explicit:
+            return True
+
+        legacy = entry.get("segment_role_voiceprint")
+        if isinstance(legacy, str):
+            legacy_norm = legacy.strip().lower()
+            if legacy_norm in {"0", "false", "no", "off"}:
+                return False
+            if legacy_norm in {"1", "true", "yes", "on"}:
+                return True
+        elif legacy is False:
+            return False
+        elif legacy:
+            return True
+
+        return entry.get("source") == "verified_transcript_labels"
 
     def _repair_agent_roles_from_voiceprint_clusters(
         text_segments: list,
@@ -1396,7 +1496,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         agent is the cluster's top acoustic match and the cluster has enough
         transcribed duration to avoid promoting short background speech.
         """
-        enabled = os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR", "1").strip().lower()
+        enabled = os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR", "0").strip().lower()
         if enabled in {"0", "false", "no", "off"}:
             return {"enabled": False, "promoted_speakers": [], "promoted_segments": 0}
         if not agent_slug or not agent_name or agent_name in {"None", "Unknown Agent"}:
@@ -1404,8 +1504,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         if not cluster_match_table:
             return {"enabled": True, "promoted_speakers": [], "promoted_segments": 0, "reason": "no_cluster_match_table"}
 
-        min_sim = float(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_SIM", "0.62") or "0.62")
-        min_margin = float(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_MARGIN", "0.03") or "0.03")
+        min_sim = float(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_SIM", "0.72") or "0.72")
+        min_margin = float(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_MARGIN", "0.10") or "0.10")
+        target_only_min_sim = float(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_TARGET_ONLY_MIN_SIM", "0.72") or "0.72")
         min_seconds = float(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_TEXT_S", "12.0") or "12.0")
         min_segments = int(os.getenv("SST_AGENT_CLUSTER_ROLE_REPAIR_MIN_SEGMENTS", "2") or "2")
 
@@ -1445,9 +1546,13 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             target_sim = float((matches.get(agent_slug) or {}).get("similarity") or 0.0)
             best_other = max((sim for slug, sim in scored if slug != agent_slug), default=0.0)
             margin = target_sim - best_other
+            target_only = not any(slug != agent_slug for slug, _sim in scored)
             if top_slug != agent_slug:
                 continue
-            if target_sim < min_sim or margin < min_margin:
+            if target_only:
+                if target_sim < target_only_min_sim:
+                    continue
+            elif target_sim < min_sim or margin < min_margin:
                 continue
             if bucket["seconds"] < min_seconds or len(bucket["segments"]) < min_segments:
                 continue
@@ -1467,6 +1572,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     "target_similarity": round(float(target_sim), 3),
                     "margin": round(float(margin), 3),
                     "top_slug": top_slug,
+                    "target_only": target_only,
                 }
             )
 
@@ -1476,7 +1582,620 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "promoted_segments": promoted_segments,
             "min_similarity": min_sim,
             "min_margin": min_margin,
+            "target_only_min_similarity": target_only_min_sim,
             "min_seconds": min_seconds,
+        }
+
+    def _foreground_customer_blocks_agent(seg: dict, seconds: float) -> bool:
+        """Block background-agent bleed from overriding a clean customer speaker slice."""
+        enabled = os.getenv("SST_FOREGROUND_ROLE_GUARD", "1").strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return False
+        if seg.get("identified_speaker") != "CUSTOMER":
+            return False
+        overlap = seg.get("role_overlap")
+        if not isinstance(overlap, dict):
+            return False
+        try:
+            agent_s = float(overlap.get("agent", 0.0) or 0.0)
+            customer_s = float(overlap.get("customer", 0.0) or 0.0)
+        except (TypeError, ValueError):
+            return False
+        dur = max(float(seconds), 0.001)
+        customer_ratio = customer_s / dur
+        agent_ratio = agent_s / dur
+        min_customer_ratio = float(os.getenv("SST_FOREGROUND_CUSTOMER_MIN_RATIO", "0.80") or "0.80")
+        min_customer_s = float(os.getenv("SST_FOREGROUND_CUSTOMER_MIN_SECONDS", "0.35") or "0.35")
+        max_agent_ratio = float(os.getenv("SST_FOREGROUND_AGENT_MAX_RATIO", "0.06") or "0.06")
+        max_agent_s = float(os.getenv("SST_FOREGROUND_AGENT_MAX_SECONDS", "0.05") or "0.05")
+        return (
+            customer_s >= min(min_customer_s, max(dur * 0.50, 0.05))
+            and customer_ratio >= min_customer_ratio
+            and agent_s <= max_agent_s
+            and agent_ratio <= max_agent_ratio
+        )
+
+    def _repair_agent_roles_from_segment_voiceprints(
+        text_segments: list,
+        agent_name: str | None,
+        agent_slug: str | None,
+        audio_file: str,
+    ) -> dict:
+        """Assign each segment role from its own audio embedding.
+
+        This is intentionally voice-only. The transcript text is never scored;
+        the text segment only supplies the start/end window to embed.
+        """
+        enabled = os.getenv("SST_AGENT_SEGMENT_VOICE_REPAIR", "1").strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return {"enabled": False, "reason": "disabled", "evaluated_segments": 0}
+        if not agent_slug or not agent_name or agent_name in {"None", "Unknown Agent"}:
+            return {"enabled": True, "reason": "no_identified_agent", "evaluated_segments": 0}
+        if not audio_file or not os.path.isfile(audio_file):
+            return {"enabled": True, "reason": "missing_audio", "evaluated_segments": 0}
+
+        try:
+            import numpy as _np
+            import soundfile as _sf
+            import torch as _torch
+            import torchaudio.functional as _F_ta
+            from src.diar_multi import _load_voiceprints
+            from src.embedding_campp import get_model, l2_norm
+            from src.voiceprints import resolve_voiceprint_path
+        except Exception as exc:
+            return {
+                "enabled": True,
+                "reason": f"dependency_error:{type(exc).__name__}",
+                "evaluated_segments": 0,
+            }
+
+        voiceprints = _load_voiceprints()
+        target = voiceprints.get(agent_slug)
+        if not target:
+            return {"enabled": True, "reason": "target_voiceprint_missing", "evaluated_segments": 0}
+        target_name, target_stack = target
+        if target_stack.ndim != 2 or not len(target_stack):
+            return {"enabled": True, "reason": "target_voiceprint_invalid", "evaluated_segments": 0}
+
+        segment_role_target_stack = None
+        segment_role_source = "all_target_voiceprints"
+        segment_role_min_sims: list[float] = []
+        segment_role_min_margins: list[float] = []
+        try:
+            agents_index = Path(__file__).parent / "data" / "agent_voiceprints" / "agents.json"
+            agents_data = json.loads(agents_index.read_text(encoding="utf-8"))
+            agent_info = agents_data.get(agent_slug) or {}
+            marked = []
+            for entry in agent_info.get("voiceprints") or []:
+                if not isinstance(entry, dict):
+                    continue
+                if not _uses_segment_role_voiceprint(entry):
+                    continue
+                raw_path = entry.get("path") or entry.get("voiceprint_path")
+                vp_path = resolve_voiceprint_path(raw_path, str(agents_index))
+                if not vp_path or not os.path.isfile(vp_path):
+                    continue
+                vp = _np.load(vp_path).astype(_np.float32).squeeze()
+                if vp.ndim != 1 or vp.shape[0] != target_stack.shape[1]:
+                    continue
+                marked.append(l2_norm(vp))
+                if entry.get("segment_role_min_similarity") is not None:
+                    segment_role_min_sims.append(float(entry.get("segment_role_min_similarity")))
+                if entry.get("segment_role_min_margin") is not None:
+                    segment_role_min_margins.append(float(entry.get("segment_role_min_margin")))
+            if marked:
+                segment_role_target_stack = _np.stack(marked).astype(_np.float32)
+                segment_role_source = "segment_role_voiceprints"
+        except Exception:
+            segment_role_target_stack = None
+        if segment_role_target_stack is not None:
+            target_stack = segment_role_target_stack
+
+        try:
+            audio, sr = _sf.read(audio_file, dtype="float32", always_2d=True)
+        except Exception as exc:
+            return {
+                "enabled": True,
+                "reason": f"audio_read_error:{type(exc).__name__}",
+                "evaluated_segments": 0,
+            }
+        audio = audio.mean(axis=1) if audio.shape[1] > 1 else audio[:, 0]
+        if sr != 16000:
+            audio = _F_ta.resample(_torch.from_numpy(audio.astype(_np.float32)), sr, 16000).numpy()
+            sr = 16000
+
+        target_dim = int(target_stack.shape[1])
+        other_voiceprints = [
+            (slug, stack)
+            for slug, (_name, stack) in voiceprints.items()
+            if slug != agent_slug and getattr(stack, "ndim", 0) == 2 and stack.shape[1] == target_dim and len(stack)
+        ]
+        if not other_voiceprints:
+            target_only = True
+        else:
+            target_only = False
+
+        min_sim = float(os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_SIM", "0.40") or "0.40")
+        min_margin = float(os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_MARGIN", "0.03") or "0.03")
+        if segment_role_target_stack is not None and not os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_SIM"):
+            if segment_role_min_sims:
+                min_sim = min(segment_role_min_sims)
+        if segment_role_target_stack is not None and not os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_MARGIN"):
+            if segment_role_min_margins:
+                min_margin = min(segment_role_min_margins)
+        target_only_min_sim = float(os.getenv("SST_AGENT_SEGMENT_VOICE_TARGET_ONLY_MIN_SIM", "0.55") or "0.55")
+        min_seconds = float(os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_SECONDS", "0.30") or "0.30")
+        pad_seconds = float(os.getenv("SST_AGENT_SEGMENT_VOICE_PAD_SECONDS", "0.12") or "0.12")
+        smooth_short_s = float(os.getenv("SST_AGENT_SEGMENT_VOICE_SMOOTH_SHORT_SECONDS", "0.80") or "0.80")
+
+        embedder = get_model(force_cpu=True)
+        evaluated = changed_to_agent = changed_to_customer = kept_agent = kept_customer = skipped = 0
+        foreground_guard_blocks = 0
+        score_rows: list[dict] = []
+        sample_changes: list[dict] = []
+        display_name = target_name or agent_name
+        pad = int(max(pad_seconds, 0.0) * sr)
+
+        def _set_agent(seg: dict, reason: str) -> None:
+            seg["identified_speaker"] = "AGENT"
+            seg["display_speaker"] = display_name
+            seg["agent_name"] = display_name
+            seg["agent_slug"] = agent_slug
+            seg["role_voiceprint_repair"] = reason
+
+        def _set_customer(seg: dict, reason: str) -> None:
+            seg["identified_speaker"] = "CUSTOMER"
+            seg["display_speaker"] = "Customer"
+            seg["role_voiceprint_repair"] = reason
+            seg.pop("agent_name", None)
+            seg.pop("agent_slug", None)
+
+        for idx, seg in enumerate(text_segments):
+            if seg.get("speech_only"):
+                skipped += 1
+                continue
+            start_s = float(seg.get("start", 0.0) or 0.0)
+            end_s = float(seg.get("end", 0.0) or 0.0)
+            seconds = max(end_s - start_s, 0.0)
+            if seconds < min_seconds:
+                skipped += 1
+                continue
+            start = max(0, int(start_s * sr) - pad)
+            end = min(len(audio), int(end_s * sr) + pad)
+            if end <= start:
+                skipped += 1
+                continue
+            emb = embedder.embed_chunk(audio[start:end].astype(_np.float32), sr=sr)
+            if emb is None or getattr(emb, "shape", (0,))[0] != target_dim:
+                skipped += 1
+                continue
+            emb = l2_norm(_np.asarray(emb, dtype=_np.float32))
+            target_sim = float(_np.max(target_stack @ emb))
+            best_other_slug = None
+            best_other_sim = 0.0
+            for slug, stack in other_voiceprints:
+                sim = float(_np.max(stack @ emb))
+                if sim > best_other_sim:
+                    best_other_slug = slug
+                    best_other_sim = sim
+            margin = target_sim - best_other_sim
+            is_agent = (
+                target_sim >= target_only_min_sim
+                if target_only
+                else target_sim >= min_sim and margin >= min_margin
+            )
+            if is_agent and _foreground_customer_blocks_agent(seg, seconds):
+                is_agent = False
+                foreground_guard_blocks += 1
+                seg["foreground_role_guard"] = "customer_diarization_blocks_background_agent"
+
+            previous = seg.get("identified_speaker")
+            if is_agent:
+                _set_agent(seg, "target_segment_voiceprint")
+                if previous != "AGENT":
+                    changed_to_agent += 1
+                else:
+                    kept_agent += 1
+            else:
+                _set_customer(seg, "target_segment_voiceprint_miss")
+                if previous == "AGENT":
+                    changed_to_customer += 1
+                else:
+                    kept_customer += 1
+
+            seg["_segment_voice_target_similarity"] = round(target_sim, 3)
+            seg["_segment_voice_margin"] = round(margin, 3)
+            seg["_segment_voice_best_other_slug"] = best_other_slug
+            evaluated += 1
+            row = {
+                "idx": idx,
+                "segment": seg,
+                "seconds": seconds,
+                "is_agent": is_agent,
+                "target_similarity": target_sim,
+                "margin": margin,
+            }
+            score_rows.append(row)
+            if previous != seg.get("identified_speaker") and len(sample_changes) < 50:
+                sample_changes.append({
+                    "start": round(start_s, 2),
+                    "end": round(end_s, 2),
+                    "from": previous,
+                    "to": seg.get("identified_speaker"),
+                    "target_similarity": round(target_sim, 3),
+                    "margin": round(margin, 3),
+                    "best_other_slug": best_other_slug,
+                    "text": str(seg.get("text") or "")[:120],
+                })
+
+        # Short embedded segments can be noisy. Smooth only from neighbouring
+        # voiceprint decisions, never from transcript words.
+        smoothed = 0
+        idx_to_row = {row["idx"]: row for row in score_rows}
+        for row in score_rows:
+            if row["seconds"] >= smooth_short_s:
+                continue
+            idx = row["idx"]
+            votes = {"AGENT": 0, "CUSTOMER": 0}
+            for near in (idx - 2, idx - 1, idx + 1, idx + 2):
+                other = idx_to_row.get(near)
+                if not other or other["seconds"] < smooth_short_s:
+                    continue
+                votes["AGENT" if other["is_agent"] else "CUSTOMER"] += 1
+            if votes["AGENT"] == votes["CUSTOMER"]:
+                continue
+            voted_agent = votes["AGENT"] > votes["CUSTOMER"]
+            if voted_agent == row["is_agent"]:
+                continue
+            # Neighbour smoothing is only a tie-breaker for weak short-window
+            # embeddings. Do not let neighbours override a clear direct
+            # voiceprint hit, and do not promote a segment whose own audio does
+            # not pass a slightly stronger target gate.
+            if voted_agent:
+                if (
+                    row["target_similarity"] < (min_sim + 0.05)
+                    or row["margin"] < (min_margin + 0.05)
+                ):
+                    continue
+            else:
+                if (
+                    row["target_similarity"] >= (min_sim + 0.15)
+                    and row["margin"] >= (min_margin + 0.10)
+                ):
+                    continue
+            seg = row["segment"]
+            if voted_agent:
+                _set_agent(seg, "target_segment_voiceprint_neighbor")
+            else:
+                _set_customer(seg, "target_segment_voiceprint_neighbor")
+            row["is_agent"] = voted_agent
+            smoothed += 1
+
+        agent_segments = sum(1 for row in score_rows if row["is_agent"])
+        customer_segments = len(score_rows) - agent_segments
+        return {
+            "enabled": True,
+            "mode": "target_segment_voiceprint",
+            "target_agent_slug": agent_slug,
+            "evaluated_segments": evaluated,
+            "agent_segments": agent_segments,
+            "customer_segments": customer_segments,
+            "changed_to_agent": changed_to_agent,
+            "changed_to_customer": changed_to_customer,
+            "kept_agent": kept_agent,
+            "kept_customer": kept_customer,
+            "skipped_segments": skipped,
+            "foreground_guard_blocks": foreground_guard_blocks,
+            "smoothed_segments": smoothed,
+            "min_similarity": min_sim,
+            "min_margin": min_margin,
+            "target_only": target_only,
+            "target_voiceprint_source": segment_role_source,
+            "target_only_min_similarity": target_only_min_sim,
+            "min_seconds": min_seconds,
+            "pad_seconds": pad_seconds,
+            "sample_changes": sample_changes,
+        }
+
+    def _repair_agent_roles_from_target_speaker_vad(
+        text_segments: list,
+        agent_name: str | None,
+        agent_slug: str | None,
+        audio_file: str,
+    ) -> dict:
+        """Experimental target-speaker VAD role engine.
+
+        This remains voiceprint-only. The transcript text is never inspected;
+        segment timestamps are used only to average target-speaker VAD windows.
+        """
+        role_engine = (os.getenv("SST_ROLE_ENGINE", "sortformer_campp").strip().lower()
+                       or "sortformer_campp")
+        env_enabled = os.getenv("SST_TARGET_SPEAKER_VAD", "").strip().lower()
+        enabled = role_engine in {"tsvad", "target_speaker_vad", "sortformer_campp_tsvad"} or env_enabled in {
+            "1", "true", "yes", "on",
+        }
+        if not enabled:
+            return {"enabled": False, "reason": "disabled", "role_engine": role_engine}
+        if not agent_slug:
+            return {"enabled": True, "reason": "no_target_agent_slug", "role_engine": role_engine}
+        if not audio_file or not os.path.isfile(audio_file):
+            return {"enabled": True, "reason": "missing_audio", "role_engine": role_engine}
+
+        try:
+            import numpy as _np
+            from src.diar_multi import _load_voiceprints
+            from src.embedding_campp import l2_norm
+            from src.target_speaker_vad import TargetSpeakerVAD
+            from src.voiceprints import resolve_voiceprint_path
+        except Exception as exc:
+            return {
+                "enabled": True,
+                "reason": f"dependency_error:{type(exc).__name__}",
+                "role_engine": role_engine,
+            }
+
+        voiceprints = _load_voiceprints()
+        target = voiceprints.get(agent_slug)
+        if not target:
+            return {"enabled": True, "reason": "target_voiceprint_missing", "role_engine": role_engine}
+        target_name, target_stack = target
+        if getattr(target_stack, "ndim", 0) != 2 or not len(target_stack):
+            return {"enabled": True, "reason": "target_voiceprint_invalid", "role_engine": role_engine}
+
+        target_stack = _np.asarray(target_stack, dtype=_np.float32)
+        target_dim = int(target_stack.shape[1])
+        source = "all_target_voiceprints"
+        threshold_hints: list[float] = []
+        margin_hints: list[float] = []
+        use_marked = os.getenv("SST_TSVAD_USE_SEGMENT_ROLE_VOICEPRINTS", "1").strip().lower()
+        if use_marked not in {"0", "false", "no", "off"}:
+            try:
+                agents_index = Path(__file__).parent / "data" / "agent_voiceprints" / "agents.json"
+                agents_data = json.loads(agents_index.read_text(encoding="utf-8"))
+                agent_info = agents_data.get(agent_slug) or {}
+                marked = []
+                for entry in agent_info.get("voiceprints") or []:
+                    if not isinstance(entry, dict):
+                        continue
+                    if not _uses_segment_role_voiceprint(entry):
+                        continue
+                    raw_path = entry.get("path") or entry.get("voiceprint_path")
+                    vp_path = resolve_voiceprint_path(raw_path, str(agents_index))
+                    if not vp_path or not os.path.isfile(vp_path):
+                        continue
+                    vp = _np.load(vp_path).astype(_np.float32).squeeze()
+                    if vp.ndim != 1 or vp.shape[0] != target_dim:
+                        continue
+                    marked.append(l2_norm(vp))
+                    if entry.get("segment_role_min_similarity") is not None:
+                        threshold_hints.append(float(entry.get("segment_role_min_similarity")))
+                    if entry.get("segment_role_min_margin") is not None:
+                        margin_hints.append(float(entry.get("segment_role_min_margin")))
+                if marked:
+                    target_stack = _np.stack(marked).astype(_np.float32)
+                    source = "segment_role_voiceprints"
+            except Exception:
+                pass
+
+        other_stacks = [
+            _np.asarray(stack, dtype=_np.float32)
+            for slug, (_name, stack) in voiceprints.items()
+            if slug != agent_slug
+            and getattr(stack, "ndim", 0) == 2
+            and stack.shape[1] == target_dim
+            and len(stack)
+        ]
+        background_stack = _np.concatenate(other_stacks, axis=0) if other_stacks else None
+        target_only = background_stack is None
+
+        min_sim = float(os.getenv("SST_TSVAD_MIN_SIM", "0.33") or "0.33")
+        min_margin = float(os.getenv("SST_TSVAD_MIN_MARGIN", "0.03") or "0.03")
+        if source == "segment_role_voiceprints" and not os.getenv("SST_TSVAD_MIN_SIM") and threshold_hints:
+            min_sim = min(threshold_hints)
+        if source == "segment_role_voiceprints" and not os.getenv("SST_TSVAD_MIN_MARGIN") and margin_hints:
+            min_margin = min(margin_hints)
+        window_s = float(os.getenv("SST_TSVAD_WINDOW_SECONDS", "1.50") or "1.50")
+        stride_s = float(os.getenv("SST_TSVAD_STRIDE_SECONDS", "1.00") or "1.00")
+        min_overlap_ratio = float(os.getenv("SST_TSVAD_MIN_OVERLAP_RATIO", "0.25") or "0.25")
+        min_overlap_seconds = float(os.getenv("SST_TSVAD_MIN_OVERLAP_SECONDS", "0.20") or "0.20")
+        decision_mode = (os.getenv("SST_TSVAD_DECISION_MODE", "tsvad").strip().lower() or "tsvad")
+        blend_segment_weight = float(os.getenv("SST_TSVAD_BLEND_SEGMENT_WEIGHT", "0.50") or "0.50")
+        blend_segment_weight = max(0.0, min(blend_segment_weight, 1.0))
+        blend_min_sim = float(os.getenv("SST_TSVAD_BLEND_MIN_SIM", "0.42") or "0.42")
+        blend_min_margin = float(os.getenv("SST_TSVAD_BLEND_MIN_MARGIN", "-0.05") or "-0.05")
+        keep_strong_segment = os.getenv("SST_TSVAD_KEEP_STRONG_SEGMENT_AGENT", "0").strip().lower()
+        keep_strong_segment = keep_strong_segment not in {"0", "false", "no", "off"}
+        strong_segment_min_sim = float(os.getenv("SST_TSVAD_STRONG_SEGMENT_MIN_SIM", "0.42") or "0.42")
+        strong_segment_min_margin = float(os.getenv("SST_TSVAD_STRONG_SEGMENT_MIN_MARGIN", "0.03") or "0.03")
+
+        try:
+            tsvad = TargetSpeakerVAD(
+                target_stack,
+                threshold=min_sim,
+                window_s=window_s,
+                stride_s=stride_s,
+                background_voiceprints=background_stack,
+                margin=0.0 if target_only else min_margin,
+            )
+            windows = tsvad.detect(audio_file)
+        except Exception as exc:
+            return {
+                "enabled": True,
+                "reason": f"runtime_error:{type(exc).__name__}:{str(exc)[:160]}",
+                "role_engine": role_engine,
+                "target_agent_slug": agent_slug,
+            }
+        if not windows:
+            return {
+                "enabled": True,
+                "reason": "no_windows",
+                "role_engine": role_engine,
+                "target_agent_slug": agent_slug,
+            }
+
+        display_name = target_name or agent_name or "Agent"
+        evaluated = skipped = changed_to_agent = changed_to_customer = kept_agent = kept_customer = 0
+        foreground_guard_blocks = 0
+        strong_segment_kept_agent = 0
+        agent_segments = customer_segments = 0
+        sample_changes: list[dict] = []
+
+        def _set_agent(seg: dict) -> None:
+            seg["identified_speaker"] = "AGENT"
+            seg["display_speaker"] = display_name
+            seg["agent_name"] = display_name
+            seg["agent_slug"] = agent_slug
+            seg["role_voiceprint_repair"] = "target_speaker_vad"
+
+        def _set_customer(seg: dict) -> None:
+            seg["identified_speaker"] = "CUSTOMER"
+            seg["display_speaker"] = "Customer"
+            seg["role_voiceprint_repair"] = "target_speaker_vad_miss"
+            seg.pop("agent_name", None)
+            seg.pop("agent_slug", None)
+
+        for seg in text_segments:
+            if seg.get("speech_only"):
+                skipped += 1
+                continue
+            start_s = float(seg.get("start", 0.0) or 0.0)
+            end_s = float(seg.get("end", 0.0) or 0.0)
+            seconds = max(end_s - start_s, 0.001)
+            overlapping = [
+                w for w in windows
+                if float(w["end"]) > start_s and float(w["start"]) < end_s
+            ]
+            if not overlapping:
+                skipped += 1
+                continue
+            weights = [
+                max(0.0, min(float(w["end"]), end_s) - max(float(w["start"]), start_s))
+                for w in overlapping
+            ]
+            overlap_seconds = sum(weights)
+            if overlap_seconds < min_overlap_seconds or (overlap_seconds / seconds) < min_overlap_ratio:
+                skipped += 1
+                continue
+            target_score = sum(float(w.get("target_cosine", w.get("cosine", 0.0))) * wt for w, wt in zip(overlapping, weights)) / overlap_seconds
+            best_other = sum(float(w.get("best_other_cosine", 0.0)) * wt for w, wt in zip(overlapping, weights)) / overlap_seconds
+            score_margin = target_score - best_other
+            decision_score = target_score
+            decision_margin = score_margin
+            decision_mode_used = decision_mode
+            if decision_mode == "blend":
+                try:
+                    segment_target = float(seg.get("_segment_voice_target_similarity"))
+                    segment_margin = float(seg.get("_segment_voice_margin"))
+                    decision_score = (
+                        blend_segment_weight * segment_target
+                        + (1.0 - blend_segment_weight) * target_score
+                    )
+                    decision_margin = (
+                        blend_segment_weight * segment_margin
+                        + (1.0 - blend_segment_weight) * score_margin
+                    )
+                    is_agent = decision_score >= blend_min_sim and (
+                        target_only or decision_margin >= blend_min_margin
+                    )
+                except (TypeError, ValueError):
+                    is_agent = target_score >= min_sim and (target_only or score_margin >= min_margin)
+                    decision_mode_used = "tsvad_fallback"
+            else:
+                is_agent = target_score >= min_sim and (target_only or score_margin >= min_margin)
+            previous = seg.get("identified_speaker")
+            if not is_agent and keep_strong_segment and previous == "AGENT":
+                try:
+                    segment_target = float(seg.get("_segment_voice_target_similarity"))
+                    segment_margin = float(seg.get("_segment_voice_margin"))
+                except (TypeError, ValueError):
+                    segment_target = segment_margin = 0.0
+                if segment_target >= strong_segment_min_sim and segment_margin >= strong_segment_min_margin:
+                    is_agent = True
+                    strong_segment_kept_agent += 1
+                    seg["tsvad_segment_voice_override"] = "strong_segment_voiceprint_kept_agent"
+            if is_agent and _foreground_customer_blocks_agent(seg, seconds):
+                is_agent = False
+                foreground_guard_blocks += 1
+                seg["foreground_role_guard"] = "customer_diarization_blocks_background_agent"
+
+            if is_agent:
+                _set_agent(seg)
+                agent_segments += 1
+                if previous != "AGENT":
+                    changed_to_agent += 1
+                else:
+                    kept_agent += 1
+            else:
+                _set_customer(seg)
+                customer_segments += 1
+                if previous == "AGENT":
+                    changed_to_customer += 1
+                else:
+                    kept_customer += 1
+
+            seg["_tsvad_target_similarity"] = round(float(target_score), 3)
+            seg["_tsvad_best_other_similarity"] = round(float(best_other), 3)
+            seg["_tsvad_margin"] = round(float(score_margin), 3)
+            seg["_tsvad_decision_score"] = round(float(decision_score), 3)
+            seg["_tsvad_decision_margin"] = round(float(decision_margin), 3)
+            seg["_tsvad_decision_mode"] = decision_mode_used
+            seg["_tsvad_overlap_ratio"] = round(float(overlap_seconds / seconds), 3)
+            evaluated += 1
+            if previous != seg.get("identified_speaker") and len(sample_changes) < 50:
+                sample_changes.append({
+                    "start": round(start_s, 2),
+                    "end": round(end_s, 2),
+                    "from": previous,
+                    "to": seg.get("identified_speaker"),
+                    "target_similarity": round(float(target_score), 3),
+                    "best_other_similarity": round(float(best_other), 3),
+                    "margin": round(float(score_margin), 3),
+                    "decision_score": round(float(decision_score), 3),
+                    "decision_margin": round(float(decision_margin), 3),
+                    "text": str(seg.get("text") or "")[:120],
+                })
+
+        return {
+            "enabled": True,
+            "mode": "target_speaker_vad",
+            "role_engine": role_engine,
+            "target_agent_slug": agent_slug,
+            "target_voiceprint_source": source,
+            "target_only": target_only,
+            "decision_mode": decision_mode,
+            "blend_segment_weight": blend_segment_weight,
+            "blend_min_similarity": blend_min_sim,
+            "blend_min_margin": blend_min_margin,
+            "window_count": len(windows),
+            "window_seconds": window_s,
+            "stride_seconds": stride_s,
+            "evaluated_segments": evaluated,
+            "skipped_segments": skipped,
+            "foreground_guard_blocks": foreground_guard_blocks,
+            "strong_segment_kept_agent": strong_segment_kept_agent,
+            "agent_segments": agent_segments,
+            "customer_segments": customer_segments,
+            "changed_to_agent": changed_to_agent,
+            "changed_to_customer": changed_to_customer,
+            "kept_agent": kept_agent,
+            "kept_customer": kept_customer,
+            "min_similarity": min_sim,
+            "min_margin": 0.0 if target_only else min_margin,
+            "min_overlap_ratio": min_overlap_ratio,
+            "min_overlap_seconds": min_overlap_seconds,
+            "keep_strong_segment_agent": keep_strong_segment,
+            "strong_segment_min_similarity": strong_segment_min_sim,
+            "strong_segment_min_margin": strong_segment_min_margin,
+            "sample_changes": sample_changes,
+        }
+
+    def _demote_agent_roles_from_customer_text_cues(text_segments: list) -> dict:
+        """Disabled: role identity must come from voiceprint matching only."""
+        return {
+            "enabled": False,
+            "demoted_segments": 0,
+            "segments": [],
+            "reason": "voiceprint_only",
         }
 
     # Free unused memory before speaker identification. diar_multi can use CUDA
@@ -1581,6 +2300,19 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         )
         print(f"[UI] Speakers: {list(diar_result.get('per_speaker', {}).keys())}", flush=True)
 
+        segments, speaker_turn_text_split = _split_text_segments_on_speaker_turns(
+            segments,
+            diar_result.get("speaker_segments", []),
+        )
+        if speaker_turn_text_split.get("added_segments"):
+            print(
+                f"[UI] Speaker-turn text split: "
+                f"{speaker_turn_text_split['original_segments']} -> "
+                f"{speaker_turn_text_split['final_segments']} segment(s) "
+                f"(+{speaker_turn_text_split['added_segments']})",
+                flush=True,
+            )
+
         unknown_segments_smoothed = _smooth_short_unknown_segments(segments)
         if unknown_segments_smoothed:
             print(f"[UI] Smoothed {unknown_segments_smoothed} short unknown speaker segments", flush=True)
@@ -1608,21 +2340,51 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 f"{len(agent_role_voiceprint_repair.get('promoted_speakers') or [])} same-agent speaker(s)",
                 flush=True,
             )
-        agent_role_text_repair = _repair_agent_roles_from_text_cues(
+        agent_role_segment_voiceprint_repair = _repair_agent_roles_from_segment_voiceprints(
             segments,
             agent_name_id,
-            dur_s,
-            int(diar_result.get("speaker_count") or 0),
-            agent_slug=diar_result.get("agent_slug"),
-            cluster_match_table=cluster_match_table,
+            diar_result.get("agent_slug"),
+            norm_wav,
         )
-        if agent_role_text_repair.get("promoted_segments"):
+        if agent_role_segment_voiceprint_repair.get("evaluated_segments"):
             print(
-                f"[UI] Text-cue role repair promoted "
-                f"{agent_role_text_repair['promoted_segments']} segment(s) across "
-                f"{len(agent_role_text_repair.get('promoted_speakers') or [])} speaker(s)",
+                f"[UI] Segment voiceprint role assignment evaluated "
+                f"{agent_role_segment_voiceprint_repair['evaluated_segments']} segment(s): "
+                f"agent={agent_role_segment_voiceprint_repair.get('agent_segments', 0)} "
+                f"customer={agent_role_segment_voiceprint_repair.get('customer_segments', 0)} "
+                f"changed_to_agent={agent_role_segment_voiceprint_repair.get('changed_to_agent', 0)} "
+                f"changed_to_customer={agent_role_segment_voiceprint_repair.get('changed_to_customer', 0)}",
                 flush=True,
             )
+        role_agent_slug = diar_result.get("agent_slug") or target_agent_slug
+        target_speaker_vad_role_refinement = _repair_agent_roles_from_target_speaker_vad(
+            segments,
+            agent_name_id,
+            role_agent_slug,
+            norm_wav,
+        )
+        if target_speaker_vad_role_refinement.get("evaluated_segments"):
+            print(
+                f"[UI] Target-speaker VAD role engine evaluated "
+                f"{target_speaker_vad_role_refinement['evaluated_segments']} segment(s): "
+                f"agent={target_speaker_vad_role_refinement.get('agent_segments', 0)} "
+                f"customer={target_speaker_vad_role_refinement.get('customer_segments', 0)} "
+                f"changed_to_agent={target_speaker_vad_role_refinement.get('changed_to_agent', 0)} "
+                f"changed_to_customer={target_speaker_vad_role_refinement.get('changed_to_customer', 0)}",
+                flush=True,
+            )
+        agent_role_text_repair = {
+            "enabled": False,
+            "promoted_speakers": [],
+            "promoted_segments": 0,
+            "reason": "voiceprint_only",
+        }
+        customer_role_text_repair = {
+            "enabled": False,
+            "demoted_segments": 0,
+            "segments": [],
+            "reason": "voiceprint_only",
+        }
 
         for seg in segments:
             dur = float(seg["end"]) - float(seg["start"])
@@ -1745,6 +2507,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "total_segments":           len(segments),
         "segments":                 segments,
         "transcription_json":       transcription_json,
+        "asr_slice_split":          locals().get("asr_slice_split", {}),
         "diarization":              "diar_multi_voiceprint" if diarization_applied else "none",
         "speaker_stats":            speaker_stats,
         "identified_agent":         _identified_agent,
@@ -1771,10 +2534,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "speaker_boundary_refinement": diar_result.get("boundary_refinement", {}),
         "speech_only_segments_added": speech_only_added,
         "transcript_coverage": transcript_coverage,
+        "speaker_turn_text_split": locals().get("speaker_turn_text_split", {}),
         "unknown_segments_smoothed": locals().get("unknown_segments_smoothed", 0),
         "unknown_segments_customer_fallback": locals().get("unknown_segments_customer_fallback", 0),
         "agent_role_voiceprint_repair": locals().get("agent_role_voiceprint_repair", {}),
+        "agent_role_segment_voiceprint_repair": locals().get("agent_role_segment_voiceprint_repair", {}),
+        "target_speaker_vad_role_refinement": locals().get("target_speaker_vad_role_refinement", {}),
+        "role_engine": os.getenv("SST_ROLE_ENGINE", "sortformer_campp").strip().lower() or "sortformer_campp",
         "agent_role_text_repair": locals().get("agent_role_text_repair", {}),
+        "customer_role_text_repair": locals().get("customer_role_text_repair", {}),
         "note": (
             f"Requested {requested_model}; transcribed with {whisper_model}"
             if requested_model != whisper_model
@@ -2418,9 +3186,10 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 {"model": "whisper-large-v3-turbo",    "label": "Whisper Large-v3-Turbo",   "type": "Local GPU",  "speed_s": 35,   "segments": 307,  "notes": "Fast, near large-v3 quality",    "rank": 3, "wer": "8.4%",  "status": "ok"},
                 {"model": "distil-whisper-large-v3.5", "label": "Distil-Whisper v3.5",      "type": "Local GPU",  "speed_s": 29,   "segments": 433,  "notes": "Fastest local, most granular",   "rank": 4, "wer": "8.6%",  "status": "ok"},
                 {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local GPU",  "speed_s": 45,   "segments": 126,  "notes": "GPU subprocess isolation protects UI from native CUDA aborts", "rank": 5, "wer": "~5.5%", "status": "ok"},
-                {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 52,   "segments": 60,   "notes": "Lowest WER on leaderboard",      "rank": 6, "wer": "5.42%", "status": "ok"},
-                {"model": "deepgram-nova-2-phonecall", "label": "Deepgram Nova-2 Phone",    "type": "Cloud API",  "speed_s": 6,    "segments": 33,   "notes": "Optimised for phone call audio", "rank": 7, "wer": "~9%",   "status": "ok"},
-                {"model": "deepgram-nova-2-meeting",   "label": "Deepgram Nova-2 Meeting",  "type": "Cloud API",  "speed_s": 8,    "segments": 51,   "notes": "Multi-speaker meetings",         "rank": 8, "wer": "~9%",   "status": "ok"},
+                {"model": "qwen3-asr-1.7b",             "label": "Qwen3-ASR 1.7B",           "type": "Local GPU",  "speed_s": 0,    "segments": 0,    "notes": "Experimental local model for noisy-call ASR checks", "rank": 6, "wer": "test", "status": "experimental"},
+                {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 52,   "segments": 60,   "notes": "Lowest WER on leaderboard",      "rank": 7, "wer": "5.42%", "status": "ok"},
+                {"model": "deepgram-nova-2-phonecall", "label": "Deepgram Nova-2 Phone",    "type": "Cloud API",  "speed_s": 6,    "segments": 33,   "notes": "Optimised for phone call audio", "rank": 8, "wer": "~9%",   "status": "ok"},
+                {"model": "deepgram-nova-2-meeting",   "label": "Deepgram Nova-2 Meeting",  "type": "Cloud API",  "speed_s": 8,    "segments": 51,   "notes": "Multi-speaker meetings",         "rank": 9, "wer": "~9%",   "status": "ok"},
             ]
             # Merge in any live data from model_comparison.json
             mc_path = os.path.join("data", "model_comparison.json")

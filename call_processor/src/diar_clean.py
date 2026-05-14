@@ -260,15 +260,10 @@ def match_agent_to_cluster(
     """
     match_table: Dict[str, Dict] = {}
     best_overall = (None, None, 0.0)
+    best_target = (None, None, 0.0)
     skipped_dim = 0
-    if target_agent_slug:
-        enrolled_voiceprints = {
-            slug: value
-            for slug, value in enrolled_voiceprints.items()
-            if slug == target_agent_slug
-        }
-        if not enrolled_voiceprints:
-            logger.warning("Target agent slug %s not found in enrolled voiceprints", target_agent_slug)
+    if target_agent_slug and target_agent_slug not in enrolled_voiceprints:
+        logger.warning("Target agent slug %s not found in enrolled voiceprints", target_agent_slug)
 
     for spk, centroid in cluster_centroids.items():
         cluster_match = {}
@@ -285,13 +280,15 @@ def match_agent_to_cluster(
 
             if best_for_agent > best_overall[2]:
                 best_overall = (spk, slug, best_for_agent)
+            if target_agent_slug and slug == target_agent_slug and best_for_agent > best_target[2]:
+                best_target = (spk, slug, best_for_agent)
 
         match_table[spk] = cluster_match
 
     if skipped_dim > 0:
         logger.info(f"Skipped {skipped_dim} dim-mismatched voiceprints during matching")
 
-    agent_spk, agent_slug, best_sim = best_overall
+    agent_spk, agent_slug, best_sim = best_target if target_agent_slug else best_overall
     if best_sim < presence_floor:
         return None, None, best_sim, match_table
     return agent_spk, agent_slug, best_sim, match_table

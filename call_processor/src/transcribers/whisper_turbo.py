@@ -38,6 +38,19 @@ class WhisperTurboTranscriber(BaseTranscriber):
     def transcribe(self, audio_path: str, language: str = "en") -> List[Dict[str, Any]]:
         self.load()
         t0 = time.time()
+        word_ts_default = "0"
+        word_timestamps = (
+            os.getenv("SST_WHISPER_WORD_TIMESTAMPS", word_ts_default).strip().lower()
+            not in {"0", "false", "no", "off"}
+        )
+        initial_prompt = os.getenv("SST_WHISPER_INITIAL_PROMPT", "").strip() or None
+        prompt_file = os.getenv("SST_WHISPER_INITIAL_PROMPT_FILE", "").strip()
+        if not initial_prompt and prompt_file and os.path.isfile(prompt_file):
+            try:
+                with open(prompt_file, "r", encoding="utf-8") as fh:
+                    initial_prompt = fh.read().strip() or None
+            except OSError:
+                initial_prompt = None
         segs_iter, info = self.model.transcribe(
             audio_path,
             language=language,
@@ -48,7 +61,8 @@ class WhisperTurboTranscriber(BaseTranscriber):
             # near-silent chunks, which is more accurate than binary VAD gating.
             vad_filter=False,
             condition_on_previous_text=False,
-            word_timestamps=False,
+            word_timestamps=word_timestamps,
+            initial_prompt=initial_prompt,
             # Fallback temperatures: if segment fails quality checks at temp=0,
             # retry at 0.2, 0.4 ... until one passes. Prevents stuck-loop hallucinations.
             temperature=[0, 0.2, 0.4, 0.6, 0.8, 1.0],
@@ -59,14 +73,33 @@ class WhisperTurboTranscriber(BaseTranscriber):
         out = []
         for s in segs_iter:
             text = s.text.strip()
-            out.append({
+            row = {
                 "start": round(s.start, 2),
                 "end":   round(s.end, 2),
                 "text":  text,
                 "speaker": "SPEAKER_00",
                 "identified_speaker": "SPEAKER_00",
                 "confidence": round(getattr(s, "avg_logprob", 0.0), 3),
-            })
+            }
+            words = []
+            for word in getattr(s, "words", None) or []:
+                token = str(getattr(word, "word", "") or "").strip()
+                start = getattr(word, "start", None)
+                end = getattr(word, "end", None)
+                if not token or start is None or end is None:
+                    continue
+                item = {
+                    "word": token,
+                    "start": round(float(start), 3),
+                    "end": round(float(end), 3),
+                }
+                probability = getattr(word, "probability", None)
+                if probability is not None:
+                    item["probability"] = round(float(probability), 4)
+                words.append(item)
+            if words:
+                row["words"] = words
+            out.append(row)
         before = len(out)
         out = self.filter_hallucinations(out)
         skipped = before - len(out)
