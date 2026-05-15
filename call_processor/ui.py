@@ -734,6 +734,149 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             timeout=600,
         )
 
+    def _make_main_conversation_wav(src: str, dst: str) -> tuple[str, dict]:
+        """
+        Keep only high-energy near-mic conversation regions before ASR.
+        Background voices/noise that never cross the strong gate are dropped.
+        """
+        enabled = os.getenv("SST_MAIN_CONVERSATION_GATE", "1").strip().lower()
+        report = {"enabled": enabled not in {"0", "false", "no", "off"}, "applied": False}
+        if not report["enabled"]:
+            report["reason"] = "disabled"
+            return src, report
+        if not os.path.isfile(src):
+            report["reason"] = "source_missing"
+            return src, report
+
+        try:
+            import numpy as _np
+            import soundfile as _sf
+
+            audio, sr = _sf.read(src, dtype="float32")
+            if getattr(audio, "ndim", 1) > 1:
+                audio = _np.mean(audio, axis=1)
+            if audio.size < max(1, int(sr * 0.5)):
+                report["reason"] = "too_short"
+                return src, report
+
+            frame_s = float(os.getenv("SST_MAIN_CONV_FRAME_SECONDS", "0.20") or "0.20")
+            hop_s = float(os.getenv("SST_MAIN_CONV_HOP_SECONDS", "0.05") or "0.05")
+            start_ratio = float(os.getenv("SST_MAIN_CONV_START_RATIO", "0.40") or "0.40")
+            hold_ratio = float(os.getenv("SST_MAIN_CONV_HOLD_RATIO", "0.18") or "0.18")
+            min_region_s = float(os.getenv("SST_MAIN_CONV_MIN_REGION_SECONDS", "0.35") or "0.35")
+            pad_s = float(os.getenv("SST_MAIN_CONV_PAD_SECONDS", "0.25") or "0.25")
+            merge_gap_s = float(os.getenv("SST_MAIN_CONV_MERGE_GAP_SECONDS", "0.80") or "0.80")
+            min_keep_s = float(os.getenv("SST_MAIN_CONV_MIN_KEEP_SECONDS", "8.0") or "8.0")
+            min_reduction_ratio = float(os.getenv("SST_MAIN_CONV_MIN_REDUCTION_RATIO", "0.03") or "0.03")
+
+            frame = max(1, int(frame_s * sr))
+            hop = max(1, int(hop_s * sr))
+            starts = _np.arange(0, max(1, audio.size - frame + 1), hop, dtype=_np.int64)
+            if starts.size == 0:
+                report["reason"] = "no_frames"
+                return src, report
+
+            sq = _np.square(audio.astype(_np.float32, copy=False), dtype=_np.float32)
+            csum = _np.concatenate(([0.0], _np.cumsum(sq, dtype=_np.float64)))
+            energy = (csum[starts + frame] - csum[starts]) / float(frame)
+            rms = _np.sqrt(_np.maximum(energy, 0.0))
+            active_rms = rms[_np.isfinite(rms) & (rms > 1e-6)]
+            if active_rms.size < 3:
+                report["reason"] = "no_energy"
+                return src, report
+
+            strong_level = float(_np.percentile(active_rms, 95))
+            start_threshold = strong_level * start_ratio
+            hold_threshold = strong_level * hold_ratio
+            high = rms >= start_threshold
+            low = rms >= hold_threshold
+            if not bool(_np.any(high)):
+                report.update({
+                    "reason": "no_main_mic_regions",
+                    "strong_level": round(strong_level, 6),
+                    "start_threshold": round(float(start_threshold), 6),
+                })
+                return src, report
+
+            blocks: list[tuple[float, float]] = []
+            i = 0
+            while i < len(low):
+                if not low[i]:
+                    i += 1
+                    continue
+                j = i + 1
+                while j < len(low) and low[j]:
+                    j += 1
+                if bool(_np.any(high[i:j])):
+                    start_t = max(0.0, float(starts[i]) / sr - pad_s)
+                    end_t = min(float(audio.size) / sr, float(starts[j - 1] + frame) / sr + pad_s)
+                    if end_t - start_t >= min_region_s:
+                        blocks.append((start_t, end_t))
+                i = j
+
+            if not blocks:
+                report["reason"] = "no_blocks"
+                return src, report
+
+            merged: list[tuple[float, float]] = []
+            for start_t, end_t in blocks:
+                if merged and start_t - merged[-1][1] <= merge_gap_s:
+                    merged[-1] = (merged[-1][0], max(merged[-1][1], end_t))
+                else:
+                    merged.append((start_t, end_t))
+
+            source_duration_s = float(audio.size) / sr
+            kept_s = sum(end_t - start_t for start_t, end_t in merged)
+            dropped_s = max(0.0, source_duration_s - kept_s)
+            if kept_s < min_keep_s:
+                report.update({
+                    "reason": "too_little_main_audio",
+                    "source_duration_s": round(source_duration_s, 2),
+                    "kept_duration_s": round(kept_s, 2),
+                })
+                return src, report
+            if source_duration_s > 0 and dropped_s / source_duration_s < min_reduction_ratio:
+                report.update({
+                    "reason": "no_meaningful_reduction",
+                    "source_duration_s": round(source_duration_s, 2),
+                    "kept_duration_s": round(kept_s, 2),
+                })
+                return src, report
+
+            chunks = []
+            for start_t, end_t in merged:
+                start_i = max(0, int(start_t * sr))
+                end_i = min(audio.size, int(end_t * sr))
+                if end_i > start_i:
+                    chunks.append(audio[start_i:end_i])
+            if not chunks:
+                report["reason"] = "no_audio_chunks"
+                return src, report
+            gated_audio = _np.concatenate(chunks).astype(_np.float32, copy=False)
+            _sf.write(dst, gated_audio, sr, subtype="PCM_16")
+
+            if not os.path.isfile(dst) or os.path.getsize(dst) < 1000:
+                report["reason"] = "trim_output_missing"
+                return src, report
+
+            report.update({
+                "applied": True,
+                "audio_file": dst.replace("\\", "/"),
+                "source_duration_s": round(source_duration_s, 2),
+                "kept_duration_s": round(kept_s, 2),
+                "dropped_duration_s": round(dropped_s, 2),
+                "kept_ratio": round(kept_s / source_duration_s, 4) if source_duration_s else 0.0,
+                "blocks": len(merged),
+                "start_ratio": start_ratio,
+                "hold_ratio": hold_ratio,
+                "start_threshold": round(float(start_threshold), 6),
+                "hold_threshold": round(float(hold_threshold), 6),
+            })
+            return dst, report
+        except Exception as exc:
+            report["reason"] = f"failed: {exc}"
+            return src, report
+
     # ── Load transcriber (shared for both channels) ───────────────────────────
     cuda_ok = _cuda_available()
     transcriber_device = "cuda" if cuda_ok else "cpu"
@@ -1011,6 +1154,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     _check_cancelled()
 
     asr_wav = norm_wav
+    diar_wav = norm_wav
+    segment_audio_path = audio_path
+    main_conversation_gate = {"enabled": False, "applied": False, "reason": "not_started"}
     asr_audio_mode = "normalized"
     raw_asr_env = os.getenv("SST_PARAKEET_RAW_ASR", "1")
     raw_asr_enabled = str(raw_asr_env).strip().lower() not in {"0", "false", "no", "off"}
@@ -1023,6 +1169,28 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             print("[UI] Preparing minimal-resample ASR audio for long desk recording...")
             _make_minimal_asr_wav(audio_path, asr_wav)
         _check_cancelled()
+
+    gate_wav = os.path.join(norm_dir, f"mainconv_{base}.wav")
+    gated_wav, main_conversation_gate = _make_main_conversation_wav(asr_wav, gate_wav)
+    if main_conversation_gate.get("applied"):
+        asr_wav = gated_wav
+        diar_wav = gated_wav
+        segment_audio_path = gated_wav
+        asr_audio_mode = f"{asr_audio_mode}+main_conversation_gate"
+        dur_s = _audio_duration_s(gated_wav) or dur_s
+        print(
+            "[UI] Main conversation gate applied: "
+            f"kept {main_conversation_gate.get('kept_duration_s')}s, "
+            f"dropped {main_conversation_gate.get('dropped_duration_s')}s, "
+            f"blocks={main_conversation_gate.get('blocks')}",
+            flush=True,
+        )
+    else:
+        print(
+            f"[UI] Main conversation gate skipped: {main_conversation_gate.get('reason')}",
+            flush=True,
+        )
+    _check_cancelled()
 
     _set_status(3, "Transcription", f"Transcribing with {whisper_model} on {transcriber_device.upper()}...")
     print(f"[UI] Transcribing with {whisper_model} on {transcriber_device} ({asr_audio_mode})...")
@@ -1048,6 +1216,13 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             f"[UI] Word-slice split: {asr_slice_split['original_segments']} -> "
             f"{asr_slice_split['final_segments']} segment(s) "
             f"(+{asr_slice_split['added_segments']})",
+            flush=True,
+        )
+    segments, asr_repeat_loop_filter = _collapse_repeated_asr_loops(segments)
+    if asr_repeat_loop_filter.get("removed_segments"):
+        print(
+            f"[UI] Collapsed {asr_repeat_loop_filter['removed_segments']} ASR repeat-loop segment(s) "
+            f"in {asr_repeat_loop_filter.get('collapsed_runs', 0)} run(s)",
             flush=True,
         )
     _check_cancelled()
@@ -2275,7 +2450,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         )
         def _run_diarization(use_streaming: bool):
             return diarize_clean(
-                audio_path=norm_wav,
+                audio_path=diar_wav,
                 transcribed_segments=segments,
                 backend=backend,
                 max_speakers=max_speakers,
@@ -2385,7 +2560,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             segments,
             agent_name_id,
             diar_result.get("agent_slug"),
-            norm_wav,
+            diar_wav,
         )
         if agent_role_segment_voiceprint_repair.get("evaluated_segments"):
             print(
@@ -2402,7 +2577,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             segments,
             agent_name_id,
             role_agent_slug,
-            norm_wav,
+            diar_wav,
         )
         if target_speaker_vad_role_refinement.get("evaluated_segments"):
             print(
@@ -2461,20 +2636,13 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         pass
 
     # Speaker stats (used by both paths)
-    first_agent_words    = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "AGENT"),    "")
-    first_customer_words = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "CUSTOMER"), "")
+    speaker_stats = _recompute_role_stats(segments)
+    agent_time = float(speaker_stats["AGENT"]["time_s"])
+    customer_time = float(speaker_stats["CUSTOMER"]["time_s"])
+    agent_turns = int(speaker_stats["AGENT"]["turns"])
+    customer_turns = int(speaker_stats["CUSTOMER"]["turns"])
 
     if diarization_applied:
-        speaker_stats = {
-            "AGENT": {
-                "time_s": round(agent_time, 1), "turns": agent_turns,
-                "first_words": first_agent_words[:120],
-            },
-            "CUSTOMER": {
-                "time_s": round(customer_time, 1), "turns": customer_turns,
-                "first_words": first_customer_words[:120],
-            },
-        }
         print(
             f"[UI] Speaker ID done — agent={agent_time:.0f}s/{agent_turns}t  "
             f"customer={customer_time:.0f}s/{customer_turns}t",
@@ -2523,7 +2691,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     # pad_s=1.0: keep 1 s around each block so word edges aren't clipped
     # merge_gap_s=5.0: join blocks separated by ≤5 s — avoids many tiny cuts
     #   in noisy recordings where VAD fires in short bursts
-    trim_ok = _trim_to_speech(audio_path, segments, trimmed_path,
+    trim_ok = _trim_to_speech(segment_audio_path, segments, trimmed_path,
                                pad_s=1.0, merge_gap_s=5.0)
     trimmed_audio_file = trimmed_path.replace("\\", "/") if trim_ok else None
     if not trim_ok:
@@ -2533,10 +2701,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     _identified_agent = identified_agent_name
 
     result = {
-        "audio_file":               audio_path.replace("\\", "/"),
+        "audio_file":               segment_audio_path.replace("\\", "/"),
+        "source_audio_file":        audio_path.replace("\\", "/"),
         "asr_audio_file":           asr_wav.replace("\\", "/"),
         "asr_audio_mode":           asr_audio_mode,
-        "diarization_audio_file":   norm_wav.replace("\\", "/"),
+        "diarization_audio_file":   diar_wav.replace("\\", "/"),
         "trimmed_audio_file":       trimmed_audio_file,
         "model":                    whisper_model,
         "requested_model":          requested_model,
@@ -2576,6 +2745,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "speech_only_segments_added": speech_only_added,
         "transcript_coverage": transcript_coverage,
         "speaker_turn_text_split": locals().get("speaker_turn_text_split", {}),
+        "main_conversation_gate": locals().get("main_conversation_gate", {}),
+        "asr_repeat_loop_filter": locals().get("asr_repeat_loop_filter", {}),
         "unknown_segments_smoothed": locals().get("unknown_segments_smoothed", 0),
         "unknown_segments_customer_fallback": locals().get("unknown_segments_customer_fallback", 0),
         "agent_role_voiceprint_repair": locals().get("agent_role_voiceprint_repair", {}),
@@ -2810,7 +2981,11 @@ def _run_pipeline(
                 rdata["processing_time_seconds"] = pipeline_elapsed
                 rdata["pipeline_time_seconds"] = pipeline_elapsed
                 rdata["enhancements"] = enhancement_paths
-                if enhancement_paths.get("playback_loud"):
+                gate = rdata.get("main_conversation_gate") or {}
+                if gate.get("applied") and rdata.get("audio_file"):
+                    rdata["playback_audio_file"] = rdata["audio_file"]
+                    rdata["enhanced_file"] = rdata["audio_file"]
+                elif enhancement_paths.get("playback_loud"):
                     rdata["playback_audio_file"] = enhancement_paths["playback_loud"]
                     rdata["enhanced_file"] = enhancement_paths["playback_loud"]
                 elif enhancement_paths.get("ffmpeg"):
@@ -3208,6 +3383,77 @@ def _recompute_role_stats(segments: list) -> dict:
     for role in stats:
         stats[role]["time_s"] = round(stats[role]["time_s"], 1)
     return stats
+
+
+def _normalise_asr_loop_text(text: str) -> str:
+    text = re.sub(r"[^\w\s]", " ", str(text or "").lower())
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _collapse_repeated_asr_loops(segments: list) -> tuple[list, dict]:
+    """Drop model repeat loops without any phrase-specific word list."""
+    if not isinstance(segments, list) or not segments:
+        return segments, {"enabled": True, "removed_segments": 0, "collapsed_runs": 0}
+
+    min_run = int(os.getenv("SST_ASR_REPEAT_LOOP_MIN_RUN", "4") or "4")
+    keep_count = max(1, int(os.getenv("SST_ASR_REPEAT_LOOP_KEEP", "1") or "1"))
+    max_item_s = float(os.getenv("SST_ASR_REPEAT_LOOP_MAX_ITEM_SECONDS", "3.0") or "3.0")
+    max_gap_s = float(os.getenv("SST_ASR_REPEAT_LOOP_MAX_GAP_SECONDS", "1.0") or "1.0")
+    max_chars = int(os.getenv("SST_ASR_REPEAT_LOOP_MAX_CHARS", "80") or "80")
+
+    remove_indexes: set[int] = set()
+    runs: list[dict] = []
+    current: list[tuple[int, dict, float, float]] = []
+    current_key = ""
+    last_end = None
+
+    def close_run() -> None:
+        nonlocal current, current_key, last_end
+        if len(current) >= min_run:
+            dropped = current[keep_count:]
+            if dropped:
+                for idx, _seg, _start, _end in dropped:
+                    remove_indexes.add(idx)
+                runs.append({
+                    "text": current_key[:80],
+                    "start": round(current[0][2], 3),
+                    "end": round(current[-1][3], 3),
+                    "count": len(current),
+                    "removed": len(dropped),
+                })
+        current = []
+        current_key = ""
+        last_end = None
+
+    for idx, seg in enumerate(segments):
+        key = _normalise_asr_loop_text(seg.get("text") or seg.get("phrase") or "")
+        try:
+            start = float(seg.get("start", 0.0) or 0.0)
+            end = float(seg.get("end", start) or start)
+        except Exception:
+            start = end = 0.0
+        dur = max(0.0, end - start)
+        gap = 0.0 if last_end is None else start - last_end
+        usable = bool(key) and len(key) <= max_chars and dur <= max_item_s
+        if not usable or gap > max_gap_s or (current_key and key != current_key):
+            close_run()
+        if usable:
+            current.append((idx, seg, start, end))
+            current_key = key
+            last_end = end
+    close_run()
+
+    if not remove_indexes:
+        return segments, {"enabled": True, "removed_segments": 0, "collapsed_runs": 0}
+
+    return [seg for idx, seg in enumerate(segments) if idx not in remove_indexes], {
+        "enabled": True,
+        "removed_segments": len(remove_indexes),
+        "collapsed_runs": len(runs),
+        "kept_per_run": keep_count,
+        "removed_indexes": sorted(remove_indexes),
+        "runs": runs[:20],
+    }
 
 
 def _resolve_result_audio_path(rdata: dict, result_path: Path) -> Path | None:
