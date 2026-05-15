@@ -2138,13 +2138,10 @@
             }).join('');
             const agentLabel = escapeHtml(shortAgentLabel());
             const fullAgent = escapeHtml(currentIdentifiedAgent || 'Agent');
-            const speakerId = escapeHtml(seg.speaker || 'speaker');
             const fixedBadge = seg.manual_role_correction ? '<span class="role-fixed">FIXED</span>' : '';
             const roleTools = `<span class="role-tools">
-                <button class="role-btn ${role === 'AGENT' ? 'active' : ''}" type="button" title="Only this line becomes ${fullAgent}" onclick="correctSegmentRole(event, ${idx}, 'AGENT')">Line ${agentLabel}</button>
-                <button class="role-btn ${role === 'CUSTOMER' ? 'active' : ''}" type="button" title="Only this line becomes Customer" onclick="correctSegmentRole(event, ${idx}, 'CUSTOMER')">Line Customer</button>
-                <button class="role-btn" type="button" title="This message is verified as ${fullAgent} voice; trains when enough verified voice lines exist" onclick="correctSpeakerRole(event, ${idx}, 'AGENT')">Voice ${agentLabel}</button>
-                <button class="role-btn" type="button" title="This message is verified as Customer voice; no agent training" onclick="correctSpeakerRole(event, ${idx}, 'CUSTOMER')">Voice Customer</button>
+                <button class="role-btn ${role === 'AGENT' ? 'active' : ''}" type="button" title="Verify this message as ${fullAgent} voice and train when enough verified messages exist" onclick="correctSpeakerRole(event, ${idx}, 'AGENT')">${agentLabel} Voice</button>
+                <button class="role-btn ${role === 'CUSTOMER' ? 'active' : ''}" type="button" title="Verify this message as Customer voice; no agent voiceprint training" onclick="correctSpeakerRole(event, ${idx}, 'CUSTOMER')">Customer Voice</button>
             </span>`;
 
             return `<div class="bubble ${css}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
