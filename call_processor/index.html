@@ -2064,13 +2064,21 @@
             if (!currentCallId || !indexes.length) return;
             const opts = typeof options === 'boolean' ? { train: options } : (options || {});
             const mode = opts.mode === 'voice' ? 'voice' : 'line';
-            applyRoleLocally(indexes, role, mode);
+            const hasWordSelection = !!Object.keys(opts.selectionByIndex || {}).length;
+            if (!hasWordSelection) {
+                applyRoleLocally(indexes, role, mode);
+            }
             try {
                 const r = await fetch(`/api/call/${encodeURIComponent(currentCallId)}/role-corrections`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        updates: indexes.map(index => ({ index, role, correction_mode: mode })),
+                        updates: indexes.map(index => ({
+                            index,
+                            role,
+                            correction_mode: mode,
+                            selection: opts.selectionByIndex?.[index] || null,
+                        })),
                         correction_mode: mode,
                         train: !!opts.train && role === 'AGENT',
                         agent_name: currentIdentifiedAgent,
@@ -2100,9 +2108,43 @@
             postRoleUpdates([idx], role, { mode: 'line', train: false });
         }
 
+        function selectedWordRangeForSegment(idx) {
+            const selection = window.getSelection?.();
+            if (!selection || selection.isCollapsed || !selection.rangeCount) return null;
+            const bubble = document.getElementById(`seg-${idx}`);
+            if (!bubble) return null;
+            const range = selection.getRangeAt(0);
+            try {
+                if (!range.intersectsNode(bubble)) return null;
+            } catch (_) {
+                return null;
+            }
+            const words = Array.from(bubble.querySelectorAll('.transcript-word'))
+                .filter(node => {
+                    try { return range.intersectsNode(node); }
+                    catch (_) { return false; }
+                });
+            if (!words.length) return null;
+            const start = Math.min(...words.map(w => parseFloat(w.dataset.start || '0')));
+            const end = Math.max(...words.map(w => parseFloat(w.dataset.end || '0')));
+            if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) return null;
+            return {
+                start,
+                end,
+                text: words.map(w => w.textContent || '').join(' ').replace(/\s+/g, ' ').trim(),
+            };
+        }
+
         function correctSpeakerRole(ev, idx, role) {
             ev?.stopPropagation?.();
-            postRoleUpdates([idx], role, { mode: 'voice', train: role === 'AGENT' });
+            const selection = selectedWordRangeForSegment(idx);
+            const selectionByIndex = selection ? { [idx]: selection } : {};
+            postRoleUpdates([idx], role, {
+                mode: 'voice',
+                train: role === 'AGENT',
+                selectionByIndex,
+            });
+            window.getSelection?.()?.removeAllRanges?.();
         }
 
         // ── Render a single chat bubble ─────────────────────────────────────────────

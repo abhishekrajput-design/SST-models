@@ -3106,6 +3106,87 @@ def _sync_transcription_role(
     _apply_manual_role(rows[idx], role, agent_name, stamp, source, voice_verified)
 
 
+def _split_item_for_manual_role(
+    item: dict,
+    role: str,
+    agent_name: str,
+    stamp: str,
+    source: str,
+    voice_verified: bool,
+    selection: dict | None,
+) -> tuple[list[dict], int]:
+    """Apply a manual role to a selected word range inside one segment."""
+    base = dict(item)
+    if not isinstance(selection, dict):
+        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
+        return [base], 0
+
+    try:
+        seg_start = float(base.get("start", 0.0))
+        seg_end = float(base.get("end", 0.0))
+        sel_start = float(selection.get("start"))
+        sel_end = float(selection.get("end"))
+    except Exception:
+        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
+        return [base], 0
+
+    text = str(base.get("text") or base.get("phrase") or "").strip()
+    words = re.findall(r"\S+", text)
+    seg_dur = seg_end - seg_start
+    if len(words) <= 1 or seg_dur <= 0 or sel_end <= sel_start:
+        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
+        return [base], 0
+
+    sel_start = max(seg_start, min(seg_end, sel_start))
+    sel_end = max(seg_start, min(seg_end, sel_end))
+    per_word = seg_dur / len(words)
+    selected = [
+        i for i in range(len(words))
+        if (seg_start + ((i + 1) * per_word)) > sel_start
+        and (seg_start + (i * per_word)) < sel_end
+    ]
+    if not selected:
+        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
+        return [base], 0
+
+    first = selected[0]
+    last = selected[-1]
+    if first == 0 and last == len(words) - 1:
+        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
+        return [base], 0
+
+    parent_start = seg_start
+    parent_end = seg_end
+
+    def make_chunk(start_word: int, end_word: int, selected_chunk: bool) -> dict | None:
+        if start_word > end_word:
+            return None
+        chunk = dict(base)
+        chunk["start"] = round(seg_start + (start_word * per_word), 3)
+        chunk["end"] = round(seg_start + ((end_word + 1) * per_word), 3)
+        chunk["text"] = " ".join(words[start_word:end_word + 1])
+        chunk["manual_word_split"] = True
+        chunk["manual_word_split_parent_start"] = parent_start
+        chunk["manual_word_split_parent_end"] = parent_end
+        if selected_chunk:
+            _apply_manual_role(chunk, role, agent_name, stamp, source, voice_verified)
+        return chunk
+
+    chunks: list[dict] = []
+    selected_offset = 0
+    before = make_chunk(0, first - 1, False)
+    if before:
+        chunks.append(before)
+        selected_offset = 1
+    selected_chunk = make_chunk(first, last, True)
+    if selected_chunk:
+        chunks.append(selected_chunk)
+    after = make_chunk(last + 1, len(words) - 1, False)
+    if after:
+        chunks.append(after)
+    return chunks, selected_offset
+
+
 def _recompute_role_stats(segments: list) -> dict:
     stats = {
         "AGENT": {"time_s": 0.0, "turns": 0, "first_words": ""},
@@ -4034,9 +4115,43 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                         update_mode = "line"
                     voice_verified = update_mode == "voice"
                     source = "ui_voiceprint_feedback" if voice_verified else "ui_line_correction"
-                    _apply_manual_role(segments[idx], role, agent_name, stamp, source, voice_verified)
-                    _sync_transcription_role(rdata, idx, role, agent_name, stamp, source, voice_verified)
-                    applied.append({"index": idx, "role": role, "correction_mode": update_mode})
+                    selection = update.get("selection") if isinstance(update.get("selection"), dict) else None
+                    if selection:
+                        rows = rdata.get("transcription_json")
+                        can_split_rows = isinstance(rows, list) and len(rows) == len(segments)
+                        replacement, selected_offset = _split_item_for_manual_role(
+                            segments[idx],
+                            role,
+                            agent_name,
+                            stamp,
+                            source,
+                            voice_verified,
+                            selection,
+                        )
+                        segments[idx:idx + 1] = replacement
+                        if can_split_rows:
+                            row_replacement, _ = _split_item_for_manual_role(
+                                rows[idx],
+                                role,
+                                agent_name,
+                                stamp,
+                                source,
+                                voice_verified,
+                                selection,
+                            )
+                            rows[idx:idx + 1] = row_replacement
+                        applied_idx = idx + selected_offset
+                        applied.append({
+                            "index": applied_idx,
+                            "original_index": idx,
+                            "role": role,
+                            "correction_mode": update_mode,
+                            "word_split": len(replacement) > 1,
+                        })
+                    else:
+                        _apply_manual_role(segments[idx], role, agent_name, stamp, source, voice_verified)
+                        _sync_transcription_role(rdata, idx, role, agent_name, stamp, source, voice_verified)
+                        applied.append({"index": idx, "role": role, "correction_mode": update_mode})
 
                 if not applied:
                     self._json({"status": "error", "message": "No matching segment indexes"}, 400)
