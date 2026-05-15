@@ -3068,23 +3068,42 @@ def _display_for_role(role: str, agent_name: str) -> str:
     return agent_name if role == "AGENT" else "Customer"
 
 
-def _apply_manual_role(item: dict, role: str, agent_name: str, stamp: str) -> None:
+def _apply_manual_role(
+    item: dict,
+    role: str,
+    agent_name: str,
+    stamp: str,
+    source: str = "ui_line_correction",
+    voice_verified: bool = False,
+) -> None:
     item["identified_speaker"] = role
     item["display_speaker"] = _display_for_role(role, agent_name)
     item["manual_role_correction"] = True
-    item["role_correction_source"] = "ui_voiceprint_feedback"
+    item["role_correction_source"] = source
     item["role_correction_at"] = stamp
+    if voice_verified:
+        item["manual_voice_role_correction"] = True
+    else:
+        item.pop("manual_voice_role_correction", None)
     if role == "AGENT":
         item["agent_name"] = agent_name
     else:
         item.pop("agent_name", None)
 
 
-def _sync_transcription_role(rdata: dict, idx: int, role: str, agent_name: str, stamp: str) -> None:
+def _sync_transcription_role(
+    rdata: dict,
+    idx: int,
+    role: str,
+    agent_name: str,
+    stamp: str,
+    source: str = "ui_line_correction",
+    voice_verified: bool = False,
+) -> None:
     rows = rdata.get("transcription_json")
     if not isinstance(rows, list) or not (0 <= idx < len(rows)):
         return
-    _apply_manual_role(rows[idx], role, agent_name, stamp)
+    _apply_manual_role(rows[idx], role, agent_name, stamp, source, voice_verified)
 
 
 def _recompute_role_stats(segments: list) -> dict:
@@ -3236,6 +3255,7 @@ def _train_manual_role_voiceprint(
         seg for idx, seg in enumerate(rdata.get("segments", []))
         if str(seg.get("identified_speaker") or "").upper() == "AGENT"
         and seg.get("manual_role_correction")
+        and seg.get("manual_voice_role_correction")
         and (source_indexes is None or idx in source_indexes)
     ]
     min_segments = int(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_SEGMENTS", "2"))
@@ -3995,6 +4015,9 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                     self._json({"status": "error", "message": "Result has no segment list"}, 400)
                     return
 
+                correction_mode = str(payload.get("correction_mode") or "line").strip().lower()
+                if correction_mode not in {"line", "voice"}:
+                    correction_mode = "line"
                 stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
                 applied = []
                 for update in updates:
@@ -4006,9 +4029,14 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                         return
                     if idx < 0 or idx >= len(segments):
                         continue
-                    _apply_manual_role(segments[idx], role, agent_name, stamp)
-                    _sync_transcription_role(rdata, idx, role, agent_name, stamp)
-                    applied.append({"index": idx, "role": role})
+                    update_mode = str(update.get("correction_mode") or correction_mode).strip().lower()
+                    if update_mode not in {"line", "voice"}:
+                        update_mode = "line"
+                    voice_verified = update_mode == "voice"
+                    source = "ui_voiceprint_feedback" if voice_verified else "ui_line_correction"
+                    _apply_manual_role(segments[idx], role, agent_name, stamp, source, voice_verified)
+                    _sync_transcription_role(rdata, idx, role, agent_name, stamp, source, voice_verified)
+                    applied.append({"index": idx, "role": role, "correction_mode": update_mode})
 
                 if not applied:
                     self._json({"status": "error", "message": "No matching segment indexes"}, 400)
@@ -4030,13 +4058,14 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                             int(item["index"])
                             for item in applied
                             if item.get("role") == "AGENT"
+                            and item.get("correction_mode") == "voice"
                         }
                         training_report = _train_manual_role_voiceprint(
                             result_path,
                             rdata,
                             agent_slug,
                             agent_name,
-                            train_indexes,
+                            None if train_indexes else set(),
                         )
                     except Exception as exc:
                         training_report = {"trained": False, "reason": f"training_failed: {exc}"}

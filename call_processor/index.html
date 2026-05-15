@@ -2011,14 +2011,20 @@
             return clean.split(/\s+/).filter(Boolean)[0] || 'Agent';
         }
 
-        function applyRoleLocally(indexes, role) {
+        function applyRoleLocally(indexes, role, mode = 'line') {
             const agentName = currentIdentifiedAgent || 'Agent';
+            const isVoiceCorrection = mode === 'voice';
             indexes.forEach(idx => {
                 const seg = currentSegments[idx];
                 if (!seg) return;
                 seg.identified_speaker = role;
                 seg.manual_role_correction = true;
-                seg.role_correction_source = 'ui_voiceprint_feedback';
+                seg.role_correction_source = isVoiceCorrection ? 'ui_voiceprint_feedback' : 'ui_line_correction';
+                if (isVoiceCorrection) {
+                    seg.manual_voice_role_correction = true;
+                } else {
+                    delete seg.manual_voice_role_correction;
+                }
                 if (role === 'AGENT') {
                     seg.agent_name = agentName;
                     seg.display_speaker = agentName;
@@ -2054,16 +2060,19 @@
             }
         }
 
-        async function postRoleUpdates(indexes, role, train = false) {
+        async function postRoleUpdates(indexes, role, options = {}) {
             if (!currentCallId || !indexes.length) return;
-            applyRoleLocally(indexes, role);
+            const opts = typeof options === 'boolean' ? { train: options } : (options || {});
+            const mode = opts.mode === 'voice' ? 'voice' : 'line';
+            applyRoleLocally(indexes, role, mode);
             try {
                 const r = await fetch(`/api/call/${encodeURIComponent(currentCallId)}/role-corrections`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        updates: indexes.map(index => ({ index, role })),
-                        train: !!train && role === 'AGENT',
+                        updates: indexes.map(index => ({ index, role, correction_mode: mode })),
+                        correction_mode: mode,
+                        train: !!opts.train && role === 'AGENT',
                         agent_name: currentIdentifiedAgent,
                         agent_slug: currentIdentifiedAgentSlug,
                     }),
@@ -2088,17 +2097,12 @@
 
         function correctSegmentRole(ev, idx, role) {
             ev?.stopPropagation?.();
-            postRoleUpdates([idx], role, false);
+            postRoleUpdates([idx], role, { mode: 'line', train: false });
         }
 
         function correctSpeakerRole(ev, idx, role) {
             ev?.stopPropagation?.();
-            const speaker = currentSegments[idx]?.speaker;
-            if (!speaker) return postRoleUpdates([idx], role);
-            const indexes = currentSegments
-                .map((seg, i) => seg.speaker === speaker ? i : -1)
-                .filter(i => i >= 0);
-            postRoleUpdates(indexes, role, role === 'AGENT');
+            postRoleUpdates([idx], role, { mode: 'voice', train: role === 'AGENT' });
         }
 
         // ── Render a single chat bubble ─────────────────────────────────────────────
@@ -2139,8 +2143,8 @@
             const roleTools = `<span class="role-tools">
                 <button class="role-btn ${role === 'AGENT' ? 'active' : ''}" type="button" title="Only this line becomes ${fullAgent}" onclick="correctSegmentRole(event, ${idx}, 'AGENT')">Line ${agentLabel}</button>
                 <button class="role-btn ${role === 'CUSTOMER' ? 'active' : ''}" type="button" title="Only this line becomes Customer" onclick="correctSegmentRole(event, ${idx}, 'CUSTOMER')">Line Customer</button>
-                <button class="role-btn" type="button" title="All ${speakerId} lines with the same voice become ${fullAgent}" onclick="correctSpeakerRole(event, ${idx}, 'AGENT')">Voice ${agentLabel}</button>
-                <button class="role-btn" type="button" title="All ${speakerId} lines with the same voice become Customer" onclick="correctSpeakerRole(event, ${idx}, 'CUSTOMER')">Voice Customer</button>
+                <button class="role-btn" type="button" title="This message is verified as ${fullAgent} voice; trains when enough verified voice lines exist" onclick="correctSpeakerRole(event, ${idx}, 'AGENT')">Voice ${agentLabel}</button>
+                <button class="role-btn" type="button" title="This message is verified as Customer voice; no agent training" onclick="correctSpeakerRole(event, ${idx}, 'CUSTOMER')">Voice Customer</button>
             </span>`;
 
             return `<div class="bubble ${css}" id="seg-${idx}" data-start="${seg.start}" data-end="${seg.end}">
