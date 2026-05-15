@@ -734,7 +734,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             timeout=600,
         )
 
-    def _make_main_conversation_wav(src: str, dst: str) -> tuple[str, dict]:
+    def _make_main_conversation_wav(
+        src: str,
+        dst: str,
+        analysis_src: str | None = None,
+    ) -> tuple[str, dict]:
         """
         Keep only high-energy near-mic conversation regions before ASR.
         Background voices/noise that never cross the strong gate are dropped.
@@ -752,10 +756,16 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             import numpy as _np
             import soundfile as _sf
 
-            audio, sr = _sf.read(src, dtype="float32")
-            if getattr(audio, "ndim", 1) > 1:
-                audio = _np.mean(audio, axis=1)
-            if audio.size < max(1, int(sr * 0.5)):
+            source_audio, source_sr = _sf.read(src, dtype="float32")
+            if getattr(source_audio, "ndim", 1) > 1:
+                source_audio = _np.mean(source_audio, axis=1)
+
+            analysis_path = analysis_src if analysis_src and os.path.isfile(analysis_src) else src
+            analysis_audio, analysis_sr = _sf.read(analysis_path, dtype="float32")
+            if getattr(analysis_audio, "ndim", 1) > 1:
+                analysis_audio = _np.mean(analysis_audio, axis=1)
+
+            if analysis_audio.size < max(1, int(analysis_sr * 0.5)):
                 report["reason"] = "too_short"
                 return src, report
 
@@ -765,18 +775,20 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             hold_ratio = float(os.getenv("SST_MAIN_CONV_HOLD_RATIO", "0.18") or "0.18")
             min_region_s = float(os.getenv("SST_MAIN_CONV_MIN_REGION_SECONDS", "0.35") or "0.35")
             pad_s = float(os.getenv("SST_MAIN_CONV_PAD_SECONDS", "0.25") or "0.25")
+            first_preroll_s = float(os.getenv("SST_MAIN_CONV_FIRST_PREROLL_SECONDS", "10.0") or "10.0")
             merge_gap_s = float(os.getenv("SST_MAIN_CONV_MERGE_GAP_SECONDS", "0.80") or "0.80")
             min_keep_s = float(os.getenv("SST_MAIN_CONV_MIN_KEEP_SECONDS", "8.0") or "8.0")
             min_reduction_ratio = float(os.getenv("SST_MAIN_CONV_MIN_REDUCTION_RATIO", "0.03") or "0.03")
+            min_high_s = float(os.getenv("SST_MAIN_CONV_MIN_HIGH_SECONDS", "1.7") or "1.7")
 
-            frame = max(1, int(frame_s * sr))
-            hop = max(1, int(hop_s * sr))
-            starts = _np.arange(0, max(1, audio.size - frame + 1), hop, dtype=_np.int64)
+            frame = max(1, int(frame_s * analysis_sr))
+            hop = max(1, int(hop_s * analysis_sr))
+            starts = _np.arange(0, max(1, analysis_audio.size - frame + 1), hop, dtype=_np.int64)
             if starts.size == 0:
                 report["reason"] = "no_frames"
                 return src, report
 
-            sq = _np.square(audio.astype(_np.float32, copy=False), dtype=_np.float32)
+            sq = _np.square(analysis_audio.astype(_np.float32, copy=False), dtype=_np.float32)
             csum = _np.concatenate(([0.0], _np.cumsum(sq, dtype=_np.float64)))
             energy = (csum[starts + frame] - csum[starts]) / float(frame)
             rms = _np.sqrt(_np.maximum(energy, 0.0))
@@ -807,9 +819,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 j = i + 1
                 while j < len(low) and low[j]:
                     j += 1
-                if bool(_np.any(high[i:j])):
-                    start_t = max(0.0, float(starts[i]) / sr - pad_s)
-                    end_t = min(float(audio.size) / sr, float(starts[j - 1] + frame) / sr + pad_s)
+                high_s = float(_np.sum(high[i:j])) * hop_s
+                if high_s >= min_high_s:
+                    pre_pad = first_preroll_s if not blocks else pad_s
+                    start_t = max(0.0, float(starts[i]) / analysis_sr - pre_pad)
+                    end_t = min(float(analysis_audio.size) / analysis_sr, float(starts[j - 1] + frame) / analysis_sr + pad_s)
                     if end_t - start_t >= min_region_s:
                         blocks.append((start_t, end_t))
                 i = j
@@ -825,7 +839,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 else:
                     merged.append((start_t, end_t))
 
-            source_duration_s = float(audio.size) / sr
+            source_duration_s = min(float(source_audio.size) / source_sr, float(analysis_audio.size) / analysis_sr)
             kept_s = sum(end_t - start_t for start_t, end_t in merged)
             dropped_s = max(0.0, source_duration_s - kept_s)
             if kept_s < min_keep_s:
@@ -845,15 +859,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
 
             chunks = []
             for start_t, end_t in merged:
-                start_i = max(0, int(start_t * sr))
-                end_i = min(audio.size, int(end_t * sr))
+                start_i = max(0, int(start_t * source_sr))
+                end_i = min(source_audio.size, int(end_t * source_sr))
                 if end_i > start_i:
-                    chunks.append(audio[start_i:end_i])
+                    chunks.append(source_audio[start_i:end_i])
             if not chunks:
                 report["reason"] = "no_audio_chunks"
                 return src, report
             gated_audio = _np.concatenate(chunks).astype(_np.float32, copy=False)
-            _sf.write(dst, gated_audio, sr, subtype="PCM_16")
+            _sf.write(dst, gated_audio, source_sr, subtype="PCM_16")
 
             if not os.path.isfile(dst) or os.path.getsize(dst) < 1000:
                 report["reason"] = "trim_output_missing"
@@ -862,13 +876,17 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             report.update({
                 "applied": True,
                 "audio_file": dst.replace("\\", "/"),
+                "analysis_audio_file": str(analysis_path).replace("\\", "/"),
                 "source_duration_s": round(source_duration_s, 2),
+                "first_kept_start_s": round(merged[0][0], 2) if merged else None,
                 "kept_duration_s": round(kept_s, 2),
                 "dropped_duration_s": round(dropped_s, 2),
                 "kept_ratio": round(kept_s / source_duration_s, 4) if source_duration_s else 0.0,
                 "blocks": len(merged),
                 "start_ratio": start_ratio,
                 "hold_ratio": hold_ratio,
+                "min_high_seconds": min_high_s,
+                "first_preroll_seconds": first_preroll_s,
                 "start_threshold": round(float(start_threshold), 6),
                 "hold_threshold": round(float(hold_threshold), 6),
             })
@@ -1170,8 +1188,21 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             _make_minimal_asr_wav(audio_path, asr_wav)
         _check_cancelled()
 
+    gate_analysis_wav = os.path.join(norm_dir, f"gate_analysis_{base}.wav")
+    gate_analysis_src = original_path if original_path and os.path.isfile(original_path) else audio_path
+    try:
+        _make_minimal_asr_wav(gate_analysis_src, gate_analysis_wav)
+        gate_analysis_audio = gate_analysis_wav
+    except Exception as exc:
+        gate_analysis_audio = None
+        print(f"[UI] Main conversation gate analysis audio failed: {exc}", flush=True)
+
     gate_wav = os.path.join(norm_dir, f"mainconv_{base}.wav")
-    gated_wav, main_conversation_gate = _make_main_conversation_wav(asr_wav, gate_wav)
+    gated_wav, main_conversation_gate = _make_main_conversation_wav(
+        asr_wav,
+        gate_wav,
+        gate_analysis_audio,
+    )
     if main_conversation_gate.get("applied"):
         asr_wav = gated_wav
         diar_wav = gated_wav
