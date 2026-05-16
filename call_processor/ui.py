@@ -1375,6 +1375,70 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 return None
             return chunks
 
+        def _join_word_tokens(words: list[dict]) -> str:
+            text = " ".join(str(w.get("word") or w.get("text") or "").strip() for w in words).strip()
+            text = re.sub(r"\s+([.,!?;:%])", r"\1", text)
+            return re.sub(r"\s+", " ", text).strip()
+
+        def _timed_word_slices(seg: dict, parts: list[dict]) -> list[tuple[str, list[dict]]] | None:
+            words = []
+            for raw in seg.get("words") or []:
+                if not isinstance(raw, dict):
+                    continue
+                token = str(raw.get("word") or raw.get("text") or "").strip()
+                if not token:
+                    continue
+                try:
+                    start = float(raw.get("start"))
+                    end = float(raw.get("end"))
+                except (TypeError, ValueError):
+                    continue
+                if end < start:
+                    continue
+                item = dict(raw)
+                item["word"] = token
+                item["start"] = start
+                item["end"] = end
+                words.append(item)
+            if len(words) < len(parts) * min_words_per_child:
+                return None
+
+            buckets: list[list[dict]] = [[] for _ in parts]
+            for word in words:
+                w_start = float(word["start"])
+                w_end = float(word["end"])
+                if w_end == w_start:
+                    w_end = w_start + 0.01
+                mid = (w_start + w_end) / 2.0
+                best_idx = None
+                best_overlap = 0.0
+                for idx, part in enumerate(parts):
+                    overlap = max(0.0, min(w_end, part["end"]) - max(w_start, part["start"]))
+                    if overlap > best_overlap:
+                        best_overlap = overlap
+                        best_idx = idx
+                if best_idx is None:
+                    for idx, part in enumerate(parts):
+                        if part["start"] <= mid <= part["end"]:
+                            best_idx = idx
+                            break
+                if best_idx is None:
+                    best_idx = min(
+                        range(len(parts)),
+                        key=lambda idx: abs(mid - ((parts[idx]["start"] + parts[idx]["end"]) / 2.0)),
+                    )
+                buckets[best_idx].append(word)
+
+            if any(len(bucket) < min_words_per_child for bucket in buckets):
+                return None
+            out = []
+            for bucket in buckets:
+                text = _join_word_tokens(bucket)
+                if not text:
+                    return None
+                out.append((text, bucket))
+            return out
+
         def _merge_parts(parts: list[dict]) -> list[dict]:
             if not parts:
                 return []
@@ -1397,6 +1461,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         added_segments = 0
         skipped_short_text = 0
         skipped_low_coverage = 0
+        word_timed_splits = 0
 
         for seg in text_segments:
             if seg.get("speech_only"):
@@ -1483,17 +1548,33 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 out.append(seg)
                 continue
 
-            chunks = _word_slices(text, [p["duration"] for p in parts])
+            timed_chunks = _timed_word_slices(seg, parts)
+            chunks = timed_chunks
+            if chunks:
+                word_timed_splits += 1
+            else:
+                text_chunks = _word_slices(text, [p["duration"] for p in parts])
+                if text_chunks:
+                    chunks = [(chunk, None) for chunk in text_chunks]
             if not chunks:
                 skipped_short_text += 1
                 out.append(seg)
                 continue
 
-            for idx, (part, chunk_text) in enumerate(zip(parts, chunks)):
+            for idx, (part, (chunk_text, chunk_words)) in enumerate(zip(parts, chunks)):
                 child = dict(seg)
                 child["start"] = round(float(part["start"]), 3)
                 child["end"] = round(float(part["end"]), 3)
                 child["text"] = chunk_text
+                if chunk_words is not None:
+                    child["words"] = [
+                        {
+                            **w,
+                            "start": round(float(w["start"]), 3),
+                            "end": round(float(w["end"]), 3),
+                        }
+                        for w in chunk_words
+                    ]
                 child["speaker"] = part["speaker"]
                 child["identified_speaker"] = part["identified_speaker"]
                 child["display_speaker"] = part["display_speaker"]
@@ -1530,6 +1611,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "min_coverage_ratio": min_coverage_ratio,
             "skipped_short_text": skipped_short_text,
             "skipped_low_coverage": skipped_low_coverage,
+            "word_timed_splits": word_timed_splits,
         }
 
     def _smooth_short_unknown_segments(text_segments: list) -> int:
