@@ -1,0 +1,217 @@
+{
+  "agent_name": "Anil",
+  "agent_slug": "anil",
+  "activated": true,
+  "agents_json_backup": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.backup.anil.clean_campp.20260515T113740Z.json",
+  "embedding_model": "cam++",
+  "embedding_dim": 512,
+  "voiceprints": [
+    "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\anil_clean_campp_all.npy",
+    "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\anil_clean_campp_1.npy",
+    "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\anil_clean_campp_2.npy",
+    "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\anil_clean_campp_3.npy"
+  ],
+  "source_files": [
+    {
+      "path": "C:\\Users\\abhis\\Downloads\\Part 1_Anil.m4a",
+      "duration_s": 29.55,
+      "windows_seen": 28,
+      "windows_used": 27,
+      "rms_p20": 0.00446,
+      "rms_p95": 0.07601,
+      "speech_threshold": 0.01734
+    },
+    {
+      "path": "C:\\Users\\abhis\\Downloads\\PART_5_OPENING_LINES_Anil.m4a",
+      "duration_s": 34.6,
+      "windows_seen": 33,
+      "windows_used": 32,
+      "rms_p20": 0.00681,
+      "rms_p95": 0.13976,
+      "speech_threshold": 0.03074
+    },
+    {
+      "path": "C:\\Users\\abhis\\Downloads\\PART_4_NUMERICS_Anil.m4a",
+      "duration_s": 58.05,
+      "windows_seen": 57,
+      "windows_used": 56,
+      "rms_p20": 0.00855,
+      "rms_p95": 0.1005,
+      "speech_threshold": 0.0251
+    }
+  ],
+  "window_count": 115,
+  "mean_inside_sim": 0.7395,
+  "min_inside_sim": 0.4282,
+  "max_outside_sim": 0.3829,
+  "min_margin": 0.08,
+  "same_source_accuracy": 100.0,
+  "centroid_best_other": [
+    {
+      "voiceprint": "anil_clean_campp_all.npy",
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.3674,
+      "margin_to_mean_inside": 0.3721
+    },
+    {
+      "voiceprint": "anil_clean_campp_1.npy",
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.3535,
+      "margin_to_mean_inside": 0.3859
+    },
+    {
+      "voiceprint": "anil_clean_campp_2.npy",
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.3224,
+      "margin_to_mean_inside": 0.4171
+    },
+    {
+      "voiceprint": "anil_clean_campp_3.npy",
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.3829,
+      "margin_to_mean_inside": 0.3566
+    }
+  ],
+  "weakest_windows": [
+    {
+      "target_similarity": 0.4712,
+      "best_other_slug": "ideal_dacaj",
+      "best_other_similarity": 0.3699,
+      "margin": 0.1013,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.4306,
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.3047,
+      "margin": 0.1259,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.5435,
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.3589,
+      "margin": 0.1846,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.5553,
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.3667,
+      "margin": 0.1886,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.5181,
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.3135,
+      "margin": 0.2046,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.493,
+      "best_other_slug": "niloufar_dastbaz",
+      "best_other_similarity": 0.2853,
+      "margin": 0.2076,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.4282,
+      "best_other_slug": "jason_kurti",
+      "best_other_similarity": 0.2078,
+      "margin": 0.2205,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.5559,
+      "best_other_slug": "kacper_barnet",
+      "best_other_similarity": 0.3033,
+      "margin": 0.2526,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6273,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.3613,
+      "margin": 0.2659,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.7238,
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.4572,
+      "margin": 0.2666,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6881,
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.4081,
+      "margin": 0.28,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6649,
+      "best_other_slug": "janusaan_jeyachandran",
+      "best_other_similarity": 0.379,
+      "margin": 0.2859,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.68,
+      "best_other_slug": "kacper_barnet",
+      "best_other_similarity": 0.3812,
+      "margin": 0.2988,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6701,
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.3657,
+      "margin": 0.3044,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.7359,
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.3964,
+      "margin": 0.3395,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6496,
+      "best_other_slug": "janusaan_jeyachandran",
+      "best_other_similarity": 0.3045,
+      "margin": 0.3451,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.7204,
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.3735,
+      "margin": 0.3468,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.7033,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.3487,
+      "margin": 0.3546,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.647,
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.282,
+      "margin": 0.365,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.7838,
+      "best_other_slug": "aayush",
+      "best_other_similarity": 0.4162,
+      "margin": 0.3676,
+      "accepted": true
+    }
+  ]
+}

@@ -8,7 +8,6 @@ import os
 import re
 import sys
 import gc
-import hashlib
 import json
 import base64
 import shutil
@@ -567,12 +566,14 @@ def _derive_paths(original_path: str) -> dict:
     """Return expected file paths for all 4 enhancement variants."""
     d = os.path.dirname(original_path)
     fname = os.path.basename(original_path)
+    stem, _ext = os.path.splitext(fname)
+    out_fname = f"{stem}.mp3"
     return {
-        "ffmpeg":      os.path.join(d, f"enhanced_{fname}").replace("\\", "/"),
-        "playback_loud": os.path.join(d, f"loud_{fname}").replace("\\", "/"),
-        "noisereduce": os.path.join(d, f"nr_{fname}").replace("\\", "/"),
-        "deepfilter":  os.path.join(d, f"df_{fname}").replace("\\", "/"),
-        "metricgan":   os.path.join(d, f"mg_{fname}").replace("\\", "/"),
+        "ffmpeg":      os.path.join(d, f"enhanced_{out_fname}").replace("\\", "/"),
+        "playback_loud": os.path.join(d, f"loud_{out_fname}").replace("\\", "/"),
+        "noisereduce": os.path.join(d, f"nr_{out_fname}").replace("\\", "/"),
+        "deepfilter":  os.path.join(d, f"df_{out_fname}").replace("\\", "/"),
+        "metricgan":   os.path.join(d, f"mg_{out_fname}").replace("\\", "/"),
     }
 
 
@@ -657,6 +658,169 @@ def _trim_to_speech(audio_path: str, segments: list, out_path: str,
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+def _select_main_conversation_segments(segments: list, audio_duration_s: float = 0.0) -> tuple[list, dict]:
+    """Return segments inside the sustained agent/customer conversation span."""
+    enabled = os.getenv("SST_TRIM_MAIN_CONVERSATION", "1").strip().lower()
+    if enabled in {"0", "false", "no", "off"}:
+        return segments, {"enabled": False, "reason": "disabled", "selected_segments": len(segments)}
+
+    usable = []
+    for seg in sorted(segments or [], key=lambda s: float(s.get("start", 0.0) or 0.0)):
+        if seg.get("speech_only"):
+            continue
+        text = str(seg.get("text") or "").strip()
+        if not text:
+            continue
+        try:
+            start_s = float(seg.get("start", 0.0) or 0.0)
+            end_s = float(seg.get("end", start_s) or start_s)
+        except (TypeError, ValueError):
+            continue
+        if end_s <= start_s:
+            continue
+        usable.append((start_s, end_s, str(seg.get("identified_speaker") or "CUSTOMER"), seg))
+
+    if len(usable) < 4:
+        return segments, {
+            "enabled": True,
+            "reason": "not_enough_segments",
+            "selected_segments": len(segments or []),
+        }
+
+    window_s = float(os.getenv("SST_TRIM_MAIN_WINDOW_SECONDS", "90") or "90")
+    step_s = float(os.getenv("SST_TRIM_MAIN_STEP_SECONDS", "15") or "15")
+    min_speech_s = float(os.getenv("SST_TRIM_MAIN_MIN_SPEECH_SECONDS", "30") or "30")
+    min_agent_s = float(os.getenv("SST_TRIM_MAIN_MIN_AGENT_SECONDS", "5") or "5")
+    min_customer_s = float(os.getenv("SST_TRIM_MAIN_MIN_CUSTOMER_SECONDS", "8") or "8")
+    min_turns = int(os.getenv("SST_TRIM_MAIN_MIN_TURNS", "10") or "10")
+    bridge_gap_s = float(os.getenv("SST_TRIM_MAIN_BRIDGE_GAP_SECONDS", "120") or "120")
+    preroll_s = float(os.getenv("SST_TRIM_MAIN_PREROLL_SECONDS", "3") or "3")
+    postroll_s = float(os.getenv("SST_TRIM_MAIN_POSTROLL_SECONDS", "3") or "3")
+    min_start_s = float(os.getenv("SST_TRIM_MAIN_MIN_START_SECONDS", "0") or "0")
+
+    first_s = usable[0][0]
+    last_s = usable[-1][1]
+    if audio_duration_s > 0:
+        last_s = min(last_s, audio_duration_s)
+
+    candidates: list[dict] = []
+    t = max(0.0, first_s, min_start_s)
+    while t <= last_s:
+        left = t
+        right = min(t + window_s, last_s)
+        if right <= left:
+            break
+        agent_s = customer_s = 0.0
+        turns = agent_turns = customer_turns = 0
+        for start_s, end_s, role, _seg in usable:
+            overlap = max(0.0, min(right, end_s) - max(left, start_s))
+            if overlap <= 0:
+                continue
+            turns += 1
+            if role == "AGENT":
+                agent_s += overlap
+                agent_turns += 1
+            else:
+                customer_s += overlap
+                customer_turns += 1
+        speech_s = agent_s + customer_s
+        if (
+            speech_s >= min_speech_s
+            and agent_s >= min_agent_s
+            and customer_s >= min_customer_s
+            and turns >= min_turns
+        ):
+            candidates.append({
+                "start": left,
+                "end": right,
+                "speech_seconds": speech_s,
+                "agent_seconds": agent_s,
+                "customer_seconds": customer_s,
+                "turns": turns,
+                "agent_turns": agent_turns,
+                "customer_turns": customer_turns,
+            })
+        t += max(step_s, 1.0)
+
+    if not candidates:
+        return segments, {
+            "enabled": True,
+            "reason": "no_sustained_agent_customer_window",
+            "selected_segments": len(segments or []),
+            "window_seconds": window_s,
+            "min_speech_seconds": min_speech_s,
+            "min_agent_seconds": min_agent_s,
+            "min_customer_seconds": min_customer_s,
+        }
+
+    spans = []
+    cur_start = candidates[0]["start"]
+    cur_end = candidates[0]["end"]
+    for cand in candidates[1:]:
+        if cand["start"] - cur_end <= bridge_gap_s:
+            cur_end = max(cur_end, cand["end"])
+        else:
+            spans.append((cur_start, cur_end))
+            cur_start = cand["start"]
+            cur_end = cand["end"]
+    spans.append((cur_start, cur_end))
+    best_span = max(
+        spans,
+        key=lambda span: sum(
+            max(0.0, min(span[1], end_s) - max(span[0], start_s))
+            for start_s, end_s, _role, _seg in usable
+        ),
+    )
+
+    span_start, span_end = best_span
+    selected = [
+        seg for start_s, end_s, _role, seg in usable
+        if end_s >= span_start and start_s <= span_end
+    ]
+    if not selected:
+        return segments, {
+            "enabled": True,
+            "reason": "empty_selected_span",
+            "selected_segments": len(segments or []),
+        }
+
+    trim_start = max(0.0, min(float(seg.get("start", 0.0) or 0.0) for seg in selected) - preroll_s)
+    if min_start_s > 0:
+        trim_start = max(trim_start, min_start_s)
+    trim_end = max(float(seg.get("end", 0.0) or 0.0) for seg in selected) + postroll_s
+    if audio_duration_s > 0:
+        trim_end = min(trim_end, audio_duration_s)
+
+    selected_for_trim = [
+        seg for seg in segments
+        if not seg.get("speech_only")
+        and float(seg.get("end", 0.0) or 0.0) >= trim_start
+        and float(seg.get("start", 0.0) or 0.0) <= trim_end
+    ]
+    if not selected_for_trim:
+        selected_for_trim = selected
+
+    return selected_for_trim, {
+        "enabled": True,
+        "reason": "sustained_agent_customer_window",
+        "selected_segments": len(selected_for_trim),
+        "original_segments": len(segments or []),
+        "candidate_windows": len(candidates),
+        "spans": [
+            {"start": round(float(s), 3), "end": round(float(e), 3)}
+            for s, e in spans
+        ],
+        "selected_start": round(float(trim_start), 3),
+        "selected_end": round(float(trim_end), 3),
+        "window_seconds": window_s,
+        "min_speech_seconds": min_speech_s,
+        "min_agent_seconds": min_agent_s,
+        "min_customer_seconds": min_customer_s,
+        "min_turns": min_turns,
+        "min_start_seconds": min_start_s,
+    }
+
+
 #  Whisper-only transcription (fallback when HF_TOKEN not set)
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
@@ -737,8 +901,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     # ── Load transcriber (shared for both channels) ───────────────────────────
     cuda_ok = _cuda_available()
     transcriber_device = "cuda" if cuda_ok else "cpu"
-    is_parakeet_model = whisper_model.startswith("parakeet-tdt-")
-    isolated_transcriber = is_parakeet_model
+    isolated_transcriber = whisper_model == "parakeet-tdt-0.6b-v3"
     transcriber = None
     if isolated_transcriber:
         _set_status(2, "Transcription", f"Loading {whisper_model} on {transcriber_device.upper()} (isolated)...")
@@ -1015,7 +1178,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     raw_asr_env = os.getenv("SST_PARAKEET_RAW_ASR", "1")
     raw_asr_enabled = str(raw_asr_env).strip().lower() not in {"0", "false", "no", "off"}
     raw_asr_min_s = float(os.getenv("SST_RAW_ASR_MIN_SECONDS", "600") or "600")
-    if is_parakeet_model and raw_asr_enabled and dur_s >= raw_asr_min_s:
+    if whisper_model == "parakeet-tdt-0.6b-v3" and raw_asr_enabled and dur_s >= raw_asr_min_s:
         asr_wav = os.path.join(norm_dir, f"asr_raw_{base}.wav")
         asr_audio_mode = "minimal_resample"
         if not os.path.exists(asr_wav):
@@ -1588,40 +1751,13 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "min_seconds": min_seconds,
         }
 
-    def _foreground_customer_blocks_agent(
-        seg: dict,
-        seconds: float,
-        target_similarity: float | None = None,
-        target_margin: float | None = None,
-        trusted_segment_voiceprint: bool = False,
-    ) -> bool:
+    def _foreground_customer_blocks_agent(seg: dict, seconds: float) -> bool:
         """Block background-agent bleed from overriding a clean customer speaker slice."""
         enabled = os.getenv("SST_FOREGROUND_ROLE_GUARD", "1").strip().lower()
         if enabled in {"0", "false", "no", "off"}:
             return False
         if seg.get("identified_speaker") != "CUSTOMER":
             return False
-        if trusted_segment_voiceprint:
-            try:
-                sim = float(target_similarity)
-                margin = float(target_margin)
-            except (TypeError, ValueError):
-                sim = margin = 0.0
-            trusted_min_sim = float(
-                os.getenv(
-                    "SST_FOREGROUND_TRUSTED_VOICE_MIN_SIM",
-                    os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_SIM", "0.40"),
-                ) or "0.40"
-            )
-            trusted_min_margin = float(
-                os.getenv(
-                    "SST_FOREGROUND_TRUSTED_VOICE_MIN_MARGIN",
-                    os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_MARGIN", "0.03"),
-                ) or "0.03"
-            )
-            if sim >= trusted_min_sim and margin >= trusted_min_margin:
-                seg["foreground_role_guard_bypassed"] = "trusted_segment_voiceprint"
-                return False
         overlap = seg.get("role_overlap")
         if not isinstance(overlap, dict):
             return False
@@ -1643,6 +1779,287 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             and agent_s <= max_agent_s
             and agent_ratio <= max_agent_ratio
         )
+
+    def _split_text_segments_on_target_speaker_activity(
+        text_segments: list,
+        windows: list[dict],
+        agent_name: str | None,
+        agent_slug: str | None,
+        min_sim: float,
+        min_margin: float,
+        target_only: bool,
+    ) -> tuple[list, dict]:
+        """Split ASR rows when target-speaker activity changes inside the row."""
+        enabled = os.getenv("SST_TSVAD_SPLIT_MIXED_SEGMENTS", "1").strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return text_segments, {"enabled": False, "reason": "disabled"}
+        if not text_segments or not windows:
+            return text_segments, {"enabled": True, "reason": "missing_inputs", "added_segments": 0}
+
+        min_parent_s = float(os.getenv("SST_TSVAD_SPLIT_MIN_PARENT_SECONDS", "1.20") or "1.20")
+        min_child_s = float(os.getenv("SST_TSVAD_SPLIT_MIN_CHILD_SECONDS", "0.45") or "0.45")
+        min_child_ratio = float(os.getenv("SST_TSVAD_SPLIT_MIN_CHILD_RATIO", "0.12") or "0.12")
+        min_words_per_child = max(1, int(os.getenv("SST_TSVAD_SPLIT_MIN_WORDS", "2") or "2"))
+        max_parts = max(2, int(os.getenv("SST_TSVAD_SPLIT_MAX_PARTS", "5") or "5"))
+        split_min_sim = float(os.getenv("SST_TSVAD_SPLIT_MIN_SIM", str(max(min_sim, 0.43))) or "0.43")
+        split_min_margin = float(os.getenv("SST_TSVAD_SPLIT_MIN_MARGIN", str(max(min_margin, 0.08))) or "0.08")
+        island_max_s = float(os.getenv("SST_TSVAD_SPLIT_AGENT_ISLAND_MAX_SECONDS", "2.25") or "2.25")
+        island_min_sim = float(os.getenv("SST_TSVAD_SPLIT_AGENT_ISLAND_MIN_SIM", "0.58") or "0.58")
+        island_min_margin = float(os.getenv("SST_TSVAD_SPLIT_AGENT_ISLAND_MIN_MARGIN", "0.24") or "0.24")
+        merge_gap_s = float(os.getenv("SST_TSVAD_SPLIT_MERGE_GAP", "0.05") or "0.05")
+        require_non_target_overlay = os.getenv("SST_TSVAD_SPLIT_REQUIRE_NON_TARGET_OVERLAY", "1").strip().lower()
+        require_non_target_overlay = require_non_target_overlay not in {"0", "false", "no", "off"}
+        min_non_target_s = float(os.getenv("SST_TSVAD_SPLIT_MIN_NONTARGET_SECONDS", "0.15") or "0.15")
+        min_non_target_ratio = float(os.getenv("SST_TSVAD_SPLIT_MIN_NONTARGET_RATIO", "0.05") or "0.05")
+
+        def _float(value, default: float = 0.0) -> float:
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                return default
+
+        def _word_slices(text: str, weights: list[float]) -> list[str] | None:
+            words = str(text or "").split()
+            if len(words) < len(weights) * min_words_per_child:
+                return None
+            total = sum(max(w, 0.001) for w in weights)
+            cuts = [0]
+            running = 0.0
+            for weight in weights[:-1]:
+                running += max(weight, 0.001)
+                cuts.append(round((running / total) * len(words)))
+            cuts.append(len(words))
+            chunks = []
+            for idx in range(len(cuts) - 1):
+                start = int(cuts[idx])
+                end = int(cuts[idx + 1])
+                min_start = idx * min_words_per_child
+                max_end = len(words) - ((len(cuts) - 2 - idx) * min_words_per_child)
+                start = max(start, min_start)
+                end = min(max(end, start + min_words_per_child), max_end)
+                chunks.append(" ".join(words[start:end]).strip())
+            if any(not chunk for chunk in chunks):
+                return None
+            return chunks
+
+        def _state_for_window(w: dict) -> tuple[str, float, float, float]:
+            target = _float(w.get("target_cosine", w.get("cosine", 0.0)))
+            other = _float(w.get("best_other_cosine", 0.0))
+            margin = target - other
+            passes = bool(w.get("is_agent")) and target >= split_min_sim
+            if not target_only:
+                passes = passes and margin >= split_min_margin
+            return ("AGENT" if passes else "CUSTOMER"), target, other, margin
+
+        def _merge_parts(parts: list[dict]) -> list[dict]:
+            if not parts:
+                return []
+            merged = [dict(parts[0])]
+            for part in parts[1:]:
+                cur = merged[-1]
+                if part["role"] == cur["role"] and part["start"] - cur["end"] <= merge_gap_s:
+                    dur = max(part["end"] - part["start"], 0.001)
+                    cur_dur = max(cur["end"] - cur["start"], 0.001)
+                    total = cur_dur + dur
+                    cur["target_sum"] += part["target_sum"]
+                    cur["other_sum"] += part["other_sum"]
+                    cur["margin_sum"] += part["margin_sum"]
+                    cur["end"] = max(cur["end"], part["end"])
+                    cur["target_similarity"] = cur["target_sum"] / total
+                    cur["best_other_similarity"] = cur["other_sum"] / total
+                    cur["margin"] = cur["margin_sum"] / total
+                else:
+                    merged.append(dict(part))
+            return merged
+
+        out = []
+        original_count = len(text_segments)
+        split_parents = 0
+        added_segments = 0
+        suppressed_agent_islands = 0
+        skipped_short_text = 0
+        skipped_small_child = 0
+        sample_splits: list[dict] = []
+
+        for seg in text_segments:
+            if seg.get("speech_only"):
+                out.append(seg)
+                continue
+            text = str(seg.get("text") or "").strip()
+            start_s = _float(seg.get("start"))
+            end_s = _float(seg.get("end"), start_s)
+            dur_s = max(end_s - start_s, 0.0)
+            if dur_s < min_parent_s or not text:
+                out.append(seg)
+                continue
+            if require_non_target_overlay and seg.get("identified_speaker") == "AGENT":
+                overlap = seg.get("role_overlap")
+                if isinstance(overlap, dict):
+                    non_target_s = _float(overlap.get("customer"))
+                    if (
+                        non_target_s < min_non_target_s
+                        and (non_target_s / max(dur_s, 0.001)) < min_non_target_ratio
+                    ):
+                        out.append(seg)
+                        continue
+
+            candidates = []
+            for w in windows:
+                w_start = _float(w.get("start"))
+                w_end = _float(w.get("end"), w_start)
+                center = (w_start + w_end) / 2.0
+                overlap = max(0.0, min(end_s, w_end) - max(start_s, w_start))
+                if not (start_s <= center <= end_s) and overlap < min(0.20, dur_s * 0.20):
+                    continue
+                role, target, other, margin = _state_for_window(w)
+                candidates.append({
+                    "center": min(max(center, start_s), end_s),
+                    "role": role,
+                    "target": target,
+                    "other": other,
+                    "margin": margin,
+                })
+            candidates.sort(key=lambda item: item["center"])
+            if len(candidates) < 2:
+                out.append(seg)
+                continue
+
+            bounds = [start_s]
+            for left, right in zip(candidates, candidates[1:]):
+                mid = (left["center"] + right["center"]) / 2.0
+                if start_s < mid < end_s:
+                    bounds.append(mid)
+            bounds.append(end_s)
+            if len(bounds) != len(candidates) + 1:
+                out.append(seg)
+                continue
+
+            parts = []
+            for idx, item in enumerate(candidates):
+                left = bounds[idx]
+                right = bounds[idx + 1]
+                duration = max(right - left, 0.0)
+                if duration <= 0.04:
+                    continue
+                parts.append({
+                    "start": left,
+                    "end": right,
+                    "role": item["role"],
+                    "target_similarity": item["target"],
+                    "best_other_similarity": item["other"],
+                    "margin": item["margin"],
+                    "target_sum": item["target"] * duration,
+                    "other_sum": item["other"] * duration,
+                    "margin_sum": item["margin"] * duration,
+                })
+            parts = _merge_parts(parts)
+
+            for part in parts:
+                part_dur = max(part["end"] - part["start"], 0.001)
+                part["target_similarity"] = part["target_sum"] / part_dur
+                part["best_other_similarity"] = part["other_sum"] / part_dur
+                part["margin"] = part["margin_sum"] / part_dur
+                if (
+                    part["role"] == "AGENT"
+                    and part_dur <= island_max_s
+                    and (
+                        part["target_similarity"] < island_min_sim
+                        or (not target_only and part["margin"] < island_min_margin)
+                    )
+                ):
+                    part["role"] = "CUSTOMER"
+                    part["suppressed_agent_island"] = True
+                    suppressed_agent_islands += 1
+            parts = _merge_parts(parts)
+
+            if len({p["role"] for p in parts}) < 2:
+                out.append(seg)
+                continue
+            if len(parts) > max_parts:
+                out.append(seg)
+                continue
+            if any((p["end"] - p["start"]) < min_child_s or ((p["end"] - p["start"]) / dur_s) < min_child_ratio for p in parts):
+                skipped_small_child += 1
+                out.append(seg)
+                continue
+
+            chunks = _word_slices(text, [p["end"] - p["start"] for p in parts])
+            if not chunks:
+                skipped_short_text += 1
+                out.append(seg)
+                continue
+
+            for idx, (part, chunk_text) in enumerate(zip(parts, chunks)):
+                child = dict(seg)
+                child["start"] = round(float(part["start"]), 3)
+                child["end"] = round(float(part["end"]), 3)
+                child["text"] = chunk_text
+                child["_target_activity_split_role"] = part["role"]
+                child["_target_activity_split_target_similarity"] = round(float(part["target_similarity"]), 3)
+                child["_target_activity_split_best_other_similarity"] = round(float(part["best_other_similarity"]), 3)
+                child["_target_activity_split_margin"] = round(float(part["margin"]), 3)
+                child["target_speaker_activity_split"] = True
+                child["target_speaker_activity_parent_start"] = round(start_s, 3)
+                child["target_speaker_activity_parent_end"] = round(end_s, 3)
+                child["target_speaker_activity_index"] = idx
+                child["target_speaker_activity_count"] = len(parts)
+                child["target_speaker_activity_source"] = "target_speaker_vad_windows"
+                child.pop("_segment_voice_target_similarity", None)
+                child.pop("_segment_voice_margin", None)
+                child.pop("_segment_voice_best_other_slug", None)
+                if part["role"] == "AGENT":
+                    child["identified_speaker"] = "AGENT"
+                    child["display_speaker"] = agent_name or "Agent"
+                    child["agent_name"] = agent_name or "Agent"
+                    if agent_slug:
+                        child["agent_slug"] = agent_slug
+                else:
+                    child["identified_speaker"] = "CUSTOMER"
+                    child["display_speaker"] = "Customer"
+                    child.pop("agent_name", None)
+                    child.pop("agent_slug", None)
+                out.append(child)
+
+            split_parents += 1
+            added_segments += len(parts) - 1
+            if len(sample_splits) < 30:
+                sample_splits.append({
+                    "start": round(start_s, 2),
+                    "end": round(end_s, 2),
+                    "roles": [p["role"] for p in parts],
+                    "parts": [
+                        {
+                            "start": round(float(p["start"]), 2),
+                            "end": round(float(p["end"]), 2),
+                            "role": p["role"],
+                            "target_similarity": round(float(p["target_similarity"]), 3),
+                            "margin": round(float(p["margin"]), 3),
+                        }
+                        for p in parts
+                    ],
+                    "text": text[:120],
+                })
+
+        out.sort(key=lambda s: (float(s.get("start", 0.0)), float(s.get("end", 0.0))))
+        return out, {
+            "enabled": True,
+            "source": "target_speaker_vad_windows",
+            "original_segments": original_count,
+            "final_segments": len(out),
+            "split_parent_segments": split_parents,
+            "added_segments": added_segments,
+            "suppressed_agent_islands": suppressed_agent_islands,
+            "min_parent_seconds": min_parent_s,
+            "min_child_seconds": min_child_s,
+            "min_child_ratio": min_child_ratio,
+            "min_similarity": split_min_sim,
+            "min_margin": 0.0 if target_only else split_min_margin,
+            "agent_island_min_similarity": island_min_sim,
+            "agent_island_min_margin": 0.0 if target_only else island_min_margin,
+            "skipped_short_text": skipped_short_text,
+            "skipped_small_child": skipped_small_child,
+            "sample_splits": sample_splits,
+        }
 
     def _repair_agent_roles_from_segment_voiceprints(
         text_segments: list,
@@ -1813,13 +2230,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 if target_only
                 else target_sim >= min_sim and margin >= min_margin
             )
-            if is_agent and _foreground_customer_blocks_agent(
-                seg,
-                seconds,
-                target_sim,
-                margin,
-                segment_role_source == "segment_role_voiceprints",
-            ):
+            if is_agent and _foreground_customer_blocks_agent(seg, seconds):
                 is_agent = False
                 foreground_guard_blocks += 1
                 seg["foreground_role_guard"] = "customer_diarization_blocks_background_agent"
@@ -1943,8 +2354,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         This remains voiceprint-only. The transcript text is never inspected;
         segment timestamps are used only to average target-speaker VAD windows.
         """
-        role_engine = (os.getenv("SST_ROLE_ENGINE", "tsvad").strip().lower()
-                       or "tsvad")
+        role_engine = (os.getenv("SST_ROLE_ENGINE", "sortformer_campp").strip().lower()
+                       or "sortformer_campp")
         env_enabled = os.getenv("SST_TARGET_SPEAKER_VAD", "").strip().lower()
         enabled = role_engine in {"tsvad", "target_speaker_vad", "sortformer_campp_tsvad"} or env_enabled in {
             "1", "true", "yes", "on",
@@ -2029,6 +2440,10 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             min_sim = min(threshold_hints)
         if source == "segment_role_voiceprints" and not os.getenv("SST_TSVAD_MIN_MARGIN") and margin_hints:
             min_margin = min(margin_hints)
+        if not os.getenv("SST_TSVAD_MIN_SIM"):
+            min_sim = max(min_sim, float(os.getenv("SST_TSVAD_MIN_SIM_FLOOR", "0.43") or "0.43"))
+        if not os.getenv("SST_TSVAD_MIN_MARGIN"):
+            min_margin = max(min_margin, float(os.getenv("SST_TSVAD_MIN_MARGIN_FLOOR", "0.08") or "0.08"))
         window_s = float(os.getenv("SST_TSVAD_WINDOW_SECONDS", "1.50") or "1.50")
         stride_s = float(os.getenv("SST_TSVAD_STRIDE_SECONDS", "1.00") or "1.00")
         min_overlap_ratio = float(os.getenv("SST_TSVAD_MIN_OVERLAP_RATIO", "0.25") or "0.25")
@@ -2069,6 +2484,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             }
 
         display_name = target_name or agent_name or "Agent"
+        text_segments[:], target_speaker_activity_split = _split_text_segments_on_target_speaker_activity(
+            text_segments,
+            windows,
+            display_name,
+            agent_slug,
+            min_sim,
+            min_margin,
+            target_only,
+        )
         evaluated = skipped = changed_to_agent = changed_to_customer = kept_agent = kept_customer = 0
         foreground_guard_blocks = 0
         strong_segment_kept_agent = 0
@@ -2148,16 +2572,24 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     is_agent = True
                     strong_segment_kept_agent += 1
                     seg["tsvad_segment_voice_override"] = "strong_segment_voiceprint_kept_agent"
-            if is_agent and _foreground_customer_blocks_agent(
-                seg,
-                seconds,
-                decision_score,
-                decision_margin,
-                source == "segment_role_voiceprints",
-            ):
-                is_agent = False
-                foreground_guard_blocks += 1
-                seg["foreground_role_guard"] = "customer_diarization_blocks_background_agent"
+            split_role = seg.get("_target_activity_split_role")
+            if split_role in {"AGENT", "CUSTOMER"}:
+                is_agent = split_role == "AGENT"
+                decision_mode_used = "target_activity_split"
+            if is_agent and _foreground_customer_blocks_agent(seg, seconds):
+                split_score = float(seg.get("_target_activity_split_target_similarity") or target_score)
+                split_margin = float(seg.get("_target_activity_split_margin") or score_margin)
+                split_override = (
+                    split_role == "AGENT"
+                    and split_score >= float(os.getenv("SST_TSVAD_SPLIT_AGENT_ISLAND_MIN_SIM", "0.58") or "0.58")
+                    and (target_only or split_margin >= float(os.getenv("SST_TSVAD_SPLIT_AGENT_ISLAND_MIN_MARGIN", "0.24") or "0.24"))
+                )
+                if not split_override:
+                    is_agent = False
+                    foreground_guard_blocks += 1
+                    seg["foreground_role_guard"] = "customer_diarization_blocks_background_agent"
+                else:
+                    seg["foreground_role_guard"] = "target_activity_split_override"
 
             if is_agent:
                 _set_agent(seg)
@@ -2210,6 +2642,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "window_count": len(windows),
             "window_seconds": window_s,
             "stride_seconds": stride_s,
+            "target_speaker_activity_split": target_speaker_activity_split,
             "evaluated_segments": evaluated,
             "skipped_segments": skipped,
             "foreground_guard_blocks": foreground_guard_blocks,
@@ -2368,12 +2801,25 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             or diar_result.get("cluster_match_table")
             or {}
         )
-        agent_role_voiceprint_repair = _repair_agent_roles_from_voiceprint_clusters(
-            segments,
-            agent_name_id,
-            diar_result.get("agent_slug"),
-            cluster_match_table,
+        multi_agent_identified = (
+            not target_agent_slug
+            and len(diar_result.get("identified_agents") or []) > 1
         )
+        single_target_agent_slug = None if multi_agent_identified else (diar_result.get("agent_slug") or target_agent_slug)
+        if single_target_agent_slug:
+            agent_role_voiceprint_repair = _repair_agent_roles_from_voiceprint_clusters(
+                segments,
+                agent_name_id,
+                single_target_agent_slug,
+                cluster_match_table,
+            )
+        else:
+            agent_role_voiceprint_repair = {
+                "enabled": False,
+                "promoted_speakers": [],
+                "promoted_segments": 0,
+                "reason": "multi_agent_cluster_match" if multi_agent_identified else "no_single_target_agent",
+            }
         if agent_role_voiceprint_repair.get("promoted_segments"):
             print(
                 f"[UI] Voiceprint role repair promoted "
@@ -2381,12 +2827,19 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 f"{len(agent_role_voiceprint_repair.get('promoted_speakers') or [])} same-agent speaker(s)",
                 flush=True,
             )
-        agent_role_segment_voiceprint_repair = _repair_agent_roles_from_segment_voiceprints(
-            segments,
-            agent_name_id,
-            diar_result.get("agent_slug"),
-            norm_wav,
-        )
+        if single_target_agent_slug:
+            agent_role_segment_voiceprint_repair = _repair_agent_roles_from_segment_voiceprints(
+                segments,
+                agent_name_id,
+                single_target_agent_slug,
+                norm_wav,
+            )
+        else:
+            agent_role_segment_voiceprint_repair = {
+                "enabled": False,
+                "reason": "multi_agent_cluster_match" if multi_agent_identified else "no_single_target_agent",
+                "evaluated_segments": 0,
+            }
         if agent_role_segment_voiceprint_repair.get("evaluated_segments"):
             print(
                 f"[UI] Segment voiceprint role assignment evaluated "
@@ -2397,13 +2850,20 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 f"changed_to_customer={agent_role_segment_voiceprint_repair.get('changed_to_customer', 0)}",
                 flush=True,
             )
-        role_agent_slug = diar_result.get("agent_slug") or target_agent_slug
-        target_speaker_vad_role_refinement = _repair_agent_roles_from_target_speaker_vad(
-            segments,
-            agent_name_id,
-            role_agent_slug,
-            norm_wav,
-        )
+        role_agent_slug = single_target_agent_slug or target_agent_slug
+        if role_agent_slug:
+            target_speaker_vad_role_refinement = _repair_agent_roles_from_target_speaker_vad(
+                segments,
+                agent_name_id,
+                role_agent_slug,
+                norm_wav,
+            )
+        else:
+            target_speaker_vad_role_refinement = {
+                "enabled": False,
+                "reason": "multi_agent_cluster_match" if multi_agent_identified else "no_single_target_agent",
+                "evaluated_segments": 0,
+            }
         if target_speaker_vad_role_refinement.get("evaluated_segments"):
             print(
                 f"[UI] Target-speaker VAD role engine evaluated "
@@ -2414,6 +2874,42 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 f"changed_to_customer={target_speaker_vad_role_refinement.get('changed_to_customer', 0)}",
                 flush=True,
             )
+        multi_agent_short_split_repair = {
+            "enabled": bool(multi_agent_identified),
+            "changed_segments": 0,
+            "reason": "not_multi_agent_cluster_match" if not multi_agent_identified else "ok",
+        }
+        if multi_agent_identified:
+            max_short_fragment_s = float(os.getenv("SST_MULTI_AGENT_SHORT_SPLIT_MAX_SECONDS", "1.2") or "1.2")
+            cluster_matches = diar_result.get("multi_agent_cluster_matches") or {}
+            groups: dict[tuple[float, float], list] = {}
+            for seg in segments:
+                if not seg.get("speaker_turn_split"):
+                    continue
+                try:
+                    key = (
+                        round(float(seg.get("speaker_turn_parent_start")), 3),
+                        round(float(seg.get("speaker_turn_parent_end")), 3),
+                    )
+                except (TypeError, ValueError):
+                    continue
+                groups.setdefault(key, []).append(seg)
+            for group in groups.values():
+                for seg in group:
+                    if seg.get("identified_speaker") != "CUSTOMER" or seg.get("agent_slug"):
+                        continue
+                    dur = max(float(seg.get("end", 0.0)) - float(seg.get("start", 0.0)), 0.0)
+                    if dur > max_short_fragment_s:
+                        continue
+                    target = cluster_matches.get(str(seg.get("speaker") or ""))
+                    if not target:
+                        continue
+                    seg["identified_speaker"] = "AGENT"
+                    seg["display_speaker"] = target.get("agent_name") or "AGENT"
+                    seg["agent_name"] = target.get("agent_name")
+                    seg["agent_slug"] = target.get("agent_slug")
+                    seg["multi_agent_short_split_repair"] = True
+                    multi_agent_short_split_repair["changed_segments"] += 1
         agent_role_text_repair = {
             "enabled": False,
             "promoted_speakers": [],
@@ -2489,9 +2985,19 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         sec = s - (h*3600 + m*60)
         return f"{h:02d}:{m:02d}:{sec:06.3f}"
 
-    identified_agent_name = next(
-        (s.get("agent_name") for s in segments if s.get("agent_name")),
-        locals().get("agent_name_id", "Unknown Agent"),
+    identified_agent_names = []
+    identified_agent_slugs = []
+    for _seg in segments:
+        _name = _seg.get("agent_name")
+        if _name and _name not in identified_agent_names:
+            identified_agent_names.append(_name)
+        _slug = _seg.get("agent_slug")
+        if _slug and _slug not in identified_agent_slugs:
+            identified_agent_slugs.append(_slug)
+    identified_agent_name = (
+        ", ".join(identified_agent_names)
+        if identified_agent_names
+        else locals().get("agent_name_id", "Unknown Agent")
     )
 
     transcription_json = []
@@ -2520,10 +3026,19 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     # ── Trim audio to speech-only regions ────────────────────────────────────
     _set_status(3, "Transcription", "Trimming audio to speech regions...")
     trimmed_path = os.path.join(out_dir, "trimmed_audio.mp3")
+    trim_segments, main_conversation_trim = _select_main_conversation_segments(segments, dur_s)
+    if main_conversation_trim.get("reason") == "sustained_agent_customer_window":
+        print(
+            f"[UI] Main conversation trim span: "
+            f"{main_conversation_trim.get('selected_start')}s -> "
+            f"{main_conversation_trim.get('selected_end')}s "
+            f"({main_conversation_trim.get('selected_segments')} segment(s))",
+            flush=True,
+        )
     # pad_s=1.0: keep 1 s around each block so word edges aren't clipped
     # merge_gap_s=5.0: join blocks separated by ≤5 s — avoids many tiny cuts
     #   in noisy recordings where VAD fires in short bursts
-    trim_ok = _trim_to_speech(audio_path, segments, trimmed_path,
+    trim_ok = _trim_to_speech(audio_path, trim_segments, trimmed_path,
                                pad_s=1.0, merge_gap_s=5.0)
     trimmed_audio_file = trimmed_path.replace("\\", "/") if trim_ok else None
     if not trim_ok:
@@ -2553,6 +3068,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "speaker_stats":            speaker_stats,
         "identified_agent":         _identified_agent,
         "identified_agent_slug":    diar_result.get("agent_slug") if diarization_applied else None,
+        "identified_agents":        diar_result.get("identified_agents", []),
+        "identified_agent_slugs":   identified_agent_slugs,
         "speaker_id_backend_dim":   diar_result.get("matched_backend_dim"),
         "voiceprint_dims":          diar_result.get("voiceprint_dims", {}),
         "speaker_id_warning":       (
@@ -2570,18 +3087,25 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             or diar_result.get("cluster_match_table")
             or {}
         ),
+        "multi_agent_cluster_matches": diar_result.get("multi_agent_cluster_matches", {}),
+        "cluster_segment_counts": diar_result.get("cluster_segment_counts", {}),
         "agent_cluster_decision": diar_result.get("agent_cluster_decision", {}),
         "cluster_durations": diar_result.get("cluster_durations", {}),
         "speaker_boundary_refinement": diar_result.get("boundary_refinement", {}),
         "speech_only_segments_added": speech_only_added,
         "transcript_coverage": transcript_coverage,
+        "main_conversation_trim": locals().get("main_conversation_trim", {}),
         "speaker_turn_text_split": locals().get("speaker_turn_text_split", {}),
         "unknown_segments_smoothed": locals().get("unknown_segments_smoothed", 0),
         "unknown_segments_customer_fallback": locals().get("unknown_segments_customer_fallback", 0),
         "agent_role_voiceprint_repair": locals().get("agent_role_voiceprint_repair", {}),
         "agent_role_segment_voiceprint_repair": locals().get("agent_role_segment_voiceprint_repair", {}),
         "target_speaker_vad_role_refinement": locals().get("target_speaker_vad_role_refinement", {}),
-        "role_engine": os.getenv("SST_ROLE_ENGINE", "tsvad").strip().lower() or "tsvad",
+        "target_speaker_activity_split": (
+            locals().get("target_speaker_vad_role_refinement", {}).get("target_speaker_activity_split", {})
+        ),
+        "multi_agent_short_split_repair": locals().get("multi_agent_short_split_repair", {}),
+        "role_engine": os.getenv("SST_ROLE_ENGINE", "sortformer_campp").strip().lower() or "sortformer_campp",
         "agent_role_text_repair": locals().get("agent_role_text_repair", {}),
         "customer_role_text_repair": locals().get("customer_role_text_repair", {}),
         "note": (
@@ -2683,7 +3207,7 @@ def _run_pipeline(
             # let SST_DEEP_ENHANCE override it.
             pipeline_audio = paths["ffmpeg"]   # fallback
             skip_dfn_for_parakeet = (
-                whisper_model.startswith("parakeet-tdt-")
+                whisper_model == "parakeet-tdt-0.6b-v3"
                 and os.getenv("SST_PARAKEET_SKIP_DFN", "1").strip().lower()
                 not in {"0", "false", "no", "off"}
             )
@@ -2712,7 +3236,7 @@ def _run_pipeline(
             # words from quiet speakers. Silence removal therefore only
             # affects the BROWSER PLAYBACK file, not the transcription input.
             prefer_original_parakeet = (
-                whisper_model.startswith("parakeet-tdt-")
+                whisper_model == "parakeet-tdt-0.6b-v3"
                 and os.getenv("SST_PARAKEET_ORIGINAL_SOURCE", "1").strip().lower()
                 not in {"0", "false", "no", "off"}
             )
@@ -3030,547 +3554,6 @@ def _read_last_training_reports() -> dict:
         except Exception:
             continue
     return reports
-
-
-_role_correction_lock = threading.Lock()
-
-
-def _result_path_for_call(call_id: str) -> Path:
-    safe_id = str(call_id or "").replace("\\", "/").strip("/")
-    base_dir = Path(__file__).resolve().parent
-    candidates = [
-        Path(PROCESSED_DIR) / safe_id / "result.json",
-        base_dir / PROCESSED_DIR / safe_id / "result.json",
-        base_dir / "data" / "processed" / safe_id / "result.json",
-    ]
-    for path in candidates:
-        if path.is_file():
-            return path
-    return candidates[0]
-
-
-def _fmt_ts_seconds(seconds: float) -> str:
-    s = max(0.0, float(seconds or 0.0))
-    h = int(s // 3600)
-    m = int((s % 3600) // 60)
-    sec = s - (h * 3600 + m * 60)
-    return f"{h:02d}:{m:02d}:{sec:06.3f}"
-
-
-def _normalise_manual_role(role: str) -> str:
-    value = str(role or "").strip().upper()
-    if value in {"AGENT", "CUSTOMER"}:
-        return value
-    raise ValueError("role must be AGENT or CUSTOMER")
-
-
-def _display_for_role(role: str, agent_name: str) -> str:
-    return agent_name if role == "AGENT" else "Customer"
-
-
-def _apply_manual_role(
-    item: dict,
-    role: str,
-    agent_name: str,
-    stamp: str,
-    source: str = "ui_line_correction",
-    voice_verified: bool = False,
-) -> None:
-    item["identified_speaker"] = role
-    item["display_speaker"] = _display_for_role(role, agent_name)
-    item["manual_role_correction"] = True
-    item["role_correction_source"] = source
-    item["role_correction_at"] = stamp
-    if voice_verified:
-        item["manual_voice_role_correction"] = True
-    else:
-        item.pop("manual_voice_role_correction", None)
-    if role == "AGENT":
-        item["agent_name"] = agent_name
-    else:
-        item.pop("agent_name", None)
-
-
-def _sync_transcription_role(
-    rdata: dict,
-    idx: int,
-    role: str,
-    agent_name: str,
-    stamp: str,
-    source: str = "ui_line_correction",
-    voice_verified: bool = False,
-) -> None:
-    rows = rdata.get("transcription_json")
-    if not isinstance(rows, list) or not (0 <= idx < len(rows)):
-        return
-    _apply_manual_role(rows[idx], role, agent_name, stamp, source, voice_verified)
-
-
-def _split_item_for_manual_role(
-    item: dict,
-    role: str,
-    agent_name: str,
-    stamp: str,
-    source: str,
-    voice_verified: bool,
-    selection: dict | None,
-) -> tuple[list[dict], int]:
-    """Apply a manual role to a selected word range inside one segment."""
-    base = dict(item)
-    if not isinstance(selection, dict):
-        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
-        return [base], 0
-
-    try:
-        seg_start = float(base.get("start", 0.0))
-        seg_end = float(base.get("end", 0.0))
-        sel_start = float(selection.get("start"))
-        sel_end = float(selection.get("end"))
-    except Exception:
-        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
-        return [base], 0
-
-    text = str(base.get("text") or base.get("phrase") or "").strip()
-    words = re.findall(r"\S+", text)
-    seg_dur = seg_end - seg_start
-    if len(words) <= 1 or seg_dur <= 0 or sel_end <= sel_start:
-        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
-        return [base], 0
-
-    sel_start = max(seg_start, min(seg_end, sel_start))
-    sel_end = max(seg_start, min(seg_end, sel_end))
-    per_word = seg_dur / len(words)
-    selected = [
-        i for i in range(len(words))
-        if (seg_start + ((i + 1) * per_word)) > sel_start
-        and (seg_start + (i * per_word)) < sel_end
-    ]
-    if not selected:
-        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
-        return [base], 0
-
-    first = selected[0]
-    last = selected[-1]
-    if first == 0 and last == len(words) - 1:
-        _apply_manual_role(base, role, agent_name, stamp, source, voice_verified)
-        return [base], 0
-
-    parent_start = seg_start
-    parent_end = seg_end
-
-    def make_chunk(start_word: int, end_word: int, selected_chunk: bool) -> dict | None:
-        if start_word > end_word:
-            return None
-        chunk = dict(base)
-        chunk["start"] = round(seg_start + (start_word * per_word), 3)
-        chunk["end"] = round(seg_start + ((end_word + 1) * per_word), 3)
-        chunk["text"] = " ".join(words[start_word:end_word + 1])
-        chunk["manual_word_split"] = True
-        chunk["manual_word_split_parent_start"] = parent_start
-        chunk["manual_word_split_parent_end"] = parent_end
-        if selected_chunk:
-            _apply_manual_role(chunk, role, agent_name, stamp, source, voice_verified)
-        return chunk
-
-    chunks: list[dict] = []
-    selected_offset = 0
-    before = make_chunk(0, first - 1, False)
-    if before:
-        chunks.append(before)
-        selected_offset = 1
-    selected_chunk = make_chunk(first, last, True)
-    if selected_chunk:
-        chunks.append(selected_chunk)
-    after = make_chunk(last + 1, len(words) - 1, False)
-    if after:
-        chunks.append(after)
-    return chunks, selected_offset
-
-
-def _recompute_role_stats(segments: list) -> dict:
-    stats = {
-        "AGENT": {"time_s": 0.0, "turns": 0, "first_words": ""},
-        "CUSTOMER": {"time_s": 0.0, "turns": 0, "first_words": ""},
-    }
-    for seg in segments or []:
-        role = str(seg.get("identified_speaker") or "").upper()
-        if role not in stats:
-            continue
-        try:
-            dur = max(0.0, float(seg.get("end", 0)) - float(seg.get("start", 0)))
-        except Exception:
-            dur = 0.0
-        stats[role]["time_s"] += dur
-        stats[role]["turns"] += 1
-        if not stats[role]["first_words"]:
-            text = str(seg.get("text") or seg.get("phrase") or "").strip()
-            stats[role]["first_words"] = text[:120]
-    for role in stats:
-        stats[role]["time_s"] = round(stats[role]["time_s"], 1)
-    return stats
-
-
-def _resolve_result_audio_path(rdata: dict, result_path: Path) -> Path | None:
-    base_dir = Path(__file__).resolve().parent
-    roots = [Path.cwd(), base_dir, base_dir.parent, result_path.parent]
-    for key in (
-        "diarization_audio_file",
-        "asr_audio_file",
-        "playback_audio_file",
-        "enhanced_file",
-        "audio_file",
-    ):
-        raw = rdata.get(key)
-        if not raw:
-            continue
-        text = str(raw).replace("\\", "/")
-        candidates: list[Path] = [Path(text)]
-        if "call_processor/" in text:
-            tail = text.split("call_processor/", 1)[1]
-            candidates.extend(root / tail for root in roots)
-        candidates.extend(root / text for root in roots)
-        candidates.append(result_path.parent / Path(text).name)
-        for path in candidates:
-            try:
-                if path.is_file():
-                    return path
-            except OSError:
-                continue
-    return None
-
-
-def _l2_norm_np(vec):
-    import numpy as np
-
-    arr = np.asarray(vec, dtype=np.float32).squeeze()
-    norm = float(np.linalg.norm(arr))
-    return arr / norm if norm > 0 else arr
-
-
-def _resolve_voiceprint_file(raw: str) -> Path:
-    path = Path(str(raw or ""))
-    if path.is_file():
-        return path
-    return Path(_VOICEPRINT_DIR) / str(raw or "")
-
-
-def _existing_voiceprint_matches(centroid, agent_slug: str) -> dict:
-    import numpy as np
-
-    matches = []
-    agents = _read_agents_json()
-    for slug, info in agents.items():
-        if not isinstance(info, dict):
-            continue
-        raw_paths = []
-        vps = info.get("voiceprints")
-        if isinstance(vps, list):
-            for entry in vps:
-                raw = entry.get("path") if isinstance(entry, dict) else entry
-                if raw:
-                    raw_paths.append(raw)
-        if not raw_paths:
-            raw = info.get("voiceprint_path") or info.get("voiceprint")
-            if raw:
-                raw_paths.append(raw)
-        best = None
-        for raw in raw_paths:
-            path = _resolve_voiceprint_file(raw)
-            if not path.is_file():
-                continue
-            try:
-                vp = _l2_norm_np(np.load(path))
-            except Exception:
-                continue
-            if vp.shape != centroid.shape:
-                continue
-            sim = float(np.dot(vp, centroid))
-            best = sim if best is None else max(best, sim)
-        if best is not None:
-            matches.append({
-                "agent_slug": slug,
-                "agent_name": info.get("agent_name") or info.get("name") or slug,
-                "similarity": round(best, 4),
-            })
-    matches.sort(key=lambda row: row["similarity"], reverse=True)
-    target = next((row for row in matches if row["agent_slug"] == agent_slug), None)
-    other = next((row for row in matches if row["agent_slug"] != agent_slug), None)
-    return {
-        "target_existing_similarity": target["similarity"] if target else None,
-        "next_best_other": other,
-        "margin_to_next_best": (
-            round((target["similarity"] - other["similarity"]), 4)
-            if target and other else None
-        ),
-        "top_matches": matches[:5],
-    }
-
-
-def _manual_training_signature(agent_slug: str, segments: list) -> str:
-    payload = [
-        {
-            "agent_slug": agent_slug,
-            "start": round(float(seg.get("start", 0.0)), 3),
-            "end": round(float(seg.get("end", 0.0)), 3),
-            "speaker": seg.get("speaker"),
-            "text": str(seg.get("text") or seg.get("phrase") or "").strip(),
-        }
-        for seg in segments
-    ]
-    return hashlib.sha1(
-        json.dumps(payload, sort_keys=True, ensure_ascii=True).encode("utf-8")
-    ).hexdigest()
-
-
-def _train_manual_role_voiceprint(
-    result_path: Path,
-    rdata: dict,
-    agent_slug: str,
-    agent_name: str,
-    source_indexes: set[int] | None = None,
-) -> dict:
-    import numpy as np
-    import soundfile as sf
-
-    segments = [
-        seg for idx, seg in enumerate(rdata.get("segments", []))
-        if str(seg.get("identified_speaker") or "").upper() == "AGENT"
-        and seg.get("manual_role_correction")
-        and seg.get("manual_voice_role_correction")
-        and (source_indexes is None or idx in source_indexes)
-    ]
-    min_segments = int(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_SEGMENTS", "2"))
-    min_total_s = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_SECONDS", "3.0"))
-    min_seg_s = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_SEGMENT_SECONDS", "0.45"))
-    max_total_s = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MAX_SECONDS", "90.0"))
-    pad_s = float(os.getenv("SST_MANUAL_ROLE_TRAIN_PAD_SECONDS", "0.12"))
-
-    eligible = []
-    for seg in segments:
-        try:
-            start = float(seg.get("start", 0.0))
-            end = float(seg.get("end", 0.0))
-        except Exception:
-            continue
-        dur = end - start
-        if dur >= min_seg_s:
-            eligible.append((start, end, dur, seg))
-
-    total_s = sum(row[2] for row in eligible)
-    if len(eligible) < min_segments or total_s < min_total_s:
-        return {
-            "trained": False,
-            "reason": "not_enough_verified_agent_audio",
-            "corrected_agent_segments": len(eligible),
-            "corrected_agent_seconds": round(total_s, 2),
-            "required_segments": min_segments,
-            "required_seconds": min_total_s,
-        }
-
-    signature = _manual_training_signature(agent_slug, [row[3] for row in eligible])
-    previous = rdata.get("manual_role_training") or {}
-    if previous.get("signature") == signature and previous.get("voiceprint_file"):
-        return {
-            "trained": False,
-            "reason": "already_trained_for_current_corrections",
-            "voiceprint_file": previous.get("voiceprint_file"),
-            "signature": signature,
-        }
-
-    audio_path = _resolve_result_audio_path(rdata, result_path)
-    if not audio_path:
-        return {"trained": False, "reason": "source_audio_not_found"}
-
-    try:
-        audio, sr = sf.read(str(audio_path), dtype="float32", always_2d=True)
-    except Exception as exc:
-        return {"trained": False, "reason": f"source_audio_read_failed: {exc}"}
-    mono = audio.mean(axis=1)
-
-    selected = []
-    running_s = 0.0
-    for start, end, dur, seg in sorted(eligible, key=lambda row: row[0]):
-        if selected and running_s >= max_total_s:
-            break
-        selected.append((start, end, dur, seg))
-        running_s += dur
-
-    from src.embedding_campp import get_model
-
-    existing_target_stack = None
-    existing_other_stacks: list[tuple[str, np.ndarray]] = []
-    try:
-        from src.diar_multi import _load_voiceprints
-
-        loaded_voiceprints = _load_voiceprints()
-        target = loaded_voiceprints.get(agent_slug)
-        if target and getattr(target[1], "ndim", 0) == 2 and len(target[1]):
-            existing_target_stack = np.asarray(target[1], dtype=np.float32)
-            existing_other_stacks = [
-                (slug, np.asarray(stack, dtype=np.float32))
-                for slug, (_name, stack) in loaded_voiceprints.items()
-                if slug != agent_slug
-                and getattr(stack, "ndim", 0) == 2
-                and stack.shape[1] == existing_target_stack.shape[1]
-                and len(stack)
-            ]
-    except Exception:
-        existing_target_stack = None
-        existing_other_stacks = []
-
-    embedder = get_model(force_cpu=True)
-    embedder.load(force_cpu=True)
-    embs = []
-    rejected_by_existing_voiceprint = 0
-    train_min_existing_sim = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_EXISTING_SIM", "0.40") or "0.40")
-    train_min_existing_margin = float(os.getenv("SST_MANUAL_ROLE_TRAIN_MIN_EXISTING_MARGIN", "0.03") or "0.03")
-    segment_quality_samples = []
-    for start, end, _dur, _seg in selected:
-        s0 = max(0, int((start - pad_s) * sr))
-        s1 = min(len(mono), int((end + pad_s) * sr))
-        if s1 <= s0:
-            continue
-        try:
-            emb = embedder.embed_chunk(mono[s0:s1], sr=sr)
-        except Exception:
-            emb = None
-        if emb is not None:
-            emb = _l2_norm_np(emb)
-            target_sim = None
-            margin = None
-            if (
-                existing_target_stack is not None
-                and emb.shape[0] == existing_target_stack.shape[1]
-            ):
-                target_sim = float(np.max(existing_target_stack @ emb))
-                best_other = 0.0
-                best_other_slug = None
-                for slug, stack in existing_other_stacks:
-                    sim = float(np.max(stack @ emb))
-                    if sim > best_other:
-                        best_other = sim
-                        best_other_slug = slug
-                margin = target_sim - best_other
-                if target_sim < train_min_existing_sim or (
-                    existing_other_stacks and margin < train_min_existing_margin
-                ):
-                    rejected_by_existing_voiceprint += 1
-                    if len(segment_quality_samples) < 20:
-                        segment_quality_samples.append({
-                            "start": round(start, 2),
-                            "end": round(end, 2),
-                            "accepted": False,
-                            "target_similarity": round(target_sim, 4),
-                            "margin": round(margin, 4),
-                            "best_other_slug": best_other_slug,
-                            "text": str(_seg.get("text") or "")[:120],
-                        })
-                    continue
-            embs.append(emb)
-            if len(segment_quality_samples) < 20:
-                segment_quality_samples.append({
-                    "start": round(start, 2),
-                    "end": round(end, 2),
-                    "accepted": True,
-                    "target_similarity": round(target_sim, 4) if target_sim is not None else None,
-                    "margin": round(margin, 4) if margin is not None else None,
-                    "text": str(_seg.get("text") or "")[:120],
-                })
-
-    if len(embs) < min_segments:
-        return {
-            "trained": False,
-            "reason": "embedding_failed_for_verified_audio",
-            "embedded_segments": len(embs),
-            "rejected_by_existing_voiceprint": rejected_by_existing_voiceprint,
-            "required_segments": min_segments,
-        }
-
-    centroid = _l2_norm_np(np.mean(np.stack(embs), axis=0))
-    validation = _existing_voiceprint_matches(centroid, agent_slug)
-
-    os.makedirs(_VOICEPRINT_DIR, exist_ok=True)
-    stamp = time.strftime("%Y%m%dT%H%M%S")
-    file_name = f"{agent_slug}_ui_corrected_{stamp}.npy"
-    vp_path = Path(_VOICEPRINT_DIR) / file_name
-    np.save(vp_path, centroid.astype(np.float32))
-
-    agents = _read_agents_json()
-    info = agents.setdefault(agent_slug, {})
-    info["agent_name"] = agent_name or info.get("agent_name") or agent_slug
-    vps = info.get("voiceprints")
-    if not isinstance(vps, list):
-        vps = []
-        legacy = info.get("voiceprint_path") or info.get("voiceprint")
-        if legacy:
-            vps.append({"path": legacy, "source": "legacy"})
-        info["voiceprints"] = vps
-    entry = {
-        "path": file_name,
-        "source": "ui_role_correction",
-        "embedding_model": embedder.model_name,
-        "embedding_dim": int(centroid.shape[0]),
-        "manual_verified": True,
-        "segment_role_voiceprint": True,
-        "source_result": str(result_path.parent.name),
-        "source_audio": str(audio_path),
-        "source_segment_count": len(selected),
-        "source_seconds": round(sum(row[2] for row in selected), 2),
-        "signature": signature,
-        "created_at_epoch": int(time.time()),
-        "validation": validation,
-    }
-    vps.append(entry)
-    info["n_voiceprints"] = len(vps)
-    info["embedding_model"] = embedder.model_name
-    info["embedding_dim"] = int(centroid.shape[0])
-    info["updated_at_epoch"] = int(time.time())
-
-    if os.path.isfile(_AGENTS_JSON):
-        backup = Path(_VOICEPRINT_DIR) / f"agents.backup.{agent_slug}.ui_role_correction.{stamp}.json"
-        shutil.copy2(_AGENTS_JSON, backup)
-    else:
-        backup = None
-    with open(_AGENTS_JSON, "w", encoding="utf-8") as f:
-        json.dump(agents, f, indent=2, ensure_ascii=False)
-
-    reports_dir = Path(_VOICEPRINT_DIR) / "manual_role_reports"
-    reports_dir.mkdir(parents=True, exist_ok=True)
-    report_path = reports_dir / f"{agent_slug}_{result_path.parent.name}_{stamp}.json"
-    report = {
-        "trained": True,
-        "agent_slug": agent_slug,
-        "agent_name": agent_name,
-        "voiceprint_file": file_name,
-        "embedding_model": embedder.model_name,
-        "embedding_dim": int(centroid.shape[0]),
-        "source_result": str(result_path.parent.name),
-        "source_audio": str(audio_path),
-        "corrected_agent_segments": len(selected),
-        "corrected_agent_seconds": round(sum(row[2] for row in selected), 2),
-        "embedded_segments": len(embs),
-        "rejected_by_existing_voiceprint": rejected_by_existing_voiceprint,
-        "train_min_existing_similarity": train_min_existing_sim,
-        "train_min_existing_margin": train_min_existing_margin,
-        "segment_quality_samples": segment_quality_samples,
-        "signature": signature,
-        "agents_backup": str(backup) if backup else None,
-        "validation": validation,
-    }
-    with open(report_path, "w", encoding="utf-8") as f:
-        json.dump(report, f, indent=2, ensure_ascii=False)
-
-    rdata["manual_role_training"] = {
-        "trained_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "signature": signature,
-        "voiceprint_file": file_name,
-        "report": str(report_path),
-        "corrected_agent_segments": len(selected),
-        "corrected_agent_seconds": round(sum(row[2] for row in selected), 2),
-        "embedding_model": embedder.model_name,
-        "embedding_dim": int(centroid.shape[0]),
-    }
-    return report
 
 
 def _auto_train_worker(agents_filter: list | None, days: int,
@@ -4034,175 +4017,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         if not self._check_auth():
             return
         parsed = urlparse(self.path)
-
-        # POST /api/call/<id>/role-corrections
-        # Persist reviewer-confirmed AGENT/CUSTOMER labels and, when requested,
-        # append corrected agent audio as a verified voiceprint for future runs.
-        role_correction_path = parsed.path.rstrip("/")
-        if role_correction_path.startswith("/api/call/") and "/role-corrections" in role_correction_path:
-            call_id = unquote(
-                role_correction_path[len("/api/call/"):].rsplit("/role-corrections", 1)[0]
-            )
-            try:
-                n = int(self.headers.get("Content-Length", 0))
-                payload = json.loads(self.rfile.read(n).decode("utf-8") or "{}")
-            except Exception as exc:
-                self._json({"status": "error", "message": f"Invalid JSON: {exc}"}, 400)
-                return
-
-            updates = payload.get("updates") or []
-            if isinstance(updates, dict):
-                updates = [updates]
-            if not isinstance(updates, list) or not updates:
-                self._json({"status": "error", "message": "No role updates supplied"}, 400)
-                return
-
-            result_path = _result_path_for_call(call_id)
-            if not result_path.is_file():
-                self._json({"status": "error", "message": "Call not found"}, 404)
-                return
-
-            with _role_correction_lock:
-                try:
-                    with open(result_path, "r", encoding="utf-8") as f:
-                        rdata = json.load(f)
-                except Exception as exc:
-                    self._json({"status": "error", "message": f"Could not read result: {exc}"}, 500)
-                    return
-
-                agent_slug = (
-                    payload.get("agent_slug")
-                    or rdata.get("identified_agent_slug")
-                    or rdata.get("target_agent_slug")
-                    or _resolve_target_agent_slug(None, rdata.get("identified_agent") or "", call_id)
-                )
-                agents = _read_agents_json()
-                agent_info = agents.get(agent_slug, {}) if agent_slug else {}
-                agent_name = (
-                    payload.get("agent_name")
-                    or rdata.get("identified_agent")
-                    or agent_info.get("agent_name")
-                    or agent_info.get("name")
-                    or "Agent"
-                )
-                if not agent_slug:
-                    agent_slug = _resolve_target_agent_slug(agent_name, call_id)
-                if not agent_slug:
-                    self._json({"status": "error", "message": "No target agent is known for this call"}, 400)
-                    return
-
-                segments = rdata.get("segments")
-                if not isinstance(segments, list):
-                    self._json({"status": "error", "message": "Result has no segment list"}, 400)
-                    return
-
-                correction_mode = str(payload.get("correction_mode") or "line").strip().lower()
-                if correction_mode not in {"line", "voice"}:
-                    correction_mode = "line"
-                stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-                applied = []
-                for update in updates:
-                    try:
-                        idx = int(update.get("index"))
-                        role = _normalise_manual_role(update.get("role"))
-                    except Exception as exc:
-                        self._json({"status": "error", "message": f"Bad update: {exc}"}, 400)
-                        return
-                    if idx < 0 or idx >= len(segments):
-                        continue
-                    update_mode = str(update.get("correction_mode") or correction_mode).strip().lower()
-                    if update_mode not in {"line", "voice"}:
-                        update_mode = "line"
-                    voice_verified = update_mode == "voice"
-                    source = "ui_voiceprint_feedback" if voice_verified else "ui_line_correction"
-                    selection = update.get("selection") if isinstance(update.get("selection"), dict) else None
-                    if selection:
-                        rows = rdata.get("transcription_json")
-                        can_split_rows = isinstance(rows, list) and len(rows) == len(segments)
-                        replacement, selected_offset = _split_item_for_manual_role(
-                            segments[idx],
-                            role,
-                            agent_name,
-                            stamp,
-                            source,
-                            voice_verified,
-                            selection,
-                        )
-                        segments[idx:idx + 1] = replacement
-                        if can_split_rows:
-                            row_replacement, _ = _split_item_for_manual_role(
-                                rows[idx],
-                                role,
-                                agent_name,
-                                stamp,
-                                source,
-                                voice_verified,
-                                selection,
-                            )
-                            rows[idx:idx + 1] = row_replacement
-                        applied_idx = idx + selected_offset
-                        applied.append({
-                            "index": applied_idx,
-                            "original_index": idx,
-                            "role": role,
-                            "correction_mode": update_mode,
-                            "word_split": len(replacement) > 1,
-                        })
-                    else:
-                        _apply_manual_role(segments[idx], role, agent_name, stamp, source, voice_verified)
-                        _sync_transcription_role(rdata, idx, role, agent_name, stamp, source, voice_verified)
-                        applied.append({"index": idx, "role": role, "correction_mode": update_mode})
-
-                if not applied:
-                    self._json({"status": "error", "message": "No matching segment indexes"}, 400)
-                    return
-
-                rdata["identified_agent"] = agent_name
-                rdata["identified_agent_slug"] = agent_slug
-                rdata["target_agent_slug"] = rdata.get("target_agent_slug") or agent_slug
-                rdata["speaker_stats"] = _recompute_role_stats(segments)
-                rdata["manual_role_corrections_count"] = sum(
-                    1 for seg in segments if seg.get("manual_role_correction")
-                )
-                rdata["manual_role_corrections_updated_at"] = stamp
-
-                training_report = {"trained": False, "reason": "training_not_requested"}
-                if payload.get("train", True):
-                    try:
-                        train_indexes = {
-                            int(item["index"])
-                            for item in applied
-                            if item.get("role") == "AGENT"
-                            and item.get("correction_mode") == "voice"
-                        }
-                        training_report = _train_manual_role_voiceprint(
-                            result_path,
-                            rdata,
-                            agent_slug,
-                            agent_name,
-                            None if train_indexes else set(),
-                        )
-                    except Exception as exc:
-                        training_report = {"trained": False, "reason": f"training_failed: {exc}"}
-
-                try:
-                    with open(result_path, "w", encoding="utf-8") as f:
-                        json.dump(rdata, f, indent=2, ensure_ascii=False)
-                except Exception as exc:
-                    self._json({"status": "error", "message": f"Could not write result: {exc}"}, 500)
-                    return
-
-            self._json({
-                "status": "ok",
-                "updated": len(applied),
-                "applied": applied,
-                "identified_agent": rdata.get("identified_agent"),
-                "identified_agent_slug": rdata.get("identified_agent_slug"),
-                "speaker_stats": rdata.get("speaker_stats", {}),
-                "segments": rdata.get("segments", []),
-                "training_report": training_report,
-            })
-            return
 
         # POST /api/call/<id>/swap-roles — flip AGENT ↔ CUSTOMER in result.json
         if parsed.path.startswith("/api/call/") and parsed.path.endswith("/swap-roles"):

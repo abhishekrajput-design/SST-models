@@ -1,0 +1,233 @@
+{
+  "agent_name": "Aayush",
+  "agent_slug": "aayush",
+  "activated": true,
+  "agents_json_backup": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.backup.aayush.clean_campp.20260515T113704Z.json",
+  "embedding_model": "cam++",
+  "embedding_dim": 512,
+  "voiceprints": [
+    "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aayush_clean_campp_all.npy",
+    "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aayush_clean_campp_1.npy",
+    "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aayush_clean_campp_2.npy",
+    "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aayush_clean_campp_3.npy",
+    "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\aayush_clean_campp_4.npy"
+  ],
+  "source_files": [
+    {
+      "path": "C:\\Users\\abhis\\Downloads\\Part 1_Aayush.m4a",
+      "duration_s": 26.99,
+      "windows_seen": 25,
+      "windows_used": 24,
+      "rms_p20": 0.00017,
+      "rms_p95": 0.03633,
+      "speech_threshold": 0.00668
+    },
+    {
+      "path": "C:\\Users\\abhis\\Downloads\\Part_2_Aayush.m4a",
+      "duration_s": 73.54,
+      "windows_seen": 72,
+      "windows_used": 71,
+      "rms_p20": 0.00151,
+      "rms_p95": 0.03273,
+      "speech_threshold": 0.00713
+    },
+    {
+      "path": "C:\\Users\\abhis\\Downloads\\Part_3_Aayush.m4a",
+      "duration_s": 25.22,
+      "windows_seen": 24,
+      "windows_used": 24,
+      "rms_p20": 0.00144,
+      "rms_p95": 0.03035,
+      "speech_threshold": 0.00664
+    },
+    {
+      "path": "C:\\Users\\abhis\\Downloads\\Part_5_Aayush.m4a",
+      "duration_s": 31.19,
+      "windows_seen": 30,
+      "windows_used": 29,
+      "rms_p20": 0.00027,
+      "rms_p95": 0.03204,
+      "speech_threshold": 0.00599
+    }
+  ],
+  "window_count": 148,
+  "mean_inside_sim": 0.7473,
+  "min_inside_sim": 0.4689,
+  "max_outside_sim": 0.4476,
+  "min_margin": 0.08,
+  "same_source_accuracy": 100.0,
+  "centroid_best_other": [
+    {
+      "voiceprint": "aayush_clean_campp_all.npy",
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.4391,
+      "margin_to_mean_inside": 0.3082
+    },
+    {
+      "voiceprint": "aayush_clean_campp_1.npy",
+      "best_other_slug": "georgi_angelov",
+      "best_other_similarity": 0.3628,
+      "margin_to_mean_inside": 0.3845
+    },
+    {
+      "voiceprint": "aayush_clean_campp_2.npy",
+      "best_other_slug": "ideal_dacaj",
+      "best_other_similarity": 0.4442,
+      "margin_to_mean_inside": 0.3032
+    },
+    {
+      "voiceprint": "aayush_clean_campp_3.npy",
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.406,
+      "margin_to_mean_inside": 0.3414
+    },
+    {
+      "voiceprint": "aayush_clean_campp_4.npy",
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.4476,
+      "margin_to_mean_inside": 0.2997
+    }
+  ],
+  "weakest_windows": [
+    {
+      "target_similarity": 0.4689,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.3602,
+      "margin": 0.1087,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.5271,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.3731,
+      "margin": 0.1539,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6498,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.4776,
+      "margin": 0.1722,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.4888,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.3067,
+      "margin": 0.1821,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6467,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.4552,
+      "margin": 0.1915,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.5305,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.339,
+      "margin": 0.1915,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6214,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.4084,
+      "margin": 0.2131,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.607,
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.3828,
+      "margin": 0.2242,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6793,
+      "best_other_slug": "ideal_dacaj",
+      "best_other_similarity": 0.4395,
+      "margin": 0.2398,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6176,
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.369,
+      "margin": 0.2486,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6873,
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.4366,
+      "margin": 0.2507,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6369,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.3862,
+      "margin": 0.2507,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6789,
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.4259,
+      "margin": 0.2531,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6016,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.347,
+      "margin": 0.2546,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6329,
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.3783,
+      "margin": 0.2546,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6905,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.4233,
+      "margin": 0.2672,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6299,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.3564,
+      "margin": 0.2735,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6868,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.4113,
+      "margin": 0.2755,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.68,
+      "best_other_slug": "allan_johnson",
+      "best_other_similarity": 0.398,
+      "margin": 0.282,
+      "accepted": true
+    },
+    {
+      "target_similarity": 0.6335,
+      "best_other_slug": "hussein_mohamed",
+      "best_other_similarity": 0.3474,
+      "margin": 0.2861,
+      "accepted": true
+    }
+  ]
+}

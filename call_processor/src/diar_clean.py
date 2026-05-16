@@ -5,10 +5,10 @@ Architecture:
   Stage 1 — Pure diarization: detect distinct speakers (SPEAKER_00, SPEAKER_01, ...)
             using NeMo Sortformer (best for 2-4 speakers, phone audio) with
             pyannote fallback for >4 speakers.
-  Stage 2 — Voiceprint matching: compute per-cluster centroid, match against
-            enrolled voiceprints, assign agent_name to the highest-similarity cluster.
-  Stage 3 — Role labeling: cluster matching agent → AGENT, all others → CUSTOMER (or
-            CUSTOMER_1, CUSTOMER_2, ... if multiple non-agent clusters).
+  Stage 2 — Voiceprint matching: compute per-cluster centroids, match against
+            enrolled voiceprints, and assign any strong enrolled-agent cluster.
+  Stage 3 — Role labeling: matched enrolled agents → AGENT with their real name,
+            all unmatched speakers → CUSTOMER.
 
 No hardcoded heuristics. No anti-flip passes. No filler/farewell special cases.
 Just: diarize → cluster centroids → voiceprint match → label.
@@ -44,6 +44,10 @@ AGENT_PRESENCE_FLOOR = 0.35
 
 # Minimum number of segments a cluster must contain to be considered a speaker.
 MIN_CLUSTER_SEGMENTS = 2
+
+# A single long diarization turn is enough evidence to build a voiceprint
+# centroid. Short one-off noises still need multiple segments.
+MIN_CLUSTER_SECONDS = 1.5
 
 # Display labels (configurable, no hardcoded strings scattered in logic)
 LABEL_AGENT = "AGENT"
@@ -200,6 +204,45 @@ def _l2_norm(v: np.ndarray) -> np.ndarray:
     return v / n if n > 0 else v
 
 
+def _env_float(name: str, default: float) -> float:
+    try:
+        return float(os.getenv(name, str(default)) or default)
+    except (TypeError, ValueError):
+        return float(default)
+
+
+def _env_bool(name: str, default: bool = True) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return bool(default)
+    return raw.strip().lower() not in {"0", "false", "no", "off"}
+
+
+def _speaker_embedding_ranges(start: float, end: float) -> List[Tuple[float, float]]:
+    """Split long diarization turns before embedding so one long turn is not skipped."""
+    dur = max(float(end) - float(start), 0.0)
+    if dur <= 0:
+        return []
+    min_window_s = max(_env_float("SST_CLUSTER_EMBED_MIN_WINDOW_SECONDS", 1.0), 0.5)
+    window_s = max(_env_float("SST_CLUSTER_EMBED_WINDOW_SECONDS", 6.0), min_window_s)
+    stride_s = max(_env_float("SST_CLUSTER_EMBED_STRIDE_SECONDS", 4.0), 0.5)
+    if dur <= window_s * 1.35:
+        return [(start, end)] if dur >= min_window_s else []
+
+    ranges: List[Tuple[float, float]] = []
+    cursor = start
+    while cursor < end:
+        right = min(cursor + window_s, end)
+        if right - cursor >= min_window_s:
+            ranges.append((cursor, right))
+        if right >= end:
+            break
+        cursor += stride_s
+    if not ranges and dur >= min_window_s:
+        ranges.append((start, end))
+    return ranges
+
+
 def _embed_segment(audio: np.ndarray, sr: int, start: float, end: float, embedder) -> Optional[np.ndarray]:
     start_samp = int(start * sr)
     end_samp = int(end * sr)
@@ -224,15 +267,21 @@ def compute_cluster_centroids(
 ) -> Tuple[Dict[str, np.ndarray], Dict[str, int]]:
     """For each SPEAKER_NN, compute centroid embedding from its segments."""
     by_speaker: Dict[str, List[np.ndarray]] = {}
+    speaker_seconds: Dict[str, float] = {}
     for seg in speaker_segments:
-        emb = _embed_segment(audio, sr, seg["start"], seg["end"], embedder)
-        if emb is not None:
-            by_speaker.setdefault(seg["speaker"], []).append(emb)
+        spk = str(seg["speaker"])
+        start = float(seg["start"])
+        end = float(seg["end"])
+        speaker_seconds[spk] = speaker_seconds.get(spk, 0.0) + max(end - start, 0.0)
+        for left, right in _speaker_embedding_ranges(start, end):
+            emb = _embed_segment(audio, sr, left, right, embedder)
+            if emb is not None:
+                by_speaker.setdefault(spk, []).append(emb)
 
     centroids = {}
     counts = {}
     for spk, embs in by_speaker.items():
-        if len(embs) < min_segments:
+        if len(embs) < min_segments and speaker_seconds.get(spk, 0.0) < MIN_CLUSTER_SECONDS:
             continue
         centroid = np.mean(np.stack(embs), axis=0)
         centroids[spk] = _l2_norm(centroid)
@@ -294,6 +343,106 @@ def match_agent_to_cluster(
     return agent_spk, agent_slug, best_sim, match_table
 
 
+def _load_agent_match_hints(
+    presence_floor: float,
+    agents_index_path: Optional[str] = None,
+) -> Tuple[Dict[str, float], Dict[str, float]]:
+    """Read per-agent similarity/margin gates saved during clean enrollment."""
+    index_path = agents_index_path or str(
+        Path(__file__).resolve().parent.parent / "data" / "agent_voiceprints" / "agents.json"
+    )
+    thresholds: Dict[str, float] = {}
+    margins: Dict[str, float] = {}
+    default_margin = _env_float("SST_MULTI_AGENT_CLUSTER_MIN_MARGIN", 0.08)
+    outside_margin = _env_float("SST_MULTI_AGENT_OUTSIDE_MARGIN", 0.06)
+
+    try:
+        with open(index_path, "r", encoding="utf-8") as f:
+            agents = json.load(f)
+    except Exception:
+        return thresholds, margins
+
+    for slug, info in (agents or {}).items():
+        if not isinstance(info, dict):
+            continue
+        min_sims: List[float] = []
+        min_margins: List[float] = []
+        for entry in info.get("voiceprints") or []:
+            if not isinstance(entry, dict):
+                continue
+            if entry.get("segment_role_min_similarity") is not None:
+                try:
+                    min_sims.append(float(entry["segment_role_min_similarity"]))
+                except (TypeError, ValueError):
+                    pass
+            if entry.get("segment_role_min_margin") is not None:
+                try:
+                    min_margins.append(float(entry["segment_role_min_margin"]))
+                except (TypeError, ValueError):
+                    pass
+
+        if min_sims:
+            thresholds[slug] = max(float(presence_floor), min(min_sims))
+        elif info.get("max_outside_sim") is not None:
+            try:
+                thresholds[slug] = max(float(presence_floor), float(info["max_outside_sim"]) + outside_margin)
+            except (TypeError, ValueError):
+                thresholds[slug] = float(presence_floor)
+        else:
+            thresholds[slug] = float(presence_floor)
+
+        margins[slug] = max(default_margin, min(min_margins) if min_margins else default_margin)
+    return thresholds, margins
+
+
+def select_multi_agent_cluster_matches(
+    match_table: Dict[str, Dict],
+    speaker_durations: Dict[str, float],
+    enrolled_voiceprints: Dict[str, Tuple[str, np.ndarray]],
+    presence_floor: float = AGENT_PRESENCE_FLOOR,
+    agents_index_path: Optional[str] = None,
+) -> Dict[str, Dict]:
+    """Return {speaker_id: agent match} for every cluster with strong voiceprint evidence."""
+    if not _env_bool("SST_MULTI_AGENT_CLUSTER_MATCH", True):
+        return {}
+
+    min_seconds = _env_float("SST_MULTI_AGENT_CLUSTER_MIN_SECONDS", 2.0)
+    thresholds, margins = _load_agent_match_hints(presence_floor, agents_index_path)
+    selected: Dict[str, Dict] = {}
+
+    for spk, matches in (match_table or {}).items():
+        if float(speaker_durations.get(spk, 0.0)) < min_seconds:
+            continue
+        scored = []
+        for slug, row in (matches or {}).items():
+            if slug not in enrolled_voiceprints or not isinstance(row, dict):
+                continue
+            try:
+                scored.append((slug, float(row.get("similarity") or 0.0), row.get("name") or enrolled_voiceprints[slug][0]))
+            except (TypeError, ValueError):
+                continue
+        if not scored:
+            continue
+        scored.sort(key=lambda item: item[1], reverse=True)
+        top_slug, top_sim, top_name = scored[0]
+        second_sim = scored[1][1] if len(scored) > 1 else 0.0
+        required_sim = max(float(presence_floor), float(thresholds.get(top_slug, presence_floor)))
+        required_margin = float(margins.get(top_slug, _env_float("SST_MULTI_AGENT_CLUSTER_MIN_MARGIN", 0.08)))
+        margin = top_sim - second_sim
+        if top_sim >= required_sim and margin >= required_margin:
+            selected[spk] = {
+                "agent_slug": top_slug,
+                "agent_name": top_name,
+                "similarity": top_sim,
+                "margin": margin,
+                "second_similarity": second_sim,
+                "required_similarity": required_sim,
+                "required_margin": required_margin,
+                "speaker_seconds": float(speaker_durations.get(spk, 0.0)),
+            }
+    return selected
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # STAGE 3 — ROLE LABELING (no hardcoded "AGENT"/"CUSTOMER" strings — use constants)
 # ──────────────────────────────────────────────────────────────────────────────
@@ -303,17 +452,24 @@ def assign_roles(
     agent_speaker_id: Optional[str],
     agent_slug: Optional[str],
     agent_name: Optional[str],
+    agent_cluster_matches: Optional[Dict[str, Dict]] = None,
 ) -> List[Dict]:
     """
-    Apply role labels in-place based on which SPEAKER_NN is the agent.
+    Apply role labels in-place based on matched SPEAKER_NN agent clusters.
 
-    All segments belonging to agent_speaker_id get role=AGENT + agent_name.
+    Matched agent clusters get role=AGENT + agent_name.
     Other speakers become CUSTOMER (single) or CUSTOMER_1/2/... (multiple).
     """
+    agent_cluster_matches = agent_cluster_matches or {}
+
     # Collect non-agent speaker IDs in arrival order
     non_agent_speakers = []
     for s in speaker_segments:
-        if s["speaker"] != agent_speaker_id and s["speaker"] not in non_agent_speakers:
+        is_agent = (
+            s["speaker"] in agent_cluster_matches
+            or (not agent_cluster_matches and s["speaker"] == agent_speaker_id and agent_speaker_id is not None)
+        )
+        if not is_agent and s["speaker"] not in non_agent_speakers:
             non_agent_speakers.append(s["speaker"])
 
     # Map non-agents to display labels. The machine-readable role stays
@@ -330,13 +486,22 @@ def assign_roles(
     out = []
     for s in speaker_segments:
         seg = dict(s)
-        if s["speaker"] == agent_speaker_id and agent_speaker_id is not None:
+        cluster_match = agent_cluster_matches.get(s["speaker"])
+        is_agent = cluster_match is not None or (
+            not agent_cluster_matches and s["speaker"] == agent_speaker_id and agent_speaker_id is not None
+        )
+        if is_agent:
+            match_slug = (cluster_match or {}).get("agent_slug") or agent_slug
+            match_name = (cluster_match or {}).get("agent_name") or agent_name
             seg["identified_speaker"] = LABEL_AGENT
-            if agent_name:
-                seg["agent_name"] = agent_name
-            if agent_slug:
-                seg["agent_slug"] = agent_slug
-            seg["display_speaker"] = agent_name or LABEL_AGENT
+            if match_name:
+                seg["agent_name"] = match_name
+            if match_slug:
+                seg["agent_slug"] = match_slug
+            if cluster_match:
+                seg["agent_match_similarity"] = round(float(cluster_match.get("similarity") or 0.0), 4)
+                seg["agent_match_margin"] = round(float(cluster_match.get("margin") or 0.0), 4)
+            seg["display_speaker"] = match_name or LABEL_AGENT
         else:
             seg["identified_speaker"] = LABEL_CUSTOMER
             seg["display_speaker"] = customer_label.get(s["speaker"], LABEL_UNKNOWN)
@@ -473,8 +638,33 @@ def diarize_clean(
     )
 
     # ── Stage 3: Apply role labels ──
+    multi_agent_matches: Dict[str, Dict] = {}
+    if target_agent_slug is None:
+        multi_agent_matches = select_multi_agent_cluster_matches(
+            match_table,
+            speaker_durations,
+            voiceprints,
+            presence_floor=presence_floor,
+        )
+        if multi_agent_matches:
+            logger.info(
+                "Multi-agent cluster matches: %s",
+                {
+                    spk: {
+                        "agent": row.get("agent_slug"),
+                        "similarity": round(float(row.get("similarity") or 0.0), 3),
+                        "margin": round(float(row.get("margin") or 0.0), 3),
+                    }
+                    for spk, row in multi_agent_matches.items()
+                },
+            )
+
     labeled_speaker_segments = assign_roles(
-        speaker_segments, agent_spk, agent_slug, agent_name
+        speaker_segments,
+        agent_spk,
+        agent_slug,
+        agent_name,
+        agent_cluster_matches=multi_agent_matches or None,
     )
     per_speaker: Dict[str, Dict[str, float]] = {}
     for seg in labeled_speaker_segments:
@@ -501,6 +691,18 @@ def diarize_clean(
         "cluster_segment_counts": cluster_counts,
         "cluster_durations": {k: round(float(v), 3) for k, v in speaker_durations.items()},
         "agent_cluster_decision": agent_decision,
+        "multi_agent_cluster_matches": multi_agent_matches,
+        "identified_agents": [
+            {
+                "speaker": spk,
+                "agent_slug": row.get("agent_slug"),
+                "agent_name": row.get("agent_name"),
+                "similarity": round(float(row.get("similarity") or 0.0), 4),
+                "margin": round(float(row.get("margin") or 0.0), 4),
+                "seconds": round(float(row.get("speaker_seconds") or 0.0), 3),
+            }
+            for spk, row in sorted(multi_agent_matches.items())
+        ],
         "per_speaker": per_speaker,
         "speaker_mode": "speaker_first_voiceprint",
         "speaker_id_backend": backend,

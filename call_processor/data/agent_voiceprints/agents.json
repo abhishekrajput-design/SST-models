@@ -2077,5 +2077,125 @@
       "hussein_mohamed_desk_campp_v10.npy"
     ],
     "stable_ds_report": "stable_ds_voiceprint_report.json"
+  },
+  "aayush": {
+    "agent_name": "Aayush",
+    "voiceprint_path": "aayush_clean_campp_all.npy",
+    "voiceprints": [
+      {
+        "path": "aayush_clean_campp_all.npy",
+        "source": "clean_single_speaker_recording",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "use_for_segment_role": true,
+        "segment_role_min_similarity": 0.5276,
+        "segment_role_min_margin": 0.08
+      },
+      {
+        "path": "aayush_clean_campp_1.npy",
+        "source": "clean_single_speaker_recording",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "use_for_segment_role": true,
+        "segment_role_min_similarity": 0.5276,
+        "segment_role_min_margin": 0.08
+      },
+      {
+        "path": "aayush_clean_campp_2.npy",
+        "source": "clean_single_speaker_recording",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "use_for_segment_role": true,
+        "segment_role_min_similarity": 0.5276,
+        "segment_role_min_margin": 0.08
+      },
+      {
+        "path": "aayush_clean_campp_3.npy",
+        "source": "clean_single_speaker_recording",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "use_for_segment_role": true,
+        "segment_role_min_similarity": 0.5276,
+        "segment_role_min_margin": 0.08
+      },
+      {
+        "path": "aayush_clean_campp_4.npy",
+        "source": "clean_single_speaker_recording",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "use_for_segment_role": true,
+        "segment_role_min_similarity": 0.5276,
+        "segment_role_min_margin": 0.08
+      }
+    ],
+    "n_voiceprints": 5,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "clean_single_speaker_recording",
+    "source_files": [
+      "C:\\Users\\abhis\\Downloads\\Part 1_Aayush.m4a",
+      "C:\\Users\\abhis\\Downloads\\Part_2_Aayush.m4a",
+      "C:\\Users\\abhis\\Downloads\\Part_3_Aayush.m4a",
+      "C:\\Users\\abhis\\Downloads\\Part_5_Aayush.m4a"
+    ],
+    "purity_report": "aayush_clean_campp_enrollment_20260515T113704Z.json",
+    "mean_inside_sim": 0.7473,
+    "max_outside_sim": 0.4476,
+    "updated_at_epoch": 1778845024
+  },
+  "anil": {
+    "agent_name": "Anil",
+    "voiceprint_path": "anil_clean_campp_all.npy",
+    "voiceprints": [
+      {
+        "path": "anil_clean_campp_all.npy",
+        "source": "clean_single_speaker_recording",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "use_for_segment_role": true,
+        "segment_role_min_similarity": 0.4629,
+        "segment_role_min_margin": 0.08
+      },
+      {
+        "path": "anil_clean_campp_1.npy",
+        "source": "clean_single_speaker_recording",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "use_for_segment_role": true,
+        "segment_role_min_similarity": 0.4629,
+        "segment_role_min_margin": 0.08
+      },
+      {
+        "path": "anil_clean_campp_2.npy",
+        "source": "clean_single_speaker_recording",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "use_for_segment_role": true,
+        "segment_role_min_similarity": 0.4629,
+        "segment_role_min_margin": 0.08
+      },
+      {
+        "path": "anil_clean_campp_3.npy",
+        "source": "clean_single_speaker_recording",
+        "embedding_model": "cam++",
+        "embedding_dim": 512,
+        "use_for_segment_role": true,
+        "segment_role_min_similarity": 0.4629,
+        "segment_role_min_margin": 0.08
+      }
+    ],
+    "n_voiceprints": 4,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "clean_single_speaker_recording",
+    "source_files": [
+      "C:\\Users\\abhis\\Downloads\\Part 1_Anil.m4a",
+      "C:\\Users\\abhis\\Downloads\\PART_5_OPENING_LINES_Anil.m4a",
+      "C:\\Users\\abhis\\Downloads\\PART_4_NUMERICS_Anil.m4a"
+    ],
+    "purity_report": "anil_clean_campp_enrollment_20260515T113740Z.json",
+    "mean_inside_sim": 0.7395,
+    "max_outside_sim": 0.3829,
+    "updated_at_epoch": 1778845060
   }
 }
