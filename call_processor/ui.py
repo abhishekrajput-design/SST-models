@@ -2472,13 +2472,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         min_parent_s = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_PARENT_SECONDS", "2.20") or "2.20")
         min_child_s = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_CHILD_SECONDS", "0.45") or "0.45")
         min_words_per_child = max(1, int(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_WORDS", "1") or "1"))
-        base_min_sim = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_SIM", "0.42") or "0.42")
+        base_min_sim = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_SIM", "0.40") or "0.40")
         hint_cap = float(os.getenv("SST_MULTI_AGENT_WINDOW_HINT_SIM_CAP", "0.48") or "0.48")
         min_margin = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_MARGIN", "0.08") or "0.08")
         short_max_s = float(os.getenv("SST_MULTI_AGENT_SHORT_MAX_SECONDS", "1.25") or "1.25")
-        short_min_sim = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_SIM", "0.25") or "0.25")
-        short_min_margin = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_MARGIN", "0.07") or "0.07")
+        short_min_sim = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_SIM", "0.28") or "0.28")
+        short_min_margin = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_MARGIN", "0.01") or "0.01")
         pad_s = float(os.getenv("SST_MULTI_AGENT_SEGMENT_PAD_SECONDS", "0.08") or "0.08")
+        use_agent_hints = os.getenv("SST_MULTI_AGENT_WINDOW_USE_AGENT_HINTS", "0").strip().lower()
+        use_agent_hints = use_agent_hints not in {"0", "false", "no", "off"}
         split_customer = os.getenv("SST_MULTI_AGENT_WINDOW_SPLIT_CUSTOMER", "1").strip().lower()
         split_customer = split_customer not in {"0", "false", "no", "off"}
 
@@ -2590,11 +2592,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             margin = top_sim - second_sim
             if short:
                 required_sim = short_min_sim
-                required_margin = max(short_min_margin, margin_hints.get(top_slug, short_min_margin))
+                required_margin = short_min_margin
             else:
-                hint = threshold_hints.get(top_slug, base_min_sim)
-                required_sim = max(base_min_sim, min(float(hint), hint_cap))
-                required_margin = max(min_margin, margin_hints.get(top_slug, min_margin))
+                if use_agent_hints:
+                    hint = threshold_hints.get(top_slug, base_min_sim)
+                    required_sim = max(base_min_sim, min(float(hint), hint_cap))
+                    required_margin = max(min_margin, margin_hints.get(top_slug, min_margin))
+                else:
+                    required_sim = base_min_sim
+                    required_margin = min_margin
             is_agent = top_sim >= required_sim and margin >= required_margin
             return {
                 "label": "AGENT" if is_agent else "CUSTOMER",
@@ -2826,6 +2832,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "min_parent_seconds": min_parent_s,
             "base_min_similarity": base_min_sim,
             "min_margin": min_margin,
+            "use_agent_hints": use_agent_hints,
             "short_max_seconds": short_max_s,
             "short_min_similarity": short_min_sim,
             "short_min_margin": short_min_margin,
