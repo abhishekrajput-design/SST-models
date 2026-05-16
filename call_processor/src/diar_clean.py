@@ -458,9 +458,7 @@ def assign_roles(
     Apply role labels in-place based on matched SPEAKER_NN agent clusters.
 
     Matched agent clusters get role=AGENT + agent_name.
-    Other speakers become CUSTOMER. The customer is open-set/random across
-    calls, so we keep raw SPEAKER_NN ids for debugging but do not expose
-    customer identity labels.
+    Other speakers become CUSTOMER (single) or CUSTOMER_1/2/... (multiple).
     """
     agent_cluster_matches = agent_cluster_matches or {}
 
@@ -474,9 +472,16 @@ def assign_roles(
         if not is_agent and s["speaker"] not in non_agent_speakers:
             non_agent_speakers.append(s["speaker"])
 
-    # The machine-readable role stays CUSTOMER for every non-agent speaker.
-    # Keep the original SPEAKER_NN id separately in "speaker" for debugging.
-    customer_label = {spk: "Customer" for spk in non_agent_speakers}
+    # Map non-agents to display labels. The machine-readable role stays
+    # CUSTOMER for every non-agent speaker; the original SPEAKER_NN id is kept
+    # separately in "speaker" so downstream systems can still inspect speaker IDs.
+    if len(non_agent_speakers) == 1:
+        customer_label = {non_agent_speakers[0]: "Customer"}
+    else:
+        customer_label = {
+            spk: f"Customer {i+1}"
+            for i, spk in enumerate(non_agent_speakers)
+        }
 
     out = []
     for s in speaker_segments:
