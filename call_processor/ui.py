@@ -2481,7 +2481,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         pad_s = float(os.getenv("SST_MULTI_AGENT_SEGMENT_PAD_SECONDS", "0.08") or "0.08")
         use_agent_hints = os.getenv("SST_MULTI_AGENT_WINDOW_USE_AGENT_HINTS", "0").strip().lower()
         use_agent_hints = use_agent_hints not in {"0", "false", "no", "off"}
-        split_customer = os.getenv("SST_MULTI_AGENT_WINDOW_SPLIT_CUSTOMER", "1").strip().lower()
+        split_customer = os.getenv("SST_MULTI_AGENT_WINDOW_SPLIT_CUSTOMER", "0").strip().lower()
         split_customer = split_customer not in {"0", "false", "no", "off"}
 
         def _segment_words(seg: dict) -> list[dict]:
@@ -2734,10 +2734,23 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
 
             chunks = _make_time_chunks(start_s, end_s)
             decisions = []
+            original_agent_slug = str(seg.get("agent_slug") or "").strip()
+            original_agent_name = str(seg.get("agent_name") or seg.get("display_speaker") or "").strip()
             for left, right in chunks:
                 decision = _classify_window(left, right, short=False)
                 if not decision:
                     break
+                if (
+                    decision.get("label") == "CUSTOMER"
+                    and not split_customer
+                    and original_agent_slug
+                ):
+                    decision = {
+                        **decision,
+                        "label": "AGENT",
+                        "agent_slug": original_agent_slug,
+                        "agent_name": original_agent_name or names.get(original_agent_slug) or original_agent_slug,
+                    }
                 decisions.append(decision)
             if len(decisions) != len(chunks):
                 out.append(seg)
