@@ -2476,13 +2476,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         hint_cap = float(os.getenv("SST_MULTI_AGENT_WINDOW_HINT_SIM_CAP", "0.48") or "0.48")
         min_margin = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_MARGIN", "0.08") or "0.08")
         short_max_s = float(os.getenv("SST_MULTI_AGENT_SHORT_MAX_SECONDS", "1.25") or "1.25")
-        short_min_sim = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_SIM", "0.28") or "0.28")
-        short_min_margin = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_MARGIN", "0.01") or "0.01")
+        short_min_sim = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_SIM", "0.35") or "0.35")
+        short_min_margin = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_MARGIN", "0.05") or "0.05")
         pad_s = float(os.getenv("SST_MULTI_AGENT_SEGMENT_PAD_SECONDS", "0.08") or "0.08")
         use_agent_hints = os.getenv("SST_MULTI_AGENT_WINDOW_USE_AGENT_HINTS", "0").strip().lower()
         use_agent_hints = use_agent_hints not in {"0", "false", "no", "off"}
-        split_customer = os.getenv("SST_MULTI_AGENT_WINDOW_SPLIT_CUSTOMER", "0").strip().lower()
-        split_customer = split_customer not in {"0", "false", "no", "off"}
+        split_customer_windows = os.getenv("SST_MULTI_AGENT_WINDOW_SPLIT_CUSTOMER", "0").strip().lower()
+        split_customer_windows = split_customer_windows not in {"0", "false", "no", "off"}
+        split_customer_short = os.getenv("SST_MULTI_AGENT_SHORT_SPLIT_CUSTOMER", "0").strip().lower()
+        split_customer_short = split_customer_short not in {"0", "false", "no", "off"}
 
         def _segment_words(seg: dict) -> list[dict]:
             out = []
@@ -2712,7 +2714,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 if decision.get("label") == "AGENT" and decision.get("agent_slug") != seg.get("agent_slug"):
                     _apply_label(seg, decision, "short_segment_voice_top_match")
                     relabeled_segments += 1
-                elif decision.get("label") == "CUSTOMER" and split_customer:
+                elif decision.get("label") == "CUSTOMER" and split_customer_short:
                     _apply_label(seg, decision, "short_segment_voice_miss")
                     relabeled_segments += 1
                 if previous != (seg.get("identified_speaker"), seg.get("agent_slug")) and len(sample_changes) < 60:
@@ -2742,7 +2744,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     break
                 if (
                     decision.get("label") == "CUSTOMER"
-                    and not split_customer
+                    and not split_customer_windows
                     and original_agent_slug
                 ):
                     decision = {
@@ -2764,7 +2766,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 if decision.get("label") == "AGENT" and decision.get("agent_slug") != seg.get("agent_slug"):
                     _apply_label(seg, decision, "segment_voice_top_match")
                     relabeled_segments += 1
-                elif decision.get("label") == "CUSTOMER" and split_customer:
+                elif decision.get("label") == "CUSTOMER" and split_customer_windows:
                     _apply_label(seg, decision, "segment_voice_miss")
                     relabeled_segments += 1
                 if previous != (seg.get("identified_speaker"), seg.get("agent_slug")) and len(sample_changes) < 60:
@@ -2849,6 +2851,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "short_max_seconds": short_max_s,
             "short_min_similarity": short_min_sim,
             "short_min_margin": short_min_margin,
+            "split_customer_windows": split_customer_windows,
+            "split_customer_short": split_customer_short,
             "sample_changes": sample_changes,
         }
 
@@ -2962,7 +2966,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         blend_segment_weight = max(0.0, min(blend_segment_weight, 1.0))
         blend_min_sim = float(os.getenv("SST_TSVAD_BLEND_MIN_SIM", "0.42") or "0.42")
         blend_min_margin = float(os.getenv("SST_TSVAD_BLEND_MIN_MARGIN", "-0.05") or "-0.05")
-        keep_strong_segment = os.getenv("SST_TSVAD_KEEP_STRONG_SEGMENT_AGENT", "0").strip().lower()
+        keep_strong_segment = os.getenv("SST_TSVAD_KEEP_STRONG_SEGMENT_AGENT", "1").strip().lower()
         keep_strong_segment = keep_strong_segment not in {"0", "false", "no", "off"}
         strong_segment_min_sim = float(os.getenv("SST_TSVAD_STRONG_SEGMENT_MIN_SIM", "0.42") or "0.42")
         strong_segment_min_margin = float(os.getenv("SST_TSVAD_STRONG_SEGMENT_MIN_MARGIN", "0.03") or "0.03")
@@ -3169,6 +3173,94 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "keep_strong_segment_agent": keep_strong_segment,
             "strong_segment_min_similarity": strong_segment_min_sim,
             "strong_segment_min_margin": strong_segment_min_margin,
+            "sample_changes": sample_changes,
+        }
+
+    def _repair_short_target_speaker_continuity(
+        text_segments: list,
+        agent_name: str | None,
+        agent_slug: str | None,
+    ) -> dict:
+        """Keep tiny same-speaker target tails from becoming random customers."""
+        enabled = os.getenv("SST_TARGET_SPEAKER_SHORT_CONTINUITY_REPAIR", "1").strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return {"enabled": False, "reason": "disabled", "changed_segments": 0}
+        if not agent_slug:
+            return {"enabled": True, "reason": "no_target_agent_slug", "changed_segments": 0}
+
+        max_seconds = float(os.getenv("SST_TARGET_SPEAKER_SHORT_CONTINUITY_MAX_SECONDS", "0.90") or "0.90")
+        max_gap = float(os.getenv("SST_TARGET_SPEAKER_SHORT_CONTINUITY_MAX_GAP", "0.20") or "0.20")
+        min_anchor_seconds = float(os.getenv("SST_TARGET_SPEAKER_SHORT_CONTINUITY_MIN_ANCHOR_SECONDS", "0.80") or "0.80")
+        display_name = agent_name or "Agent"
+        changed = 0
+        sample_changes = []
+
+        def _duration(row: dict) -> float:
+            try:
+                return max(float(row.get("end", 0.0) or 0.0) - float(row.get("start", 0.0) or 0.0), 0.0)
+            except (TypeError, ValueError):
+                return 0.0
+
+        def _is_target_anchor(row: dict, speaker: str, left_end: float, right_start: float) -> bool:
+            if str(row.get("speaker") or "") != speaker:
+                return False
+            if row.get("identified_speaker") != "AGENT" or row.get("agent_slug") != agent_slug:
+                return False
+            if _duration(row) < min_anchor_seconds:
+                return False
+            try:
+                start = float(row.get("start", 0.0) or 0.0)
+                end = float(row.get("end", start) or start)
+            except (TypeError, ValueError):
+                return False
+            return abs(start - right_start) <= max_gap or abs(left_end - end) <= max_gap
+
+        for idx, seg in enumerate(text_segments):
+            if seg.get("speech_only") or seg.get("identified_speaker") != "CUSTOMER":
+                continue
+            if seg.get("agent_slug"):
+                continue
+            speaker = str(seg.get("speaker") or "")
+            if not speaker:
+                continue
+            seconds = _duration(seg)
+            if seconds <= 0.0 or seconds > max_seconds:
+                continue
+            try:
+                start_s = float(seg.get("start", 0.0) or 0.0)
+                end_s = float(seg.get("end", start_s) or start_s)
+            except (TypeError, ValueError):
+                continue
+            neighbors = []
+            if idx > 0:
+                neighbors.append(text_segments[idx - 1])
+            if idx + 1 < len(text_segments):
+                neighbors.append(text_segments[idx + 1])
+            if not any(_is_target_anchor(row, speaker, start_s, end_s) for row in neighbors):
+                continue
+
+            seg["identified_speaker"] = "AGENT"
+            seg["display_speaker"] = display_name
+            seg["agent_name"] = display_name
+            seg["agent_slug"] = agent_slug
+            seg["short_target_speaker_continuity_repair"] = True
+            changed += 1
+            if len(sample_changes) < 25:
+                sample_changes.append({
+                    "start": round(start_s, 2),
+                    "end": round(end_s, 2),
+                    "speaker": speaker,
+                    "to": agent_slug,
+                    "text": str(seg.get("text") or "")[:120],
+                })
+
+        return {
+            "enabled": True,
+            "mode": "short_target_speaker_continuity",
+            "changed_segments": changed,
+            "max_seconds": max_seconds,
+            "max_gap": max_gap,
+            "min_anchor_seconds": min_anchor_seconds,
             "sample_changes": sample_changes,
         }
 
@@ -3381,6 +3473,21 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 f"customer={target_speaker_vad_role_refinement.get('customer_segments', 0)} "
                 f"changed_to_agent={target_speaker_vad_role_refinement.get('changed_to_agent', 0)} "
                 f"changed_to_customer={target_speaker_vad_role_refinement.get('changed_to_customer', 0)}",
+                flush=True,
+            )
+        target_speaker_short_continuity_repair = _repair_short_target_speaker_continuity(
+            segments,
+            agent_name_id,
+            role_agent_slug,
+        ) if role_agent_slug else {
+            "enabled": False,
+            "reason": "no_single_target_agent",
+            "changed_segments": 0,
+        }
+        if target_speaker_short_continuity_repair.get("changed_segments"):
+            print(
+                f"[UI] Short target-speaker continuity repair promoted "
+                f"{target_speaker_short_continuity_repair['changed_segments']} segment(s)",
                 flush=True,
             )
         if multi_agent_identified:
@@ -3633,6 +3740,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "agent_role_voiceprint_repair": locals().get("agent_role_voiceprint_repair", {}),
         "agent_role_segment_voiceprint_repair": locals().get("agent_role_segment_voiceprint_repair", {}),
         "target_speaker_vad_role_refinement": locals().get("target_speaker_vad_role_refinement", {}),
+        "target_speaker_short_continuity_repair": locals().get("target_speaker_short_continuity_repair", {}),
         "target_speaker_activity_split": (
             locals().get("target_speaker_vad_role_refinement", {}).get("target_speaker_activity_split", {})
         ),
