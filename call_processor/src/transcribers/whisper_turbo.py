@@ -38,7 +38,9 @@ class WhisperTurboTranscriber(BaseTranscriber):
     def transcribe(self, audio_path: str, language: str = "en") -> List[Dict[str, Any]]:
         self.load()
         t0 = time.time()
-        word_ts_default = "0"
+        # Keep word timestamps by default so downstream voice-window speaker
+        # refinement can split mixed-speaker ASR rows on real word timing.
+        word_ts_default = "1"
         word_timestamps = (
             os.getenv("SST_WHISPER_WORD_TIMESTAMPS", word_ts_default).strip().lower()
             not in {"0", "false", "no", "off"}

@@ -2343,6 +2343,495 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "sample_changes": sample_changes,
         }
 
+    def _refine_multi_agent_segments_from_voice_windows(
+        text_segments: list,
+        cluster_matches: dict | None,
+        audio_file: str,
+    ) -> tuple[list, dict]:
+        """Split/relabel multi-agent rows using only local audio voiceprints."""
+        enabled = os.getenv("SST_MULTI_AGENT_SEGMENT_VOICE_REPAIR", "1").strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return text_segments, {"enabled": False, "reason": "disabled"}
+        if not cluster_matches:
+            return text_segments, {"enabled": True, "reason": "no_multi_agent_cluster_matches"}
+        if not audio_file or not os.path.isfile(audio_file):
+            return text_segments, {"enabled": True, "reason": "missing_audio"}
+
+        try:
+            import numpy as _np
+            import soundfile as _sf
+            import torch as _torch
+            import torchaudio.functional as _F_ta
+            from src.diar_multi import _load_voiceprints
+            from src.embedding_campp import get_model, l2_norm
+            from src.voiceprints import resolve_voiceprint_path
+        except Exception as exc:
+            return text_segments, {
+                "enabled": True,
+                "reason": f"dependency_error:{type(exc).__name__}",
+            }
+
+        matched: dict[str, dict] = {}
+        for row in (cluster_matches or {}).values():
+            if not isinstance(row, dict):
+                continue
+            slug = str(row.get("agent_slug") or "").strip()
+            if not slug:
+                continue
+            matched.setdefault(slug, row)
+        if len(matched) < 2:
+            return text_segments, {"enabled": True, "reason": "less_than_two_agents"}
+
+        try:
+            agents_index = Path(__file__).parent / "data" / "agent_voiceprints" / "agents.json"
+            agents_data = json.loads(agents_index.read_text(encoding="utf-8"))
+        except Exception:
+            agents_index = Path(__file__).parent / "data" / "agent_voiceprints" / "agents.json"
+            agents_data = {}
+
+        voiceprints = _load_voiceprints()
+        stacks: dict[str, _np.ndarray] = {}
+        names: dict[str, str] = {}
+        threshold_hints: dict[str, float] = {}
+        margin_hints: dict[str, float] = {}
+        expected_dim: int | None = None
+
+        for slug, match in matched.items():
+            target = voiceprints.get(slug)
+            if not target:
+                continue
+            target_name, target_stack = target
+            target_stack = _np.asarray(target_stack, dtype=_np.float32)
+            if target_stack.ndim != 2 or not len(target_stack):
+                continue
+            if expected_dim is None:
+                expected_dim = int(target_stack.shape[1])
+            if int(target_stack.shape[1]) != expected_dim:
+                continue
+
+            marked = []
+            agent_info = agents_data.get(slug) or {}
+            for entry in agent_info.get("voiceprints") or []:
+                if not isinstance(entry, dict):
+                    continue
+                if not _uses_segment_role_voiceprint(entry):
+                    continue
+                raw_path = entry.get("path") or entry.get("voiceprint_path")
+                vp_path = resolve_voiceprint_path(raw_path, str(agents_index))
+                if not vp_path or not os.path.isfile(vp_path):
+                    continue
+                try:
+                    vp = _np.load(vp_path).astype(_np.float32).squeeze()
+                except Exception:
+                    continue
+                if vp.ndim != 1 or int(vp.shape[0]) != expected_dim:
+                    continue
+                marked.append(l2_norm(vp))
+                if entry.get("segment_role_min_similarity") is not None:
+                    try:
+                        threshold_hints[slug] = min(
+                            threshold_hints.get(slug, 1.0),
+                            float(entry.get("segment_role_min_similarity")),
+                        )
+                    except (TypeError, ValueError):
+                        pass
+                if entry.get("segment_role_min_margin") is not None:
+                    try:
+                        margin_hints[slug] = min(
+                            margin_hints.get(slug, 1.0),
+                            float(entry.get("segment_role_min_margin")),
+                        )
+                    except (TypeError, ValueError):
+                        pass
+
+            stacks[slug] = _np.stack(marked).astype(_np.float32) if marked else target_stack
+            names[slug] = (
+                str(match.get("agent_name") or "").strip()
+                or str(agent_info.get("agent_name") or "").strip()
+                or str(target_name or "").strip()
+                or slug
+            )
+
+        if len(stacks) < 2 or expected_dim is None:
+            return text_segments, {"enabled": True, "reason": "missing_agent_voiceprints"}
+
+        try:
+            audio, sr = _sf.read(audio_file, dtype="float32", always_2d=True)
+        except Exception as exc:
+            return text_segments, {
+                "enabled": True,
+                "reason": f"audio_read_error:{type(exc).__name__}",
+            }
+        audio = audio.mean(axis=1) if audio.shape[1] > 1 else audio[:, 0]
+        if sr != 16000:
+            audio = _F_ta.resample(_torch.from_numpy(audio.astype(_np.float32)), sr, 16000).numpy()
+            sr = 16000
+
+        embedder = get_model(force_cpu=True)
+        window_s = float(os.getenv("SST_MULTI_AGENT_WINDOW_SECONDS", "1.50") or "1.50")
+        min_parent_s = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_PARENT_SECONDS", "2.20") or "2.20")
+        min_child_s = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_CHILD_SECONDS", "0.45") or "0.45")
+        min_words_per_child = max(1, int(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_WORDS", "1") or "1"))
+        base_min_sim = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_SIM", "0.42") or "0.42")
+        hint_cap = float(os.getenv("SST_MULTI_AGENT_WINDOW_HINT_SIM_CAP", "0.48") or "0.48")
+        min_margin = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_MARGIN", "0.08") or "0.08")
+        short_max_s = float(os.getenv("SST_MULTI_AGENT_SHORT_MAX_SECONDS", "1.25") or "1.25")
+        short_min_sim = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_SIM", "0.25") or "0.25")
+        short_min_margin = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_MARGIN", "0.07") or "0.07")
+        pad_s = float(os.getenv("SST_MULTI_AGENT_SEGMENT_PAD_SECONDS", "0.08") or "0.08")
+        split_customer = os.getenv("SST_MULTI_AGENT_WINDOW_SPLIT_CUSTOMER", "1").strip().lower()
+        split_customer = split_customer not in {"0", "false", "no", "off"}
+
+        def _segment_words(seg: dict) -> list[dict]:
+            out = []
+            for raw in seg.get("words") or []:
+                if not isinstance(raw, dict):
+                    continue
+                token = str(raw.get("word") or raw.get("text") or "").strip()
+                if not token:
+                    continue
+                try:
+                    start = float(raw.get("start"))
+                    end = float(raw.get("end"))
+                except (TypeError, ValueError):
+                    continue
+                if end <= start:
+                    continue
+                item = dict(raw)
+                item["word"] = token
+                item["start"] = start
+                item["end"] = end
+                out.append(item)
+            return out
+
+        def _join_word_tokens(words: list[dict]) -> str:
+            text = " ".join(str(w.get("word") or w.get("text") or "").strip() for w in words).strip()
+            text = re.sub(r"\s+([.,!?;:%])", r"\1", text)
+            text = re.sub(r"([$Â£â‚¬])\s+", r"\1", text)
+            return re.sub(r"\s+", " ", text).strip()
+
+        def _proportional_text_slices(text: str, weights: list[float]) -> list[str] | None:
+            words = str(text or "").split()
+            if len(words) < len(weights) * min_words_per_child:
+                return None
+            total = sum(max(float(w), 0.001) for w in weights)
+            cuts = [0]
+            running = 0.0
+            for weight in weights[:-1]:
+                running += max(float(weight), 0.001)
+                cuts.append(round((running / total) * len(words)))
+            cuts.append(len(words))
+            chunks = []
+            for idx in range(len(cuts) - 1):
+                start = int(cuts[idx])
+                end = int(cuts[idx + 1])
+                min_start = idx * min_words_per_child
+                max_end = len(words) - ((len(cuts) - 2 - idx) * min_words_per_child)
+                start = max(start, min_start)
+                end = min(max(end, start + min_words_per_child), max_end)
+                chunk = " ".join(words[start:end]).strip()
+                if not chunk:
+                    return None
+                chunks.append(chunk)
+            return chunks
+
+        def _text_slices_for_parts(seg: dict, parts: list[dict]) -> list[tuple[str, list[dict] | None]] | None:
+            words = _segment_words(seg)
+            if words:
+                buckets: list[list[dict]] = [[] for _ in parts]
+                for word in words:
+                    mid = (float(word["start"]) + float(word["end"])) / 2.0
+                    best_idx = None
+                    best_overlap = 0.0
+                    for idx, part in enumerate(parts):
+                        overlap = max(0.0, min(float(word["end"]), part["end"]) - max(float(word["start"]), part["start"]))
+                        if overlap > best_overlap:
+                            best_overlap = overlap
+                            best_idx = idx
+                    if best_idx is None:
+                        for idx, part in enumerate(parts):
+                            if part["start"] <= mid <= part["end"]:
+                                best_idx = idx
+                                break
+                    if best_idx is None:
+                        best_idx = min(
+                            range(len(parts)),
+                            key=lambda idx: abs(mid - ((parts[idx]["start"] + parts[idx]["end"]) / 2.0)),
+                        )
+                    buckets[best_idx].append(word)
+                if all(bucket for bucket in buckets):
+                    return [(_join_word_tokens(bucket), bucket) for bucket in buckets]
+
+            chunks = _proportional_text_slices(
+                str(seg.get("text") or ""),
+                [max(part["end"] - part["start"], 0.001) for part in parts],
+            )
+            if not chunks:
+                return None
+            return [(chunk, None) for chunk in chunks]
+
+        def _classify_window(start_s: float, end_s: float, short: bool = False) -> dict | None:
+            start = max(0, int((start_s - pad_s) * sr))
+            end = min(len(audio), int((end_s + pad_s) * sr))
+            if end <= start:
+                return None
+            emb = embedder.embed_chunk(audio[start:end].astype(_np.float32), sr=sr)
+            if emb is None or getattr(emb, "shape", (0,))[0] != expected_dim:
+                return None
+            emb = l2_norm(_np.asarray(emb, dtype=_np.float32))
+            scored = []
+            for slug, stack in stacks.items():
+                scored.append((slug, float(_np.max(stack @ emb))))
+            scored.sort(key=lambda item: item[1], reverse=True)
+            if not scored:
+                return None
+            top_slug, top_sim = scored[0]
+            second_sim = scored[1][1] if len(scored) > 1 else 0.0
+            margin = top_sim - second_sim
+            if short:
+                required_sim = short_min_sim
+                required_margin = max(short_min_margin, margin_hints.get(top_slug, short_min_margin))
+            else:
+                hint = threshold_hints.get(top_slug, base_min_sim)
+                required_sim = max(base_min_sim, min(float(hint), hint_cap))
+                required_margin = max(min_margin, margin_hints.get(top_slug, min_margin))
+            is_agent = top_sim >= required_sim and margin >= required_margin
+            return {
+                "label": "AGENT" if is_agent else "CUSTOMER",
+                "agent_slug": top_slug if is_agent else None,
+                "agent_name": names.get(top_slug) if is_agent else None,
+                "similarity": top_sim,
+                "margin": margin,
+                "required_similarity": required_sim,
+                "required_margin": required_margin,
+                "scores": {slug: round(float(sim), 4) for slug, sim in scored},
+            }
+
+        def _apply_label(seg: dict, decision: dict, reason: str) -> None:
+            seg["multi_agent_segment_voice_repair"] = reason
+            seg["_multi_agent_voice_similarity"] = round(float(decision.get("similarity") or 0.0), 3)
+            seg["_multi_agent_voice_margin"] = round(float(decision.get("margin") or 0.0), 3)
+            if decision.get("label") == "AGENT" and decision.get("agent_slug"):
+                slug = str(decision["agent_slug"])
+                seg["identified_speaker"] = "AGENT"
+                seg["display_speaker"] = decision.get("agent_name") or names.get(slug) or slug
+                seg["agent_name"] = decision.get("agent_name") or names.get(slug) or slug
+                seg["agent_slug"] = slug
+            else:
+                seg["identified_speaker"] = "CUSTOMER"
+                seg["display_speaker"] = "Customer"
+                seg.pop("agent_name", None)
+                seg.pop("agent_slug", None)
+
+        def _make_time_chunks(start_s: float, end_s: float) -> list[tuple[float, float]]:
+            dur = max(end_s - start_s, 0.0)
+            if dur <= 0:
+                return []
+            if dur <= window_s * 1.25:
+                return [(start_s, end_s)]
+            chunks = []
+            cursor = start_s
+            while cursor < end_s:
+                right = min(cursor + window_s, end_s)
+                if right - cursor < min_child_s and chunks:
+                    left, _old = chunks[-1]
+                    chunks[-1] = (left, end_s)
+                    break
+                chunks.append((cursor, right))
+                if right >= end_s:
+                    break
+                cursor = right
+            return chunks
+
+        def _merge_decisions(chunks: list[tuple[float, float]], decisions: list[dict]) -> list[dict]:
+            parts = []
+            for (left, right), decision in zip(chunks, decisions):
+                label = decision.get("label")
+                slug = decision.get("agent_slug") if label == "AGENT" else None
+                if parts and parts[-1]["label"] == label and parts[-1].get("agent_slug") == slug:
+                    parts[-1]["end"] = right
+                    parts[-1]["decisions"].append(decision)
+                else:
+                    parts.append({
+                        "start": left,
+                        "end": right,
+                        "label": label,
+                        "agent_slug": slug,
+                        "agent_name": decision.get("agent_name"),
+                        "decisions": [decision],
+                    })
+            out = []
+            for part in parts:
+                sims = [float(d.get("similarity") or 0.0) for d in part["decisions"]]
+                margins = [float(d.get("margin") or 0.0) for d in part["decisions"]]
+                part["duration"] = max(float(part["end"]) - float(part["start"]), 0.0)
+                part["similarity"] = max(sims) if sims else 0.0
+                part["margin"] = max(margins) if margins else 0.0
+                if part["duration"] < min_child_s and out:
+                    out[-1]["end"] = part["end"]
+                    out[-1]["duration"] = max(out[-1]["end"] - out[-1]["start"], 0.0)
+                    out[-1]["decisions"].extend(part["decisions"])
+                    continue
+                out.append(part)
+            return out
+
+        out = []
+        evaluated_segments = relabeled_segments = split_parents = added_segments = skipped = 0
+        sample_changes = []
+        for seg in text_segments:
+            if seg.get("speech_only") or seg.get("identified_speaker") != "AGENT":
+                out.append(seg)
+                continue
+            try:
+                start_s = float(seg.get("start", 0.0) or 0.0)
+                end_s = float(seg.get("end", start_s) or start_s)
+            except (TypeError, ValueError):
+                out.append(seg)
+                skipped += 1
+                continue
+            seconds = max(end_s - start_s, 0.0)
+            if seconds <= 0:
+                out.append(seg)
+                skipped += 1
+                continue
+
+            if seconds <= short_max_s:
+                decision = _classify_window(start_s, end_s, short=True)
+                if not decision:
+                    out.append(seg)
+                    skipped += 1
+                    continue
+                evaluated_segments += 1
+                previous = (seg.get("identified_speaker"), seg.get("agent_slug"))
+                if decision.get("label") == "AGENT" and decision.get("agent_slug") != seg.get("agent_slug"):
+                    _apply_label(seg, decision, "short_segment_voice_top_match")
+                    relabeled_segments += 1
+                elif decision.get("label") == "CUSTOMER" and split_customer:
+                    _apply_label(seg, decision, "short_segment_voice_miss")
+                    relabeled_segments += 1
+                if previous != (seg.get("identified_speaker"), seg.get("agent_slug")) and len(sample_changes) < 60:
+                    sample_changes.append({
+                        "start": round(start_s, 2),
+                        "end": round(end_s, 2),
+                        "from": previous[1] or previous[0],
+                        "to": seg.get("agent_slug") or seg.get("identified_speaker"),
+                        "similarity": round(float(decision.get("similarity") or 0.0), 3),
+                        "margin": round(float(decision.get("margin") or 0.0), 3),
+                        "text": str(seg.get("text") or "")[:120],
+                    })
+                out.append(seg)
+                continue
+
+            if seconds < min_parent_s:
+                out.append(seg)
+                continue
+
+            chunks = _make_time_chunks(start_s, end_s)
+            decisions = []
+            for left, right in chunks:
+                decision = _classify_window(left, right, short=False)
+                if not decision:
+                    break
+                decisions.append(decision)
+            if len(decisions) != len(chunks):
+                out.append(seg)
+                skipped += 1
+                continue
+            evaluated_segments += 1
+            parts = _merge_decisions(chunks, decisions)
+            if len(parts) <= 1:
+                decision = decisions[0]
+                previous = (seg.get("identified_speaker"), seg.get("agent_slug"))
+                if decision.get("label") == "AGENT" and decision.get("agent_slug") != seg.get("agent_slug"):
+                    _apply_label(seg, decision, "segment_voice_top_match")
+                    relabeled_segments += 1
+                elif decision.get("label") == "CUSTOMER" and split_customer:
+                    _apply_label(seg, decision, "segment_voice_miss")
+                    relabeled_segments += 1
+                if previous != (seg.get("identified_speaker"), seg.get("agent_slug")) and len(sample_changes) < 60:
+                    sample_changes.append({
+                        "start": round(start_s, 2),
+                        "end": round(end_s, 2),
+                        "from": previous[1] or previous[0],
+                        "to": seg.get("agent_slug") or seg.get("identified_speaker"),
+                        "similarity": round(float(decision.get("similarity") or 0.0), 3),
+                        "margin": round(float(decision.get("margin") or 0.0), 3),
+                        "text": str(seg.get("text") or "")[:120],
+                    })
+                out.append(seg)
+                continue
+
+            if len({(p["label"], p.get("agent_slug")) for p in parts}) < 2:
+                out.append(seg)
+                continue
+            text_parts = _text_slices_for_parts(seg, parts)
+            if not text_parts:
+                out.append(seg)
+                skipped += 1
+                continue
+
+            split_parents += 1
+            added_segments += len(parts) - 1
+            for idx, (part, (chunk_text, chunk_words)) in enumerate(zip(parts, text_parts)):
+                child = dict(seg)
+                child["start"] = round(float(part["start"]), 3)
+                child["end"] = round(float(part["end"]), 3)
+                child["text"] = chunk_text
+                if chunk_words is not None:
+                    child["words"] = [
+                        {
+                            **w,
+                            "start": round(float(w["start"]), 3),
+                            "end": round(float(w["end"]), 3),
+                        }
+                        for w in chunk_words
+                    ]
+                child["multi_agent_voice_window_split"] = True
+                child["multi_agent_voice_window_parent_start"] = round(start_s, 3)
+                child["multi_agent_voice_window_parent_end"] = round(end_s, 3)
+                child["multi_agent_voice_window_index"] = idx
+                child["multi_agent_voice_window_count"] = len(parts)
+                decision = {
+                    "label": part["label"],
+                    "agent_slug": part.get("agent_slug"),
+                    "agent_name": part.get("agent_name"),
+                    "similarity": part.get("similarity"),
+                    "margin": part.get("margin"),
+                }
+                _apply_label(child, decision, "voice_window_split")
+                out.append(child)
+            if len(sample_changes) < 60:
+                sample_changes.append({
+                    "start": round(start_s, 2),
+                    "end": round(end_s, 2),
+                    "from": seg.get("agent_slug") or seg.get("identified_speaker"),
+                    "to": [
+                        p.get("agent_slug") or p.get("label")
+                        for p in parts
+                    ],
+                    "text": str(seg.get("text") or "")[:120],
+                })
+
+        out.sort(key=lambda row: (float(row.get("start", 0.0)), float(row.get("end", 0.0))))
+        return out, {
+            "enabled": True,
+            "mode": "multi_agent_segment_voice_windows",
+            "agents": sorted(stacks.keys()),
+            "evaluated_segments": evaluated_segments,
+            "relabeled_segments": relabeled_segments,
+            "split_parent_segments": split_parents,
+            "added_segments": added_segments,
+            "skipped_segments": skipped,
+            "window_seconds": window_s,
+            "min_parent_seconds": min_parent_s,
+            "base_min_similarity": base_min_sim,
+            "min_margin": min_margin,
+            "short_max_seconds": short_max_s,
+            "short_min_similarity": short_min_sim,
+            "short_min_margin": short_min_margin,
+            "sample_changes": sample_changes,
+        }
+
     def _repair_agent_roles_from_target_speaker_vad(
         text_segments: list,
         agent_name: str | None,
@@ -2874,6 +3363,29 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 f"changed_to_customer={target_speaker_vad_role_refinement.get('changed_to_customer', 0)}",
                 flush=True,
             )
+        if multi_agent_identified:
+            segments, multi_agent_segment_voiceprint_repair = (
+                _refine_multi_agent_segments_from_voice_windows(
+                    segments,
+                    diar_result.get("multi_agent_cluster_matches") or {},
+                    norm_wav,
+                )
+            )
+        else:
+            multi_agent_segment_voiceprint_repair = {
+                "enabled": False,
+                "reason": "not_multi_agent_cluster_match",
+            }
+        if (
+            multi_agent_segment_voiceprint_repair.get("split_parent_segments")
+            or multi_agent_segment_voiceprint_repair.get("relabeled_segments")
+        ):
+            print(
+                f"[UI] Multi-agent voice-window refinement split "
+                f"{multi_agent_segment_voiceprint_repair.get('split_parent_segments', 0)} parent segment(s), "
+                f"relabeled {multi_agent_segment_voiceprint_repair.get('relabeled_segments', 0)} segment(s)",
+                flush=True,
+            )
         multi_agent_short_split_repair = {
             "enabled": bool(multi_agent_identified),
             "changed_segments": 0,
@@ -3104,6 +3616,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "target_speaker_activity_split": (
             locals().get("target_speaker_vad_role_refinement", {}).get("target_speaker_activity_split", {})
         ),
+        "multi_agent_segment_voiceprint_repair": locals().get("multi_agent_segment_voiceprint_repair", {}),
         "multi_agent_short_split_repair": locals().get("multi_agent_short_split_repair", {}),
         "role_engine": os.getenv("SST_ROLE_ENGINE", "sortformer_campp").strip().lower() or "sortformer_campp",
         "agent_role_text_repair": locals().get("agent_role_text_repair", {}),
