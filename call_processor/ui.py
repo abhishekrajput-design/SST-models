@@ -3191,19 +3191,6 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         max_seconds = float(os.getenv("SST_TARGET_SPEAKER_SHORT_CONTINUITY_MAX_SECONDS", "0.90") or "0.90")
         max_gap = float(os.getenv("SST_TARGET_SPEAKER_SHORT_CONTINUITY_MAX_GAP", "0.20") or "0.20")
         min_anchor_seconds = float(os.getenv("SST_TARGET_SPEAKER_SHORT_CONTINUITY_MIN_ANCHOR_SECONDS", "0.80") or "0.80")
-        cross_speaker_boundary = os.getenv(
-            "SST_TARGET_SPEAKER_SHORT_CONTINUITY_CROSS_SPEAKER_BOUNDARY",
-            "1",
-        ).strip().lower()
-        cross_speaker_boundary = cross_speaker_boundary not in {"0", "false", "no", "off"}
-        cross_speaker_max_gap = float(os.getenv(
-            "SST_TARGET_SPEAKER_SHORT_CONTINUITY_CROSS_SPEAKER_MAX_GAP",
-            "0.05",
-        ) or "0.05")
-        min_anchor_similarity = float(os.getenv(
-            "SST_TARGET_SPEAKER_SHORT_CONTINUITY_MIN_ANCHOR_SIM",
-            "0.55",
-        ) or "0.55")
         display_name = agent_name or "Agent"
         changed = 0
         sample_changes = []
@@ -3228,23 +3215,6 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 return False
             return abs(start - right_start) <= max_gap or abs(left_end - end) <= max_gap
 
-        def _is_preceding_target_boundary_anchor(row: dict, candidate_start: float) -> bool:
-            if not cross_speaker_boundary:
-                return False
-            if row.get("identified_speaker") != "AGENT" or row.get("agent_slug") != agent_slug:
-                return False
-            if _duration(row) < min_anchor_seconds:
-                return False
-            try:
-                end = float(row.get("end", 0.0) or 0.0)
-                anchor_similarity = float(row.get("_segment_voice_target_similarity", 0.0) or 0.0)
-            except (TypeError, ValueError):
-                return False
-            if anchor_similarity < min_anchor_similarity:
-                return False
-            gap = candidate_start - end
-            return -0.02 <= gap <= cross_speaker_max_gap
-
         for idx, seg in enumerate(text_segments):
             if seg.get("speech_only") or seg.get("identified_speaker") != "CUSTOMER":
                 continue
@@ -3266,12 +3236,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 neighbors.append(text_segments[idx - 1])
             if idx + 1 < len(text_segments):
                 neighbors.append(text_segments[idx + 1])
-            same_speaker_anchor = any(_is_target_anchor(row, speaker, start_s, end_s) for row in neighbors)
-            boundary_anchor = bool(
-                idx > 0
-                and _is_preceding_target_boundary_anchor(text_segments[idx - 1], start_s)
-            )
-            if not same_speaker_anchor and not boundary_anchor:
+            if not any(_is_target_anchor(row, speaker, start_s, end_s) for row in neighbors):
                 continue
 
             seg["identified_speaker"] = "AGENT"
@@ -3279,9 +3244,6 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             seg["agent_name"] = display_name
             seg["agent_slug"] = agent_slug
             seg["short_target_speaker_continuity_repair"] = True
-            seg["short_target_speaker_continuity_reason"] = (
-                "same_speaker_neighbor" if same_speaker_anchor else "preceding_target_boundary"
-            )
             changed += 1
             if len(sample_changes) < 25:
                 sample_changes.append({
@@ -3289,7 +3251,6 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     "end": round(end_s, 2),
                     "speaker": speaker,
                     "to": agent_slug,
-                    "reason": seg["short_target_speaker_continuity_reason"],
                     "text": str(seg.get("text") or "")[:120],
                 })
 
@@ -3300,9 +3261,6 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "max_seconds": max_seconds,
             "max_gap": max_gap,
             "min_anchor_seconds": min_anchor_seconds,
-            "cross_speaker_boundary": cross_speaker_boundary,
-            "cross_speaker_max_gap": cross_speaker_max_gap,
-            "min_anchor_similarity": min_anchor_similarity,
             "sample_changes": sample_changes,
         }
 
