@@ -4612,6 +4612,120 @@ def _auto_train_worker(agents_filter: list | None, days: int,
         print(f"[AutoTrain] Error: {e}", flush=True)
 
 
+def _processed_result_dir(call_id: str) -> Path:
+    processed_root = Path(PROCESSED_DIR).resolve()
+    target = (processed_root / call_id).resolve()
+    if target != processed_root and processed_root in target.parents:
+        return target
+    raise ValueError("Invalid call id")
+
+
+def _repair_main_conversation_audio(call_id: str) -> tuple[dict, int]:
+    result_dir = _processed_result_dir(call_id)
+    result_path = result_dir / "result.json"
+    if not result_path.is_file():
+        return {"status": "error", "message": "Call not found"}, 404
+
+    with result_path.open("r", encoding="utf-8") as f:
+        rdata = json.load(f)
+
+    main_trim = rdata.get("main_conversation_trim") or {}
+    if main_trim.get("reason") != "sustained_agent_customer_window":
+        return {
+            "status": "error",
+            "message": "Call has no sustained main-conversation trim span",
+            "main_conversation_trim": main_trim,
+        }, 400
+
+    try:
+        start_s = float(main_trim.get("selected_start") or 0.0)
+        end_s = float(main_trim.get("selected_end") or 0.0)
+    except (TypeError, ValueError):
+        return {"status": "error", "message": "Invalid trim start/end"}, 400
+    if end_s <= start_s:
+        return {"status": "error", "message": "Empty trim span"}, 400
+
+    existing_main = rdata.get("main_conversation_audio_file")
+    if existing_main:
+        existing_path = Path(existing_main)
+        if not existing_path.is_absolute():
+            existing_path = Path.cwd() / existing_path
+        if existing_path.is_file():
+            return {
+                "status": "ok",
+                "message": "Main conversation audio already exists",
+                "playback_audio_file": rdata.get("playback_audio_file"),
+                "playback_audio_offset_s": rdata.get("playback_audio_offset_s", 0.0),
+                "display_audio_meta": rdata.get("display_audio_meta") or {},
+            }, 200
+
+    source_audio = (
+        rdata.get("full_playback_audio_file")
+        or rdata.get("playback_audio_file")
+        or rdata.get("enhanced_file")
+        or rdata.get("audio_file")
+    )
+    if not source_audio:
+        return {"status": "error", "message": "No playback source audio in result"}, 400
+
+    source_path = Path(str(source_audio))
+    if not source_path.is_absolute():
+        source_path = Path.cwd() / source_path
+    if not source_path.is_file():
+        fallback_audio = rdata.get("audio_file")
+        fallback_path = Path(str(fallback_audio or ""))
+        if fallback_audio and not fallback_path.is_absolute():
+            fallback_path = Path.cwd() / fallback_path
+        if fallback_audio and fallback_path.is_file():
+            source_path = fallback_path
+        else:
+            return {"status": "error", "message": f"Source audio missing: {source_audio}"}, 404
+
+    out_path = result_dir / "main_conversation_audio.mp3"
+    if not _trim_contiguous_audio(str(source_path), str(out_path), start_s, end_s):
+        return {"status": "error", "message": "Could not create main conversation audio"}, 500
+
+    main_audio_file = str(out_path).replace("\\", "/")
+    full_playback_audio = str(source_path).replace("\\", "/")
+    try:
+        cwd = str(Path.cwd().resolve()).replace("\\", "/")
+        if full_playback_audio.startswith(cwd + "/"):
+            full_playback_audio = full_playback_audio[len(cwd) + 1:]
+    except Exception:
+        pass
+
+    rdata["full_playback_audio_file"] = rdata.get("full_playback_audio_file") or full_playback_audio
+    rdata["main_conversation_audio_file"] = main_audio_file
+    rdata["playback_audio_file"] = main_audio_file
+    rdata["playback_audio_offset_s"] = round(start_s, 3)
+    rdata["playback_audio_source"] = "main_conversation"
+
+    display_meta = dict(rdata.get("orig_meta") or {})
+    display_meta["duration_s"] = round(max(end_s - start_s, 0.0))
+    try:
+        display_meta["size_mb"] = round(out_path.stat().st_size / 1024 / 1024, 1)
+    except OSError:
+        pass
+    display_meta["channels"] = 1
+    display_meta["trimmed_from_s"] = round(start_s, 3)
+    display_meta["trimmed_to_s"] = round(end_s, 3)
+    rdata["display_audio_meta"] = display_meta
+    rdata["main_conversation_audio_repaired_at"] = datetime.utcnow().isoformat() + "Z"
+
+    tmp_path = result_path.with_suffix(".json.tmp")
+    with tmp_path.open("w", encoding="utf-8") as f:
+        json.dump(rdata, f, indent=2, ensure_ascii=False)
+    os.replace(tmp_path, result_path)
+
+    return {
+        "status": "ok",
+        "playback_audio_file": rdata["playback_audio_file"],
+        "full_playback_audio_file": rdata["full_playback_audio_file"],
+        "playback_audio_offset_s": rdata["playback_audio_offset_s"],
+        "display_audio_meta": display_meta,
+    }, 200
+
+
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 #  HTTP Request Handler
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -4989,6 +5103,19 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         if not self._check_auth():
             return
         parsed = urlparse(self.path)
+
+        # POST /api/call/<id>/repair-main-audio - retrofit old trimmed results
+        # so the enhanced player uses a continuous main-conversation clip.
+        if parsed.path.startswith("/api/call/") and parsed.path.endswith("/repair-main-audio"):
+            call_id = unquote(parsed.path[len("/api/call/"):-len("/repair-main-audio")])
+            try:
+                payload, status = _repair_main_conversation_audio(call_id)
+            except ValueError as exc:
+                payload, status = {"status": "error", "message": str(exc)}, 400
+            except Exception as exc:
+                payload, status = {"status": "error", "message": str(exc)}, 500
+            self._json(payload, status)
+            return
 
         # POST /api/call/<id>/role-corrections - persist per-line AGENT/CUSTOMER fixes
         if parsed.path.startswith("/api/call/") and parsed.path.endswith("/role-corrections"):
