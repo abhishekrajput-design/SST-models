@@ -353,7 +353,7 @@ def _load_agent_match_hints(
     )
     thresholds: Dict[str, float] = {}
     margins: Dict[str, float] = {}
-    default_margin = _env_float("SST_MULTI_AGENT_CLUSTER_MIN_MARGIN", 0.08)
+    default_margin = _env_float("SST_MULTI_AGENT_CLUSTER_MIN_MARGIN", 0.10)
     outside_margin = _env_float("SST_MULTI_AGENT_OUTSIDE_MARGIN", 0.06)
 
     try:
@@ -427,7 +427,7 @@ def select_multi_agent_cluster_matches(
         top_slug, top_sim, top_name = scored[0]
         second_sim = scored[1][1] if len(scored) > 1 else 0.0
         required_sim = max(float(presence_floor), float(thresholds.get(top_slug, presence_floor)))
-        required_margin = float(margins.get(top_slug, _env_float("SST_MULTI_AGENT_CLUSTER_MIN_MARGIN", 0.08)))
+        required_margin = float(margins.get(top_slug, _env_float("SST_MULTI_AGENT_CLUSTER_MIN_MARGIN", 0.10)))
         margin = top_sim - second_sim
         if top_sim >= required_sim and margin >= required_margin:
             selected[spk] = {
