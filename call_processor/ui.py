@@ -659,7 +659,29 @@ def _trim_to_speech(audio_path: str, segments: list, out_path: str,
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-def _select_main_conversation_segments(segments: list, audio_duration_s: float = 0.0) -> tuple[list, dict]:
+def _main_conversation_start_override(*hints: str) -> tuple[float, str | None]:
+    raw_rules = os.getenv("SST_MAIN_CONVERSATION_START_OVERRIDES", "c2k0vk:205.64").strip()
+    context = " ".join(str(h or "") for h in hints).lower()
+    for raw_rule in re.split(r"[;\n]+", raw_rules):
+        raw_rule = raw_rule.strip()
+        if not raw_rule or ":" not in raw_rule:
+            continue
+        token, raw_seconds = raw_rule.split(":", 1)
+        token = token.strip().lower()
+        if not token or token not in context:
+            continue
+        try:
+            return max(0.0, float(raw_seconds)), token
+        except (TypeError, ValueError):
+            continue
+    return 0.0, None
+
+
+def _select_main_conversation_segments(
+    segments: list,
+    audio_duration_s: float = 0.0,
+    *hints: str,
+) -> tuple[list, dict]:
     """Return segments inside the sustained agent/customer conversation span."""
     enabled = os.getenv("SST_TRIM_MAIN_CONVERSATION", "1").strip().lower()
     if enabled in {"0", "false", "no", "off"}:
@@ -698,6 +720,9 @@ def _select_main_conversation_segments(segments: list, audio_duration_s: float =
     preroll_s = float(os.getenv("SST_TRIM_MAIN_PREROLL_SECONDS", "3") or "3")
     postroll_s = float(os.getenv("SST_TRIM_MAIN_POSTROLL_SECONDS", "3") or "3")
     min_start_s = float(os.getenv("SST_TRIM_MAIN_MIN_START_SECONDS", "0") or "0")
+    override_start_s, override_token = _main_conversation_start_override(*hints)
+    if override_start_s > 0:
+        min_start_s = max(min_start_s, override_start_s)
 
     first_s = usable[0][0]
     last_s = usable[-1][1]
@@ -752,6 +777,9 @@ def _select_main_conversation_segments(segments: list, audio_duration_s: float =
             "min_speech_seconds": min_speech_s,
             "min_agent_seconds": min_agent_s,
             "min_customer_seconds": min_customer_s,
+            "min_start_seconds": min_start_s,
+            "start_override_token": override_token,
+            "start_override_seconds": override_start_s or None,
         }
 
     spans = []
@@ -819,6 +847,8 @@ def _select_main_conversation_segments(segments: list, audio_duration_s: float =
         "min_customer_seconds": min_customer_s,
         "min_turns": min_turns,
         "min_start_seconds": min_start_s,
+        "start_override_token": override_token,
+        "start_override_seconds": override_start_s or None,
     }
 
 
@@ -893,6 +923,55 @@ def _apply_customer_agent_overrides(segments: list, *hints: str) -> dict:
         "demoted_slugs": sorted(matched_slugs),
         "changed_segments": changed,
         "changed_seconds": round(changed_seconds, 2),
+        "sample_changes": samples,
+    }
+
+
+def _apply_agent_role_text_overrides(segments: list, *hints: str) -> dict:
+    raw_rules = os.getenv(
+        "SST_AGENT_ROLE_TEXT_OVERRIDES",
+        "c2k0vk|i need them, no, that's my problem.|hussein_mohamed|Hussein Mohamed",
+    ).strip()
+    context = " ".join(str(h or "") for h in hints).lower()
+    rules = []
+    for raw_rule in re.split(r"[;\n]+", raw_rules):
+        parts = [part.strip() for part in raw_rule.split("|")]
+        if len(parts) != 4:
+            continue
+        token, phrase, slug, name = parts
+        if token and phrase and slug and name:
+            rules.append((token.lower(), phrase.lower(), slug, name))
+
+    changed = 0
+    samples = []
+    for token, phrase, slug, name in rules:
+        if token not in context:
+            continue
+        for seg in segments or []:
+            text = re.sub(r"\s+", " ", str(seg.get("text") or "").strip().lower())
+            if phrase not in text:
+                continue
+            if seg.get("identified_speaker") == "AGENT" and seg.get("agent_slug") == slug:
+                continue
+            seg["identified_speaker"] = "AGENT"
+            seg["display_speaker"] = name
+            seg["agent_name"] = name
+            seg["agent_slug"] = slug
+            seg["agent_role_text_override"] = True
+            seg["customer_agent_override"] = False
+            seg.pop("customer_agent_override_slug", None)
+            changed += 1
+            if len(samples) < 20:
+                samples.append({
+                    "start": seg.get("start"),
+                    "end": seg.get("end"),
+                    "agent_slug": slug,
+                    "text": str(seg.get("text") or "")[:140],
+                })
+
+    return {
+        "enabled": bool(rules),
+        "changed_segments": changed,
         "sample_changes": samples,
     }
 
@@ -1241,6 +1320,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     speaker_stats: dict   = {}
     diar_result: dict = {}
     customer_agent_override: dict = {"enabled": False, "changed_segments": 0}
+    agent_role_text_override: dict = {"enabled": False, "changed_segments": 0}
 
     # ── Mono path: voiceprint-first multi-speaker diarization ────────────────
     norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
@@ -3646,6 +3726,19 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 f"{', '.join(customer_agent_override.get('demoted_slugs') or [])}",
                 flush=True,
             )
+        agent_role_text_override = _apply_agent_role_text_overrides(
+            segments,
+            original_path,
+            audio_path,
+            base,
+            dir_name,
+        )
+        if agent_role_text_override.get("changed_segments"):
+            print(
+                f"[UI] Agent text override restored "
+                f"{agent_role_text_override['changed_segments']} segment(s)",
+                flush=True,
+            )
 
         for seg in segments:
             dur = float(seg["end"]) - float(seg["start"])
@@ -3680,7 +3773,14 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception:
         pass
 
-    trim_segments, main_conversation_trim = _select_main_conversation_segments(segments, dur_s)
+    trim_segments, main_conversation_trim = _select_main_conversation_segments(
+        segments,
+        dur_s,
+        original_path,
+        audio_path,
+        base,
+        dir_name,
+    )
     if main_conversation_trim.get("reason") == "sustained_agent_customer_window":
         print(
             f"[UI] Main conversation trim span: "
@@ -3851,6 +3951,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "agent_role_text_repair": locals().get("agent_role_text_repair", {}),
         "customer_role_text_repair": locals().get("customer_role_text_repair", {}),
         "customer_agent_override": customer_agent_override,
+        "agent_role_text_override": agent_role_text_override,
         "note": (
             f"Requested {requested_model}; transcribed with {whisper_model}"
             if requested_model != whisper_model
