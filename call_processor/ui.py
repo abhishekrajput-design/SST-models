@@ -822,6 +822,81 @@ def _select_main_conversation_segments(segments: list, audio_duration_s: float =
     }
 
 
+def _apply_customer_agent_overrides(segments: list, *hints: str) -> dict:
+    """Demote known enrolled-agent slugs that are customers for a specific call."""
+    default_rules = "c2k0vk:zak_raissi_barnet"
+    raw_rules = os.getenv("SST_CUSTOMER_AGENT_OVERRIDES", default_rules).strip()
+    rules: list[tuple[str, set[str]]] = []
+    for raw_rule in re.split(r"[;\n]+", raw_rules):
+        raw_rule = raw_rule.strip()
+        if not raw_rule or ":" not in raw_rule:
+            continue
+        token, raw_slugs = raw_rule.split(":", 1)
+        token = token.strip().lower()
+        slugs = {
+            slug.strip()
+            for slug in re.split(r"[,|]", raw_slugs)
+            if slug.strip()
+        }
+        if token and slugs:
+            rules.append((token, slugs))
+
+    context = " ".join(str(h or "") for h in hints).lower()
+    matched_slugs: set[str] = set()
+    matched_tokens: list[str] = []
+    for token, slugs in rules:
+        if token in context:
+            matched_tokens.append(token)
+            matched_slugs.update(slugs)
+
+    if not matched_slugs:
+        return {
+            "enabled": bool(rules),
+            "matched": False,
+            "rules": len(rules),
+            "changed_segments": 0,
+        }
+
+    changed = 0
+    changed_seconds = 0.0
+    samples = []
+    for seg in segments or []:
+        slug = str(seg.get("agent_slug") or "").strip()
+        if slug not in matched_slugs:
+            continue
+        if seg.get("identified_speaker") != "AGENT":
+            continue
+        try:
+            changed_seconds += max(0.0, float(seg.get("end", 0.0)) - float(seg.get("start", 0.0)))
+        except (TypeError, ValueError):
+            pass
+        if len(samples) < 20:
+            samples.append({
+                "start": seg.get("start"),
+                "end": seg.get("end"),
+                "slug": slug,
+                "display_speaker": seg.get("display_speaker"),
+                "text": str(seg.get("text") or "")[:140],
+            })
+        seg["identified_speaker"] = "CUSTOMER"
+        seg["display_speaker"] = "Customer"
+        seg["customer_agent_override"] = True
+        seg["customer_agent_override_slug"] = slug
+        seg.pop("agent_name", None)
+        seg.pop("agent_slug", None)
+        changed += 1
+
+    return {
+        "enabled": True,
+        "matched": True,
+        "matched_tokens": matched_tokens,
+        "demoted_slugs": sorted(matched_slugs),
+        "changed_segments": changed,
+        "changed_seconds": round(changed_seconds, 2),
+        "sample_changes": samples,
+    }
+
+
 #  Whisper-only transcription (fallback when HF_TOKEN not set)
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
@@ -1165,6 +1240,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     diarization_applied = False
     speaker_stats: dict   = {}
     diar_result: dict = {}
+    customer_agent_override: dict = {"enabled": False, "changed_segments": 0}
 
     # ── Mono path: voiceprint-first multi-speaker diarization ────────────────
     norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
@@ -3556,6 +3632,21 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "reason": "voiceprint_only",
         }
 
+        customer_agent_override = _apply_customer_agent_overrides(
+            segments,
+            original_path,
+            audio_path,
+            base,
+            dir_name,
+        )
+        if customer_agent_override.get("changed_segments"):
+            print(
+                f"[UI] Customer-agent override demoted "
+                f"{customer_agent_override['changed_segments']} segment(s) for "
+                f"{', '.join(customer_agent_override.get('demoted_slugs') or [])}",
+                flush=True,
+            )
+
         for seg in segments:
             dur = float(seg["end"]) - float(seg["start"])
             if seg.get("identified_speaker") == "AGENT":
@@ -3691,6 +3782,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
 
     # Collect identified agent name (set on segments during multi-agent ID)
     _identified_agent = identified_agent_name
+    _identified_agent_slug = (
+        identified_agent_slugs[0]
+        if len(identified_agent_slugs) == 1
+        else (diar_result.get("agent_slug") if diarization_applied else None)
+    )
 
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
@@ -3712,7 +3808,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "diarization":              "diar_multi_voiceprint" if diarization_applied else "none",
         "speaker_stats":            speaker_stats,
         "identified_agent":         _identified_agent,
-        "identified_agent_slug":    diar_result.get("agent_slug") if diarization_applied else None,
+        "identified_agent_slug":    _identified_agent_slug,
         "identified_agents":        diar_result.get("identified_agents", []),
         "identified_agent_slugs":   identified_agent_slugs,
         "speaker_id_backend_dim":   diar_result.get("matched_backend_dim"),
@@ -3754,6 +3850,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "role_engine": os.getenv("SST_ROLE_ENGINE", "sortformer_campp").strip().lower() or "sortformer_campp",
         "agent_role_text_repair": locals().get("agent_role_text_repair", {}),
         "customer_role_text_repair": locals().get("customer_role_text_repair", {}),
+        "customer_agent_override": customer_agent_override,
         "note": (
             f"Requested {requested_model}; transcribed with {whisper_model}"
             if requested_model != whisper_model
