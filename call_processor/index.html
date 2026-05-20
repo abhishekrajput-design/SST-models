@@ -1907,6 +1907,7 @@
         let currentCallId = null;
         let currentIdentifiedAgent = 'Agent';
         let currentIdentifiedAgentSlug = null;
+        let currentSpeakerAgentMap = {}; // speaker_id -> agent_name (per-call mapping from identified_agents)
         let agentSpkId = null;
         let _activeSegIdx = -1;
         let _isPlaying = false;
@@ -2006,9 +2007,29 @@
             return seg.display_speaker || seg.speaker || 'Unknown';
         }
 
-        function shortAgentLabel() {
-            const clean = String(currentIdentifiedAgent || 'Agent').trim();
-            return clean.split(/\s+/).filter(Boolean)[0] || 'Agent';
+        function shortAgentLabel(seg) {
+            // Prefer per-segment agent_name if backend tagged it
+            if (seg && seg.agent_name) {
+                const w = String(seg.agent_name).trim().split(/\s+/).filter(Boolean)[0];
+                if (w) return w;
+            }
+            // Else use speaker -> agent map (built from identified_agents)
+            if (seg && seg.speaker && currentSpeakerAgentMap[seg.speaker]) {
+                const w = String(currentSpeakerAgentMap[seg.speaker]).trim().split(/\s+/).filter(Boolean)[0];
+                if (w) return w;
+            }
+            // Else if there is a single identified agent, use it
+            if (currentIdentifiedAgent && !currentIdentifiedAgent.includes(',')) {
+                const w = String(currentIdentifiedAgent).trim().split(/\s+/).filter(Boolean)[0];
+                if (w) return w;
+            }
+            return 'Agent';
+        }
+        function fullAgentLabel(seg) {
+            if (seg && seg.agent_name) return seg.agent_name;
+            if (seg && seg.speaker && currentSpeakerAgentMap[seg.speaker]) return currentSpeakerAgentMap[seg.speaker];
+            if (currentIdentifiedAgent && !currentIdentifiedAgent.includes(',')) return currentIdentifiedAgent;
+            return 'Agent';
         }
 
         function applyRoleLocally(indexes, role, mode = 'line') {
@@ -2178,8 +2199,8 @@
                 wordTime = wEnd;
                 return `<span class="transcript-word" data-start="${wStart.toFixed(3)}" data-end="${wEnd.toFixed(3)}">${word}</span>`;
             }).join('');
-            const agentLabel = escapeHtml(shortAgentLabel());
-            const fullAgent = escapeHtml(currentIdentifiedAgent || 'Agent');
+            const agentLabel = escapeHtml(shortAgentLabel(seg));
+            const fullAgent = escapeHtml(fullAgentLabel(seg));
             const fixedBadge = seg.manual_role_correction ? '<span class="role-fixed">FIXED</span>' : '';
             const roleTools = `<span class="role-tools">
                 <button class="role-btn ${role === 'AGENT' ? 'active' : ''}" type="button" title="Verify this message as ${fullAgent} voice and train when enough verified messages exist" onclick="correctSpeakerRole(event, ${idx}, 'AGENT')">${agentLabel} Voice</button>
@@ -2303,6 +2324,12 @@
             currentCallId = callId;
             currentIdentifiedAgent = data.identified_agent || 'Agent';
             currentIdentifiedAgentSlug = data.identified_agent_slug || data.target_agent_slug || null;
+            currentSpeakerAgentMap = {};
+            (data.identified_agents || []).forEach(a => {
+                if (a && a.speaker && a.agent_name) {
+                    currentSpeakerAgentMap[a.speaker] = a.agent_name;
+                }
+            });
             _activeSegIdx = -1;
             _autoScroll = true;
             if (opts.updateUrl !== false) setCallUrl(callId);
