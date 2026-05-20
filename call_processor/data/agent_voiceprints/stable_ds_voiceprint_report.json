@@ -1,5 +1,5 @@
 {
-  "seconds": 120,
+  "seconds": 90,
   "offset": 0,
   "offsets": [
     0,
@@ -9,9 +9,9 @@
     1200,
     1500
   ],
-  "max_files": 10,
-  "train_limit": 10,
-  "max_per_file": 4,
+  "max_files": 11,
+  "train_limit": 8,
+  "max_per_file": 1,
   "min_include_sim": 0.24,
   "target_presence_floor": 0.24,
   "reject_other_agent_floor": 0.35,
@@ -19,8 +19,8 @@
     "hussein": {
       "agent_slug": "hussein_mohamed",
       "agent_name": "Hussein Mohamed",
-      "files_seen": 3,
-      "candidate_clips_seen": 18,
+      "files_seen": 10,
+      "candidate_clips_seen": 59,
       "offsets": [
         0,
         300,
@@ -29,207 +29,414 @@
         1200,
         1500
       ],
-      "holdout_files": [],
+      "holdout_files": [
+        "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3"
+      ],
       "train_voiceprints_saved": [
         {
           "path": "hussein_mohamed_desk_campp_v1.npy",
           "source": "desk_recordings_campp_stable_ds",
           "embedding_model": "cam++",
           "embedding_dim": 512,
-          "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "source_offset": 900,
-          "source_seconds": 120,
-          "source_speaker": "SPEAKER_03",
-          "source_similarity_to_phone_vp": 0.379
+          "source_file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
+          "source_offset": 0,
+          "source_seconds": 90,
+          "source_speaker": "SPEAKER_00",
+          "source_similarity_to_phone_vp": 0.3945
         },
         {
           "path": "hussein_mohamed_desk_campp_v2.npy",
           "source": "desk_recordings_campp_stable_ds",
           "embedding_model": "cam++",
           "embedding_dim": 512,
-          "source_file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-          "source_offset": 1500,
-          "source_seconds": 120,
-          "source_speaker": "SPEAKER_00",
-          "source_similarity_to_phone_vp": 0.3349
-        },
-        {
-          "path": "hussein_mohamed_desk_campp_v3.npy",
-          "source": "desk_recordings_campp_stable_ds",
-          "embedding_model": "cam++",
-          "embedding_dim": 512,
-          "source_file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
-          "source_offset": 0,
-          "source_seconds": 120,
-          "source_speaker": "SPEAKER_00",
-          "source_similarity_to_phone_vp": 0.3307
-        },
-        {
-          "path": "hussein_mohamed_desk_campp_v4.npy",
-          "source": "desk_recordings_campp_stable_ds",
-          "embedding_model": "cam++",
-          "embedding_dim": 512,
           "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "source_offset": 300,
-          "source_seconds": 120,
-          "source_speaker": "SPEAKER_00",
-          "source_similarity_to_phone_vp": 0.3286
-        },
-        {
-          "path": "hussein_mohamed_desk_campp_v5.npy",
-          "source": "desk_recordings_campp_stable_ds",
-          "embedding_model": "cam++",
-          "embedding_dim": 512,
-          "source_file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
-          "source_offset": 300,
-          "source_seconds": 120,
-          "source_speaker": "SPEAKER_01",
-          "source_similarity_to_phone_vp": 0.3012
-        },
-        {
-          "path": "hussein_mohamed_desk_campp_v6.npy",
-          "source": "desk_recordings_campp_stable_ds",
-          "embedding_model": "cam++",
-          "embedding_dim": 512,
-          "source_file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-          "source_offset": 600,
-          "source_seconds": 120,
-          "source_speaker": "SPEAKER_01",
-          "source_similarity_to_phone_vp": 0.2913
-        },
-        {
-          "path": "hussein_mohamed_desk_campp_v7.npy",
-          "source": "desk_recordings_campp_stable_ds",
-          "embedding_model": "cam++",
-          "embedding_dim": 512,
-          "source_file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
           "source_offset": 1200,
-          "source_seconds": 120,
+          "source_seconds": 90,
           "source_speaker": "SPEAKER_00",
-          "source_similarity_to_phone_vp": 0.2912
-        },
-        {
-          "path": "hussein_mohamed_desk_campp_v8.npy",
-          "source": "desk_recordings_campp_stable_ds",
-          "embedding_model": "cam++",
-          "embedding_dim": 512,
-          "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "source_offset": 0,
-          "source_seconds": 120,
-          "source_speaker": "SPEAKER_00",
-          "source_similarity_to_phone_vp": 0.2859
-        },
-        {
-          "path": "hussein_mohamed_desk_campp_v9.npy",
-          "source": "desk_recordings_campp_stable_ds",
-          "embedding_model": "cam++",
-          "embedding_dim": 512,
-          "source_file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-          "source_offset": 0,
-          "source_seconds": 120,
-          "source_speaker": "SPEAKER_01",
-          "source_similarity_to_phone_vp": 0.2727
-        },
-        {
-          "path": "hussein_mohamed_desk_campp_v10.npy",
-          "source": "desk_recordings_campp_stable_ds",
-          "embedding_model": "cam++",
-          "embedding_dim": 512,
-          "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "source_offset": 600,
-          "source_seconds": 120,
-          "source_speaker": "SPEAKER_00",
-          "source_similarity_to_phone_vp": 0.2725
+          "source_similarity_to_phone_vp": 0.3145
         }
       ],
       "train_files_used": [
-        "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-        "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
         "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
-        "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-        "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
-        "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-        "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-        "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-        "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
         "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3"
       ],
       "train_clip_offsets_used": [
         {
-          "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "offset": 900,
-          "similarity": 0.379
-        },
-        {
-          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-          "offset": 1500,
-          "similarity": 0.3349
-        },
-        {
           "file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
           "offset": 0,
-          "similarity": 0.3307
+          "similarity": 0.3945
         },
         {
           "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "offset": 300,
-          "similarity": 0.3286
-        },
-        {
-          "file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
-          "offset": 300,
-          "similarity": 0.3012
-        },
-        {
-          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-          "offset": 600,
-          "similarity": 0.2913
-        },
-        {
-          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
           "offset": 1200,
-          "similarity": 0.2912
-        },
-        {
-          "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "offset": 0,
-          "similarity": 0.2859
-        },
-        {
-          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-          "offset": 0,
-          "similarity": 0.2727
-        },
-        {
-          "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "offset": 600,
-          "similarity": 0.2725
+          "similarity": 0.3145
         }
       ],
       "skipped_candidates": [
         {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 0,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0585,
+          "before_slug": null,
+          "before_similarity": 0.2131
+        },
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 300,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0605,
+          "before_slug": null,
+          "before_similarity": 0.2128
+        },
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 600,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0601,
+          "before_slug": null,
+          "before_similarity": 0.2126
+        },
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 900,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0583,
+          "before_slug": null,
+          "before_similarity": 0.2141
+        },
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 1200,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0604,
+          "before_slug": null,
+          "before_similarity": 0.2128
+        },
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 1500,
+          "reason": "offset_too_late"
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 0,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0585,
+          "before_slug": null,
+          "before_similarity": 0.2131
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 300,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0578,
+          "before_slug": null,
+          "before_similarity": 0.2144
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 600,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0586,
+          "before_slug": null,
+          "before_similarity": 0.2121
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 900,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0581,
+          "before_slug": null,
+          "before_similarity": 0.2124
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 1200,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0566,
+          "before_slug": null,
+          "before_similarity": 0.2134
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 1500,
+          "reason": "low_target_sim",
+          "target_similarity": 0.058,
+          "before_slug": null,
+          "before_similarity": 0.2123
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 0,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0583,
+          "before_slug": null,
+          "before_similarity": 0.212
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 300,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0542,
+          "before_slug": null,
+          "before_similarity": 0.2109
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 600,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0586,
+          "before_slug": null,
+          "before_similarity": 0.2148
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 900,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0541,
+          "before_slug": null,
+          "before_similarity": 0.2114
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 1200,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0574,
+          "before_slug": null,
+          "before_similarity": 0.218
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 1500,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0591,
+          "before_slug": null,
+          "before_similarity": 0.2127
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 0,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0585,
+          "before_slug": null,
+          "before_similarity": 0.2131
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 300,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0578,
+          "before_slug": null,
+          "before_similarity": 0.2144
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 600,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0586,
+          "before_slug": null,
+          "before_similarity": 0.2121
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 900,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0581,
+          "before_slug": null,
+          "before_similarity": 0.2124
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 1200,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0566,
+          "before_slug": null,
+          "before_similarity": 0.2134
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 1500,
+          "reason": "low_target_sim",
+          "target_similarity": 0.058,
+          "before_slug": null,
+          "before_similarity": 0.2123
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 0,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0585,
+          "before_slug": null,
+          "before_similarity": 0.2131
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 300,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0578,
+          "before_slug": null,
+          "before_similarity": 0.2144
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 600,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0586,
+          "before_slug": null,
+          "before_similarity": 0.2121
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 900,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0581,
+          "before_slug": null,
+          "before_similarity": 0.2124
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 1200,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0566,
+          "before_slug": null,
+          "before_similarity": 0.2134
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 1500,
+          "reason": "low_target_sim",
+          "target_similarity": 0.058,
+          "before_slug": null,
+          "before_similarity": 0.2123
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 0,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0585,
+          "before_slug": null,
+          "before_similarity": 0.2131
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 300,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0578,
+          "before_slug": null,
+          "before_similarity": 0.2144
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 600,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0586,
+          "before_slug": null,
+          "before_similarity": 0.2121
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 900,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0581,
+          "before_slug": null,
+          "before_similarity": 0.2124
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 1200,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0566,
+          "before_slug": null,
+          "before_similarity": 0.2134
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 1500,
+          "reason": "low_target_sim",
+          "target_similarity": 0.058,
+          "before_slug": null,
+          "before_similarity": 0.2123
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 0,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0596,
+          "before_slug": null,
+          "before_similarity": 0.2122
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 300,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0564,
+          "before_slug": null,
+          "before_similarity": 0.2112
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 600,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0588,
+          "before_slug": null,
+          "before_similarity": 0.2136
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 900,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0584,
+          "before_slug": null,
+          "before_similarity": 0.2142
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 1200,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0588,
+          "before_slug": null,
+          "before_similarity": 0.2123
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 1500,
+          "reason": "low_target_sim",
+          "target_similarity": 0.0569,
+          "before_slug": null,
+          "before_similarity": 0.2175
+        },
+        {
+          "file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
+          "offset": 300,
+          "reason": "low_target_sim",
+          "target_similarity": 0.1747,
+          "before_slug": null,
+          "before_similarity": 0.3328
+        },
+        {
           "file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
           "offset": 600,
-          "reason": "conflicting_agent:shuahib_miah:0.507",
-          "target_similarity": 0.3182,
+          "reason": "conflicting_agent:shuahib_miah:0.544",
+          "target_similarity": 0.3232,
           "before_slug": "shuahib_miah",
-          "before_similarity": 0.5068
+          "before_similarity": 0.5442
         },
         {
           "file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
           "offset": 900,
-          "reason": "conflicting_agent:shuahib_miah:0.488",
-          "target_similarity": 0.3113,
+          "reason": "conflicting_agent:shuahib_miah:0.542",
+          "target_similarity": 0.3181,
           "before_slug": "shuahib_miah",
-          "before_similarity": 0.4882
+          "before_similarity": 0.5425
         },
         {
           "file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
           "offset": 1200,
-          "reason": "conflicting_agent:shuahib_miah:0.465",
-          "target_similarity": 0.3021,
+          "reason": "conflicting_agent:shuahib_miah:0.490",
+          "target_similarity": 0.3022,
           "before_slug": "shuahib_miah",
-          "before_similarity": 0.4646
+          "before_similarity": 0.4897
         },
         {
           "file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
@@ -241,38 +448,873 @@
         },
         {
           "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "offset": 1500,
-          "reason": "low_target_sim",
-          "target_similarity": 0.1978,
+          "offset": 0,
+          "reason": "conflicting_agent:zak_raissi_barnet:0.389",
+          "target_similarity": 0.2911,
+          "before_slug": "zak_raissi_barnet",
+          "before_similarity": 0.3893
+        },
+        {
+          "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
+          "offset": 300,
+          "reason": "conflicting_agent:zak_raissi_barnet:0.373",
+          "target_similarity": 0.2828,
+          "before_slug": "zak_raissi_barnet",
+          "before_similarity": 0.3729
+        },
+        {
+          "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
+          "offset": 600,
+          "reason": "conflicting_agent:aayush:0.425",
+          "target_similarity": 0.2777,
+          "before_slug": "aayush",
+          "before_similarity": 0.4251
+        },
+        {
+          "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
+          "offset": 900,
+          "reason": "conflicting_agent:zak_raissi_barnet:0.479",
+          "target_similarity": 0.1966,
+          "before_slug": "zak_raissi_barnet",
+          "before_similarity": 0.4786
+        },
+        {
+          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+          "offset": 0,
+          "reason": "heldout_for_testing",
+          "target_similarity": 0.2891,
           "before_slug": null,
-          "before_similarity": 0.2497
+          "before_similarity": 0.3268
         },
         {
           "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
           "offset": 300,
-          "reason": "low_target_sim",
-          "target_similarity": 0.1913,
-          "before_slug": null,
-          "before_similarity": 0.3096
+          "reason": "conflicting_agent:sylwia_recruitment:0.362",
+          "target_similarity": 0.2636,
+          "before_slug": "sylwia_recruitment",
+          "before_similarity": 0.3617
+        },
+        {
+          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+          "offset": 600,
+          "reason": "conflicting_agent:zak_raissi_barnet:0.392",
+          "target_similarity": 0.3165,
+          "before_slug": "zak_raissi_barnet",
+          "before_similarity": 0.3916
         },
         {
           "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
           "offset": 900,
-          "reason": "low_target_sim",
-          "target_similarity": 0.1751,
+          "reason": "heldout_for_testing",
+          "target_similarity": 0.2308,
           "before_slug": null,
-          "before_similarity": 0.2921
+          "before_similarity": 0.2736
+        },
+        {
+          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+          "offset": 1200,
+          "reason": "heldout_for_testing",
+          "target_similarity": 0.2328,
+          "before_slug": null,
+          "before_similarity": 0.3175
+        },
+        {
+          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+          "offset": 1500,
+          "reason": "heldout_for_testing",
+          "target_similarity": 0.2463,
+          "before_slug": null,
+          "before_similarity": 0.342
         }
       ],
       "evaluations": [
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 0,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2131,
+          "before_target_similarity": 0.0585,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3879,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3879,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 300,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2128,
+          "before_target_similarity": 0.0605,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3895,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3895,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 600,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2126,
+          "before_target_similarity": 0.0601,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3892,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3892,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 10
+          }
+        },
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 900,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2141,
+          "before_target_similarity": 0.0583,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3878,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3878,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 16
+          }
+        },
+        {
+          "file": "hussein_mohamed_00_audio_04_05_2026_20_37_05_z2l7zh.mp3",
+          "offset": 1200,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2128,
+          "before_target_similarity": 0.0604,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.389,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.389,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 10
+          }
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 0,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2131,
+          "before_target_similarity": 0.0585,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3879,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3879,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 300,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2144,
+          "before_target_similarity": 0.0578,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3873,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3873,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 600,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2121,
+          "before_target_similarity": 0.0586,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3877,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3877,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 12
+          }
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 900,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2124,
+          "before_target_similarity": 0.0581,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3876,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3876,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 13
+          }
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 1200,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2134,
+          "before_target_similarity": 0.0566,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3903,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3903,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 17
+          }
+        },
+        {
+          "file": "hussein_mohamed_01_audio_04_05_2026_20_07_05_ov6b6k.mp3",
+          "offset": 1500,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2123,
+          "before_target_similarity": 0.058,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3875,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3875,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 0,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.212,
+          "before_target_similarity": 0.0583,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3874,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3874,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 300,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2109,
+          "before_target_similarity": 0.0542,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.393,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.393,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 21
+          }
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 600,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2148,
+          "before_target_similarity": 0.0586,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3879,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3879,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 13
+          }
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 900,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2114,
+          "before_target_similarity": 0.0541,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3932,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3932,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 21
+          }
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 1200,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.218,
+          "before_target_similarity": 0.0574,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3892,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3892,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 18
+          }
+        },
+        {
+          "file": "hussein_mohamed_02_audio_04_05_2026_19_37_05_gz10ff.mp3",
+          "offset": 1500,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2127,
+          "before_target_similarity": 0.0591,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3876,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3876,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 18
+          }
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 0,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2131,
+          "before_target_similarity": 0.0585,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3879,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3879,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 300,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2144,
+          "before_target_similarity": 0.0578,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3873,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3873,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 600,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2121,
+          "before_target_similarity": 0.0586,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3877,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3877,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 12
+          }
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 900,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2124,
+          "before_target_similarity": 0.0581,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3876,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3876,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 13
+          }
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 1200,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2134,
+          "before_target_similarity": 0.0566,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3903,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3903,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 17
+          }
+        },
+        {
+          "file": "hussein_mohamed_03_audio_04_05_2026_19_07_05_yxrduu.mp3",
+          "offset": 1500,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2123,
+          "before_target_similarity": 0.058,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3875,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3875,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 0,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2131,
+          "before_target_similarity": 0.0585,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3879,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3879,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 300,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2144,
+          "before_target_similarity": 0.0578,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3873,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3873,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 600,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2121,
+          "before_target_similarity": 0.0586,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3877,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3877,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 12
+          }
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 900,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2124,
+          "before_target_similarity": 0.0581,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3876,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3876,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 13
+          }
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 1200,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2134,
+          "before_target_similarity": 0.0566,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3903,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3903,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 17
+          }
+        },
+        {
+          "file": "hussein_mohamed_04_audio_04_05_2026_18_37_05_vzn4z5.mp3",
+          "offset": 1500,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2123,
+          "before_target_similarity": 0.058,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3875,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3875,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 0,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2131,
+          "before_target_similarity": 0.0585,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3879,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3879,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 300,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2144,
+          "before_target_similarity": 0.0578,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3873,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3873,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 600,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2121,
+          "before_target_similarity": 0.0586,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3877,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3877,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 12
+          }
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 900,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2124,
+          "before_target_similarity": 0.0581,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3876,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3876,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 13
+          }
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 1200,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2134,
+          "before_target_similarity": 0.0566,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3903,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3903,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 17
+          }
+        },
+        {
+          "file": "hussein_mohamed_05_audio_04_05_2026_18_07_05_wrk624.mp3",
+          "offset": 1500,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2123,
+          "before_target_similarity": 0.058,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3875,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3875,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 0,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2122,
+          "before_target_similarity": 0.0596,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3882,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3882,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 300,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2112,
+          "before_target_similarity": 0.0564,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.391,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.391,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 20
+          }
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 600,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2136,
+          "before_target_similarity": 0.0588,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3884,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3884,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 14
+          }
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 900,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2142,
+          "before_target_similarity": 0.0584,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3887,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3887,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 16
+          }
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 1200,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2123,
+          "before_target_similarity": 0.0588,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3878,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3878,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 15
+          }
+        },
+        {
+          "file": "hussein_mohamed_06_audio_04_05_2026_17_37_05_mb3f2p.mp3",
+          "offset": 1500,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": null,
+          "before_similarity": 0.2175,
+          "before_target_similarity": 0.0569,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.3877,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_00",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.3877,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 16
+          }
+        },
         {
           "file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
           "offset": 0,
           "trained_from_this_file": true,
           "trained_from_this_clip": true,
-          "before_slug": null,
-          "before_similarity": 0.3307,
-          "before_target_similarity": 0.3307,
+          "before_slug": "hussein_mohamed",
+          "before_similarity": 0.3945,
+          "before_target_similarity": 0.3945,
           "after_slug": "hussein_mohamed",
           "after_similarity": 1.0,
           "correct_after": true,
@@ -281,27 +1323,27 @@
           "target_after_similarity": 1.0,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 24
+            "SPEAKER_00": 12
           }
         },
         {
           "file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
           "offset": 300,
           "trained_from_this_file": true,
-          "trained_from_this_clip": true,
+          "trained_from_this_clip": false,
           "before_slug": null,
-          "before_similarity": 0.3012,
-          "before_target_similarity": 0.3012,
+          "before_similarity": 0.3328,
+          "before_target_similarity": 0.1747,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 1.0,
+          "after_similarity": 0.7555,
           "correct_after": true,
           "target_after_speaker": "SPEAKER_01",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 1.0,
+          "target_after_similarity": 0.7555,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_01": 12,
-            "SPEAKER_00": 10
+            "SPEAKER_01": 13,
+            "SPEAKER_00": 3
           }
         },
         {
@@ -310,19 +1352,19 @@
           "trained_from_this_file": true,
           "trained_from_this_clip": false,
           "before_slug": "shuahib_miah",
-          "before_similarity": 0.5068,
-          "before_target_similarity": 0.3182,
+          "before_similarity": 0.5442,
+          "before_target_similarity": 0.3232,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 0.6561,
+          "after_similarity": 0.6653,
           "correct_after": true,
           "target_after_speaker": "SPEAKER_01",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 0.6561,
+          "target_after_similarity": 0.6653,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 13,
-            "SPEAKER_01": 12,
-            "SPEAKER_02": 3
+            "SPEAKER_00": 4,
+            "SPEAKER_01": 19,
+            "SPEAKER_02": 2
           }
         },
         {
@@ -331,18 +1373,19 @@
           "trained_from_this_file": true,
           "trained_from_this_clip": false,
           "before_slug": "shuahib_miah",
-          "before_similarity": 0.4882,
-          "before_target_similarity": 0.3113,
+          "before_similarity": 0.5425,
+          "before_target_similarity": 0.3181,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 0.625,
+          "after_similarity": 0.6383,
           "correct_after": true,
-          "target_after_speaker": "SPEAKER_00",
+          "target_after_speaker": "SPEAKER_02",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 0.625,
+          "target_after_similarity": 0.6383,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 17,
-            "SPEAKER_01": 10
+            "SPEAKER_00": 12,
+            "SPEAKER_01": 3,
+            "SPEAKER_02": 13
           }
         },
         {
@@ -351,17 +1394,19 @@
           "trained_from_this_file": true,
           "trained_from_this_clip": false,
           "before_slug": "shuahib_miah",
-          "before_similarity": 0.4646,
-          "before_target_similarity": 0.3021,
+          "before_similarity": 0.4897,
+          "before_target_similarity": 0.3022,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 0.7102,
+          "after_similarity": 0.6766,
           "correct_after": true,
           "target_after_speaker": "SPEAKER_00",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 0.7102,
+          "target_after_similarity": 0.6766,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 10
+            "SPEAKER_00": 12,
+            "SPEAKER_01": 1,
+            "SPEAKER_02": 5
           }
         },
         {
@@ -385,255 +1430,253 @@
           "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
           "offset": 0,
           "trained_from_this_file": true,
-          "trained_from_this_clip": true,
-          "before_slug": null,
-          "before_similarity": 0.3074,
-          "before_target_similarity": 0.2859,
+          "trained_from_this_clip": false,
+          "before_slug": "zak_raissi_barnet",
+          "before_similarity": 0.3893,
+          "before_target_similarity": 0.2911,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 1.0,
+          "after_similarity": 0.7663,
           "correct_after": true,
-          "target_after_speaker": "SPEAKER_00",
+          "target_after_speaker": "SPEAKER_01",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 1.0,
+          "target_after_similarity": 0.7663,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 23,
-            "SPEAKER_01": 2
+            "SPEAKER_00": 9,
+            "SPEAKER_01": 14
           }
         },
         {
           "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
           "offset": 300,
           "trained_from_this_file": true,
-          "trained_from_this_clip": true,
-          "before_slug": null,
-          "before_similarity": 0.3286,
-          "before_target_similarity": 0.3286,
+          "trained_from_this_clip": false,
+          "before_slug": "zak_raissi_barnet",
+          "before_similarity": 0.3729,
+          "before_target_similarity": 0.2828,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 1.0,
+          "after_similarity": 0.8498,
           "correct_after": true,
           "target_after_speaker": "SPEAKER_00",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 1.0,
+          "target_after_similarity": 0.8498,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 20,
-            "SPEAKER_01": 8,
-            "SPEAKER_02": 3
+            "SPEAKER_00": 14,
+            "SPEAKER_01": 7
           }
         },
         {
           "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
           "offset": 600,
           "trained_from_this_file": true,
-          "trained_from_this_clip": true,
-          "before_slug": null,
-          "before_similarity": 0.3039,
-          "before_target_similarity": 0.2725,
+          "trained_from_this_clip": false,
+          "before_slug": "aayush",
+          "before_similarity": 0.4251,
+          "before_target_similarity": 0.2777,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 1.0,
+          "after_similarity": 0.8039,
           "correct_after": true,
           "target_after_speaker": "SPEAKER_00",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 1.0,
+          "target_after_similarity": 0.8039,
           "correct_target_after": true,
           "cluster_segment_counts": {
             "SPEAKER_00": 16,
-            "SPEAKER_01": 15
+            "SPEAKER_01": 3,
+            "SPEAKER_02": 1
           }
         },
         {
           "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
           "offset": 900,
           "trained_from_this_file": true,
-          "trained_from_this_clip": true,
-          "before_slug": "hussein_mohamed",
-          "before_similarity": 0.379,
-          "before_target_similarity": 0.379,
-          "after_slug": "hussein_mohamed",
-          "after_similarity": 1.0,
-          "correct_after": true,
-          "target_after_speaker": "SPEAKER_03",
-          "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 1.0,
-          "correct_target_after": true,
-          "cluster_segment_counts": {
-            "SPEAKER_00": 8,
-            "SPEAKER_01": 17,
-            "SPEAKER_02": 5,
-            "SPEAKER_03": 7
-          }
-        },
-        {
-          "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "offset": 1200,
-          "trained_from_this_file": true,
           "trained_from_this_clip": false,
-          "before_slug": null,
-          "before_similarity": 0.3392,
-          "before_target_similarity": 0.2652,
+          "before_slug": "zak_raissi_barnet",
+          "before_similarity": 0.4786,
+          "before_target_similarity": 0.1966,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 0.9043,
+          "after_similarity": 0.6175,
           "correct_after": true,
-          "target_after_speaker": "SPEAKER_00",
+          "target_after_speaker": "SPEAKER_01",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 0.9043,
+          "target_after_similarity": 0.6175,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 19,
-            "SPEAKER_01": 3,
+            "SPEAKER_00": 5,
+            "SPEAKER_01": 18,
             "SPEAKER_02": 2
           }
         },
         {
           "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-          "offset": 1500,
-          "trained_from_this_file": true,
-          "trained_from_this_clip": false,
-          "before_slug": null,
-          "before_similarity": 0.2497,
-          "before_target_similarity": 0.1978,
-          "after_slug": "hussein_mohamed",
-          "after_similarity": 0.8497,
-          "correct_after": true,
-          "target_after_speaker": "SPEAKER_00",
-          "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 0.8497,
-          "correct_target_after": true,
-          "cluster_segment_counts": {
-            "SPEAKER_00": 24,
-            "SPEAKER_01": 2
-          }
-        },
-        {
-          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-          "offset": 0,
+          "offset": 1200,
           "trained_from_this_file": true,
           "trained_from_this_clip": true,
           "before_slug": null,
-          "before_similarity": 0.2727,
-          "before_target_similarity": 0.2727,
+          "before_similarity": 0.3145,
+          "before_target_similarity": 0.3145,
           "after_slug": "hussein_mohamed",
           "after_similarity": 1.0,
           "correct_after": true,
-          "target_after_speaker": "SPEAKER_01",
+          "target_after_speaker": "SPEAKER_00",
           "target_after_slug": "hussein_mohamed",
           "target_after_similarity": 1.0,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 2,
-            "SPEAKER_01": 20
+            "SPEAKER_00": 13,
+            "SPEAKER_01": 2,
+            "SPEAKER_02": 1
           }
         },
         {
-          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-          "offset": 300,
+          "file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
+          "offset": 1500,
           "trained_from_this_file": true,
           "trained_from_this_clip": false,
           "before_slug": null,
-          "before_similarity": 0.3096,
-          "before_target_similarity": 0.1913,
+          "before_similarity": 0.2648,
+          "before_target_similarity": 0.2648,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 0.8014,
+          "after_similarity": 0.8884,
           "correct_after": true,
-          "target_after_speaker": "SPEAKER_01",
+          "target_after_speaker": "SPEAKER_00",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 0.8014,
+          "target_after_similarity": 0.8884,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_01": 28,
             "SPEAKER_00": 15
           }
         },
         {
           "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
-          "offset": 600,
-          "trained_from_this_file": true,
-          "trained_from_this_clip": true,
+          "offset": 0,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
           "before_slug": null,
-          "before_similarity": 0.3307,
-          "before_target_similarity": 0.2913,
+          "before_similarity": 0.3268,
+          "before_target_similarity": 0.2891,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 1.0,
+          "after_similarity": 0.7571,
           "correct_after": true,
           "target_after_speaker": "SPEAKER_01",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 1.0,
+          "target_after_similarity": 0.7571,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 7,
-            "SPEAKER_01": 9
+            "SPEAKER_00": 2,
+            "SPEAKER_01": 18
+          }
+        },
+        {
+          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+          "offset": 300,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": "sylwia_recruitment",
+          "before_similarity": 0.3617,
+          "before_target_similarity": 0.2636,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.8119,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_01",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.8119,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_01": 19,
+            "SPEAKER_00": 10
+          }
+        },
+        {
+          "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
+          "offset": 600,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
+          "before_slug": "zak_raissi_barnet",
+          "before_similarity": 0.3916,
+          "before_target_similarity": 0.3165,
+          "after_slug": "hussein_mohamed",
+          "after_similarity": 0.7599,
+          "correct_after": true,
+          "target_after_speaker": "SPEAKER_01",
+          "target_after_slug": "hussein_mohamed",
+          "target_after_similarity": 0.7599,
+          "correct_target_after": true,
+          "cluster_segment_counts": {
+            "SPEAKER_00": 12,
+            "SPEAKER_01": 5
           }
         },
         {
           "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
           "offset": 900,
-          "trained_from_this_file": true,
+          "trained_from_this_file": false,
           "trained_from_this_clip": false,
           "before_slug": null,
-          "before_similarity": 0.2921,
-          "before_target_similarity": 0.1751,
+          "before_similarity": 0.2736,
+          "before_target_similarity": 0.2308,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 0.8893,
+          "after_similarity": 0.8472,
           "correct_after": true,
           "target_after_speaker": "SPEAKER_00",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 0.8893,
+          "target_after_similarity": 0.8472,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 19
+            "SPEAKER_00": 10
           }
         },
         {
           "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
           "offset": 1200,
-          "trained_from_this_file": true,
-          "trained_from_this_clip": true,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
           "before_slug": null,
-          "before_similarity": 0.2912,
-          "before_target_similarity": 0.2912,
+          "before_similarity": 0.3175,
+          "before_target_similarity": 0.2328,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 1.0,
+          "after_similarity": 0.8395,
           "correct_after": true,
           "target_after_speaker": "SPEAKER_00",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 1.0,
+          "target_after_similarity": 0.8395,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 17
+            "SPEAKER_00": 11
           }
         },
         {
           "file": "hussein_mohamed_09_audio_04_05_2026_16_07_05_uqkd6v.mp3",
           "offset": 1500,
-          "trained_from_this_file": true,
-          "trained_from_this_clip": true,
+          "trained_from_this_file": false,
+          "trained_from_this_clip": false,
           "before_slug": null,
-          "before_similarity": 0.3349,
-          "before_target_similarity": 0.3349,
+          "before_similarity": 0.342,
+          "before_target_similarity": 0.2463,
           "after_slug": "hussein_mohamed",
-          "after_similarity": 1.0,
+          "after_similarity": 0.8395,
           "correct_after": true,
           "target_after_speaker": "SPEAKER_00",
           "target_after_slug": "hussein_mohamed",
-          "target_after_similarity": 1.0,
+          "target_after_similarity": 0.8395,
           "correct_target_after": true,
           "cluster_segment_counts": {
-            "SPEAKER_00": 17
+            "SPEAKER_00": 12
           }
         }
       ],
-      "correct_after": 17,
-      "accuracy_after": 0.9444,
-      "correct_target_after": 17,
-      "target_accuracy_after": 0.9444,
-      "avg_before_target_similarity": 0.2694,
-      "avg_after_target_similarity": 0.8576,
-      "avg_target_similarity_gain_pct": 218.3,
-      "heldout_clip_count": 0,
-      "heldout_avg_before_target_similarity": 0.0,
-      "heldout_avg_after_target_similarity": 0.0,
-      "heldout_target_similarity_gain_pct": 0.0
+      "correct_after": 58,
+      "accuracy_after": 0.9831,
+      "correct_target_after": 58,
+      "target_accuracy_after": 0.9831,
+      "avg_before_target_similarity": 0.1203,
+      "avg_after_target_similarity": 0.499,
+      "avg_target_similarity_gain_pct": 314.8,
+      "heldout_clip_count": 47,
+      "heldout_avg_before_target_similarity": 0.0842,
+      "heldout_avg_after_target_similarity": 0.4422,
+      "heldout_target_similarity_gain_pct": 425.2
     }
   }
 }
