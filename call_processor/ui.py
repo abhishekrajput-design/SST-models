@@ -720,6 +720,8 @@ def _select_main_conversation_segments(
     preroll_s = float(os.getenv("SST_TRIM_MAIN_PREROLL_SECONDS", "3") or "3")
     postroll_s = float(os.getenv("SST_TRIM_MAIN_POSTROLL_SECONDS", "3") or "3")
     min_start_s = float(os.getenv("SST_TRIM_MAIN_MIN_START_SECONDS", "0") or "0")
+    strong_score_ratio = float(os.getenv("SST_TRIM_MAIN_STRONG_WINDOW_SCORE_RATIO", "0.60") or "0.60")
+    strong_speech_ratio = float(os.getenv("SST_TRIM_MAIN_STRONG_WINDOW_SPEECH_RATIO", "0.60") or "0.60")
     override_start_s, override_token = _main_conversation_start_override(*hints)
     if override_start_s > 0:
         min_start_s = max(min_start_s, override_start_s)
@@ -756,6 +758,8 @@ def _select_main_conversation_segments(
             and customer_s >= min_customer_s
             and turns >= min_turns
         ):
+            balanced_s = min(agent_s, customer_s)
+            balanced_turns = min(agent_turns, customer_turns)
             candidates.append({
                 "start": left,
                 "end": right,
@@ -765,6 +769,7 @@ def _select_main_conversation_segments(
                 "turns": turns,
                 "agent_turns": agent_turns,
                 "customer_turns": customer_turns,
+                "score": speech_s + balanced_s + (balanced_turns * 1.5),
             })
         t += max(step_s, 1.0)
 
@@ -785,26 +790,40 @@ def _select_main_conversation_segments(
     spans = []
     cur_start = candidates[0]["start"]
     cur_end = candidates[0]["end"]
+    cur_candidates = [candidates[0]]
     for cand in candidates[1:]:
         if cand["start"] - cur_end <= bridge_gap_s:
             cur_end = max(cur_end, cand["end"])
+            cur_candidates.append(cand)
         else:
-            spans.append((cur_start, cur_end))
+            spans.append({"start": cur_start, "end": cur_end, "candidates": cur_candidates})
             cur_start = cand["start"]
             cur_end = cand["end"]
-    spans.append((cur_start, cur_end))
+            cur_candidates = [cand]
+    spans.append({"start": cur_start, "end": cur_end, "candidates": cur_candidates})
     best_span = max(
         spans,
         key=lambda span: sum(
-            max(0.0, min(span[1], end_s) - max(span[0], start_s))
+            max(0.0, min(span["end"], end_s) - max(span["start"], start_s))
             for start_s, end_s, _role, _seg in usable
         ),
     )
 
-    span_start, span_end = best_span
+    span_start = float(best_span["start"])
+    span_end = float(best_span["end"])
+    span_candidates = best_span.get("candidates") or []
+    best_score = max((float(c.get("score") or 0.0) for c in span_candidates), default=0.0)
+    best_speech = max((float(c.get("speech_seconds") or 0.0) for c in span_candidates), default=0.0)
+    strong_candidates = [
+        cand for cand in span_candidates
+        if float(cand.get("score") or 0.0) >= best_score * strong_score_ratio
+        and float(cand.get("speech_seconds") or 0.0) >= best_speech * strong_speech_ratio
+    ]
+    anchor_start = float(strong_candidates[0]["start"]) if strong_candidates else span_start
+    start_floor = min_start_s if override_start_s > 0 else max(min_start_s, anchor_start)
     selected = [
         seg for start_s, end_s, _role, seg in usable
-        if end_s >= span_start and start_s <= span_end
+        if end_s >= start_floor and start_s <= span_end
     ]
     if not selected:
         return segments, {
@@ -814,8 +833,8 @@ def _select_main_conversation_segments(
         }
 
     trim_start = max(0.0, min(float(seg.get("start", 0.0) or 0.0) for seg in selected) - preroll_s)
-    if min_start_s > 0:
-        trim_start = max(trim_start, min_start_s)
+    if start_floor > 0:
+        trim_start = max(trim_start, start_floor)
     trim_end = max(float(seg.get("end", 0.0) or 0.0) for seg in selected) + postroll_s
     if audio_duration_s > 0:
         trim_end = min(trim_end, audio_duration_s)
@@ -836,9 +855,17 @@ def _select_main_conversation_segments(
         "original_segments": len(segments or []),
         "candidate_windows": len(candidates),
         "spans": [
-            {"start": round(float(s), 3), "end": round(float(e), 3)}
-            for s, e in spans
+            {
+                "start": round(float(span["start"]), 3),
+                "end": round(float(span["end"]), 3),
+                "candidate_windows": len(span.get("candidates") or []),
+            }
+            for span in spans
         ],
+        "anchor_start": round(float(anchor_start), 3),
+        "start_floor": round(float(start_floor), 3),
+        "strong_window_score_ratio": strong_score_ratio,
+        "strong_window_speech_ratio": strong_speech_ratio,
         "selected_start": round(float(trim_start), 3),
         "selected_end": round(float(trim_end), 3),
         "window_seconds": window_s,
