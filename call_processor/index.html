@@ -1908,6 +1908,7 @@
         let currentIdentifiedAgent = 'Agent';
         let currentIdentifiedAgentSlug = null;
         let currentSpeakerAgentMap = {}; // speaker_id -> agent_name (per-call mapping from identified_agents)
+        let currentPlaybackOffset = 0;
         let agentSpkId = null;
         let _activeSegIdx = -1;
         let _isPlaying = false;
@@ -2248,7 +2249,7 @@
                     const idArg = escapeHtml(jsArg(id));
                     const model = typeof c === 'object' ? (c.model || 'unknown') : 'unknown';
                     const segs = typeof c === 'object' ? (c.segments || 0) : 0;
-                    const meta = typeof c === 'object' ? (c.orig_meta || {}) : {};
+                    const meta = typeof c === 'object' ? (c.display_audio_meta || c.orig_meta || {}) : {};
                     const procT = typeof c === 'object' ? (c.processing_time_s || 0) : 0;
                     const procAt = typeof c === 'object' ? (c.processed_at || '') : '';
                     const dur = meta.duration_s ? fmtDur(meta.duration_s) : '—';
@@ -2324,6 +2325,7 @@
             currentCallId = callId;
             currentIdentifiedAgent = data.identified_agent || 'Agent';
             currentIdentifiedAgentSlug = data.identified_agent_slug || data.target_agent_slug || null;
+            currentPlaybackOffset = Number(data.playback_audio_offset_s || 0);
             currentSpeakerAgentMap = {};
             (data.identified_agents || []).forEach(a => {
                 if (a && a.speaker && a.agent_name) {
@@ -2429,7 +2431,7 @@
         }
 
         function playFrom(s) {
-            DOM.audioPlayer.currentTime = s;
+            DOM.audioPlayer.currentTime = Math.max(0, s - currentPlaybackOffset);
             DOM.audioPlayer.play();
         }
 
@@ -2510,7 +2512,7 @@
         });
 
         DOM.audioPlayer.addEventListener('timeupdate', () => {
-            const t = DOM.audioPlayer.currentTime;
+            const t = DOM.audioPlayer.currentTime + currentPlaybackOffset;
             const newIdx = findSeg(t);
 
             // Update progress bar and word highlighting (same segment)

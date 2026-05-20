@@ -659,6 +659,65 @@ def _trim_to_speech(audio_path: str, segments: list, out_path: str,
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+def _trim_contiguous_audio(
+    audio_path: str,
+    out_path: str,
+    start_s: float,
+    end_s: float,
+) -> bool:
+    """Cut one continuous audio span while keeping transcript times unchanged."""
+    try:
+        start_s = max(0.0, float(start_s))
+        end_s = max(start_s, float(end_s))
+    except (TypeError, ValueError):
+        print("[UI] Main audio clip skipped: invalid trim span.", flush=True)
+        return False
+
+    duration_s = end_s - start_s
+    if duration_s <= 0.1:
+        print("[UI] Main audio clip skipped: empty trim span.", flush=True)
+        return False
+    if not audio_path or not os.path.isfile(audio_path):
+        print(f"[UI] Main audio clip skipped: missing source {audio_path}", flush=True)
+        return False
+
+    try:
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+        result = subprocess.run(
+            [
+                "ffmpeg", "-y",
+                "-ss", f"{start_s:.3f}",
+                "-i", audio_path,
+                "-t", f"{duration_s:.3f}",
+                "-vn",
+                "-ar", "22050",
+                "-ac", "1",
+                "-b:a", "96k",
+                out_path,
+            ],
+            env=_ENV,
+            capture_output=True,
+            timeout=240,
+        )
+        if result.returncode != 0:
+            err = result.stderr.decode("utf-8", errors="replace")[-500:]
+            print(f"[UI] Main audio clip ffmpeg failed (rc={result.returncode}): {err}", flush=True)
+            return False
+        ok = os.path.exists(out_path) and os.path.getsize(out_path) > 1000
+        if ok:
+            print(
+                f"[UI] Main audio clip ready: {out_path} "
+                f"({duration_s:.1f}s from {start_s:.2f}s)",
+                flush=True,
+            )
+        else:
+            print(f"[UI] Main audio clip missing or empty: {out_path}", flush=True)
+        return ok
+    except Exception as e:
+        print(f"[UI] Main audio clip exception: {repr(e)}", flush=True)
+        return False
+
+
 def _main_conversation_start_override(*hints: str) -> tuple[float, str | None]:
     raw_rules = os.getenv("SST_MAIN_CONVERSATION_START_OVERRIDES", "c2k0vk:205.64").strip()
     context = " ".join(str(h or "") for h in hints).lower()
@@ -4205,12 +4264,14 @@ def _run_pipeline(
                 rdata["processing_time_seconds"] = pipeline_elapsed
                 rdata["pipeline_time_seconds"] = pipeline_elapsed
                 rdata["enhancements"] = enhancement_paths
+                full_playback_audio = None
                 if enhancement_paths.get("playback_loud"):
-                    rdata["playback_audio_file"] = enhancement_paths["playback_loud"]
-                    rdata["enhanced_file"] = enhancement_paths["playback_loud"]
+                    full_playback_audio = enhancement_paths["playback_loud"]
                 elif enhancement_paths.get("ffmpeg"):
-                    rdata["playback_audio_file"] = enhancement_paths["ffmpeg"]
-                    rdata["enhanced_file"] = enhancement_paths["ffmpeg"]
+                    full_playback_audio = enhancement_paths["ffmpeg"]
+                if full_playback_audio:
+                    rdata["full_playback_audio_file"] = full_playback_audio
+                    rdata["enhanced_file"] = full_playback_audio
 
                 # Cache orig_meta once so /api/calls never needs to run ffprobe.
                 if not rdata.get("orig_meta"):
@@ -4234,6 +4295,43 @@ def _run_pipeline(
                             }
                     except Exception as _e:
                         print(f"[UI] orig_meta ffprobe failed: {_e}")
+
+                main_trim = rdata.get("main_conversation_trim") or {}
+                main_audio_file = None
+                if main_trim.get("reason") == "sustained_agent_customer_window":
+                    try:
+                        start_s = float(main_trim.get("selected_start") or 0.0)
+                        end_s = float(main_trim.get("selected_end") or 0.0)
+                    except (TypeError, ValueError):
+                        start_s = end_s = 0.0
+                    main_audio_path = os.path.join(
+                        "data", "processed", result_id, "main_conversation_audio.mp3"
+                    )
+                    source_audio = full_playback_audio or rdata.get("audio_file") or upload_path
+                    if _trim_contiguous_audio(source_audio, main_audio_path, start_s, end_s):
+                        main_audio_file = main_audio_path.replace("\\", "/")
+                        rdata["main_conversation_audio_file"] = main_audio_file
+                        rdata["playback_audio_file"] = main_audio_file
+                        rdata["playback_audio_offset_s"] = round(start_s, 3)
+                        rdata["playback_audio_source"] = "main_conversation"
+                        display_meta = dict(rdata.get("orig_meta") or {})
+                        display_meta["duration_s"] = round(max(end_s - start_s, 0.0))
+                        try:
+                            display_meta["size_mb"] = round(
+                                os.path.getsize(main_audio_path) / 1024 / 1024, 1
+                            )
+                        except OSError:
+                            pass
+                        display_meta["channels"] = 1
+                        display_meta["trimmed_from_s"] = round(start_s, 3)
+                        display_meta["trimmed_to_s"] = round(end_s, 3)
+                        rdata["display_audio_meta"] = display_meta
+
+                if not main_audio_file and full_playback_audio:
+                    rdata["playback_audio_file"] = full_playback_audio
+                    rdata["playback_audio_offset_s"] = 0.0
+                    rdata["playback_audio_source"] = "full"
+                    rdata["display_audio_meta"] = rdata.get("orig_meta") or {}
 
                 with open(result_path, "w", encoding="utf-8") as f:
                     json.dump(rdata, f, indent=2, ensure_ascii=False)
@@ -4596,6 +4694,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                         # orig_meta is written into result.json by _run_pipeline at
                         # completion — never computed here to keep this endpoint fast.
                         orig_meta = rdata.get("orig_meta") or {}
+                        display_meta = rdata.get("display_audio_meta") or orig_meta
                         calls.append({
                             "id": d,
                             "model": rdata.get("model", "unknown"),
@@ -4605,6 +4704,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                             "audio_file": audio_file,
                             "orig_file": orig_file,
                             "orig_meta": orig_meta,
+                            "display_audio_meta": display_meta,
                         })
                     except Exception:
                         calls.append({"id": d, "model": "unknown", "segments": 0,
