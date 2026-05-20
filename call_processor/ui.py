@@ -17,6 +17,7 @@ import http.server
 import socketserver
 import tempfile
 import time
+from datetime import datetime
 from urllib.parse import urlparse, unquote, parse_qs
 from pathlib import Path
 
@@ -4663,6 +4664,158 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         if not self._check_auth():
             return
         parsed = urlparse(self.path)
+
+        # POST /api/call/<id>/role-corrections - persist per-line AGENT/CUSTOMER fixes
+        if parsed.path.startswith("/api/call/") and parsed.path.endswith("/role-corrections"):
+            call_id = unquote(parsed.path[len("/api/call/"):-len("/role-corrections")])
+            result_path = os.path.join(PROCESSED_DIR, call_id, "result.json")
+            if not os.path.isfile(result_path):
+                self._json({"status": "error", "message": "Not found"}, 404)
+                return
+
+            try:
+                n = int(self.headers.get("Content-Length", 0) or 0)
+                body = self.rfile.read(n) if n else b"{}"
+                payload = json.loads(body.decode("utf-8") or "{}")
+            except Exception as exc:
+                self._json({"status": "error", "message": f"Invalid JSON: {exc}"}, 400)
+                return
+
+            updates = payload.get("updates") or []
+            if not isinstance(updates, list) or not updates:
+                self._json({"status": "error", "message": "No role updates supplied"}, 400)
+                return
+
+            with open(result_path, "r", encoding="utf-8") as f:
+                rdata = json.load(f)
+
+            segments = rdata.get("segments") or []
+            transcription_json = rdata.get("transcription_json") or []
+            if not isinstance(segments, list):
+                self._json({"status": "error", "message": "Result has no segment list"}, 400)
+                return
+
+            agent_label = (
+                str(payload.get("agent_name") or "").strip()
+                or str(rdata.get("identified_agent") or "").strip()
+                or "Agent"
+            )
+            agent_slug = str(payload.get("agent_slug") or rdata.get("identified_agent_slug") or "").strip()
+            correction_mode = str(payload.get("correction_mode") or "line").strip().lower()
+            changed = []
+
+            def _segment_duration(seg: dict) -> float:
+                try:
+                    return max(0.0, float(seg.get("end", 0.0)) - float(seg.get("start", 0.0)))
+                except Exception:
+                    return 0.0
+
+            def _apply_role(item: dict, role: str, mode: str, source_index: int) -> None:
+                item["identified_speaker"] = role
+                item["manual_role_correction"] = True
+                item["role_correction_source"] = (
+                    "ui_voiceprint_feedback" if mode == "voice" else "ui_line_correction"
+                )
+                item["role_correction_index"] = source_index
+                if mode == "voice":
+                    item["manual_voice_role_correction"] = True
+                else:
+                    item.pop("manual_voice_role_correction", None)
+                if role == "AGENT":
+                    item["agent_name"] = agent_label
+                    if agent_slug:
+                        item["agent_slug"] = agent_slug
+                    item["display_speaker"] = agent_label
+                else:
+                    item.pop("agent_name", None)
+                    item.pop("agent_slug", None)
+                    item["display_speaker"] = "Customer"
+
+            for raw_update in updates:
+                if not isinstance(raw_update, dict):
+                    continue
+                try:
+                    idx = int(raw_update.get("index"))
+                except Exception:
+                    continue
+                if idx < 0 or idx >= len(segments):
+                    continue
+                role = str(raw_update.get("role") or "").strip().upper()
+                if role not in {"AGENT", "CUSTOMER"}:
+                    continue
+                mode = str(raw_update.get("correction_mode") or correction_mode or "line").strip().lower()
+                if mode not in {"line", "voice"}:
+                    mode = "line"
+                _apply_role(segments[idx], role, mode, idx)
+                if idx < len(transcription_json) and isinstance(transcription_json[idx], dict):
+                    _apply_role(transcription_json[idx], role, mode, idx)
+                changed.append({
+                    "index": idx,
+                    "role": role,
+                    "mode": mode,
+                    "start": segments[idx].get("start"),
+                    "end": segments[idx].get("end"),
+                    "text": (segments[idx].get("text") or segments[idx].get("phrase") or "")[:160],
+                })
+
+            if not changed:
+                self._json({"status": "error", "message": "No valid role updates supplied"}, 400)
+                return
+
+            agent_time = customer_time = 0.0
+            agent_turns = customer_turns = 0
+            first_agent_words = ""
+            first_customer_words = ""
+            for seg in segments:
+                role = seg.get("identified_speaker")
+                text = str(seg.get("text") or seg.get("phrase") or "").strip()
+                dur = _segment_duration(seg)
+                if role == "AGENT":
+                    agent_time += dur
+                    agent_turns += 1
+                    if not first_agent_words:
+                        first_agent_words = text
+                else:
+                    customer_time += dur
+                    customer_turns += 1
+                    if not first_customer_words:
+                        first_customer_words = text
+
+            rdata["speaker_stats"] = {
+                "AGENT": {
+                    "time_s": round(agent_time, 1),
+                    "turns": agent_turns,
+                    "first_words": first_agent_words[:120],
+                },
+                "CUSTOMER": {
+                    "time_s": round(customer_time, 1),
+                    "turns": customer_turns,
+                    "first_words": first_customer_words[:120],
+                },
+            }
+            rdata["segments"] = segments
+            rdata["transcription_json"] = transcription_json
+            rdata["manual_role_corrections"] = (rdata.get("manual_role_corrections") or []) + changed
+            rdata["manual_role_corrections_updated_at"] = datetime.utcnow().isoformat() + "Z"
+
+            tmp_path = result_path + ".tmp"
+            with open(tmp_path, "w", encoding="utf-8") as f:
+                json.dump(rdata, f, indent=2, ensure_ascii=False)
+            os.replace(tmp_path, result_path)
+
+            self._json({
+                "status": "ok",
+                "segments": segments,
+                "identified_agent": rdata.get("identified_agent"),
+                "identified_agent_slug": rdata.get("identified_agent_slug"),
+                "speaker_stats": rdata["speaker_stats"],
+                "changed": changed,
+                "training_report": {
+                    "trained": False,
+                    "reason": "manual_correction_saved_only",
+                },
+            })
+            return
 
         # POST /api/call/<id>/swap-roles — flip AGENT ↔ CUSTOMER in result.json
         if parsed.path.startswith("/api/call/") and parsed.path.endswith("/swap-roles"):
