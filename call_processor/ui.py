@@ -3588,11 +3588,32 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception:
         pass
 
+    trim_segments, main_conversation_trim = _select_main_conversation_segments(segments, dur_s)
+    if main_conversation_trim.get("reason") == "sustained_agent_customer_window":
+        print(
+            f"[UI] Main conversation trim span: "
+            f"{main_conversation_trim.get('selected_start')}s -> "
+            f"{main_conversation_trim.get('selected_end')}s "
+            f"({main_conversation_trim.get('selected_segments')} segment(s))",
+            flush=True,
+        )
+        segments = trim_segments
+
     # Speaker stats (used by both paths)
     first_agent_words    = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "AGENT"),    "")
     first_customer_words = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "CUSTOMER"), "")
 
     if diarization_applied:
+        agent_time = customer_time = 0.0
+        agent_turns = customer_turns = 0
+        for seg in segments:
+            dur = float(seg["end"]) - float(seg["start"])
+            if seg.get("identified_speaker") == "AGENT":
+                agent_time += dur
+                agent_turns += 1
+            else:
+                customer_time += dur
+                customer_turns += 1
         speaker_stats = {
             "AGENT": {
                 "time_s": round(agent_time, 1), "turns": agent_turns,
@@ -3658,15 +3679,6 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     # ── Trim audio to speech-only regions ────────────────────────────────────
     _set_status(3, "Transcription", "Trimming audio to speech regions...")
     trimmed_path = os.path.join(out_dir, "trimmed_audio.mp3")
-    trim_segments, main_conversation_trim = _select_main_conversation_segments(segments, dur_s)
-    if main_conversation_trim.get("reason") == "sustained_agent_customer_window":
-        print(
-            f"[UI] Main conversation trim span: "
-            f"{main_conversation_trim.get('selected_start')}s -> "
-            f"{main_conversation_trim.get('selected_end')}s "
-            f"({main_conversation_trim.get('selected_segments')} segment(s))",
-            flush=True,
-        )
     # pad_s=1.0: keep 1 s around each block so word edges aren't clipped
     # merge_gap_s=5.0: join blocks separated by ≤5 s — avoids many tiny cuts
     #   in noisy recordings where VAD fires in short bursts
