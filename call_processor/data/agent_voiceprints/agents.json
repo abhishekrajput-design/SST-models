@@ -1736,60 +1736,6 @@
         "embedding_dim": 512
       },
       {
-        "path": "zak_raissi_barnet_desk_campp_v1.npy",
-        "source": "desk_recordings_campp_stable_ds",
-        "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "source_file": "zak_raissi_barnet_10_audio_05_06_2026_16_05_29_ekome8.mp3",
-        "source_speaker": "SPEAKER_01",
-        "source_similarity_to_phone_vp": 0.6407
-      },
-      {
-        "path": "zak_raissi_barnet_desk_campp_v2.npy",
-        "source": "desk_recordings_campp_stable_ds",
-        "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "source_file": "zak_raissi_barnet_09_audio_03_15_2026_14_38_04_p3lvx4.mp3",
-        "source_speaker": "SPEAKER_02",
-        "source_similarity_to_phone_vp": 0.5335
-      },
-      {
-        "path": "zak_raissi_barnet_desk_campp_v3.npy",
-        "source": "desk_recordings_campp_stable_ds",
-        "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "source_file": "zak_raissi_barnet_08_audio_03_15_2026_14_08_04_gwimyf.mp3",
-        "source_speaker": "SPEAKER_00",
-        "source_similarity_to_phone_vp": 0.5208
-      },
-      {
-        "path": "zak_raissi_barnet_desk_campp_v4.npy",
-        "source": "desk_recordings_campp_stable_ds",
-        "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "source_file": "zak_raissi_barnet_01_audio_03_15_2026_10_38_04_j9u7ub.mp3",
-        "source_speaker": "SPEAKER_00",
-        "source_similarity_to_phone_vp": 0.4708
-      },
-      {
-        "path": "zak_raissi_barnet_desk_campp_v5.npy",
-        "source": "desk_recordings_campp_stable_ds",
-        "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "source_file": "zak_raissi_barnet_00_audio_03_15_2026_10_08_04_qbpe8e.mp3",
-        "source_speaker": "SPEAKER_01",
-        "source_similarity_to_phone_vp": 0.4301
-      },
-      {
-        "path": "zak_raissi_barnet_desk_campp_v6.npy",
-        "source": "desk_recordings_campp_stable_ds",
-        "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "source_file": "zak_raissi_barnet_06_audio_03_15_2026_13_08_04_wshqao.mp3",
-        "source_speaker": "SPEAKER_00",
-        "source_similarity_to_phone_vp": 0.4117
-      },
-      {
         "path": "zak_raissi_barnet_ui_corrected_20260514T175910.npy",
         "source": "ui_role_correction",
         "embedding_model": "cam++",
@@ -1890,7 +1836,7 @@
         }
       }
     ],
-    "n_voiceprints": 12,
+    "n_voiceprints": 6,
     "embedding_model": "cam++",
     "embedding_dim": 512,
     "source": "pure_agent_segments_plus_clean_clips",
@@ -1902,15 +1848,7 @@
     "mean_inside_sim": 0.7355,
     "max_outside_sim": 0.3482,
     "updated_at_epoch": 1778764250,
-    "has_desk_voiceprints": true,
-    "desk_voiceprints": [
-      "zak_raissi_barnet_desk_campp_v1.npy",
-      "zak_raissi_barnet_desk_campp_v2.npy",
-      "zak_raissi_barnet_desk_campp_v3.npy",
-      "zak_raissi_barnet_desk_campp_v4.npy",
-      "zak_raissi_barnet_desk_campp_v5.npy",
-      "zak_raissi_barnet_desk_campp_v6.npy"
-    ]
+    "has_desk_voiceprints": false
   },
   "hussein_mohamed": {
     "agent_name": "Hussein Mohamed",
