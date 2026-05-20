@@ -1215,6 +1215,24 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         )
     _check_cancelled()
 
+    # Free ASR GPU memory before loading Sortformer for speaker identification.
+    # Larger local ASR models such as Granite otherwise leave too little VRAM
+    # for diarization on 6 GB GPUs.
+    if transcriber is not None:
+        try:
+            transcriber.unload()
+        except Exception as _unload_err:
+            print(f"[UI] Transcriber unload warning: {_unload_err}", flush=True)
+        transcriber = None
+        try:
+            import torch as _torch, gc as _gc
+            _gc.collect()
+            if _torch.cuda.is_available():
+                _torch.cuda.empty_cache()
+                _torch.cuda.synchronize()
+        except Exception:
+            pass
+
     agent_time = customer_time = 0.0
     agent_turns = customer_turns = 0
     speech_only_added = 0
@@ -4366,10 +4384,11 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 {"model": "whisper-large-v3-turbo",    "label": "Whisper Large-v3-Turbo",   "type": "Local GPU",  "speed_s": 35,   "segments": 307,  "notes": "Fast, near large-v3 quality",    "rank": 3, "wer": "8.4%",  "status": "ok"},
                 {"model": "distil-whisper-large-v3.5", "label": "Distil-Whisper v3.5",      "type": "Local GPU",  "speed_s": 29,   "segments": 433,  "notes": "Fastest local, most granular",   "rank": 4, "wer": "8.6%",  "status": "ok"},
                 {"model": "parakeet-tdt-0.6b-v3",      "label": "NVIDIA Parakeet TDT v3",   "type": "Local GPU",  "speed_s": 45,   "segments": 126,  "notes": "GPU subprocess isolation protects UI from native CUDA aborts", "rank": 5, "wer": "~5.5%", "status": "ok"},
-                {"model": "qwen3-asr-1.7b",             "label": "Qwen3-ASR 1.7B",           "type": "Local GPU",  "speed_s": 0,    "segments": 0,    "notes": "Experimental local model for noisy-call ASR checks", "rank": 6, "wer": "test", "status": "experimental"},
-                {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 52,   "segments": 60,   "notes": "Lowest WER on leaderboard",      "rank": 7, "wer": "5.42%", "status": "ok"},
-                {"model": "deepgram-nova-2-phonecall", "label": "Deepgram Nova-2 Phone",    "type": "Cloud API",  "speed_s": 6,    "segments": 33,   "notes": "Optimised for phone call audio", "rank": 8, "wer": "~9%",   "status": "ok"},
-                {"model": "deepgram-nova-2-meeting",   "label": "Deepgram Nova-2 Meeting",  "type": "Cloud API",  "speed_s": 8,    "segments": 51,   "notes": "Multi-speaker meetings",         "rank": 9, "wer": "~9%",   "status": "ok"},
+                {"model": "granite-speech-4.1-2b",      "label": "IBM Granite Speech 4.1 2B","type": "Local GPU",  "speed_s": 0,    "segments": 0,    "notes": "Research ASR for noisy English audio; no native word timestamps", "rank": 6, "wer": "5.33%", "status": "experimental"},
+                {"model": "qwen3-asr-1.7b",             "label": "Qwen3-ASR 1.7B",           "type": "Local GPU",  "speed_s": 0,    "segments": 0,    "notes": "Experimental local model for noisy-call ASR checks", "rank": 8, "wer": "test", "status": "experimental"},
+                {"model": "cohere-transcribe-03-2026", "label": "Cohere Transcribe 03-2026","type": "Local GPU",  "speed_s": 52,   "segments": 60,   "notes": "Lowest WER on leaderboard",      "rank": 9, "wer": "5.42%", "status": "ok"},
+                {"model": "deepgram-nova-2-phonecall", "label": "Deepgram Nova-2 Phone",    "type": "Cloud API",  "speed_s": 6,    "segments": 33,   "notes": "Optimised for phone call audio", "rank": 10, "wer": "~9%",   "status": "ok"},
+                {"model": "deepgram-nova-2-meeting",   "label": "Deepgram Nova-2 Meeting",  "type": "Cloud API",  "speed_s": 8,    "segments": 51,   "notes": "Multi-speaker meetings",         "rank": 11, "wer": "~9%",   "status": "ok"},
             ]
             # Merge in any live data from model_comparison.json
             mc_path = os.path.join("data", "model_comparison.json")
