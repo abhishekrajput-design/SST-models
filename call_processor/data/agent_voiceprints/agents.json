@@ -1715,25 +1715,29 @@
         "path": "zak_raissi_barnet_pure_campp_v1.npy",
         "source": "pure_agent_segments_plus_clean_clips",
         "embedding_model": "cam++",
-        "embedding_dim": 512
+        "embedding_dim": 512,
+        "use_for_segment_role": true
       },
       {
         "path": "zak_raissi_barnet_pure_campp_v2.npy",
         "source": "pure_agent_segments_plus_clean_clips",
         "embedding_model": "cam++",
-        "embedding_dim": 512
+        "embedding_dim": 512,
+        "use_for_segment_role": true
       },
       {
         "path": "zak_raissi_barnet_pure_campp_v3.npy",
         "source": "pure_agent_segments_plus_clean_clips",
         "embedding_model": "cam++",
-        "embedding_dim": 512
+        "embedding_dim": 512,
+        "use_for_segment_role": true
       },
       {
         "path": "zak_raissi_barnet_pure_campp_v4.npy",
         "source": "pure_agent_segments_plus_clean_clips",
         "embedding_model": "cam++",
-        "embedding_dim": 512
+        "embedding_dim": 512,
+        "use_for_segment_role": true
       },
       {
         "path": "zak_raissi_barnet_ui_corrected_20260514T175910.npy",
