@@ -429,7 +429,19 @@ def select_multi_agent_cluster_matches(
         required_sim = max(float(presence_floor), float(thresholds.get(top_slug, presence_floor)))
         required_margin = float(margins.get(top_slug, _env_float("SST_MULTI_AGENT_CLUSTER_MIN_MARGIN", 0.10)))
         margin = top_sim - second_sim
-        if top_sim >= required_sim and margin >= required_margin:
+        effective_margin = required_margin
+        margin_mode = "default"
+        strong_sim_bonus = _env_float("SST_MULTI_AGENT_CLUSTER_STRONG_SIM_BONUS", 0.12)
+        strong_min_margin = _env_float("SST_MULTI_AGENT_CLUSTER_STRONG_MIN_MARGIN", 0.05)
+        high_sim_relax_min_sim = _env_float("SST_MULTI_AGENT_CLUSTER_HIGH_SIM_RELAX_MIN_SIM", 0.48)
+        high_sim_relax_min_margin = _env_float("SST_MULTI_AGENT_CLUSTER_HIGH_SIM_RELAX_MIN_MARGIN", strong_min_margin)
+        if top_sim >= required_sim + strong_sim_bonus:
+            effective_margin = min(required_margin, strong_min_margin)
+            margin_mode = "strong_similarity_relaxed_margin"
+        elif top_sim >= high_sim_relax_min_sim and margin >= high_sim_relax_min_margin:
+            effective_margin = min(required_margin, high_sim_relax_min_margin)
+            margin_mode = "high_similarity_relaxed_margin"
+        if top_sim >= required_sim and margin >= effective_margin:
             selected[spk] = {
                 "agent_slug": top_slug,
                 "agent_name": top_name,
@@ -438,6 +450,8 @@ def select_multi_agent_cluster_matches(
                 "second_similarity": second_sim,
                 "required_similarity": required_sim,
                 "required_margin": required_margin,
+                "effective_margin": effective_margin,
+                "margin_mode": margin_mode,
                 "speaker_seconds": float(speaker_durations.get(spk, 0.0)),
             }
     return selected

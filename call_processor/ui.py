@@ -2826,6 +2826,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         use_agent_hints = use_agent_hints not in {"0", "false", "no", "off"}
         split_customer = os.getenv("SST_MULTI_AGENT_WINDOW_SPLIT_CUSTOMER", "0").strip().lower()
         split_customer = split_customer not in {"0", "false", "no", "off"}
+        eval_customer = os.getenv("SST_MULTI_AGENT_WINDOW_EVAL_CUSTOMER", "1").strip().lower()
+        eval_customer = eval_customer not in {"0", "false", "no", "off"}
 
         def _segment_words(seg: dict) -> list[dict]:
             out = []
@@ -3028,7 +3030,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         evaluated_segments = relabeled_segments = split_parents = added_segments = skipped = 0
         sample_changes = []
         for seg in text_segments:
-            if seg.get("speech_only") or seg.get("identified_speaker") != "AGENT":
+            initial_is_agent = seg.get("identified_speaker") == "AGENT"
+            if seg.get("speech_only") or (not initial_is_agent and not eval_customer):
                 out.append(seg)
                 continue
             try:
@@ -3045,7 +3048,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 continue
 
             if seconds <= short_max_s:
-                decision = _classify_window(start_s, end_s, short=True)
+                decision = _classify_window(start_s, end_s, short=initial_is_agent)
                 if not decision:
                     out.append(seg)
                     skipped += 1
@@ -5534,13 +5537,14 @@ _gc_orphan_processed_dirs()
 import faulthandler as _fh
 _fh.enable()   # dump traceback to stderr on SIGSEGV / fatal Python errors
 
-socketserver.ThreadingTCPServer.allow_reuse_address = True
+if __name__ == "__main__":
+    socketserver.ThreadingTCPServer.allow_reuse_address = True
 
-with socketserver.ThreadingTCPServer(("", PORT), RequestHandler) as httpd:
-    print(f"\n{'='*50}")
-    print(f"  UI Dashboard  →  http://localhost:{PORT}")
-    print(f"{'='*50}\n")
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("Shutting down...")
+    with socketserver.ThreadingTCPServer(("", PORT), RequestHandler) as httpd:
+        print(f"\n{'='*50}")
+        print(f"  UI Dashboard  →  http://localhost:{PORT}")
+        print(f"{'='*50}\n")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("Shutting down...")
