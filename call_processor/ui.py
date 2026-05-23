@@ -2833,24 +2833,6 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         allow_agent_demote = os.getenv("SST_MULTI_AGENT_WINDOW_ALLOW_AGENT_DEMOTION", "0").strip().lower()
         allow_agent_demote = allow_agent_demote not in {"0", "false", "no", "off"}
 
-        def _segment_words(seg: dict) -> list[dict]:
-            out = []
-            for raw in seg.get("words") or []:
-                if not isinstance(raw, dict):
-                    continue
-                token = str(raw.get("word") or raw.get("text") or "").strip()
-                if not token:
-                    continue
-                try:
-                    start = float(raw.get("start"))
-                    end = float(raw.get("end"))
-                except (TypeError, ValueError):
-                    continue
-                if end <= start:
-                    continue
-                item = dict(raw)
-                item["word"] = token
-                item["start"] = start
 
         def _segment_words(seg: dict) -> list[dict]:
             out = []
@@ -3941,6 +3923,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         multi_agent_short_split_repair = {
             "enabled": bool(multi_agent_identified),
             "changed_segments": 0,
+            "voice_reclassified": 0,
+            "merged_fragments": 0,
             "reason": "not_multi_agent_cluster_match" if not multi_agent_identified else "ok",
         }
         if multi_agent_identified:
@@ -3959,6 +3943,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     continue
                 groups.setdefault(key, []).append(seg)
             for group in groups.values():
+                # ----- Phase 1: Re-classify short CUSTOMER fragments back to AGENT -----
                 for seg in group:
                     if seg.get("identified_speaker") != "CUSTOMER" or seg.get("agent_slug"):
                         continue
@@ -3974,6 +3959,81 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     seg["agent_slug"] = target.get("agent_slug")
                     seg["multi_agent_short_split_repair"] = True
                     multi_agent_short_split_repair["changed_segments"] += 1
+
+                # ----- Phase 2: Re-classify wrong-agent fragments via majority vote -----
+                # When a parent segment is split into fragments with different agent
+                # attributions, short fragments that disagree with the group majority
+                # are likely diarizer mis-assignments.
+                if len(group) >= 2:
+                    agent_slugs_in_group = [
+                        seg.get("agent_slug") for seg in group
+                        if seg.get("identified_speaker") == "AGENT" and seg.get("agent_slug")
+                    ]
+                    if agent_slugs_in_group and len(set(agent_slugs_in_group)) > 1:
+                        # Find majority agent by total duration
+                        slug_dur: dict[str, float] = {}
+                        for seg in group:
+                            sl = seg.get("agent_slug")
+                            if sl and seg.get("identified_speaker") == "AGENT":
+                                dur = max(float(seg.get("end", 0.0)) - float(seg.get("start", 0.0)), 0.0)
+                                slug_dur[sl] = slug_dur.get(sl, 0.0) + dur
+                        if slug_dur:
+                            majority_slug = max(slug_dur, key=slug_dur.get)
+                            majority_name = None
+                            for seg in group:
+                                if seg.get("agent_slug") == majority_slug:
+                                    majority_name = seg.get("agent_name") or seg.get("display_speaker")
+                                    break
+                            if not majority_name:
+                                _match = cluster_matches.get(
+                                    next((seg.get("speaker") for seg in group if seg.get("agent_slug") == majority_slug), ""),
+                                    {},
+                                )
+                                majority_name = _match.get("agent_name") or majority_slug
+                            for seg in group:
+                                if (
+                                    seg.get("identified_speaker") == "AGENT"
+                                    and seg.get("agent_slug")
+                                    and seg.get("agent_slug") != majority_slug
+                                ):
+                                    dur = max(float(seg.get("end", 0.0)) - float(seg.get("start", 0.0)), 0.0)
+                                    # Only correct short minority fragments
+                                    if dur <= max_short_fragment_s * 2.0:
+                                        seg["agent_slug"] = majority_slug
+                                        seg["agent_name"] = majority_name
+                                        seg["display_speaker"] = majority_name
+                                        seg["multi_agent_short_split_voice_reclassified"] = True
+                                        multi_agent_short_split_repair["voice_reclassified"] += 1
+
+            # ----- Phase 3: Merge consecutive same-agent fragments from the same parent -----
+            if segments:
+                merged: list[dict] = [segments[0]]
+                for seg in segments[1:]:
+                    prev = merged[-1]
+                    same_parent = (
+                        prev.get("speaker_turn_split")
+                        and seg.get("speaker_turn_split")
+                        and prev.get("speaker_turn_parent_start") == seg.get("speaker_turn_parent_start")
+                        and prev.get("speaker_turn_parent_end") == seg.get("speaker_turn_parent_end")
+                    )
+                    same_role = (
+                        prev.get("identified_speaker") == seg.get("identified_speaker")
+                        and prev.get("agent_slug") == seg.get("agent_slug")
+                    )
+                    if same_parent and same_role:
+                        prev["end"] = seg["end"]
+                        prev_text = str(prev.get("text") or "").strip()
+                        seg_text = str(seg.get("text") or "").strip()
+                        prev["text"] = (prev_text + " " + seg_text).strip() if seg_text else prev_text
+                        prev_words = prev.get("words") or []
+                        seg_words = seg.get("words") or []
+                        if prev_words or seg_words:
+                            prev["words"] = list(prev_words) + list(seg_words)
+                        prev["multi_agent_split_merged"] = True
+                        multi_agent_short_split_repair["merged_fragments"] += 1
+                    else:
+                        merged.append(seg)
+                segments = merged
         male_agent_pitch_guard = _demote_high_pitch_male_agent_segments(
             segments,
             norm_wav,
