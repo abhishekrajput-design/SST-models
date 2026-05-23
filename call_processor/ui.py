@@ -2818,6 +2818,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         base_min_sim = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_SIM", "0.40") or "0.40")
         hint_cap = float(os.getenv("SST_MULTI_AGENT_WINDOW_HINT_SIM_CAP", "0.48") or "0.48")
         min_margin = float(os.getenv("SST_MULTI_AGENT_WINDOW_MIN_MARGIN", "0.08") or "0.08")
+        rescue_min_sim = float(os.getenv("SST_MULTI_AGENT_RESCUE_WINDOW_MIN_SIM", "0.25") or "0.25")
+        rescue_min_margin = float(os.getenv("SST_MULTI_AGENT_RESCUE_WINDOW_MIN_MARGIN", "0.02") or "0.02")
         short_max_s = float(os.getenv("SST_MULTI_AGENT_SHORT_MAX_SECONDS", "1.25") or "1.25")
         short_min_sim = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_SIM", "0.28") or "0.28")
         short_min_margin = float(os.getenv("SST_MULTI_AGENT_SHORT_MIN_MARGIN", "0.01") or "0.01")
@@ -2917,7 +2919,12 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 return None
             return [(chunk, None) for chunk in chunks]
 
-        def _classify_window(start_s: float, end_s: float, short: bool = False) -> dict | None:
+        def _classify_window(
+            start_s: float,
+            end_s: float,
+            short: bool = False,
+            rescue: bool = False,
+        ) -> dict | None:
             start = max(0, int((start_s - pad_s) * sr))
             end = min(len(audio), int((end_s + pad_s) * sr))
             if end <= start:
@@ -2938,6 +2945,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             if short:
                 required_sim = short_min_sim
                 required_margin = short_min_margin
+            elif rescue:
+                required_sim = rescue_min_sim
+                required_margin = rescue_min_margin
             else:
                 if use_agent_hints:
                     hint = threshold_hints.get(top_slug, base_min_sim)
@@ -3031,6 +3041,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         sample_changes = []
         for seg in text_segments:
             initial_is_agent = seg.get("identified_speaker") == "AGENT"
+            cluster_match = cluster_matches.get(seg.get("speaker")) or {}
+            cluster_rescue = bool(cluster_match.get("ambiguous_participant_rescue"))
+            allow_split_customer = split_customer or cluster_rescue
             if seg.get("speech_only") or (not initial_is_agent and not eval_customer):
                 out.append(seg)
                 continue
@@ -3048,7 +3061,12 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 continue
 
             if seconds <= short_max_s:
-                decision = _classify_window(start_s, end_s, short=initial_is_agent)
+                decision = _classify_window(
+                    start_s,
+                    end_s,
+                    short=initial_is_agent,
+                    rescue=cluster_rescue,
+                )
                 if not decision:
                     out.append(seg)
                     skipped += 1
@@ -3058,7 +3076,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 if decision.get("label") == "AGENT" and decision.get("agent_slug") != seg.get("agent_slug"):
                     _apply_label(seg, decision, "short_segment_voice_top_match")
                     relabeled_segments += 1
-                elif decision.get("label") == "CUSTOMER" and split_customer:
+                elif decision.get("label") == "CUSTOMER" and allow_split_customer:
                     _apply_label(seg, decision, "short_segment_voice_miss")
                     relabeled_segments += 1
                 if previous != (seg.get("identified_speaker"), seg.get("agent_slug")) and len(sample_changes) < 60:
@@ -3083,12 +3101,12 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             original_agent_slug = str(seg.get("agent_slug") or "").strip()
             original_agent_name = str(seg.get("agent_name") or seg.get("display_speaker") or "").strip()
             for left, right in chunks:
-                decision = _classify_window(left, right, short=False)
+                decision = _classify_window(left, right, short=False, rescue=cluster_rescue)
                 if not decision:
                     break
                 if (
                     decision.get("label") == "CUSTOMER"
-                    and not split_customer
+                    and not allow_split_customer
                     and original_agent_slug
                 ):
                     decision = {
@@ -3110,7 +3128,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 if decision.get("label") == "AGENT" and decision.get("agent_slug") != seg.get("agent_slug"):
                     _apply_label(seg, decision, "segment_voice_top_match")
                     relabeled_segments += 1
-                elif decision.get("label") == "CUSTOMER" and split_customer:
+                elif decision.get("label") == "CUSTOMER" and allow_split_customer:
                     _apply_label(seg, decision, "segment_voice_miss")
                     relabeled_segments += 1
                 if previous != (seg.get("identified_speaker"), seg.get("agent_slug")) and len(sample_changes) < 60:
@@ -3191,6 +3209,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "min_parent_seconds": min_parent_s,
             "base_min_similarity": base_min_sim,
             "min_margin": min_margin,
+            "rescue_min_similarity": rescue_min_sim,
+            "rescue_min_margin": rescue_min_margin,
             "use_agent_hints": use_agent_hints,
             "short_max_seconds": short_max_s,
             "short_min_similarity": short_min_sim,

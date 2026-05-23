@@ -409,6 +409,7 @@ def select_multi_agent_cluster_matches(
     min_seconds = _env_float("SST_MULTI_AGENT_CLUSTER_MIN_SECONDS", 2.0)
     thresholds, margins = _load_agent_match_hints(presence_floor, agents_index_path)
     selected: Dict[str, Dict] = {}
+    scored_by_speaker: Dict[str, List[Tuple[str, float, str]]] = {}
 
     for spk, matches in (match_table or {}).items():
         if float(speaker_durations.get(spk, 0.0)) < min_seconds:
@@ -424,6 +425,7 @@ def select_multi_agent_cluster_matches(
         if not scored:
             continue
         scored.sort(key=lambda item: item[1], reverse=True)
+        scored_by_speaker[spk] = scored
         top_slug, top_sim, top_name = scored[0]
         second_sim = scored[1][1] if len(scored) > 1 else 0.0
         required_sim = max(float(presence_floor), float(thresholds.get(top_slug, presence_floor)))
@@ -454,6 +456,60 @@ def select_multi_agent_cluster_matches(
                 "margin_mode": margin_mode,
                 "speaker_seconds": float(speaker_durations.get(spk, 0.0)),
             }
+
+    if _env_bool("SST_MULTI_AGENT_CLUSTER_PARTICIPANT_RESCUE", True):
+        selected_slugs = {
+            str(row.get("agent_slug"))
+            for row in selected.values()
+            if row.get("agent_slug")
+        }
+        if len(selected_slugs) >= 2:
+            rescue_min_sim = _env_float("SST_MULTI_AGENT_CLUSTER_PARTICIPANT_RESCUE_MIN_SIM", 0.40)
+            rescue_max_top_gap = _env_float("SST_MULTI_AGENT_CLUSTER_PARTICIPANT_RESCUE_MAX_TOP_GAP", 0.03)
+            rescue_min_participant_margin = _env_float(
+                "SST_MULTI_AGENT_CLUSTER_PARTICIPANT_RESCUE_MIN_AGENT_MARGIN",
+                0.04,
+            )
+            for spk, scored in scored_by_speaker.items():
+                if spk in selected or not scored:
+                    continue
+                top_slug, top_sim, top_name = scored[0]
+                participant_scored = [
+                    item for item in scored
+                    if item[0] in selected_slugs
+                ]
+                if not participant_scored:
+                    continue
+                part_slug, part_sim, part_name = max(participant_scored, key=lambda item: item[1])
+                other_participant_sim = max(
+                    [item[1] for item in participant_scored if item[0] != part_slug] or [0.0]
+                )
+                top_gap = top_sim - part_sim
+                participant_margin = part_sim - other_participant_sim
+                required_sim = max(float(presence_floor), float(thresholds.get(part_slug, presence_floor)))
+                if (
+                    part_sim >= rescue_min_sim
+                    and top_gap <= rescue_max_top_gap
+                    and participant_margin >= rescue_min_participant_margin
+                    and part_sim >= required_sim
+                ):
+                    selected[spk] = {
+                        "agent_slug": part_slug,
+                        "agent_name": part_name,
+                        "similarity": part_sim,
+                        "margin": participant_margin,
+                        "second_similarity": other_participant_sim,
+                        "required_similarity": required_sim,
+                        "required_margin": rescue_min_participant_margin,
+                        "effective_margin": rescue_min_participant_margin,
+                        "margin_mode": "participant_agent_rescue",
+                        "speaker_seconds": float(speaker_durations.get(spk, 0.0)),
+                        "ambiguous_participant_rescue": True,
+                        "overall_top_slug": top_slug,
+                        "overall_top_name": top_name,
+                        "overall_top_similarity": top_sim,
+                        "overall_top_gap": top_gap,
+                    }
     return selected
 
 
