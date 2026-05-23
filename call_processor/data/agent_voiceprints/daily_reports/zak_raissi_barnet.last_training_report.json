@@ -1,98 +1,61 @@
 {
   "agent_slug": "zak_raissi_barnet",
   "agent_name": "Zak Raissi Barnet",
-  "data_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+  "data_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\zak_raissi_barnet",
   "calls": [
     {
-      "call": "call_14",
-      "call_id": "20260426T122156209_33629",
-      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_14\\20260426T122156209_33629.mp3",
-      "segments": 11,
-      "audio_duration_s": 27.44
-    },
-    {
-      "call": "call_17",
-      "call_id": "20260425T175023849_113343",
-      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi\\call_17\\20260425T175023849_113343.mp3",
-      "segments": 41,
-      "audio_duration_s": 103.1
+      "call": "call_00",
+      "call_id": "6a0ecf5b5968d89989d2b7a7",
+      "audio": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\zak_raissi_barnet\\call_00\\audio_16k.wav",
+      "segments": 25,
+      "audio_duration_s": 50.1
     }
   ],
   "skipped_calls": [],
-  "label_rows": 34,
-  "eval_rows": 34,
-  "agent_candidates": 20,
-  "customer_calibration_rows": 11,
-  "pure_label_rows": 20,
-  "training_rows": 20,
+  "label_rows": 13,
+  "eval_rows": 13,
+  "agent_candidates": 4,
+  "customer_calibration_rows": 8,
+  "pure_label_rows": 4,
+  "training_rows": 4,
+  "min_train_score": 0.6,
   "purity_floor": 0.55,
-  "customer_p95": 0.2832,
-  "calibrated_threshold": 0.3432,
+  "customer_p95": 0.4005,
+  "calibrated_threshold": 0.4605,
   "same_data_accuracy": {
-    "threshold": 0.3432,
-    "segments": 34,
-    "overall_accuracy": 94.12,
-    "agent_accuracy": 95.65,
-    "customer_accuracy": 90.91,
-    "agent_correct": 22,
-    "agent_total": 23,
-    "customer_correct": 10,
-    "customer_total": 11,
+    "threshold": 0.4605,
+    "segments": 13,
+    "overall_accuracy": 92.31,
+    "agent_accuracy": 80.0,
+    "customer_accuracy": 100.0,
+    "agent_correct": 4,
+    "agent_total": 5,
+    "customer_correct": 8,
+    "customer_total": 8,
     "errors": [
       {
-        "call": "call_14",
-        "segment": 10,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.3531,
-        "text": "Alright, okay, Sarah, thanks."
-      },
-      {
-        "call": "call_17",
-        "segment": 36,
+        "call": "call_00",
+        "segment": 14,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.2938,
-        "text": "I saw drop the try."
+        "similarity": 0.4299,
+        "text": "Alright, perfect, that's no stress."
       }
     ]
   },
   "best_same_data_threshold": {
-    "threshold": 0.215,
-    "segments": 34,
-    "overall_accuracy": 97.06,
+    "threshold": 0.41,
+    "segments": 13,
+    "overall_accuracy": 100.0,
     "agent_accuracy": 100.0,
-    "customer_accuracy": 90.91,
-    "agent_correct": 23,
-    "agent_total": 23,
-    "customer_correct": 10,
-    "customer_total": 11,
-    "errors": [
-      {
-        "call": "call_14",
-        "segment": 10,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.3531,
-        "text": "Alright, okay, Sarah, thanks."
-      }
-    ]
+    "customer_accuracy": 100.0,
+    "agent_correct": 5,
+    "agent_total": 5,
+    "customer_correct": 8,
+    "customer_total": 8,
+    "errors": []
   },
-  "loco_result": {
-    "n_calls": 2,
-    "n_folds": 1,
-    "overall_accuracy": 80.0,
-    "per_call": [
-      {
-        "held_out": "call_14",
-        "threshold": 0.34,
-        "accuracy": 80.0,
-        "agent_accuracy": 100.0,
-        "customer_accuracy": 50.0,
-        "segments": 5
-      }
-    ]
-  },
+  "loco_result": {},
   "activation_requested": false,
   "activation_eligible": false,
   "activation_min_accuracy": 85.0,
@@ -101,14 +64,15 @@
   "artifacts": {
     "voiceprints": [
       "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_raissi_barnet_pure_campp_v1.npy",
-      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_raissi_barnet_pure_campp_v2.npy"
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_raissi_barnet_pure_campp_v2.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\zak_raissi_barnet_pure_campp_v3.npy"
     ],
     "agents_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.json",
     "agents_backup": null,
     "activated": false,
     "blocked_by_existing": false,
-    "mean_inside_sim": 0.7662,
-    "max_outside_sim": 0.2832,
+    "mean_inside_sim": 0.937,
+    "max_outside_sim": 0.4005,
     "existing_mean_inside": 0.7355,
     "existing_max_outside": 0.3482
   },

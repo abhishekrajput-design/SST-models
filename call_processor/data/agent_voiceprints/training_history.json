@@ -15,6 +15,20 @@
         "customer_accuracy": 97.45,
         "loco_accuracy": 83.99,
         "n_training_segments": 102
+      },
+      {
+        "date": "2026-05-21",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.907,
+        "max_outside_sim": 0.2992,
+        "same_data_accuracy": 95.24,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 93.33,
+        "n_training_segments": 5,
+        "improvement": "+0.1732 inside, -0.1743 outside"
       }
     ]
   },
@@ -113,6 +127,196 @@
         "loco_accuracy": 87.93,
         "n_training_segments": 322,
         "improvement": "+0.0000 inside, +0.0000 outside"
+      }
+    ]
+  },
+  "ahmad_safaye": {
+    "agent_name": "Ahmad Safaye",
+    "history": [
+      {
+        "date": "2026-05-21",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.779,
+        "max_outside_sim": 0.3367,
+        "same_data_accuracy": 94.55,
+        "agent_accuracy": 91.84,
+        "customer_accuracy": 96.72,
+        "loco_accuracy": 86.36,
+        "n_training_segments": 35
+      }
+    ]
+  },
+  "shuahib_miah": {
+    "agent_name": "Shuahib Miah",
+    "history": [
+      {
+        "date": "2026-05-21",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.8891,
+        "max_outside_sim": 0.3093,
+        "same_data_accuracy": 95.0,
+        "agent_accuracy": 93.33,
+        "customer_accuracy": 100.0,
+        "loco_accuracy": 95.0,
+        "n_training_segments": 8
+      }
+    ]
+  },
+  "ithayakumar_ithushon": {
+    "agent_name": "Ithayakumar Ithushon",
+    "history": [
+      {
+        "date": "2026-05-21",
+        "n_calls_used": 10,
+        "activated": false,
+        "activation_eligible": false,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.8413,
+        "max_outside_sim": 0.4412,
+        "same_data_accuracy": 96.83,
+        "agent_accuracy": 97.83,
+        "customer_accuracy": 94.12,
+        "loco_accuracy": 95.24,
+        "n_training_segments": 35
+      }
+    ]
+  },
+  "allan_johnson": {
+    "agent_name": "Allan Johnson",
+    "history": [
+      {
+        "date": "2026-05-22",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.7453,
+        "max_outside_sim": 0.2372,
+        "same_data_accuracy": 96.88,
+        "agent_accuracy": 94.29,
+        "customer_accuracy": 100.0,
+        "loco_accuracy": 93.75,
+        "n_training_segments": 24
+      }
+    ]
+  },
+  "enfield_trade_admin": {
+    "agent_name": "Enfield Trade Admin",
+    "history": [
+      {
+        "date": "2026-05-22",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.785,
+        "max_outside_sim": 0.313,
+        "same_data_accuracy": 97.95,
+        "agent_accuracy": 98.21,
+        "customer_accuracy": 97.06,
+        "loco_accuracy": 94.52,
+        "n_training_segments": 90
+      }
+    ]
+  },
+  "haris_bajwa": {
+    "agent_name": "Haris Bajwa",
+    "history": [
+      {
+        "date": "2026-05-22",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.7867,
+        "max_outside_sim": 0.4248,
+        "same_data_accuracy": 93.1,
+        "agent_accuracy": 89.55,
+        "customer_accuracy": 97.96,
+        "loco_accuracy": 90.52,
+        "n_training_segments": 49
+      }
+    ]
+  },
+  "iana_eastmond": {
+    "agent_name": "Iana Eastmond",
+    "history": [
+      {
+        "date": "2026-05-22",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.7608,
+        "max_outside_sim": 0.444,
+        "same_data_accuracy": 95.56,
+        "agent_accuracy": 91.67,
+        "customer_accuracy": 100.0,
+        "loco_accuracy": 91.11,
+        "n_training_segments": 19
+      }
+    ]
+  },
+  "mohammed_al_russell": {
+    "agent_name": "Mohammed Al Russell",
+    "history": [
+      {
+        "date": "2026-05-22",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.7587,
+        "max_outside_sim": 0.2773,
+        "same_data_accuracy": 96.45,
+        "agent_accuracy": 96.48,
+        "customer_accuracy": 96.41,
+        "loco_accuracy": 94.48,
+        "n_training_segments": 158
+      }
+    ]
+  },
+  "rebeca_cazan": {
+    "agent_name": "Rebeca Cazan",
+    "history": [
+      {
+        "date": "2026-05-22",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.8578,
+        "max_outside_sim": 0.4667,
+        "same_data_accuracy": 100.0,
+        "agent_accuracy": 100.0,
+        "customer_accuracy": 100.0,
+        "loco_accuracy": 94.74,
+        "n_training_segments": 11
+      }
+    ]
+  },
+  "sak_mohamed": {
+    "agent_name": "Sak Mohamed",
+    "history": [
+      {
+        "date": "2026-05-22",
+        "n_calls_used": 1,
+        "activated": true,
+        "activation_eligible": true,
+        "blocked_by_existing": false,
+        "mean_inside_sim": 0.7935,
+        "max_outside_sim": 0.2773,
+        "same_data_accuracy": 97.59,
+        "agent_accuracy": 97.87,
+        "customer_accuracy": 97.22,
+        "loco_accuracy": 96.39,
+        "n_training_segments": 100
       }
     ]
   }

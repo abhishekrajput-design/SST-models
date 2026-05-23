@@ -26,20 +26,42 @@ import numpy as np
 import soundfile as sf
 from src.voiceprints import resolve_voiceprint_path
 
+import shutil
+
 logger = logging.getLogger(__name__)
 
 TARGET_SR         = 16_000
 MIN_CHUNK_S       = 0.5
-ENROLLED_PATH     = os.path.join("data", "enrolled_agent.npy")
-ECAPA_SAVE_DIR    = "./models/spkrec-ecapa"
-VOICEPRINT_DIR    = os.path.join("data", "agent_voiceprints")
+_PROJECT_ROOT     = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ENROLLED_PATH     = os.path.join(_PROJECT_ROOT, "data", "enrolled_agent.npy")
+ECAPA_SAVE_DIR    = os.path.join(_PROJECT_ROOT, "models", "spkrec-ecapa")
+VOICEPRINT_DIR    = os.path.join(_PROJECT_ROOT, "data", "agent_voiceprints")
 AGENTS_INDEX_PATH = os.path.join(VOICEPRINT_DIR, "agents.json")
 
-_FFMPEG_BIN = (
-    r"C:\Users\abhis\AppData\Local\Microsoft\WinGet\Packages"
-    r"\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe"
-    r"\ffmpeg-8.1-full_build\bin"
-)
+
+def _find_ffmpeg_bin() -> str:
+    """Find ffmpeg binary directory dynamically."""
+    found = shutil.which("ffmpeg")
+    if found:
+        return os.path.dirname(os.path.abspath(found))
+    env_path = os.environ.get("FFMPEG_BIN")
+    if env_path and os.path.isdir(env_path):
+        return env_path
+    winget_base = os.path.join(
+        os.path.expanduser("~"),
+        "AppData", "Local", "Microsoft", "WinGet", "Packages",
+    )
+    if os.path.isdir(winget_base):
+        for d in os.listdir(winget_base):
+            if "FFmpeg" in d:
+                for sub in ("ffmpeg-8.1-full_build", "ffmpeg-7.1-full_build"):
+                    candidate = os.path.join(winget_base, d, sub, "bin")
+                    if os.path.isfile(os.path.join(candidate, "ffmpeg.exe")):
+                        return candidate
+    return ""
+
+
+_FFMPEG_BIN = _find_ffmpeg_bin()
 
 
 def _ffmpeg_env() -> dict:
@@ -300,7 +322,7 @@ def _match_enrolled(
         if sim > best_sim:
             best_sim, best_spk = sim, spk
 
-    if best_spk and best_sim > 0.25:
+    if best_spk and best_sim > 0.55:
         print(f"  [SpeakerID] Agent={best_spk} via enrollment (cosine={best_sim:.3f})", flush=True)
         return best_spk
 
@@ -523,7 +545,7 @@ def identify_agent_name(
     segments: List[Dict],
     norm_wav: str,
     spk_time: Dict[str, float],
-    threshold: float = 0.25,
+    threshold: float = 0.55,
 ) -> tuple[str, str, float]:
     """
     Match speakers against ALL enrolled agent voiceprints.

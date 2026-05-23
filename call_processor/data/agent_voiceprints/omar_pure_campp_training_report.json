@@ -34,20 +34,20 @@
   "eval_rows": 465,
   "agent_candidates": 182,
   "customer_calibration_rows": 224,
-  "pure_label_rows": 169,
-  "training_rows": 169,
+  "pure_label_rows": 176,
+  "training_rows": 176,
   "purity_floor": 0.55,
-  "customer_p95": 0.4569,
-  "calibrated_threshold": 0.5169,
+  "customer_p95": 0.4809,
+  "calibrated_threshold": 0.5409,
   "same_data_accuracy": {
-    "threshold": 0.5169,
+    "threshold": 0.5409,
     "segments": 465,
-    "overall_accuracy": 90.54,
-    "agent_accuracy": 84.23,
-    "customer_accuracy": 97.32,
-    "agent_correct": 203,
+    "overall_accuracy": 90.97,
+    "agent_accuracy": 86.72,
+    "customer_accuracy": 95.54,
+    "agent_correct": 209,
     "agent_total": 241,
-    "customer_correct": 218,
+    "customer_correct": 214,
     "customer_total": 224,
     "errors": [
       {
@@ -55,7 +55,7 @@
         "segment": 13,
         "speaker": "customer",
         "predicted": "agent",
-        "similarity": 0.5795,
+        "similarity": 0.5901,
         "text": "I'm not sure which one."
       },
       {
@@ -63,7 +63,7 @@
         "segment": 18,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.2126,
+        "similarity": 0.2265,
         "text": "Oh, shit."
       },
       {
@@ -71,7 +71,7 @@
         "segment": 20,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.4724,
+        "similarity": 0.4629,
         "text": "Just above Luton, right?"
       },
       {
@@ -79,7 +79,7 @@
         "segment": 22,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.4069,
+        "similarity": 0.4084,
         "text": "Okay, perfect."
       },
       {
@@ -87,15 +87,23 @@
         "segment": 38,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.4267,
+        "similarity": 0.4522,
         "text": "So regarding the vehicle..."
+      },
+      {
+        "call": "call_01",
+        "segment": 45,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5444,
+        "text": "Um, and yeah, we're going to... No, I'm not doing this, there's a monster in that, what are we..."
       },
       {
         "call": "call_01",
         "segment": 58,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.3262,
+        "similarity": 0.3251,
         "text": "Yeah, of course."
       },
       {
@@ -103,23 +111,15 @@
         "segment": 60,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.427,
+        "similarity": 0.4219,
         "text": "That's perfect now."
-      },
-      {
-        "call": "call_01",
-        "segment": 70,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.4317,
-        "text": "Yeah, where did you go to church?"
       },
       {
         "call": "call_01",
         "segment": 76,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.4147,
+        "similarity": 0.4238,
         "text": "Very close."
       },
       {
@@ -127,7 +127,7 @@
         "segment": 114,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.5144,
+        "similarity": 0.5256,
         "text": "walkthrough the details with you."
       },
       {
@@ -135,7 +135,7 @@
         "segment": 133,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.4231,
+        "similarity": 0.4531,
         "text": "Yep, that's perfect."
       },
       {
@@ -143,23 +143,15 @@
         "segment": 149,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.3661,
+        "similarity": 0.3985,
         "text": "Not 2-3 years of course, much more."
-      },
-      {
-        "call": "call_01",
-        "segment": 152,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.4109,
-        "text": "Of course I understand."
       },
       {
         "call": "call_01",
         "segment": 168,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.2563,
+        "similarity": 0.2708,
         "text": "Yeah, of course."
       },
       {
@@ -167,7 +159,7 @@
         "segment": 169,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.4386,
+        "similarity": 0.4866,
         "text": "Why would you say that?"
       },
       {
@@ -175,7 +167,7 @@
         "segment": 181,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.2414,
+        "similarity": 0.2643,
         "text": "Thank you for your time."
       },
       {
@@ -183,7 +175,7 @@
         "segment": 183,
         "speaker": "customer",
         "predicted": "agent",
-        "similarity": 0.6219,
+        "similarity": 0.6008,
         "text": "are you going to be there on Sunday?"
       },
       {
@@ -191,7 +183,7 @@
         "segment": 185,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.3939,
+        "similarity": 0.4372,
         "text": "Bye Bye"
       },
       {
@@ -199,7 +191,7 @@
         "segment": 2,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.4776,
+        "similarity": 0.4849,
         "text": "Omo from CarPlanet"
       },
       {
@@ -207,23 +199,15 @@
         "segment": 7,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.5034,
+        "similarity": 0.5325,
         "text": "I'm alright, I'm alright, thank you for asking."
-      },
-      {
-        "call": "call_02",
-        "segment": 14,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.4786,
-        "text": "That's giving me the last push of the day."
       },
       {
         "call": "call_02",
         "segment": 27,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.3693,
+        "similarity": 0.3972,
         "text": "Completely understand."
       },
       {
@@ -231,15 +215,23 @@
         "segment": 63,
         "speaker": "customer",
         "predicted": "agent",
-        "similarity": 0.5628,
+        "similarity": 0.546,
         "text": "the world."
+      },
+      {
+        "call": "call_02",
+        "segment": 69,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5474,
+        "text": "That sounds cool to me."
       },
       {
         "call": "call_02",
         "segment": 85,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.3682,
+        "similarity": 0.3823,
         "text": "I completely understand."
       },
       {
@@ -247,7 +239,7 @@
         "segment": 101,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.3628,
+        "similarity": 0.4047,
         "text": "Perfect stuff."
       },
       {
@@ -255,180 +247,23 @@
         "segment": 133,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.4066,
+        "similarity": 0.4357,
         "text": "We're about to set off."
       },
       {
         "call": "call_02",
-        "segment": 147,
+        "segment": 134,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.5048,
-        "text": "That keeps things forward, okay?"
-      },
-      {
-        "call": "call_02",
-        "segment": 153,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.4921,
-        "text": "I might just fill it back up."
+        "similarity": 0.5317,
+        "text": "It has a history."
       },
       {
         "call": "call_03",
         "segment": 1,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.0932,
-        "text": "This is an inbound lead from Carwow."
-      },
-      {
-        "call": "call_03",
-        "segment": 9,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.4674,
-        "text": "Yeah?"
-      }
-    ]
-  },
-  "best_same_data_threshold": {
-    "threshold": 0.35,
-    "segments": 465,
-    "overall_accuracy": 92.47,
-    "agent_accuracy": 96.68,
-    "customer_accuracy": 87.95,
-    "agent_correct": 233,
-    "agent_total": 241,
-    "customer_correct": 197,
-    "customer_total": 224,
-    "errors": [
-      {
-        "call": "call_01",
-        "segment": 13,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.5795,
-        "text": "I'm not sure which one."
-      },
-      {
-        "call": "call_01",
-        "segment": 17,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4432,
-        "text": "I'm in Bedfordshire Bedfordshire"
-      },
-      {
-        "call": "call_01",
-        "segment": 18,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.2126,
-        "text": "Oh, shit."
-      },
-      {
-        "call": "call_01",
-        "segment": 45,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4833,
-        "text": "Um, and yeah, we're going to... No, I'm not doing this, there's a monster in that, what are we..."
-      },
-      {
-        "call": "call_01",
-        "segment": 50,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4542,
-        "text": "I've been in an accident in the past."
-      },
-      {
-        "call": "call_01",
-        "segment": 58,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.3262,
-        "text": "Yeah, of course."
-      },
-      {
-        "call": "call_01",
-        "segment": 92,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4292,
-        "text": "Yeah, so it's the first one, yeah."
-      },
-      {
-        "call": "call_01",
-        "segment": 168,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.2563,
-        "text": "Yeah, of course."
-      },
-      {
-        "call": "call_01",
-        "segment": 181,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.2414,
-        "text": "Thank you for your time."
-      },
-      {
-        "call": "call_01",
-        "segment": 182,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.431,
-        "text": "Oma, O-M-A-R Oma, let me just write it on that, what's that?"
-      },
-      {
-        "call": "call_01",
-        "segment": 183,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.6219,
-        "text": "are you going to be there on Sunday?"
-      },
-      {
-        "call": "call_02",
-        "segment": 55,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4356,
-        "text": "Oh yeah, I know it, inside out and back as well."
-      },
-      {
-        "call": "call_02",
-        "segment": 63,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.5628,
-        "text": "the world."
-      },
-      {
-        "call": "call_02",
-        "segment": 69,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.5165,
-        "text": "That sounds cool to me."
-      },
-      {
-        "call": "call_02",
-        "segment": 76,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4614,
-        "text": "Yeah, of course."
-      },
-      {
-        "call": "call_03",
-        "segment": 1,
-        "speaker": "agent",
-        "predicted": "customer",
-        "similarity": 0.0932,
+        "similarity": 0.1387,
         "text": "This is an inbound lead from Carwow."
       },
       {
@@ -436,130 +271,300 @@
         "segment": 8,
         "speaker": "customer",
         "predicted": "agent",
-        "similarity": 0.477,
+        "similarity": 0.5569,
         "text": "I saw one of your cars online, it's a Toyota Yaris."
+      },
+      {
+        "call": "call_03",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4523,
+        "text": "Yeah?"
       },
       {
         "call": "call_03",
         "segment": 12,
         "speaker": "customer",
         "predicted": "agent",
-        "similarity": 0.6223,
+        "similarity": 0.641,
         "text": "Yeah, of course, of course, take your time."
-      },
+      }
+    ]
+  },
+  "best_same_data_threshold": {
+    "threshold": 0.475,
+    "segments": 465,
+    "overall_accuracy": 92.26,
+    "agent_accuracy": 90.04,
+    "customer_accuracy": 94.64,
+    "agent_correct": 217,
+    "agent_total": 241,
+    "customer_correct": 212,
+    "customer_total": 224,
+    "errors": [
       {
-        "call": "call_03",
-        "segment": 21,
+        "call": "call_01",
+        "segment": 13,
         "speaker": "customer",
         "predicted": "agent",
-        "similarity": 0.4477,
-        "text": "I am in New Church."
+        "similarity": 0.5901,
+        "text": "I'm not sure which one."
       },
       {
-        "call": "call_03",
+        "call": "call_01",
+        "segment": 18,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2265,
+        "text": "Oh, shit."
+      },
+      {
+        "call": "call_01",
+        "segment": 20,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4629,
+        "text": "Just above Luton, right?"
+      },
+      {
+        "call": "call_01",
         "segment": 22,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.373,
-        "text": "It's uh, it's Charlie Romeo 4"
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4084,
+        "text": "Okay, perfect."
       },
       {
-        "call": "call_03",
-        "segment": 26,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4263,
-        "text": "Where are you at?"
-      },
-      {
-        "call": "call_03",
+        "call": "call_01",
         "segment": 38,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4522,
+        "text": "So regarding the vehicle..."
+      },
+      {
+        "call": "call_01",
+        "segment": 45,
         "speaker": "customer",
         "predicted": "agent",
-        "similarity": 0.4134,
-        "text": "What caught the eye of the car?"
+        "similarity": 0.5444,
+        "text": "Um, and yeah, we're going to... No, I'm not doing this, there's a monster in that, what are we..."
+      },
+      {
+        "call": "call_01",
+        "segment": 58,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3251,
+        "text": "Yeah, of course."
+      },
+      {
+        "call": "call_01",
+        "segment": 60,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4219,
+        "text": "That's perfect now."
+      },
+      {
+        "call": "call_01",
+        "segment": 76,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4238,
+        "text": "Very close."
+      },
+      {
+        "call": "call_01",
+        "segment": 133,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4531,
+        "text": "Yep, that's perfect."
+      },
+      {
+        "call": "call_01",
+        "segment": 149,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3985,
+        "text": "Not 2-3 years of course, much more."
+      },
+      {
+        "call": "call_01",
+        "segment": 168,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2708,
+        "text": "Yeah, of course."
+      },
+      {
+        "call": "call_01",
+        "segment": 181,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.2643,
+        "text": "Thank you for your time."
+      },
+      {
+        "call": "call_01",
+        "segment": 183,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.6008,
+        "text": "are you going to be there on Sunday?"
+      },
+      {
+        "call": "call_01",
+        "segment": 185,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4372,
+        "text": "Bye Bye"
+      },
+      {
+        "call": "call_02",
+        "segment": 27,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3972,
+        "text": "Completely understand."
+      },
+      {
+        "call": "call_02",
+        "segment": 63,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.546,
+        "text": "the world."
+      },
+      {
+        "call": "call_02",
+        "segment": 69,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5474,
+        "text": "That sounds cool to me."
+      },
+      {
+        "call": "call_02",
+        "segment": 85,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.3823,
+        "text": "I completely understand."
+      },
+      {
+        "call": "call_02",
+        "segment": 101,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4047,
+        "text": "Perfect stuff."
+      },
+      {
+        "call": "call_02",
+        "segment": 133,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4357,
+        "text": "We're about to set off."
+      },
+      {
+        "call": "call_03",
+        "segment": 1,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.1387,
+        "text": "This is an inbound lead from Carwow."
+      },
+      {
+        "call": "call_03",
+        "segment": 8,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.5569,
+        "text": "I saw one of your cars online, it's a Toyota Yaris."
+      },
+      {
+        "call": "call_03",
+        "segment": 9,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4523,
+        "text": "Yeah?"
+      },
+      {
+        "call": "call_03",
+        "segment": 12,
+        "speaker": "customer",
+        "predicted": "agent",
+        "similarity": 0.641,
+        "text": "Yeah, of course, of course, take your time."
       },
       {
         "call": "call_03",
         "segment": 39,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.3384,
+        "similarity": 0.3298,
         "text": "Oh, yeah."
       },
       {
         "call": "call_03",
-        "segment": 63,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4329,
-        "text": "I made a big mistake."
+        "segment": 48,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4261,
+        "text": "Yeah, fair enough."
       },
       {
         "call": "call_03",
         "segment": 65,
         "speaker": "agent",
         "predicted": "customer",
-        "similarity": 0.1852,
+        "similarity": 0.195,
         "text": "Uh huh."
-      },
-      {
-        "call": "call_03",
-        "segment": 69,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4079,
-        "text": "I will come definitely tomorrow."
-      },
-      {
-        "call": "call_03",
-        "segment": 70,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.3837,
-        "text": "tomorrow."
       },
       {
         "call": "call_03",
         "segment": 74,
         "speaker": "customer",
         "predicted": "agent",
-        "similarity": 0.6123,
+        "similarity": 0.6377,
         "text": "11 o'clock 11 o'clock tomorrow"
       },
       {
         "call": "call_03",
-        "segment": 93,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.6653,
-        "text": "Let me take a look."
-      },
-      {
-        "call": "call_03",
-        "segment": 117,
-        "speaker": "customer",
-        "predicted": "agent",
-        "similarity": 0.4573,
-        "text": "Okay, yep."
+        "segment": 76,
+        "speaker": "agent",
+        "predicted": "customer",
+        "similarity": 0.4134,
+        "text": "How many keys?"
       }
     ]
   },
-  "activation_requested": false,
-  "activation_eligible": false,
+  "activation_requested": true,
+  "activation_eligible": true,
   "activation_min_accuracy": 85.0,
-  "activated": false,
+  "activated": true,
   "artifacts": {
     "voiceprints": [
       "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v1.npy",
       "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v2.npy",
-      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v3.npy"
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v3.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v4.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v5.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v6.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v7.npy",
+      "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\omar_el_harchaoui_pure_campp_v8.npy"
     ],
     "agents_json": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.json",
-    "agents_backup": null,
-    "activated": false,
-    "mean_inside_sim": 0.756,
-    "max_outside_sim": 0.4569
+    "agents_backup": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\agents.backup.omar_el_harchaoui.pure_campp.1779449105.json",
+    "activated": true,
+    "mean_inside_sim": 0.7746,
+    "max_outside_sim": 0.4809
   },
   "dry_run": false
 }

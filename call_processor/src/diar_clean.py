@@ -93,9 +93,10 @@ class SortformerDiarizer(DiarizationBackend):
         from nemo.collections.asr.models import SortformerEncLabelModel
         logger.info(f"Loading Sortformer: {self.model_name}")
         self._model = SortformerEncLabelModel.from_pretrained(self.model_name)
-        self._model = self._model.to("cuda")
+        _device = "cuda" if torch.cuda.is_available() else "cpu"
+        self._model = self._model.to(_device)
         self._model.eval()
-        logger.info("Sortformer loaded on cuda")
+        logger.info("Sortformer loaded on %s", _device)
 
     def unload(self):
         if self._model is not None:
@@ -463,7 +464,7 @@ def select_multi_agent_cluster_matches(
             for row in selected.values()
             if row.get("agent_slug")
         }
-        if len(selected_slugs) >= 2:
+        if len(selected_slugs) >= 1:
             rescue_min_sim = _env_float("SST_MULTI_AGENT_CLUSTER_PARTICIPANT_RESCUE_MIN_SIM", 0.40)
             rescue_max_top_gap = _env_float("SST_MULTI_AGENT_CLUSTER_PARTICIPANT_RESCUE_MAX_TOP_GAP", 0.03)
             rescue_min_participant_margin = _env_float(
@@ -557,7 +558,8 @@ def assign_roles(
     for s in speaker_segments:
         seg = dict(s)
         cluster_match = agent_cluster_matches.get(s["speaker"])
-        is_agent = cluster_match is not None or (
+        cluster_is_rescue = bool((cluster_match or {}).get("ambiguous_participant_rescue"))
+        is_agent = (cluster_match is not None) or (
             not agent_cluster_matches and s["speaker"] == agent_speaker_id and agent_speaker_id is not None
         )
         if is_agent:
@@ -916,6 +918,45 @@ def _overlay_speakers_on_text(text_segments: List[Dict], speaker_segments: List[
             seg["identified_speaker"] = LABEL_UNKNOWN
             seg["display_speaker"] = LABEL_UNKNOWN
         out.append(seg)
+
+    # ── Post-processing: Merge consecutive segments of the same speaker ──
+    # ONLY merge if the gap between them is less than a threshold (default 1.0 second)
+    # and they have the same identified display speaker.
+    merge_enabled = _env_bool("SST_TRANSCRIPT_SPEAKER_MERGE", True)
+    if merge_enabled and len(out) > 1:
+        max_gap = _env_float("SST_TRANSCRIPT_SPEAKER_MERGE_MAX_GAP", 1.0)
+        merged_out = []
+        current = dict(out[0])
+        for next_seg in out[1:]:
+            curr_spk = current.get("display_speaker") or current.get("speaker") or ""
+            next_spk = next_seg.get("display_speaker") or next_seg.get("speaker") or ""
+            
+            gap = float(next_seg.get("start", 0.0)) - float(current.get("end", 0.0))
+            
+            if curr_spk == next_spk and gap < max_gap:
+                # Merge!
+                current["end"] = next_seg["end"]
+                current["text"] = (str(current.get("text") or "").strip() + " " + str(next_seg.get("text") or "").strip()).strip()
+                
+                # Merge words if available
+                if "words" in current or "words" in next_seg:
+                    curr_words = current.get("words") or []
+                    next_words = next_seg.get("words") or []
+                    current["words"] = curr_words + next_words
+                    
+                # Update role overlap statistics
+                if "role_overlap" in current and "role_overlap" in next_seg:
+                    try:
+                        current["role_overlap"]["agent"] = round(float(current["role_overlap"].get("agent", 0.0)) + float(next_seg["role_overlap"].get("agent", 0.0)), 3)
+                        current["role_overlap"]["customer"] = round(float(current["role_overlap"].get("customer", 0.0)) + float(next_seg["role_overlap"].get("customer", 0.0)), 3)
+                    except Exception:
+                        pass
+            else:
+                merged_out.append(current)
+                current = dict(next_seg)
+        merged_out.append(current)
+        out = merged_out
+
     return out
 
 

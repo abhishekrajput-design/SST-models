@@ -13,7 +13,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-LEGACY_DIR = REPO_ROOT / "call_processor" / "tools" / "legacy"
+LEGACY_DIR = REPO_ROOT / "call_processor" / "archive" / "cleanup_20260512_1400" / "legacy_folders" / "tools" / "legacy"
 sys.path.insert(0, str(LEGACY_DIR))
 
 from scrape_audiofy import AudiofyClient, save_and_cut, scrape  # noqa: E402

@@ -2830,6 +2830,27 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         split_customer = split_customer not in {"0", "false", "no", "off"}
         eval_customer = os.getenv("SST_MULTI_AGENT_WINDOW_EVAL_CUSTOMER", "1").strip().lower()
         eval_customer = eval_customer not in {"0", "false", "no", "off"}
+        allow_agent_demote = os.getenv("SST_MULTI_AGENT_WINDOW_ALLOW_AGENT_DEMOTION", "0").strip().lower()
+        allow_agent_demote = allow_agent_demote not in {"0", "false", "no", "off"}
+
+        def _segment_words(seg: dict) -> list[dict]:
+            out = []
+            for raw in seg.get("words") or []:
+                if not isinstance(raw, dict):
+                    continue
+                token = str(raw.get("word") or raw.get("text") or "").strip()
+                if not token:
+                    continue
+                try:
+                    start = float(raw.get("start"))
+                    end = float(raw.get("end"))
+                except (TypeError, ValueError):
+                    continue
+                if end <= start:
+                    continue
+                item = dict(raw)
+                item["word"] = token
+                item["start"] = start
 
         def _segment_words(seg: dict) -> list[dict]:
             out = []
@@ -2858,6 +2879,62 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             text = re.sub(r"\s+([.,!?;:%])", r"\1", text)
             text = re.sub(r"([$Â£â‚¬])\s+", r"\1", text)
             return re.sub(r"\s+", " ", text).strip()
+
+        def _classify_window(
+            start_s: float,
+            end_s: float,
+            short: bool = False,
+            rescue: bool = False,
+            parent_agent_slug: str | None = None,
+        ) -> dict | None:
+            start = max(0, int((start_s - pad_s) * sr))
+            end = min(len(audio), int((end_s + pad_s) * sr))
+            if end <= start:
+                return None
+            emb = embedder.embed_chunk(audio[start:end].astype(_np.float32), sr=sr)
+            if emb is None or getattr(emb, "shape", (0,))[0] != expected_dim:
+                return None
+            emb = l2_norm(_np.asarray(emb, dtype=_np.float32))
+            scored = []
+            for slug, stack in stacks.items():
+                scored.append((slug, float(_np.max(stack @ emb))))
+            scored.sort(key=lambda item: item[1], reverse=True)
+            if not scored:
+                return None
+            top_slug, top_sim = scored[0]
+            second_sim = scored[1][1] if len(scored) > 1 else 0.0
+            margin = top_sim - second_sim
+
+            # Only use relaxed short/rescue thresholds if the top match is the parent cluster's agent.
+            # This protects against false positive cross-talk swaps at the subsegment level.
+            use_short_threshold = short and (parent_agent_slug is not None and top_slug == parent_agent_slug)
+            use_rescue_threshold = rescue and (parent_agent_slug is not None and top_slug == parent_agent_slug)
+
+            if use_short_threshold:
+                required_sim = short_min_sim
+                required_margin = short_min_margin
+            elif use_rescue_threshold:
+                required_sim = rescue_min_sim
+                required_margin = rescue_min_margin
+            else:
+                if use_agent_hints:
+                    hint = threshold_hints.get(top_slug, base_min_sim)
+                    required_sim = max(base_min_sim, min(float(hint), hint_cap))
+                    required_margin = max(min_margin, margin_hints.get(top_slug, min_margin))
+                else:
+                    required_sim = base_min_sim
+                    required_margin = min_margin
+            is_agent = top_sim >= required_sim and margin >= required_margin
+            return {
+                "label": "AGENT" if is_agent else "CUSTOMER",
+                "agent_slug": top_slug if is_agent else None,
+                "agent_name": names.get(top_slug) if is_agent else None,
+                "similarity": top_sim,
+                "margin": margin,
+                "required_similarity": required_sim,
+                "required_margin": required_margin,
+                "scores": {slug: round(float(sim), 4) for slug, sim in scored},
+            }
 
         def _proportional_text_slices(text: str, weights: list[float]) -> list[str] | None:
             words = str(text or "").split()
@@ -2918,55 +2995,6 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             if not chunks:
                 return None
             return [(chunk, None) for chunk in chunks]
-
-        def _classify_window(
-            start_s: float,
-            end_s: float,
-            short: bool = False,
-            rescue: bool = False,
-        ) -> dict | None:
-            start = max(0, int((start_s - pad_s) * sr))
-            end = min(len(audio), int((end_s + pad_s) * sr))
-            if end <= start:
-                return None
-            emb = embedder.embed_chunk(audio[start:end].astype(_np.float32), sr=sr)
-            if emb is None or getattr(emb, "shape", (0,))[0] != expected_dim:
-                return None
-            emb = l2_norm(_np.asarray(emb, dtype=_np.float32))
-            scored = []
-            for slug, stack in stacks.items():
-                scored.append((slug, float(_np.max(stack @ emb))))
-            scored.sort(key=lambda item: item[1], reverse=True)
-            if not scored:
-                return None
-            top_slug, top_sim = scored[0]
-            second_sim = scored[1][1] if len(scored) > 1 else 0.0
-            margin = top_sim - second_sim
-            if short:
-                required_sim = short_min_sim
-                required_margin = short_min_margin
-            elif rescue:
-                required_sim = rescue_min_sim
-                required_margin = rescue_min_margin
-            else:
-                if use_agent_hints:
-                    hint = threshold_hints.get(top_slug, base_min_sim)
-                    required_sim = max(base_min_sim, min(float(hint), hint_cap))
-                    required_margin = max(min_margin, margin_hints.get(top_slug, min_margin))
-                else:
-                    required_sim = base_min_sim
-                    required_margin = min_margin
-            is_agent = top_sim >= required_sim and margin >= required_margin
-            return {
-                "label": "AGENT" if is_agent else "CUSTOMER",
-                "agent_slug": top_slug if is_agent else None,
-                "agent_name": names.get(top_slug) if is_agent else None,
-                "similarity": top_sim,
-                "margin": margin,
-                "required_similarity": required_sim,
-                "required_margin": required_margin,
-                "scores": {slug: round(float(sim), 4) for slug, sim in scored},
-            }
 
         def _apply_label(seg: dict, decision: dict, reason: str) -> None:
             seg["multi_agent_segment_voice_repair"] = reason
@@ -3043,6 +3071,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             initial_is_agent = seg.get("identified_speaker") == "AGENT"
             cluster_match = cluster_matches.get(seg.get("speaker")) or {}
             cluster_rescue = bool(cluster_match.get("ambiguous_participant_rescue"))
+            parent_agent_slug = cluster_match.get("agent_slug")
             allow_split_customer = split_customer or cluster_rescue
             if seg.get("speech_only") or (not initial_is_agent and not eval_customer):
                 out.append(seg)
@@ -3066,6 +3095,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     end_s,
                     short=initial_is_agent,
                     rescue=cluster_rescue,
+                    parent_agent_slug=parent_agent_slug,
                 )
                 if not decision:
                     out.append(seg)
@@ -3076,7 +3106,10 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 if decision.get("label") == "AGENT" and decision.get("agent_slug") != seg.get("agent_slug"):
                     _apply_label(seg, decision, "short_segment_voice_top_match")
                     relabeled_segments += 1
-                elif decision.get("label") == "CUSTOMER" and allow_split_customer:
+                elif decision.get("label") == "CUSTOMER" and (
+                    (not initial_is_agent and allow_split_customer)
+                    or (initial_is_agent and allow_agent_demote)
+                ):
                     _apply_label(seg, decision, "short_segment_voice_miss")
                     relabeled_segments += 1
                 if previous != (seg.get("identified_speaker"), seg.get("agent_slug")) and len(sample_changes) < 60:
@@ -3101,12 +3134,21 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             original_agent_slug = str(seg.get("agent_slug") or "").strip()
             original_agent_name = str(seg.get("agent_name") or seg.get("display_speaker") or "").strip()
             for left, right in chunks:
-                decision = _classify_window(left, right, short=False, rescue=cluster_rescue)
+                decision = _classify_window(
+                    left,
+                    right,
+                    short=False,
+                    rescue=cluster_rescue,
+                    parent_agent_slug=parent_agent_slug,
+                )
                 if not decision:
                     break
                 if (
                     decision.get("label") == "CUSTOMER"
-                    and not allow_split_customer
+                    and (
+                        (initial_is_agent and not allow_agent_demote)
+                        or (not initial_is_agent and not allow_split_customer)
+                    )
                     and original_agent_slug
                 ):
                     decision = {
@@ -3128,7 +3170,10 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 if decision.get("label") == "AGENT" and decision.get("agent_slug") != seg.get("agent_slug"):
                     _apply_label(seg, decision, "segment_voice_top_match")
                     relabeled_segments += 1
-                elif decision.get("label") == "CUSTOMER" and allow_split_customer:
+                elif decision.get("label") == "CUSTOMER" and (
+                    (not initial_is_agent and allow_split_customer)
+                    or (initial_is_agent and allow_agent_demote)
+                ):
                     _apply_label(seg, decision, "segment_voice_miss")
                     relabeled_segments += 1
                 if previous != (seg.get("identified_speaker"), seg.get("agent_slug")) and len(sample_changes) < 60:
@@ -3212,10 +3257,130 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "rescue_min_similarity": rescue_min_sim,
             "rescue_min_margin": rescue_min_margin,
             "use_agent_hints": use_agent_hints,
+            "allow_agent_demote": allow_agent_demote,
             "short_max_seconds": short_max_s,
             "short_min_similarity": short_min_sim,
             "short_min_margin": short_min_margin,
             "sample_changes": sample_changes,
+        }
+
+    def _demote_high_pitch_male_agent_segments(
+        text_segments: list,
+        audio_file: str,
+    ) -> dict:
+        enabled = os.getenv("SST_MALE_AGENT_PITCH_GUARD", "1").strip().lower()
+        if enabled in {"0", "false", "no", "off"}:
+            return {"enabled": False, "reason": "disabled", "demoted_segments": 0}
+        if not audio_file or not os.path.isfile(audio_file):
+            return {"enabled": True, "reason": "missing_audio", "demoted_segments": 0}
+
+        raw_slugs = os.getenv(
+            "SST_MALE_AGENT_PITCH_GUARD_SLUGS",
+            "hussein_mohamed,zak_raissi_barnet",
+        )
+        male_slugs = {slug.strip() for slug in raw_slugs.split(",") if slug.strip()}
+        if not male_slugs:
+            return {"enabled": True, "reason": "no_male_agent_slugs", "demoted_segments": 0}
+
+        try:
+            import numpy as _np
+            import soundfile as _sf
+            import torch as _torch
+            import torchaudio.functional as _F_ta
+            import librosa as _librosa
+        except Exception as exc:
+            return {"enabled": True, "reason": f"dependency_error:{type(exc).__name__}", "demoted_segments": 0}
+
+        try:
+            audio, sr = _sf.read(audio_file, dtype="float32", always_2d=True)
+        except Exception as exc:
+            return {"enabled": True, "reason": f"audio_read_error:{type(exc).__name__}", "demoted_segments": 0}
+        audio = audio.mean(axis=1) if audio.shape[1] > 1 else audio[:, 0]
+        if sr != 16000:
+            audio = _F_ta.resample(_torch.from_numpy(audio.astype(_np.float32)), sr, 16000).numpy()
+            sr = 16000
+
+        min_seconds = float(os.getenv("SST_MALE_AGENT_PITCH_MIN_SECONDS", "0.80") or "0.80")
+        median_threshold = float(os.getenv("SST_MALE_AGENT_PITCH_MEDIAN_HZ", "195") or "195")
+        p75_threshold = float(os.getenv("SST_MALE_AGENT_PITCH_P75_HZ", "220") or "220")
+        min_frames = int(os.getenv("SST_MALE_AGENT_PITCH_MIN_FRAMES", "20") or "20")
+        # Don't demote segments with strong voiceprint match
+        sim_protect_threshold = float(os.getenv("SST_MALE_AGENT_PITCH_SIM_PROTECT", "0.40") or "0.40")
+        evaluated = demoted = 0
+        samples = []
+
+        for seg in text_segments:
+            if seg.get("identified_speaker") != "AGENT":
+                continue
+            if str(seg.get("agent_slug") or "").strip() not in male_slugs:
+                continue
+            # Skip segments with strong voiceprint similarity — they're correctly identified
+            seg_sim = float(seg.get("_multi_agent_voice_similarity") or seg.get("agent_match_similarity") or 0.0)
+            if seg_sim >= sim_protect_threshold:
+                continue
+            try:
+                start_s = float(seg.get("start", 0.0) or 0.0)
+                end_s = float(seg.get("end", start_s) or start_s)
+            except (TypeError, ValueError):
+                continue
+            if end_s - start_s < min_seconds:
+                continue
+
+            start = max(0, int(start_s * sr))
+            end = min(len(audio), int(end_s * sr))
+            if end <= start:
+                continue
+            try:
+                f0 = _librosa.yin(
+                    audio[start:end].astype(_np.float32),
+                    fmin=70,
+                    fmax=350,
+                    sr=sr,
+                    frame_length=1024,
+                    hop_length=256,
+                )
+                f0 = f0[_np.isfinite(f0)]
+                f0 = f0[(f0 > 70) & (f0 < 350)]
+            except Exception:
+                continue
+            if len(f0) < min_frames:
+                continue
+            evaluated += 1
+            median_f0 = float(_np.median(f0))
+            p75_f0 = float(_np.percentile(f0, 75))
+            if median_f0 < median_threshold or p75_f0 < p75_threshold:
+                continue
+
+            prev = seg.get("display_speaker") or seg.get("agent_name") or seg.get("identified_speaker")
+            seg["identified_speaker"] = "CUSTOMER"
+            seg["display_speaker"] = "Customer"
+            seg["pitch_guard_previous_speaker"] = prev
+            seg["pitch_guard_median_hz"] = round(median_f0, 1)
+            seg["pitch_guard_p75_hz"] = round(p75_f0, 1)
+            seg["role_voiceprint_repair"] = "male_agent_high_pitch_demoted"
+            seg.pop("agent_name", None)
+            seg.pop("agent_slug", None)
+            demoted += 1
+            if len(samples) < 20:
+                samples.append({
+                    "start": round(start_s, 2),
+                    "end": round(end_s, 2),
+                    "from": prev,
+                    "median_hz": round(median_f0, 1),
+                    "p75_hz": round(p75_f0, 1),
+                    "text": str(seg.get("text") or "")[:120],
+                })
+
+        return {
+            "enabled": True,
+            "mode": "male_agent_high_pitch_guard",
+            "male_agent_slugs": sorted(male_slugs),
+            "evaluated_segments": evaluated,
+            "demoted_segments": demoted,
+            "median_threshold_hz": median_threshold,
+            "p75_threshold_hz": p75_threshold,
+            "min_seconds": min_seconds,
+            "sample_changes": samples,
         }
 
     def _repair_agent_roles_from_target_speaker_vad(
@@ -3749,6 +3914,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 f"changed_to_customer={target_speaker_vad_role_refinement.get('changed_to_customer', 0)}",
                 flush=True,
             )
+        main_conversation_trim_source_segments = [dict(seg) for seg in segments]
         if multi_agent_identified:
             segments, multi_agent_segment_voiceprint_repair = (
                 _refine_multi_agent_segments_from_voice_windows(
@@ -3808,6 +3974,16 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     seg["agent_slug"] = target.get("agent_slug")
                     seg["multi_agent_short_split_repair"] = True
                     multi_agent_short_split_repair["changed_segments"] += 1
+        male_agent_pitch_guard = _demote_high_pitch_male_agent_segments(
+            segments,
+            norm_wav,
+        )
+        if male_agent_pitch_guard.get("demoted_segments"):
+            print(
+                f"[UI] Male-agent pitch guard demoted "
+                f"{male_agent_pitch_guard['demoted_segments']} segment(s)",
+                flush=True,
+            )
         agent_role_text_repair = {
             "enabled": False,
             "promoted_speakers": [],
@@ -3882,8 +4058,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception:
         pass
 
+    trim_source_segments = locals().get("main_conversation_trim_source_segments") or segments
     trim_segments, main_conversation_trim = _select_main_conversation_segments(
-        segments,
+        trim_source_segments,
         dur_s,
         original_path,
         audio_path,
@@ -3891,6 +4068,16 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         dir_name,
     )
     if main_conversation_trim.get("reason") == "sustained_agent_customer_window":
+        selected_start = float(main_conversation_trim.get("selected_start") or 0.0)
+        selected_end = float(main_conversation_trim.get("selected_end") or 0.0)
+        if trim_source_segments is not segments and selected_end > selected_start:
+            trim_segments = [
+                seg for seg in segments
+                if not seg.get("speech_only")
+                and float(seg.get("end", 0.0) or 0.0) >= selected_start
+                and float(seg.get("start", 0.0) or 0.0) <= selected_end
+            ] or trim_segments
+            main_conversation_trim["selected_segments"] = len(trim_segments)
         print(
             f"[UI] Main conversation trim span: "
             f"{main_conversation_trim.get('selected_start')}s -> "
@@ -4056,6 +4243,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         ),
         "multi_agent_segment_voiceprint_repair": locals().get("multi_agent_segment_voiceprint_repair", {}),
         "multi_agent_short_split_repair": locals().get("multi_agent_short_split_repair", {}),
+        "male_agent_pitch_guard": locals().get("male_agent_pitch_guard", {}),
         "role_engine": os.getenv("SST_ROLE_ENGINE", "sortformer_campp").strip().lower() or "sortformer_campp",
         "agent_role_text_repair": locals().get("agent_role_text_repair", {}),
         "customer_role_text_repair": locals().get("customer_role_text_repair", {}),

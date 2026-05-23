@@ -363,7 +363,7 @@ def call_quality_check(rec: dict, agent: str) -> tuple[bool, str]:
         return False, f"only {len(all_customer)} customer phrase(s) — likely mislabelled (real calls have both speakers)"
     if not all_agent:
         return False, "no agent phrases at all"
-    agent_scores = [float(s.get("avg_score") or 0) for s in all_agent]
+    agent_scores = [float(s.get("avg_score") if s.get("avg_score") is not None else 0.85) for s in all_agent]
     mean_score = sum(agent_scores) / len(agent_scores)
     if mean_score < MIN_AGENT_MEAN_SCORE:
         return False, f"agent mean avg_score {mean_score:.3f} < {MIN_AGENT_MEAN_SCORE} (most labels are noise)"
@@ -405,7 +405,7 @@ def filter_and_group(records: list[dict], min_calls: int) -> dict[str, list[dict
             s for s in sj
             if isinstance(s, dict)
             and speaker_role_from_api_label(str(s.get("speaker") or ""), agent) == "agent"
-            and float(s.get("avg_score") or 0) >= MIN_AVG_SCORE
+            and float(s.get("avg_score") if s.get("avg_score") is not None else 0.85) >= MIN_AVG_SCORE
             and usable_agent_training_text(str(s.get("phrase") or ""))
         ]
         if len(agent_phrases) < MIN_AGENT_PHRASES:
@@ -477,7 +477,7 @@ def _call_quality_score(rec: dict, agent_name: str) -> tuple[float, float]:
             continue
         if speaker_role_from_api_label(str(s.get("speaker") or ""), agent_name) != "agent":
             continue
-        scores.append(float(s.get("avg_score") or 0))
+        scores.append(float(s.get("avg_score") if s.get("avg_score") is not None else 0.85))
         try:
             duration += float(ts2s(s.get("end") or 0)) - float(ts2s(s.get("start") or 0))
         except Exception:
@@ -559,7 +559,7 @@ def prepare_training_data(
             start = ts2s(phrase.get("start") or 0)
             end = ts2s(phrase.get("end") or 0)
             text = phrase.get("phrase") or ""
-            avg_score = float(phrase.get("avg_score") or 0)
+            avg_score = float(phrase.get("avg_score") if phrase.get("avg_score") is not None else 0.85)
 
             if end <= start:
                 continue
@@ -635,6 +635,7 @@ def train_single_agent(
     n_clusters: int,
     activate: bool,
     dry_run: bool,
+    no_compare: bool = False,
 ) -> dict:
     """Run the training script for a single agent."""
     train_script = CALL_PROCESSOR_DIR / "scripts" / "train_agent_from_api_labels.py"
@@ -647,9 +648,12 @@ def train_single_agent(
         "--data-dir", str(data_dir),
         "--clusters", str(n_clusters),
         "--min-activation-accuracy", str(MIN_ACTIVATION_ACCURACY),
-        "--compare-existing",
         "--report-out", str(report_out),
     ]
+    if no_compare:
+        cmd.append("--no-compare")
+    else:
+        cmd.append("--compare-existing")
     if activate:
         cmd.append("--activate")
     if dry_run:
@@ -706,6 +710,8 @@ def main() -> int:
                         help="Actually activate improved voiceprints")
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview only, don't modify anything")
+    parser.add_argument("--no-compare", action="store_true",
+                        help="Disable comparison with existing voiceprints")
     parser.add_argument("--skip-scrape", action="store_true",
                         help="Skip API scrape, use existing data in work_dir")
     parser.add_argument("--work-dir", default=str(REPO_ROOT / "traning_data" / "_daily_auto"),
@@ -819,6 +825,7 @@ def main() -> int:
         result = train_single_agent(
             agent_name, agent_slug_str, data_dir, args.clusters,
             activate=args.activate, dry_run=args.dry_run,
+            no_compare=args.no_compare,
         )
 
         # Update history

@@ -127,8 +127,13 @@ class EmbeddingModel:
                 torch.from_numpy(audio), sr, _TARGET_SR
             ).numpy()
 
-        if len(audio) < _MIN_SAMPLES:
+        if len(audio) < _REJECT_SAMPLES:
             return None
+        if len(audio) < _MIN_SAMPLES:
+            # Repeat-pad short clips (matching embed_chunk behavior)
+            # instead of dropping them, which causes downstream mis-labeling
+            n_repeats = int(np.ceil(_MIN_SAMPLES / max(len(audio), 1)))
+            audio = np.tile(audio, n_repeats)[:_MIN_SAMPLES]
 
         if self._backend == "cam++":
             return self._embed_file_campp(wav_path, audio)
@@ -200,7 +205,12 @@ class EmbeddingModel:
             except Exception as exc:
                 logger.debug("CAM++ dual embed failed: %s", exc)
 
-        # Get ECAPA if available
+        # Get ECAPA — lazy-load if needed for dual embedding
+        if self._ecapa is None:
+            try:
+                self._load_ecapa()
+            except Exception as exc:
+                logger.warning("Could not load ECAPA for dual embedding: %s", exc)
         if self._ecapa is not None:
             try:
                 t = torch.tensor(audio.astype(np.float32)).unsqueeze(0)

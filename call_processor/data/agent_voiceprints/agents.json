@@ -11,19 +11,19 @@
     "voiceprints": [
       {
         "path": "omar_el_harchaoui_pure_campp_v1.npy",
-        "source": "pure_api_agent_segments",
+        "source": "daily_auto_api_labels",
         "embedding_model": "cam++",
         "embedding_dim": 512
       },
       {
         "path": "omar_el_harchaoui_pure_campp_v2.npy",
-        "source": "pure_api_agent_segments",
+        "source": "daily_auto_api_labels",
         "embedding_model": "cam++",
         "embedding_dim": 512
       },
       {
         "path": "omar_el_harchaoui_pure_campp_v3.npy",
-        "source": "pure_api_agent_segments",
+        "source": "daily_auto_api_labels",
         "embedding_model": "cam++",
         "embedding_dim": 512
       }
@@ -31,310 +31,154 @@
     "n_voiceprints": 3,
     "embedding_model": "cam++",
     "embedding_dim": 512,
-    "source": "pure_api_agent_segments",
+    "source": "daily_auto_api_labels",
     "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\omar_el_harchaoui",
-    "purity_report": "omar_pure_campp_training_report.json",
-    "n_training_segments": 169,
-    "total_training_seconds": 540.24,
-    "mean_inside_sim": 0.756,
-    "max_outside_sim": 0.4569,
-    "updated_at_epoch": 1778051853
+    "purity_report": "omar_el_harchaoui_auto_training_report.json",
+    "n_training_segments": 168,
+    "total_training_seconds": 541.3,
+    "mean_inside_sim": 0.7559,
+    "max_outside_sim": 0.4555,
+    "updated_at_epoch": 1779460112
   },
   "mohammed_al_russell": {
     "agent_name": "Mohammed Al Russell",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\mohammed_al_russell.npy",
-    "n_clips": 175,
-    "total_seconds": 182.7,
-    "used_calls": 6,
-    "source": "audiofy_api_bulk_20260424"
+    "voiceprint_path": "mohammed_al_russell_pure_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "mohammed_al_russell_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "mohammed_al_russell_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "mohammed_al_russell_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\mohammed_al_russell",
+    "purity_report": "mohammed_al_russell_auto_training_report.json",
+    "n_training_segments": 158,
+    "total_training_seconds": 450.24,
+    "mean_inside_sim": 0.7587,
+    "max_outside_sim": 0.2773,
+    "updated_at_epoch": 1779441848
   },
   "haris_bajwa": {
     "agent_name": "Haris Bajwa",
-    "voiceprint_path": "haris_bajwa.npy",
+    "voiceprint_path": "haris_bajwa_pure_campp_v1.npy",
     "voiceprints": [
       {
-        "path": "haris_bajwa__low_0.npy",
-        "bucket": "low",
-        "n_clips": 966,
-        "snr_db": 6.0
+        "path": "haris_bajwa_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
       },
       {
-        "path": "haris_bajwa__low_1.npy",
-        "bucket": "low",
-        "n_clips": 966,
-        "snr_db": 6.0
+        "path": "haris_bajwa_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
       },
       {
-        "path": "haris_bajwa__low_2.npy",
-        "bucket": "low",
-        "n_clips": 966,
-        "snr_db": 6.0
+        "path": "haris_bajwa_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
       }
     ],
-    "n_voiceprints": 4,
-    "total_seconds": 2468.604000000004,
-    "used_calls": 78,
-    "source": "multi_vp_advanced",
-    "per_call_snr": [
-      {
-        "_id": "69efbb12f91ac02559f82756"
-      },
-      {
-        "_id": "69efbaaef91ac02559f8267b"
-      },
-      {
-        "_id": "69efb7b2f91ac02559f81b41"
-      },
-      {
-        "_id": "69efb764f91ac02559f81ab7"
-      },
-      {
-        "_id": "69efb684f91ac02559f81999"
-      },
-      {
-        "_id": "69efb296f91ac02559f81252"
-      },
-      {
-        "_id": "69efb1edf91ac02559f8117b"
-      },
-      {
-        "_id": "69efb181f91ac02559f810d7"
-      },
-      {
-        "_id": "69efaf2bf91ac02559f80ad9"
-      },
-      {
-        "_id": "69efaee4f91ac02559f80972"
-      },
-      {
-        "_id": "69efae88f91ac02559f80800"
-      },
-      {
-        "_id": "69efae31f91ac02559f806ec"
-      },
-      {
-        "_id": "69efabbff91ac02559f7fe9b"
-      },
-      {
-        "_id": "69efab8af91ac02559f7fdb9"
-      },
-      {
-        "_id": "69efab6af91ac02559f7fd48"
-      },
-      {
-        "_id": "69efab33f91ac02559f7fc64"
-      },
-      {
-        "_id": "69efaa99f91ac02559f7fa28"
-      },
-      {
-        "_id": "69efa923f91ac02559f7f817"
-      },
-      {
-        "_id": "69efa889f91ac02559f7f640"
-      },
-      {
-        "_id": "69efa20df91ac02559f7e600"
-      },
-      {
-        "_id": "69efa196f91ac02559f7e4bd"
-      },
-      {
-        "_id": "69ef9fbbf91ac02559f7e28f"
-      },
-      {
-        "_id": "69ef9c65f91ac02559f7db33"
-      },
-      {
-        "_id": "69ef9b94f91ac02559f7d893"
-      },
-      {
-        "_id": "69ef9b79f91ac02559f7d854"
-      },
-      {
-        "_id": "69ef9a7ef91ac02559f7d5cd"
-      },
-      {
-        "_id": "69efbb12f91ac02559f82756"
-      },
-      {
-        "_id": "69efbaaef91ac02559f8267b"
-      },
-      {
-        "_id": "69efb7b2f91ac02559f81b41"
-      },
-      {
-        "_id": "69efb764f91ac02559f81ab7"
-      },
-      {
-        "_id": "69efb684f91ac02559f81999"
-      },
-      {
-        "_id": "69efb296f91ac02559f81252"
-      },
-      {
-        "_id": "69efb1edf91ac02559f8117b"
-      },
-      {
-        "_id": "69efb181f91ac02559f810d7"
-      },
-      {
-        "_id": "69efaf2bf91ac02559f80ad9"
-      },
-      {
-        "_id": "69efaee4f91ac02559f80972"
-      },
-      {
-        "_id": "69efae88f91ac02559f80800"
-      },
-      {
-        "_id": "69efae31f91ac02559f806ec"
-      },
-      {
-        "_id": "69efabbff91ac02559f7fe9b"
-      },
-      {
-        "_id": "69efab8af91ac02559f7fdb9"
-      },
-      {
-        "_id": "69efab6af91ac02559f7fd48"
-      },
-      {
-        "_id": "69efab33f91ac02559f7fc64"
-      },
-      {
-        "_id": "69efaa99f91ac02559f7fa28"
-      },
-      {
-        "_id": "69efa923f91ac02559f7f817"
-      },
-      {
-        "_id": "69efa889f91ac02559f7f640"
-      },
-      {
-        "_id": "69efa20df91ac02559f7e600"
-      },
-      {
-        "_id": "69efa196f91ac02559f7e4bd"
-      },
-      {
-        "_id": "69ef9fbbf91ac02559f7e28f"
-      },
-      {
-        "_id": "69ef9c65f91ac02559f7db33"
-      },
-      {
-        "_id": "69ef9b94f91ac02559f7d893"
-      },
-      {
-        "_id": "69ef9b79f91ac02559f7d854"
-      },
-      {
-        "_id": "69ef9a7ef91ac02559f7d5cd"
-      },
-      {
-        "_id": "69efbb12f91ac02559f82756"
-      },
-      {
-        "_id": "69efbaaef91ac02559f8267b"
-      },
-      {
-        "_id": "69efb7b2f91ac02559f81b41"
-      },
-      {
-        "_id": "69efb764f91ac02559f81ab7"
-      },
-      {
-        "_id": "69efb684f91ac02559f81999"
-      },
-      {
-        "_id": "69efb296f91ac02559f81252"
-      },
-      {
-        "_id": "69efb1edf91ac02559f8117b"
-      },
-      {
-        "_id": "69efb181f91ac02559f810d7"
-      },
-      {
-        "_id": "69efaf2bf91ac02559f80ad9"
-      },
-      {
-        "_id": "69efaee4f91ac02559f80972"
-      },
-      {
-        "_id": "69efae88f91ac02559f80800"
-      },
-      {
-        "_id": "69efae31f91ac02559f806ec"
-      },
-      {
-        "_id": "69efabbff91ac02559f7fe9b"
-      },
-      {
-        "_id": "69efab8af91ac02559f7fdb9"
-      },
-      {
-        "_id": "69efab6af91ac02559f7fd48"
-      },
-      {
-        "_id": "69efab33f91ac02559f7fc64"
-      },
-      {
-        "_id": "69efaa99f91ac02559f7fa28"
-      },
-      {
-        "_id": "69efa923f91ac02559f7f817"
-      },
-      {
-        "_id": "69efa889f91ac02559f7f640"
-      },
-      {
-        "_id": "69efa20df91ac02559f7e600"
-      },
-      {
-        "_id": "69efa196f91ac02559f7e4bd"
-      },
-      {
-        "_id": "69ef9fbbf91ac02559f7e28f"
-      },
-      {
-        "_id": "69ef9c65f91ac02559f7db33"
-      },
-      {
-        "_id": "69ef9b94f91ac02559f7d893"
-      },
-      {
-        "_id": "69ef9b79f91ac02559f7d854"
-      },
-      {
-        "_id": "69ef9a7ef91ac02559f7d5cd"
-      }
-    ],
-    "mean_inside_sim": 0.891,
-    "max_outside_sim": 0.4901
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\haris_bajwa",
+    "purity_report": "haris_bajwa_auto_training_report.json",
+    "n_training_segments": 49,
+    "total_training_seconds": 176.32,
+    "mean_inside_sim": 0.7867,
+    "max_outside_sim": 0.4248,
+    "updated_at_epoch": 1779441767
   },
   "sarah_aziz": {
     "agent_name": "Sarah Aziz",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\sarah_aziz.npy",
-    "n_clips": 74,
-    "n_windows_total": 219,
-    "total_seconds": 225.6,
-    "used_calls": 4,
-    "mean_inside_sim": 0.657,
-    "max_outside_sim": 0.625,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "sarah_aziz_pure_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "sarah_aziz_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "sarah_aziz_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "sarah_aziz_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\sarah_aziz",
+    "purity_report": "sarah_aziz_auto_training_report.json",
+    "n_training_segments": 57,
+    "total_training_seconds": 200.96,
+    "mean_inside_sim": 0.7932,
+    "max_outside_sim": 0.4304,
+    "updated_at_epoch": 1779460289
   },
   "rebeca_cazan": {
     "agent_name": "Rebeca Cazan",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\rebeca_cazan.npy",
-    "n_clips": 70,
-    "n_windows_total": 164,
-    "total_seconds": 169.8,
-    "used_calls": 4,
-    "mean_inside_sim": 0.65,
-    "max_outside_sim": 0.513,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "rebeca_cazan_pure_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "rebeca_cazan_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "rebeca_cazan_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "rebeca_cazan_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\rebeca_cazan",
+    "purity_report": "rebeca_cazan_auto_training_report.json",
+    "n_training_segments": 11,
+    "total_training_seconds": 47.44,
+    "mean_inside_sim": 0.8578,
+    "max_outside_sim": 0.4667,
+    "updated_at_epoch": 1779441865
   },
   "rajan_singh": {
     "agent_name": "Rajan Singh",
@@ -371,14 +215,38 @@
   },
   "shuahib_miah": {
     "agent_name": "Shuahib Miah",
-    "voiceprint_path": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\agent_voiceprints\\shuahib_miah.npy",
-    "n_clips": 110,
-    "n_windows_total": 122,
-    "total_seconds": 123.3,
-    "used_calls": 1,
-    "mean_inside_sim": 0.712,
-    "max_outside_sim": 0.543,
-    "source": "audiofy_api_bulk_tight_20260424"
+    "voiceprint_path": "shuahib_miah_pure_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "shuahib_miah_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "shuahib_miah_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "shuahib_miah_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\shuahib_miah",
+    "purity_report": "shuahib_miah_auto_training_report.json",
+    "n_training_segments": 8,
+    "total_training_seconds": 23.6,
+    "mean_inside_sim": 0.8891,
+    "max_outside_sim": 0.3093,
+    "updated_at_epoch": 1779358741
   },
   "albjon_vokshi": {
     "agent_name": "Albjon Vokshi",
@@ -483,53 +351,38 @@
   },
   "allan_johnson": {
     "agent_name": "Allan Johnson",
-    "voiceprint_path": "allan_johnson.npy",
+    "voiceprint_path": "allan_johnson_pure_campp_v1.npy",
     "voiceprints": [
       {
-        "path": "allan_johnson__mid_0.npy",
-        "bucket": "mid",
-        "n_clips": 963,
-        "snr_db": 15.7
+        "path": "allan_johnson_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
       },
       {
-        "path": "allan_johnson__mid_1.npy",
-        "bucket": "mid",
-        "n_clips": 963,
-        "snr_db": 15.7
+        "path": "allan_johnson_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
       },
       {
-        "path": "allan_johnson__mid_2.npy",
-        "bucket": "mid",
-        "n_clips": 963,
-        "snr_db": 15.7
+        "path": "allan_johnson_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
       }
     ],
-    "n_voiceprints": 2,
-    "total_seconds": 2158.6470000000027,
-    "used_calls": 6,
-    "source": "multi_vp_advanced",
-    "per_call_snr": [
-      {
-        "_id": "69efb162f91ac02559f810af"
-      },
-      {
-        "_id": "69efae3bf91ac02559f8071c"
-      },
-      {
-        "_id": "69efb162f91ac02559f810af"
-      },
-      {
-        "_id": "69efae3bf91ac02559f8071c"
-      },
-      {
-        "_id": "69efb162f91ac02559f810af"
-      },
-      {
-        "_id": "69efae3bf91ac02559f8071c"
-      }
-    ],
-    "mean_inside_sim": 0.6889,
-    "max_outside_sim": 0.3789
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\allan_johnson",
+    "purity_report": "allan_johnson_auto_training_report.json",
+    "n_training_segments": 24,
+    "total_training_seconds": 83.52,
+    "mean_inside_sim": 0.7453,
+    "max_outside_sim": 0.2372,
+    "updated_at_epoch": 1779441710
   },
   "sababa_hossain": {
     "agent_name": "Sababa Hossain",
@@ -1709,150 +1562,80 @@
   },
   "zak_raissi_barnet": {
     "agent_name": "Zak Raissi Barnet",
-    "voiceprint_path": "zak_raissi_barnet_pure_campp_v1.npy",
+    "voiceprint_path": "zak_raissi_barnet_desk_campp_v6.npy",
     "voiceprints": [
       {
         "path": "zak_raissi_barnet_pure_campp_v1.npy",
-        "source": "pure_agent_segments_plus_clean_clips",
+        "source": "daily_auto_api_labels",
         "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "use_for_segment_role": true
+        "embedding_dim": 512
       },
       {
         "path": "zak_raissi_barnet_pure_campp_v2.npy",
-        "source": "pure_agent_segments_plus_clean_clips",
+        "source": "daily_auto_api_labels",
         "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "use_for_segment_role": true
+        "embedding_dim": 512
       },
       {
         "path": "zak_raissi_barnet_pure_campp_v3.npy",
-        "source": "pure_agent_segments_plus_clean_clips",
+        "source": "daily_auto_api_labels",
         "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "use_for_segment_role": true
+        "embedding_dim": 512
       },
       {
-        "path": "zak_raissi_barnet_pure_campp_v4.npy",
-        "source": "pure_agent_segments_plus_clean_clips",
+        "path": "zak_raissi_barnet_desk_campp_v1.npy",
+        "source": "desk_enrollment",
         "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "use_for_segment_role": true
+        "embedding_dim": 512
       },
       {
-        "path": "zak_raissi_barnet_ui_corrected_20260514T175910.npy",
-        "source": "ui_role_correction",
+        "path": "zak_raissi_barnet_desk_campp_v2.npy",
+        "source": "desk_enrollment",
         "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "manual_verified": true,
-        "segment_role_voiceprint": true,
-        "source_result": "exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm__parakeet-tdt-0.6b-v3",
-        "source_audio": "data\\processed\\exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm\\norm_exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm.wav",
-        "source_segment_count": 11,
-        "source_seconds": 20.16,
-        "signature": "7a1267642612991814c916c7fab40b30f9d32d58",
-        "created_at_epoch": 1778761750,
-        "validation": {
-          "target_existing_similarity": 0.7025,
-          "next_best_other": {
-            "agent_slug": "hussein_mohamed",
-            "agent_name": "Hussein Mohamed",
-            "similarity": 0.3632
-          },
-          "margin_to_next_best": 0.3393,
-          "top_matches": [
-            {
-              "agent_slug": "zak_raissi_barnet",
-              "agent_name": "Zak Raissi Barnet",
-              "similarity": 0.7025
-            },
-            {
-              "agent_slug": "hussein_mohamed",
-              "agent_name": "Hussein Mohamed",
-              "similarity": 0.3632
-            },
-            {
-              "agent_slug": "waris_sales_controllers",
-              "agent_name": "Waris Sales Controllers",
-              "similarity": 0.3013
-            },
-            {
-              "agent_slug": "aftaab_supervisor",
-              "agent_name": "Aftaab Supervisor",
-              "similarity": 0.2931
-            },
-            {
-              "agent_slug": "haris_bajwa",
-              "agent_name": "Haris Bajwa",
-              "similarity": 0.2834
-            }
-          ]
-        }
+        "embedding_dim": 512
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v3.npy",
+        "source": "desk_enrollment",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v4.npy",
+        "source": "desk_enrollment",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v5.npy",
+        "source": "desk_enrollment",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "zak_raissi_barnet_desk_campp_v6.npy",
+        "source": "desk_enrollment",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
       },
       {
         "path": "zak_raissi_barnet_ui_corrected_20260514T183050.npy",
-        "source": "ui_role_correction",
+        "source": "ui_correction",
         "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "manual_verified": true,
-        "segment_role_voiceprint": true,
-        "source_result": "enhanced_exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm__whisper-large-v3-turbo",
-        "source_audio": "data\\processed\\enhanced_exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm\\norm_enhanced_exp01bench_fix_zak_audio_05_01_2026_20_33_03_cnc1cm.wav",
-        "source_segment_count": 16,
-        "source_seconds": 38.12,
-        "signature": "42176deb36bdb9d3aa9ca96f8ea1787f3ddbe926",
-        "created_at_epoch": 1778763650,
-        "validation": {
-          "target_existing_similarity": 0.995,
-          "next_best_other": {
-            "agent_slug": "hussein_mohamed",
-            "agent_name": "Hussein Mohamed",
-            "similarity": 0.4284
-          },
-          "margin_to_next_best": 0.5666,
-          "top_matches": [
-            {
-              "agent_slug": "zak_raissi_barnet",
-              "agent_name": "Zak Raissi Barnet",
-              "similarity": 0.995
-            },
-            {
-              "agent_slug": "hussein_mohamed",
-              "agent_name": "Hussein Mohamed",
-              "similarity": 0.4284
-            },
-            {
-              "agent_slug": "haris_bajwa",
-              "agent_name": "Haris Bajwa",
-              "similarity": 0.3336
-            },
-            {
-              "agent_slug": "kowsar_alam",
-              "agent_name": "Kowsar Alam",
-              "similarity": 0.3063
-            },
-            {
-              "agent_slug": "waris_sales_controllers",
-              "agent_name": "Waris Sales Controllers",
-              "similarity": 0.3004
-            }
-          ]
-        }
+        "embedding_dim": 512
       }
     ],
-    "n_voiceprints": 6,
+    "n_voiceprints": 10,
     "embedding_model": "cam++",
     "embedding_dim": 512,
-    "source": "pure_agent_segments_plus_clean_clips",
-    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training",
-    "purity_report": "zak_local_audiofy_clean_training_report.json",
-    "validation_report": "zak_local_audiofy_clean_training_report.json",
-    "n_training_segments": 89,
-    "total_training_seconds": 192.76,
-    "mean_inside_sim": 0.7355,
-    "max_outside_sim": 0.3482,
-    "updated_at_epoch": 1778764250,
-    "has_desk_voiceprints": false
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\zak_raissi",
+    "purity_report": "zak_raissi_barnet_auto_training_report.json",
+    "n_training_segments": 20,
+    "total_training_seconds": 63.04,
+    "mean_inside_sim": 0.7995,
+    "max_outside_sim": 0.3093,
+    "updated_at_epoch": 1779460683
   },
   "hussein_mohamed": {
     "agent_name": "Hussein Mohamed",
@@ -1883,46 +1666,42 @@
         "embedding_dim": 512
       },
       {
-        "path": "hussein_mohamed_desk_campp_v1.npy",
-        "source": "desk_recordings_campp_stable_ds",
+        "path": "hussein_mohamed_pure_campp_v5.npy",
+        "source": "pure_agent_segments_plus_clean_clips",
         "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "source_file": "hussein_mohamed_07_audio_04_05_2026_17_07_05_2x064t.mp3",
-        "source_offset": 0,
-        "source_seconds": 90,
-        "source_speaker": "SPEAKER_00",
-        "source_similarity_to_phone_vp": 0.3945
+        "embedding_dim": 512
       },
       {
-        "path": "hussein_mohamed_desk_campp_v2.npy",
-        "source": "desk_recordings_campp_stable_ds",
+        "path": "hussein_mohamed_pure_campp_v6.npy",
+        "source": "pure_agent_segments_plus_clean_clips",
         "embedding_model": "cam++",
-        "embedding_dim": 512,
-        "source_file": "hussein_mohamed_08_audio_04_05_2026_16_37_05_ykcpda.mp3",
-        "source_offset": 1200,
-        "source_seconds": 90,
-        "source_speaker": "SPEAKER_00",
-        "source_similarity_to_phone_vp": 0.3145
+        "embedding_dim": 512
+      },
+      {
+        "path": "hussein_mohamed_pure_campp_v7.npy",
+        "source": "pure_agent_segments_plus_clean_clips",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "hussein_mohamed_pure_campp_v8.npy",
+        "source": "pure_agent_segments_plus_clean_clips",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
       }
     ],
-    "n_voiceprints": 6,
+    "n_voiceprints": 8,
     "embedding_model": "cam++",
     "embedding_dim": 512,
     "source": "pure_agent_segments_plus_clean_clips",
     "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\call_processor\\data\\training",
-    "purity_report": "hussein_mohamed_pure_campp_training_report.json",
-    "validation_report": "hussein_mohamed_pure_campp_training_report.json",
+    "purity_report": "hussein_mohamed_auto_training_20260522_152823.json",
+    "validation_report": "hussein_mohamed_auto_training_20260522_152823.json",
     "n_training_segments": 16,
     "total_training_seconds": 55.84,
-    "mean_inside_sim": 0.8423,
-    "max_outside_sim": 0.2522,
-    "updated_at_epoch": 1778667031,
-    "has_desk_voiceprints": true,
-    "desk_voiceprints": [
-      "hussein_mohamed_desk_campp_v1.npy",
-      "hussein_mohamed_desk_campp_v2.npy"
-    ],
-    "stable_ds_report": "stable_ds_voiceprint_report.json"
+    "mean_inside_sim": 0.9132,
+    "max_outside_sim": 0.2558,
+    "updated_at_epoch": 1779443955
   },
   "aayush": {
     "agent_name": "Aayush",
@@ -2043,5 +1822,180 @@
     "mean_inside_sim": 0.7395,
     "max_outside_sim": 0.3829,
     "updated_at_epoch": 1778845060
+  },
+  "ahmad_safaye": {
+    "agent_name": "Ahmad Safaye",
+    "voiceprint_path": "ahmad_safaye_pure_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "ahmad_safaye_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "ahmad_safaye_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "ahmad_safaye_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\ahmad_safaye",
+    "purity_report": "ahmad_safaye_auto_training_report.json",
+    "n_training_segments": 35,
+    "total_training_seconds": 130.32,
+    "mean_inside_sim": 0.779,
+    "max_outside_sim": 0.3367,
+    "updated_at_epoch": 1779358718
+  },
+  "ithayakumar_ithushon": {
+    "agent_name": "Ithayakumar Ithushon",
+    "voiceprint_path": "ithayakumar_ithushon_pure_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "ithayakumar_ithushon_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "ithayakumar_ithushon_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "ithayakumar_ithushon_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\ithayakumar_ithushon",
+    "purity_report": "ithayakumar_ithushon_auto_training_report.json",
+    "n_training_segments": 35,
+    "total_training_seconds": 131.2,
+    "mean_inside_sim": 0.8413,
+    "max_outside_sim": 0.4412,
+    "updated_at_epoch": 1779383452
+  },
+  "enfield_trade_admin": {
+    "agent_name": "Enfield Trade Admin",
+    "voiceprint_path": "enfield_trade_admin_pure_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "enfield_trade_admin_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "enfield_trade_admin_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "enfield_trade_admin_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\enfield_trade_admin",
+    "purity_report": "enfield_trade_admin_auto_training_report.json",
+    "n_training_segments": 90,
+    "total_training_seconds": 336.4,
+    "mean_inside_sim": 0.785,
+    "max_outside_sim": 0.313,
+    "updated_at_epoch": 1779441742
+  },
+  "iana_eastmond": {
+    "agent_name": "Iana Eastmond",
+    "voiceprint_path": "iana_eastmond_pure_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "iana_eastmond_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "iana_eastmond_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "iana_eastmond_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\iana_eastmond",
+    "purity_report": "iana_eastmond_auto_training_report.json",
+    "n_training_segments": 19,
+    "total_training_seconds": 47.68,
+    "mean_inside_sim": 0.7608,
+    "max_outside_sim": 0.444,
+    "updated_at_epoch": 1779441789
+  },
+  "sak_mohamed": {
+    "agent_name": "Sak Mohamed",
+    "voiceprint_path": "sak_mohamed_pure_campp_v1.npy",
+    "voiceprints": [
+      {
+        "path": "sak_mohamed_pure_campp_v1.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "sak_mohamed_pure_campp_v2.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      },
+      {
+        "path": "sak_mohamed_pure_campp_v3.npy",
+        "source": "daily_auto_api_labels",
+        "embedding_model": "cam++",
+        "embedding_dim": 512
+      }
+    ],
+    "n_voiceprints": 3,
+    "embedding_model": "cam++",
+    "embedding_dim": 512,
+    "source": "daily_auto_api_labels",
+    "source_labels_dir": "C:\\Users\\abhis\\Desktop\\SST-models\\traning_data\\_daily_auto\\sak_mohamed",
+    "purity_report": "sak_mohamed_auto_training_report.json",
+    "n_training_segments": 100,
+    "total_training_seconds": 339.28,
+    "mean_inside_sim": 0.7935,
+    "max_outside_sim": 0.2773,
+    "updated_at_epoch": 1779441898
   }
 }

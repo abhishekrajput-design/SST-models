@@ -44,11 +44,24 @@ FFMPEG = None  # resolved at startup
 
 
 def find_ffmpeg() -> str:
-    """Locate ffmpeg — check WinGet path first, then PATH."""
-    candidates = [
-        r"C:\Users\abhis\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin\ffmpeg.exe",
-        "ffmpeg",
-    ]
+    """Locate ffmpeg — check PATH first, then common install locations."""
+    import shutil
+    found = shutil.which("ffmpeg")
+    if found:
+        return found
+    # Auto-discover WinGet installs
+    winget_base = os.path.join(
+        os.path.expanduser("~"),
+        "AppData", "Local", "Microsoft", "WinGet", "Packages",
+    )
+    if os.path.isdir(winget_base):
+        for d in os.listdir(winget_base):
+            if "FFmpeg" in d:
+                for sub in ("ffmpeg-8.1-full_build", "ffmpeg-7.1-full_build"):
+                    candidate = os.path.join(winget_base, d, sub, "bin", "ffmpeg.exe")
+                    if os.path.isfile(candidate):
+                        return candidate
+    candidates = ["ffmpeg"]
     for c in candidates:
         try:
             subprocess.run([c, "-version"], capture_output=True, check=True)

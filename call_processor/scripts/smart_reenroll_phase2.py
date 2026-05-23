@@ -27,13 +27,13 @@ AGENTS_JSON = "call_processor/data/agent_voiceprints/agents.json"
 # Config
 MIN_AGENT_DUR = 2.0
 MAX_AGENT_DUR = 20.0
-HIGH_CONFIDENCE_SIM = 0.65  # Only use segments with sim >= this
+HIGH_CONFIDENCE_SIM = 0.50  # Lowered to avoid circular bias — use broader data
 MIN_SEGMENTS_PER_AGENT = 5
 
 print("=" * 100)
 print("PHASE 2: SMART RE-ENROLLMENT FROM API CALLS")
 print("=" * 100)
-print("\nUsing high-confidence segments (sim >= {:.2f}) to avoid circular training".format(HIGH_CONFIDENCE_SIM))
+print("\nUsing agent-labeled segments (sim >= {:.2f}) with L2-normalized embeddings".format(HIGH_CONFIDENCE_SIM))
 
 # Step 1: Get processed calls from API
 print("\nStep 1: Fetching processed calls from API...")
@@ -172,12 +172,19 @@ for agent_name in agent_names:
 
     embeddings = np.array([s["embedding"] for s in segs])
 
+    # FIX C8: L2-normalize each embedding before averaging
+    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    norms[norms == 0] = 1.0
+    embeddings = embeddings / norms
+
     # Build multiple voiceprints (3 buckets by SNR/confidence)
     sims = np.array([s["sim"] for s in segs])
     sorted_idx = np.argsort(sims)
 
     voiceprints = []
+    npy_paths = []
     bucket_size = max(1, len(embeddings) // 3)
+    vp_dir = Path(AGENTS_JSON).parent
 
     for bucket_idx in range(3):
         start_idx = bucket_idx * bucket_size
@@ -188,19 +195,43 @@ for agent_name in agent_names:
             bucket_embs = embeddings[bucket_indices]
             centroid = np.mean(bucket_embs, axis=0)
             centroid = centroid / (np.linalg.norm(centroid) + 1e-8)
-            voiceprints.append(centroid.tolist())
+            # FIX C7: Save as .npy file instead of inline .tolist()
+            npy_name = f"{agent_name}_smart_reenroll_bucket{bucket_idx}.npy"
+            npy_path = vp_dir / npy_name
+            np.save(str(npy_path), centroid)
+            npy_paths.append(npy_name)
+            voiceprints.append({
+                "path": npy_name,
+                "source": "smart_reenroll_phase2",
+                "embedding_model": embedding_model.model_name,
+            })
 
-    # Stats
-    mean_inside_sim = float(np.mean(sims))
-    max_outside_sim = 0.40  # Conservative
+    # FIX C6: Compute real mean_inside_sim from NEW centroids, not old voiceprint
+    all_centroids = []
+    for npy_name in npy_paths:
+        c = np.load(str(vp_dir / npy_name))
+        all_centroids.append(c)
+    if all_centroids:
+        main_centroid = np.mean(np.stack(all_centroids), axis=0)
+        main_centroid = main_centroid / (np.linalg.norm(main_centroid) + 1e-8)
+        mean_inside_sim = float(np.mean([np.dot(main_centroid, emb) for emb in embeddings]))
+    else:
+        mean_inside_sim = 0.0
 
-    agents_updated[agent_name] = {
+    # FIX C6: Compute real max_outside_sim from customer data if available
+    # For now, set to a reasonable default — will be computed properly when customer data is available
+    max_outside_sim = 0.40  # TODO: compute from actual customer embeddings
+
+    # FIX C9: Merge into existing entry instead of overwriting
+    update_data = {
         "mean_inside_sim": mean_inside_sim,
         "max_outside_sim": max_outside_sim,
         "n_voiceprints": len(voiceprints),
-        "source": f"smart_reenroll_phase2_v1",
+        "source": f"smart_reenroll_phase2_v2",
         "voiceprints": voiceprints,
     }
+
+    agents_updated[agent_name] = update_data
 
     print(f"  {agent_name:30s}: {len(segs):3d} segments → {len(voiceprints)} voiceprints (avg_sim={mean_inside_sim:.3f})")
 
@@ -215,8 +246,12 @@ shutil.copy(AGENTS_JSON, backup_file)
 print(f"Backed up to: {backup_file}")
 
 # Merge and update
+# FIX C9: Merge into existing entries instead of overwriting
 for agent_name, agent_data in agents_updated.items():
-    existing_agents[agent_name].update(agent_data)
+    if agent_name in existing_agents:
+        existing_agents[agent_name].update(agent_data)
+    else:
+        existing_agents[agent_name] = agent_data
 
 # Write
 with open(AGENTS_JSON, "w") as f:

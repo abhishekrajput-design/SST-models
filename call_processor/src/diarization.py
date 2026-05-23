@@ -125,6 +125,12 @@ class Diarizer:
             except Exception as e:
                 logger.warning(f"Could not load {model_id}: {e}")
 
+        if self.pipeline is None:
+            raise RuntimeError(
+                "Failed to load any pyannote diarization model. "
+                "Check HuggingFace token and network access."
+            )
+
     def unload_model(self):
         """Free GPU memory by unloading the model."""
         if self.pipeline is not None:

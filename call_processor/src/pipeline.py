@@ -38,7 +38,7 @@ class CallProcessor:
         whisper_device: str = "auto",
         language: str = "en",
         device: str = "cuda",
-        similarity_threshold: float = 0.25,
+        similarity_threshold: float = 0.62,
         min_segment_duration: float = 1.0,
         output_dir: str = "data/processed",
         initial_prompt: Optional[str] = "CarPlanet car dealership. Agent speaking with customer.",
@@ -140,18 +140,29 @@ class CallProcessor:
 
     def _stage_speaker_id(self, segments: List[Dict], segment_paths: List[str]):
         """Stage 2: Extract embeddings and match to known agents."""
-        from src.embedding import EmbeddingExtractor
+        from src.config import PipelineConfig
         from src.speaker_matcher import SpeakerMatcher
 
-        extractor = EmbeddingExtractor(
-            device=self.device,
-            model_dir=os.path.join(self.model_cache_dir, "spkrec-ecapa"),
-        )
+        cfg = PipelineConfig()
 
-        try:
-            embeddings = extractor.extract_embeddings_batch(segment_paths)
-        finally:
-            extractor.unload_model()
+        if cfg.embedding_model == "cam++":
+            from src.embedding_campp import EmbeddingModel
+            model = EmbeddingModel()
+            model.load()
+            try:
+                embeddings = model.embed_batch(segment_paths)
+            finally:
+                pass  # CAM++ uses module-level singleton; don't unload
+        else:
+            from src.embedding import EmbeddingExtractor
+            extractor = EmbeddingExtractor(
+                device=self.device,
+                model_dir=os.path.join(self.model_cache_dir, "spkrec-ecapa"),
+            )
+            try:
+                embeddings = extractor.extract_embeddings_batch(segment_paths)
+            finally:
+                extractor.unload_model()
 
         # Match embeddings to agents (CPU-only, no model needed)
         if os.path.exists(self.embeddings_path):
