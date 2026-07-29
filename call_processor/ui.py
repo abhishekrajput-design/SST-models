@@ -48,7 +48,17 @@ if sys.platform == "win32":
 
 PORT = 8080
 PROCESSED_DIR = "data/processed"
+FEATURED_CALL_FILE = Path("data/featured_call_id.txt")
 HF_TOKEN = os.environ.get("HF_TOKEN", "")
+
+
+def _featured_call_id() -> str | None:
+    """Return the one locally featured playground call, when configured."""
+    try:
+        call_id = FEATURED_CALL_FILE.read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    return call_id or None
 
 # Basic auth for the UI. OFF by default — the browser would otherwise pop a
 # login prompt every visit. Enable by setting CALLPROC_AUTH_REQUIRED=1 (any
@@ -79,6 +89,13 @@ if sys.platform == "win32" and os.path.isdir(_FFMPEG_BIN):
 _DEEP_ENHANCE = os.environ.get("SST_DEEP_ENHANCE", "").strip().lower() in (
     "1", "true", "yes", "on",
 )
+
+
+def _use_main_conversation_playback() -> bool:
+    """Play the contiguous conversation clip unless explicitly disabled."""
+    return os.getenv("SST_PLAYBACK_MAIN_CONVERSATION", "1").strip().lower() not in {
+        "0", "false", "no", "off",
+    }
 
 AUDIO_FILTER_DEFAULT = (
     "aresample=44100,"                        # upsample first — loudnorm needs ≥44.1k
@@ -166,12 +183,31 @@ _TARGET_AGENT_ALIASES = {
 
 
 def _agent_slug_from_hint(*hints: str) -> str | None:
+    # Dynamically load all keys from agents.json to support all agents
+    try:
+        agents_index = Path(__file__).parent / "data" / "agent_voiceprints" / "agents.json"
+        if agents_index.exists():
+            with open(agents_index, "r", encoding="utf-8") as f:
+                slugs = list(json.load(f).keys())
+        else:
+            slugs = []
+    except Exception:
+        slugs = []
+
     for raw in hints:
         if not raw:
             continue
         text = str(raw).lower()
         compact = re.sub(r"[^a-z0-9]+", "", text)
         underscored = re.sub(r"[^a-z0-9]+", "_", text).strip("_")
+
+        # Try to find slug directly in underscored/compact string
+        for slug in slugs:
+            slug_clean = slug.lower()
+            slug_compact = re.sub(r"[^a-z0-9]+", "", slug_clean)
+            if slug_clean in underscored or slug_compact in compact:
+                return slug
+
         for key in (underscored, compact):
             if key in _TARGET_AGENT_ALIASES:
                 return _TARGET_AGENT_ALIASES[key]
@@ -741,7 +777,7 @@ def _select_main_conversation_segments(
     audio_duration_s: float = 0.0,
     *hints: str,
 ) -> tuple[list, dict]:
-    """Return segments inside the sustained agent/customer conversation span."""
+    """Detect sustained agent/customer spans without destructively dropping text."""
     enabled = os.getenv("SST_TRIM_MAIN_CONVERSATION", "1").strip().lower()
     if enabled in {"0", "false", "no", "off"}:
         return segments, {"enabled": False, "reason": "disabled", "selected_segments": len(segments)}
@@ -778,9 +814,19 @@ def _select_main_conversation_segments(
     bridge_gap_s = float(os.getenv("SST_TRIM_MAIN_BRIDGE_GAP_SECONDS", "120") or "120")
     preroll_s = float(os.getenv("SST_TRIM_MAIN_PREROLL_SECONDS", "3") or "3")
     postroll_s = float(os.getenv("SST_TRIM_MAIN_POSTROLL_SECONDS", "3") or "3")
+    edge_attach_s = float(os.getenv("SST_TRIM_MAIN_EDGE_ATTACH_SECONDS", "60") or "60")
     min_start_s = float(os.getenv("SST_TRIM_MAIN_MIN_START_SECONDS", "0") or "0")
     strong_score_ratio = float(os.getenv("SST_TRIM_MAIN_STRONG_WINDOW_SCORE_RATIO", "0.60") or "0.60")
     strong_speech_ratio = float(os.getenv("SST_TRIM_MAIN_STRONG_WINDOW_SPEECH_RATIO", "0.60") or "0.60")
+    dense_speech_ratio = float(os.getenv("SST_TRIM_MAIN_DENSE_SPEECH_RATIO", "0.55") or "0.55")
+    preserve_all_spans = (
+        os.getenv("SST_TRIM_MAIN_PRESERVE_ALL_SPANS", "1").strip().lower()
+        not in {"0", "false", "no", "off"}
+    )
+    trim_transcript = (
+        os.getenv("SST_TRIM_MAIN_CONVERSATION_TRANSCRIPT", "0").strip().lower()
+        not in {"0", "false", "no", "off"}
+    )
     override_start_s, override_token = _main_conversation_start_override(*hints)
     if override_start_s > 0:
         min_start_s = max(min_start_s, override_start_s)
@@ -811,12 +857,20 @@ def _select_main_conversation_segments(
                 customer_s += overlap
                 customer_turns += 1
         speech_s = agent_s + customer_s
-        if (
+        role_balanced = (
             speech_s >= min_speech_s
             and agent_s >= min_agent_s
             and customer_s >= min_customer_s
             and turns >= min_turns
-        ):
+        )
+        window_duration_s = max(right - left, 1.0)
+        speech_density = speech_s / window_duration_s
+        speech_density_fallback = (
+            not role_balanced
+            and speech_s >= min_speech_s
+            and (turns >= min_turns or speech_density >= dense_speech_ratio)
+        )
+        if role_balanced or speech_density_fallback:
             balanced_s = min(agent_s, customer_s)
             balanced_turns = min(agent_turns, customer_turns)
             candidates.append({
@@ -829,6 +883,10 @@ def _select_main_conversation_segments(
                 "agent_turns": agent_turns,
                 "customer_turns": customer_turns,
                 "score": speech_s + balanced_s + (balanced_turns * 1.5),
+                "speech_density": speech_density,
+                "selection_basis": (
+                    "role_balanced" if role_balanced else "speech_density_fallback"
+                ),
             })
         t += max(step_s, 1.0)
 
@@ -860,16 +918,31 @@ def _select_main_conversation_segments(
             cur_end = cand["end"]
             cur_candidates = [cand]
     spans.append({"start": cur_start, "end": cur_end, "candidates": cur_candidates})
-    best_span = max(
-        spans,
-        key=lambda span: sum(
-            max(0.0, min(span["end"], end_s) - max(span["start"], start_s))
-            for start_s, end_s, _role, _seg in usable
-        ),
-    )
+    if preserve_all_spans:
+        best_span = {
+            "start": spans[0]["start"],
+            "end": spans[-1]["end"],
+            "candidates": [
+                candidate
+                for span in spans
+                for candidate in (span.get("candidates") or [])
+            ],
+        }
+    else:
+        best_span = max(
+            spans,
+            key=lambda span: sum(
+                max(0.0, min(span["end"], end_s) - max(span["start"], start_s))
+                for start_s, end_s, _role, _seg in usable
+            ),
+        )
 
     span_start = float(best_span["start"])
     span_end = float(best_span["end"])
+    if 0.0 < span_start - first_s <= edge_attach_s:
+        span_start = first_s
+    if 0.0 < last_s - span_end <= edge_attach_s:
+        span_end = last_s
     span_candidates = best_span.get("candidates") or []
     best_score = max((float(c.get("score") or 0.0) for c in span_candidates), default=0.0)
     best_speech = max((float(c.get("speech_seconds") or 0.0) for c in span_candidates), default=0.0)
@@ -878,7 +951,11 @@ def _select_main_conversation_segments(
         if float(cand.get("score") or 0.0) >= best_score * strong_score_ratio
         and float(cand.get("speech_seconds") or 0.0) >= best_speech * strong_speech_ratio
     ]
-    anchor_start = float(strong_candidates[0]["start"]) if strong_candidates else span_start
+    anchor_start = (
+        span_start
+        if preserve_all_spans
+        else float(strong_candidates[0]["start"]) if strong_candidates else span_start
+    )
     start_floor = min_start_s if override_start_s > 0 else max(min_start_s, anchor_start)
     selected = [
         seg for start_s, end_s, _role, seg in usable
@@ -907,12 +984,21 @@ def _select_main_conversation_segments(
     if not selected_for_trim:
         selected_for_trim = selected
 
-    return selected_for_trim, {
+    returned_segments = selected_for_trim if trim_transcript else segments
+    return returned_segments, {
         "enabled": True,
         "reason": "sustained_agent_customer_window",
-        "selected_segments": len(selected_for_trim),
+        "selected_segments": len(returned_segments),
         "original_segments": len(segments or []),
+        "span_segments": len(selected_for_trim),
+        "transcript_trimmed": bool(trim_transcript),
+        "returned_full_transcript": not trim_transcript,
         "candidate_windows": len(candidates),
+        "speech_density_fallback_windows": sum(
+            1
+            for candidate in candidates
+            if candidate.get("selection_basis") == "speech_density_fallback"
+        ),
         "spans": [
             {
                 "start": round(float(span["start"]), 3),
@@ -925,6 +1011,9 @@ def _select_main_conversation_segments(
         "start_floor": round(float(start_floor), 3),
         "strong_window_score_ratio": strong_score_ratio,
         "strong_window_speech_ratio": strong_speech_ratio,
+        "dense_speech_ratio": dense_speech_ratio,
+        "span_policy": "conversation_envelope" if preserve_all_spans else "best_span",
+        "edge_attach_seconds": edge_attach_s,
         "selected_start": round(float(trim_start), 3),
         "selected_end": round(float(trim_end), 3),
         "window_seconds": window_s,
@@ -1099,6 +1188,29 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         except Exception:
             return 0.0
 
+    def _cached_wav_complete(path: str, expected_duration_s: float) -> bool:
+        if not os.path.exists(path) or os.path.getsize(path) < 1024:
+            return False
+        actual = _audio_duration_s(path)
+        if actual <= 0:
+            return False
+        return actual >= max(1.0, expected_duration_s - 2.0)
+
+    def _run_ffmpeg_to_cache(cmd: list, dst: str, timeout: int = 600):
+        tmp = f"{dst}.tmp.{os.getpid()}.wav"
+        try:
+            if os.path.exists(tmp):
+                os.remove(tmp)
+            _run_ffmpeg([tmp if part == dst else part for part in cmd], timeout=timeout)
+            os.replace(tmp, dst)
+        except Exception:
+            try:
+                if os.path.exists(tmp):
+                    os.remove(tmp)
+            except OSError:
+                pass
+            raise
+
     dur_s = _audio_duration_s(audio_path)
     target_agent_slug = _resolve_target_agent_slug(
         target_agent_slug,
@@ -1126,16 +1238,18 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     def _make_norm_wav(src: str, dst: str):
         """16 kHz mono WAV from src with normalisation. Mono-only pipeline."""
         af = f"aformat=channel_layouts=mono,{_NORM_AF}"
-        _run_ffmpeg(
+        _run_ffmpeg_to_cache(
             ["ffmpeg", "-y", "-i", src, "-ar", "16000", "-af", af, dst],
+            dst,
             timeout=600,   # 30-min audio needs up to ~5 min for loudnorm
         )
 
     def _make_minimal_asr_wav(src: str, dst: str):
         """16 kHz mono WAV without gain/noise processing for low-level desk audio."""
         af = "aformat=channel_layouts=mono,aresample=16000"
-        _run_ffmpeg(
+        _run_ffmpeg_to_cache(
             ["ffmpeg", "-y", "-i", src, "-ar", "16000", "-af", af, dst],
+            dst,
             timeout=600,
         )
 
@@ -1405,12 +1519,50 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     diarization_applied = False
     speaker_stats: dict   = {}
     diar_result: dict = {}
+    diarization_error: dict = {}
     customer_agent_override: dict = {"enabled": False, "changed_segments": 0}
     agent_role_text_override: dict = {"enabled": False, "changed_segments": 0}
+    asr_step_check: dict = {}
+    diarization_step_check: dict = {}
+
+    def _summarize_segments_for_debug(rows: list | None) -> dict:
+        rows = list(rows or [])
+        role_counts: dict[str, int] = {}
+        role_seconds: dict[str, float] = {}
+        speaker_counts: dict[str, int] = {}
+        speaker_seconds: dict[str, float] = {}
+        words_count = 0
+        for seg in rows:
+            role = str(seg.get("identified_speaker") or "UNKNOWN")
+            speaker = str(seg.get("speaker") or "UNKNOWN")
+            role_counts[role] = role_counts.get(role, 0) + 1
+            speaker_counts[speaker] = speaker_counts.get(speaker, 0) + 1
+            if seg.get("words"):
+                words_count += 1
+            try:
+                seconds = max(
+                    float(seg.get("end", 0.0) or 0.0) - float(seg.get("start", 0.0) or 0.0),
+                    0.0,
+                )
+            except (TypeError, ValueError):
+                seconds = 0.0
+            role_seconds[role] = role_seconds.get(role, 0.0) + seconds
+            speaker_seconds[speaker] = speaker_seconds.get(speaker, 0.0) + seconds
+        return {
+            "segments": len(rows),
+            "segments_with_words": words_count,
+            "role_counts": role_counts,
+            "role_seconds": {k: round(float(v), 2) for k, v in role_seconds.items()},
+            "speaker_counts": speaker_counts,
+            "speaker_seconds": {k: round(float(v), 2) for k, v in speaker_seconds.items()},
+        }
 
     # ── Mono path: voiceprint-first multi-speaker diarization ────────────────
     norm_wav = os.path.join(norm_dir, f"norm_{base}.wav")
-    if not os.path.exists(norm_wav):
+    if not _cached_wav_complete(norm_wav, dur_s):
+        if os.path.exists(norm_wav):
+            print("[UI] Removing incomplete normalized WAV cache.", flush=True)
+            os.remove(norm_wav)
         _set_status(1, "Transcription", "Normalizing audio to 16 kHz mono...")
         print("[UI] Normalizing audio...")
         _make_norm_wav(audio_path, norm_wav)
@@ -1424,7 +1576,10 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     if whisper_model == "parakeet-tdt-0.6b-v3" and raw_asr_enabled and dur_s >= raw_asr_min_s:
         asr_wav = os.path.join(norm_dir, f"asr_raw_{base}.wav")
         asr_audio_mode = "minimal_resample"
-        if not os.path.exists(asr_wav):
+        if not _cached_wav_complete(asr_wav, dur_s):
+            if os.path.exists(asr_wav):
+                print("[UI] Removing incomplete minimal ASR WAV cache.", flush=True)
+                os.remove(asr_wav)
             _set_status(1, "Transcription", "Preparing minimal-resample ASR audio...")
             print("[UI] Preparing minimal-resample ASR audio for long desk recording...")
             _make_minimal_asr_wav(audio_path, asr_wav)
@@ -1443,12 +1598,25 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         )
     else:
         segments = transcriber.transcribe(asr_wav, language="en")
+    raw_asr_summary = _summarize_segments_for_debug(segments)
     segments = _retry_empty_transcript(
         segments,
         asr_wav,
         "No transcript segments returned",
     )
     segments, asr_slice_split = _split_asr_segments_on_word_slices(segments, whisper_model, asr_wav)
+    asr_step_check = {
+        "status": "ok" if segments else "empty",
+        "requested_model": requested_model,
+        "model_used": whisper_model,
+        "fallback_used": requested_model != whisper_model,
+        "isolated_transcriber": bool(isolated_transcriber),
+        "asr_audio_mode": asr_audio_mode,
+        "asr_audio_file": asr_wav.replace("\\", "/"),
+        "raw": raw_asr_summary,
+        "after_word_slice": _summarize_segments_for_debug(segments),
+        "word_slice_split": asr_slice_split,
+    }
     if asr_slice_split.get("added_segments"):
         print(
             f"[UI] Word-slice split: {asr_slice_split['original_segments']} -> "
@@ -2409,11 +2577,14 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         agent_name: str | None,
         agent_slug: str | None,
         audio_file: str,
+        selected_agent_speakers: set[str] | None = None,
     ) -> dict:
         """Assign each segment role from its own audio embedding.
 
         This is intentionally voice-only. The transcript text is never scored;
-        the text segment only supplies the start/end window to embed.
+        the text segment only supplies the start/end window to embed. If
+        Sortformer already selected the target speaker cluster, short-window
+        voiceprint misses are not allowed to demote that cluster to CUSTOMER.
         """
         enabled = os.getenv("SST_AGENT_SEGMENT_VOICE_REPAIR", "1").strip().lower()
         if enabled in {"0", "false", "no", "off"}:
@@ -2494,15 +2665,22 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             sr = 16000
 
         target_dim = int(target_stack.shape[1])
+        selected_agent_speakers = {
+            str(spk)
+            for spk in (selected_agent_speakers or set())
+            if str(spk or "").strip()
+        }
+        preserve_selected_cluster = (
+            os.getenv("SST_AGENT_SEGMENT_PRESERVE_SELECTED_CLUSTER", "1").strip().lower()
+            not in {"0", "false", "no", "off"}
+        )
         other_voiceprints = [
             (slug, stack)
             for slug, (_name, stack) in voiceprints.items()
             if slug != agent_slug and getattr(stack, "ndim", 0) == 2 and stack.shape[1] == target_dim and len(stack)
         ]
-        if not other_voiceprints:
-            target_only = True
-        else:
-            target_only = False
+        # Force target_only to True when target_agent_slug is set to prevent noise from other agents' profiles
+        target_only = True if agent_slug else not other_voiceprints
 
         min_sim = float(os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_SIM", "0.40") or "0.40")
         min_margin = float(os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_MARGIN", "0.03") or "0.03")
@@ -2512,14 +2690,19 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         if segment_role_target_stack is not None and not os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_MARGIN"):
             if segment_role_min_margins:
                 min_margin = min(segment_role_min_margins)
-        target_only_min_sim = float(os.getenv("SST_AGENT_SEGMENT_VOICE_TARGET_ONLY_MIN_SIM", "0.55") or "0.55")
+        target_only_min_sim = float(os.getenv("SST_AGENT_SEGMENT_VOICE_TARGET_ONLY_MIN_SIM", "0.44") or "0.44")
         min_seconds = float(os.getenv("SST_AGENT_SEGMENT_VOICE_MIN_SECONDS", "0.30") or "0.30")
         pad_seconds = float(os.getenv("SST_AGENT_SEGMENT_VOICE_PAD_SECONDS", "0.12") or "0.12")
         smooth_short_s = float(os.getenv("SST_AGENT_SEGMENT_VOICE_SMOOTH_SHORT_SECONDS", "0.80") or "0.80")
+        preserve_selected_min_sim = float(os.getenv("SST_AGENT_SEGMENT_PRESERVE_SELECTED_MIN_SIM", "0.30") or "0.30")
+        preserve_selected_min_margin = float(os.getenv("SST_AGENT_SEGMENT_PRESERVE_SELECTED_MIN_MARGIN", "0.00") or "0.00")
+        mixed_window_min_seconds = float(os.getenv("SST_AGENT_SEGMENT_VOICE_MIXED_MIN_SECONDS", "0.6") or "0.6")
 
         embedder = get_model(force_cpu=True)
         evaluated = changed_to_agent = changed_to_customer = kept_agent = kept_customer = skipped = 0
         foreground_guard_blocks = 0
+        selected_cluster_preserved = 0
+        skipped_mixed_window = 0
         score_rows: list[dict] = []
         sample_changes: list[dict] = []
         display_name = target_name or agent_name
@@ -2549,6 +2732,30 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             if seconds < min_seconds:
                 skipped += 1
                 continue
+            # A single embedding of the whole padded window assumes the window
+            # is one speaker. When the diarization-overlap pass (which runs
+            # before this repair and sums real per-turn overlap time) already
+            # found a substantial amount of BOTH roles inside this window, the
+            # text segment actually spans more than one real turn (an ASR/diar
+            # boundary merge) and a blended embedding can't be trusted to speak
+            # for the whole thing - it will just reflect whichever role has
+            # more duration and mislabel the rest. Leave the overlap-based
+            # role alone rather than blanket-overriding a mixed window.
+            overlap = seg.get("role_overlap")
+            if isinstance(overlap, dict):
+                try:
+                    overlap_agent_s = float(overlap.get("agent", 0.0) or 0.0)
+                    overlap_customer_s = float(overlap.get("customer", 0.0) or 0.0)
+                except (TypeError, ValueError):
+                    overlap_agent_s = overlap_customer_s = 0.0
+                if (
+                    overlap_agent_s >= mixed_window_min_seconds
+                    and overlap_customer_s >= mixed_window_min_seconds
+                ):
+                    skipped += 1
+                    skipped_mixed_window += 1
+                    seg["role_voiceprint_repair_skip_reason"] = "mixed_role_overlap_window"
+                    continue
             start = max(0, int(start_s * sr) - pad)
             end = min(len(audio), int(end_s * sr) + pad)
             if end <= start:
@@ -2579,7 +2786,21 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 seg["foreground_role_guard"] = "customer_diarization_blocks_background_agent"
 
             previous = seg.get("identified_speaker")
-            if is_agent:
+            speaker_is_selected_agent = (
+                preserve_selected_cluster
+                and str(seg.get("speaker") or "") in selected_agent_speakers
+                and target_sim >= preserve_selected_min_sim
+                and margin >= preserve_selected_min_margin
+            )
+            if speaker_is_selected_agent and not is_agent:
+                _set_agent(seg, "selected_agent_cluster_preserved")
+                selected_cluster_preserved += 1
+                if previous != "AGENT":
+                    changed_to_agent += 1
+                else:
+                    kept_agent += 1
+                is_agent = True
+            elif is_agent:
                 _set_agent(seg, "target_segment_voiceprint")
                 if previous != "AGENT":
                     changed_to_agent += 1
@@ -2674,7 +2895,12 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             "kept_agent": kept_agent,
             "kept_customer": kept_customer,
             "skipped_segments": skipped,
+            "skipped_mixed_window": skipped_mixed_window,
+            "mixed_window_min_seconds": mixed_window_min_seconds,
             "foreground_guard_blocks": foreground_guard_blocks,
+            "selected_cluster_preserved": selected_cluster_preserved,
+            "selected_agent_speakers": sorted(selected_agent_speakers),
+            "preserve_selected_cluster": preserve_selected_cluster,
             "smoothed_segments": smoothed,
             "min_similarity": min_sim,
             "min_margin": min_margin,
@@ -3454,7 +3680,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             and len(stack)
         ]
         background_stack = _np.concatenate(other_stacks, axis=0) if other_stacks else None
-        target_only = background_stack is None
+        # Force target_only = True when target_agent_slug is set to prevent noise from other agents' profiles
+        target_only = True if agent_slug else (background_stack is None)
 
         min_sim = float(os.getenv("SST_TSVAD_MIN_SIM", "0.33") or "0.33")
         min_margin = float(os.getenv("SST_TSVAD_MIN_MARGIN", "0.03") or "0.03")
@@ -3711,7 +3938,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         max_speakers = int(os.getenv("SST_MAX_SPEAKERS", "4") or "4")
         backend = os.getenv("SST_SPEAKER_DIAR_BACKEND", "sortformer").strip() or "sortformer"
         streaming_env = os.getenv("SST_SORTFORMER_STREAMING", "").strip().lower()
-        streaming_min_s = float(os.getenv("SST_SORTFORMER_STREAMING_MIN_SECONDS", "600") or "600")
+        streaming_min_s = float(os.getenv("SST_SORTFORMER_STREAMING_MIN_SECONDS", "120") or "120")
         if streaming_env in {"1", "true", "yes", "on"}:
             sortformer_streaming = True
         elif streaming_env in {"0", "false", "no", "off"}:
@@ -3728,11 +3955,11 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             f"floor={presence_floor:.2f})...",
             flush=True,
         )
-        def _run_diarization(use_streaming: bool):
+        def _run_diarization(use_streaming: bool, diar_backend: str):
             return diarize_clean(
                 audio_path=norm_wav,
                 transcribed_segments=segments,
-                backend=backend,
+                backend=diar_backend,
                 max_speakers=max_speakers,
                 sortformer_streaming=use_streaming,
                 target_agent_slug=target_agent_slug,
@@ -3740,12 +3967,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 hf_token=os.getenv("HF_TOKEN"),
             )
 
-        try:
-            diar_result = _run_diarization(sortformer_streaming)
-        except Exception:
-            if backend != "sortformer" or sortformer_streaming:
-                raise
-            print("[UI] Full Sortformer failed; retrying with streaming Sortformer...", flush=True)
+        def _free_diar_gpu():
             try:
                 import torch as _torch, gc as _gc
                 _gc.collect()
@@ -3754,8 +3976,44 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                     _torch.cuda.synchronize()
             except Exception:
                 pass
-            sortformer_streaming = True
-            diar_result = _run_diarization(True)
+
+        # Fallback chain: full Sortformer -> streaming Sortformer -> pyannote.
+        # A streaming OOM (common on long desk recordings on 6 GB GPUs) previously
+        # propagated and collapsed every segment to CUSTOMER. The pyannote step keeps
+        # real diarization instead of that all-customer collapse.
+        from src.diar_clean import next_diarization_fallback
+        _pyannote_fallback_enabled = os.getenv("SST_DIAR_PYANNOTE_FALLBACK", "1").strip().lower() not in {"0", "false", "no", "off"}
+        current_backend = backend
+        use_streaming = sortformer_streaming
+        diar_result = None
+        while True:
+            try:
+                diar_result = _run_diarization(use_streaming, current_backend)
+                break
+            except Exception as _diar_attempt_err:
+                _free_diar_gpu()
+                nxt = next_diarization_fallback(
+                    current_backend=current_backend,
+                    was_streaming=use_streaming,
+                    has_hf_token=bool(os.getenv("HF_TOKEN")),
+                    pyannote_fallback_enabled=_pyannote_fallback_enabled,
+                )
+                print(
+                    f"[UI] Diarization attempt failed "
+                    f"(backend={current_backend}, streaming={use_streaming}, "
+                    f"err={type(_diar_attempt_err).__name__}); next={nxt or 'give-up'}",
+                    flush=True,
+                )
+                if nxt == "streaming":
+                    use_streaming = True
+                    continue
+                if nxt == "pyannote":
+                    current_backend = "pyannote"
+                    use_streaming = False
+                    continue
+                raise
+        backend = diar_result.get("backend", current_backend)
+        sortformer_streaming = bool(use_streaming) if current_backend == "sortformer" else False
         segments     = diar_result["segments"]
         show_untranscribed = (
             os.getenv("SST_SHOW_UNTRANSCRIBED_SPEAKERS", "0").strip().lower()
@@ -3795,6 +4053,23 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             flush=True,
         )
         print(f"[UI] Speakers: {list(diar_result.get('per_speaker', {}).keys())}", flush=True)
+        diarization_step_check = {
+            "status": "ok",
+            "backend": backend,
+            "sortformer_streaming": bool(sortformer_streaming),
+            "speaker_mode": diar_result.get("speaker_mode"),
+            "speaker_count": diar_result.get("speaker_count"),
+            "agent_speaker_id": diar_result.get("agent_speaker_id"),
+            "agent_slug": diar_result.get("agent_slug"),
+            "agent_name": diar_result.get("agent_name"),
+            "agent_similarity": diar_result.get("agent_similarity"),
+            "target_agent_slug": target_agent_slug,
+            "presence_floor": presence_floor,
+            "segments_after_overlay": _summarize_segments_for_debug(segments),
+            "cluster_segment_counts": diar_result.get("cluster_segment_counts", {}),
+            "cluster_durations": diar_result.get("cluster_durations", {}),
+            "agent_cluster_decision": diar_result.get("agent_cluster_decision", {}),
+        }
 
         segments, speaker_turn_text_split = _split_text_segments_on_speaker_turns(
             segments,
@@ -3828,6 +4103,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             and len(diar_result.get("identified_agents") or []) > 1
         )
         single_target_agent_slug = None if multi_agent_identified else (diar_result.get("agent_slug") or target_agent_slug)
+        selected_agent_speakers = {
+            str(diar_result.get("agent_speaker_id") or "").strip(),
+        }
+        selected_agent_speakers.update(
+            str(spk_seg.get("speaker") or "").strip()
+            for spk_seg in (diar_result.get("speaker_segments") or [])
+            if spk_seg.get("identified_speaker") == "AGENT"
+        )
+        selected_agent_speakers = {spk for spk in selected_agent_speakers if spk}
         if single_target_agent_slug:
             agent_role_voiceprint_repair = _repair_agent_roles_from_voiceprint_clusters(
                 segments,
@@ -3855,6 +4139,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 agent_name_id,
                 single_target_agent_slug,
                 norm_wav,
+                selected_agent_speakers=selected_agent_speakers,
             )
         else:
             agent_role_segment_voiceprint_repair = {
@@ -4096,6 +4381,16 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception as _diar_err:
         print(f"[UI] Speaker-first diarization failed ({repr(_diar_err)})", flush=True)
         import traceback; traceback.print_exc()
+        diarization_error = {
+            "type": type(_diar_err).__name__,
+            "message": str(_diar_err)[:1000],
+        }
+        diarization_step_check = {
+            "status": "failed",
+            "error": diarization_error,
+            "fallback": "all_segments_customer",
+            "segments_before_fallback": _summarize_segments_for_debug(segments),
+        }
         for seg in segments:
             seg["speaker"] = seg.get("speaker") or "SPEAKER_99"
             seg["identified_speaker"] = "CUSTOMER"
@@ -4118,6 +4413,22 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     except Exception:
         pass
 
+    # ── Stabilize isolated role flips (systemic fix) ──
+    # After every per-segment voice repair, flip lone SHORT role-outliers to match
+    # agreeing neighbours — kills the "keeps switching Agent to Customer" and
+    # "a little noise flips the label" feedback. Sustained turns are never touched.
+    role_flip_stabilized_count = 0
+    if diarization_applied and os.getenv("SST_ROLE_FLIP_STABILIZE", "1").strip().lower() not in {"0", "false", "no", "off"}:
+        try:
+            from src.diar_clean import stabilize_role_flips
+            _max_flip_s = float(os.getenv("SST_ROLE_FLIP_STABILIZE_MAX_SECONDS", "1.0") or "1.0")
+            segments, role_flip_stabilized_count = stabilize_role_flips(segments, max_flip_seconds=_max_flip_s)
+            if role_flip_stabilized_count:
+                print(f"[UI] Stabilized {role_flip_stabilized_count} isolated role-flip segment(s)", flush=True)
+        except Exception as _stab_err:
+            print(f"[UI] Role-flip stabilization skipped ({repr(_stab_err)})", flush=True)
+
+    pre_main_trim_summary = _summarize_segments_for_debug(segments)
     trim_source_segments = locals().get("main_conversation_trim_source_segments") or segments
     trim_segments, main_conversation_trim = _select_main_conversation_segments(
         trim_source_segments,
@@ -4130,7 +4441,8 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     if main_conversation_trim.get("reason") == "sustained_agent_customer_window":
         selected_start = float(main_conversation_trim.get("selected_start") or 0.0)
         selected_end = float(main_conversation_trim.get("selected_end") or 0.0)
-        if trim_source_segments is not segments and selected_end > selected_start:
+        transcript_trimmed = bool(main_conversation_trim.get("transcript_trimmed"))
+        if transcript_trimmed and trim_source_segments is not segments and selected_end > selected_start:
             trim_segments = [
                 seg for seg in segments
                 if not seg.get("speech_only")
@@ -4138,6 +4450,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
                 and float(seg.get("start", 0.0) or 0.0) <= selected_end
             ] or trim_segments
             main_conversation_trim["selected_segments"] = len(trim_segments)
+        elif not transcript_trimmed:
+            trim_segments = segments
+            main_conversation_trim["selected_segments"] = len(segments)
         print(
             f"[UI] Main conversation trim span: "
             f"{main_conversation_trim.get('selected_start')}s -> "
@@ -4145,7 +4460,9 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
             f"({main_conversation_trim.get('selected_segments')} segment(s))",
             flush=True,
         )
-        segments = trim_segments
+        if transcript_trimmed:
+            segments = trim_segments
+    post_main_trim_summary = _summarize_segments_for_debug(segments)
 
     # Speaker stats (used by both paths)
     first_agent_words    = next((s["text"].strip() for s in segments if s.get("identified_speaker") == "AGENT"),    "")
@@ -4198,7 +4515,7 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     identified_agent_name = (
         ", ".join(identified_agent_names)
         if identified_agent_names
-        else locals().get("agent_name_id", "Unknown Agent")
+        else None
     )
 
     transcription_json = []
@@ -4241,8 +4558,15 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
     _identified_agent_slug = (
         identified_agent_slugs[0]
         if len(identified_agent_slugs) == 1
-        else (diar_result.get("agent_slug") if diarization_applied else None)
+        else None
     )
+    _identified_agents = [
+        item for item in (diar_result.get("identified_agents", []) or [])
+        if item.get("agent_slug") in set(identified_agent_slugs)
+        or item.get("agent_name") in set(identified_agent_names)
+    ]
+    if not identified_agent_slugs and not identified_agent_names:
+        _identified_agents = []
 
     result = {
         "audio_file":               audio_path.replace("\\", "/"),
@@ -4265,13 +4589,14 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "speaker_stats":            speaker_stats,
         "identified_agent":         _identified_agent,
         "identified_agent_slug":    _identified_agent_slug,
-        "identified_agents":        diar_result.get("identified_agents", []),
+        "identified_agents":        _identified_agents,
         "identified_agent_slugs":   identified_agent_slugs,
         "speaker_id_backend_dim":   diar_result.get("matched_backend_dim"),
         "voiceprint_dims":          diar_result.get("voiceprint_dims", {}),
         "speaker_id_warning":       (
             diar_result.get("speaker_id_warning") or diar_result.get("warning")
         ),
+        "speaker_id_error":         diarization_error,
         "speaker_id_mode":          diar_result.get("speaker_mode"),
         "speaker_id_backend":       diar_result.get("speaker_id_backend") or diar_result.get("backend"),
         "speaker_id_sortformer_streaming": bool(
@@ -4309,6 +4634,28 @@ def _transcribe_inline(audio_path: str, whisper_model: str = "whisper-large-v3-t
         "customer_role_text_repair": locals().get("customer_role_text_repair", {}),
         "customer_agent_override": customer_agent_override,
         "agent_role_text_override": agent_role_text_override,
+        "pipeline_step_checks": {
+            "input_audio": {
+                "duration_s": round(float(dur_s), 3),
+                "original_path": original_path.replace("\\", "/") if original_path else "",
+                "pipeline_audio": audio_path.replace("\\", "/"),
+            },
+            "asr": asr_step_check,
+            "diarization": diarization_step_check,
+            "speaker_turn_text_split": locals().get("speaker_turn_text_split", {}),
+            "unknown_customer_fallback": {
+                "count": locals().get("unknown_segments_customer_fallback", 0),
+            },
+            "cluster_role_repair": locals().get("agent_role_voiceprint_repair", {}),
+            "segment_voiceprint_repair": locals().get("agent_role_segment_voiceprint_repair", {}),
+            "target_speaker_vad": locals().get("target_speaker_vad_role_refinement", {}),
+            "main_conversation_trim": {
+                **(locals().get("main_conversation_trim", {}) or {}),
+                "pre_summary": locals().get("pre_main_trim_summary", {}),
+                "post_summary": locals().get("post_main_trim_summary", {}),
+            },
+            "final": _summarize_segments_for_debug(segments),
+        },
         "note": (
             f"Requested {requested_model}; transcribed with {whisper_model}"
             if requested_model != whisper_model
@@ -4569,6 +4916,7 @@ def _run_pipeline(
 
                 main_trim = rdata.get("main_conversation_trim") or {}
                 main_audio_file = None
+                use_main_playback = _use_main_conversation_playback()
                 if main_trim.get("reason") == "sustained_agent_customer_window":
                     try:
                         start_s = float(main_trim.get("selected_start") or 0.0)
@@ -4582,23 +4930,25 @@ def _run_pipeline(
                     if _trim_contiguous_audio(source_audio, main_audio_path, start_s, end_s):
                         main_audio_file = main_audio_path.replace("\\", "/")
                         rdata["main_conversation_audio_file"] = main_audio_file
-                        rdata["playback_audio_file"] = main_audio_file
-                        rdata["playback_audio_offset_s"] = round(start_s, 3)
-                        rdata["playback_audio_source"] = "main_conversation"
-                        display_meta = dict(rdata.get("orig_meta") or {})
-                        display_meta["duration_s"] = round(max(end_s - start_s, 0.0))
-                        try:
-                            display_meta["size_mb"] = round(
-                                os.path.getsize(main_audio_path) / 1024 / 1024, 1
-                            )
-                        except OSError:
-                            pass
-                        display_meta["channels"] = 1
-                        display_meta["trimmed_from_s"] = round(start_s, 3)
-                        display_meta["trimmed_to_s"] = round(end_s, 3)
-                        rdata["display_audio_meta"] = display_meta
+                        rdata["main_conversation_audio_offset_s"] = round(start_s, 3)
+                        if use_main_playback:
+                            rdata["playback_audio_file"] = main_audio_file
+                            rdata["playback_audio_offset_s"] = round(start_s, 3)
+                            rdata["playback_audio_source"] = "main_conversation"
+                            display_meta = dict(rdata.get("orig_meta") or {})
+                            display_meta["duration_s"] = round(max(end_s - start_s, 0.0))
+                            try:
+                                display_meta["size_mb"] = round(
+                                    os.path.getsize(main_audio_path) / 1024 / 1024, 1
+                                )
+                            except OSError:
+                                pass
+                            display_meta["channels"] = 1
+                            display_meta["trimmed_from_s"] = round(start_s, 3)
+                            display_meta["trimmed_to_s"] = round(end_s, 3)
+                            rdata["display_audio_meta"] = display_meta
 
-                if not main_audio_file and full_playback_audio:
+                if full_playback_audio and (not main_audio_file or not use_main_playback):
                     rdata["playback_audio_file"] = full_playback_audio
                     rdata["playback_audio_offset_s"] = 0.0
                     rdata["playback_audio_source"] = "full"
@@ -5066,8 +5416,11 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         # /api/calls
         if path == "/api/calls":
             calls = []
+            featured_call_id = _featured_call_id()
             if os.path.exists(PROCESSED_DIR):
                 for d in sorted(os.listdir(PROCESSED_DIR), reverse=True):
+                    if featured_call_id and d != featured_call_id:
+                        continue
                     rp = os.path.join(PROCESSED_DIR, d, "result.json")
                     if not os.path.isfile(rp):
                         continue
@@ -5315,7 +5668,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         if path == "/" or path == "/index.html":
             # Serve fresh HTML/JS — disable browser cache so UI fixes hit immediately.
             try:
-                with open("index.html", "rb") as f:
+                with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.html"), "rb") as f:
                     body = f.read()
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")

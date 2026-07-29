@@ -159,21 +159,62 @@ class ParakeetV3Transcriber(BaseTranscriber):
 
         ts = getattr(hyp, "timestamp", None)
         if isinstance(ts, dict):
-            seg_list = ts.get("segment") or ts.get("word") or []
+            word_rows = []
+            for raw_word in ts.get("word") or []:
+                token = (raw_word.get("word") or raw_word.get("text") or "").strip()
+                if not token:
+                    continue
+                try:
+                    w_start = float(raw_word.get("start", 0)) + chunk_offset
+                    w_end = float(raw_word.get("end", w_start - chunk_offset + 0.01)) + chunk_offset
+                except (TypeError, ValueError):
+                    continue
+                if w_end < w_start:
+                    continue
+                word_rows.append({
+                    "word": token,
+                    "start": round(w_start, 3),
+                    "end": round(w_end, 3),
+                })
+
+            seg_list = ts.get("segment") or []
             for seg in seg_list:
                 s = float(seg.get("start", 0)) + chunk_offset
                 e = float(seg.get("end", s + 0.5)) + chunk_offset
                 text = (seg.get("segment") or seg.get("word") or "").strip()
                 if text:
-                    segs.append({
+                    row = {
                         "start": round(s, 2),
                         "end":   round(e, 2),
                         "text":  text,
                         "speaker": "SPEAKER_00",
                         "identified_speaker": "SPEAKER_00",
                         "confidence": 0.0,
-                    })
+                    }
+                    words = []
+                    for word in word_rows:
+                        w_start = float(word["start"])
+                        w_end = float(word["end"])
+                        mid = (w_start + w_end) / 2.0
+                        overlap = max(0.0, min(e, w_end) - max(s, w_start))
+                        if overlap > 0 or s <= mid <= e:
+                            words.append(word)
+                    if words:
+                        row["words"] = words
+                    segs.append(row)
             if segs:
+                return segs
+
+            if word_rows:
+                segs.append({
+                    "start": round(float(word_rows[0]["start"]), 2),
+                    "end": round(float(word_rows[-1]["end"]), 2),
+                    "text": " ".join(str(w["word"]) for w in word_rows).strip(),
+                    "speaker": "SPEAKER_00",
+                    "identified_speaker": "SPEAKER_00",
+                    "confidence": 0.0,
+                    "words": word_rows,
+                })
                 return segs
 
         # No timestamps — emit the whole chunk as one segment (text only)

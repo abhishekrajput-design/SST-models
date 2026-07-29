@@ -137,16 +137,27 @@ class SpeakerMatcher:
             )
 
         # Determine best identity for each diarization label
+        # H9 fix: use count-based majority vote with average confidence as
+        # tiebreaker.  The old code used accumulated confidence (sum), which
+        # lets many low-confidence segments outweigh fewer high-confidence
+        # ones (or vice versa), producing biased speaker assignments.
         speaker_map: Dict[str, Tuple[str, float]] = {}
         for diar_label, votes in speaker_votes.items():
-            # Weight by confidence: pick the identity with highest total confidence
-            identity_scores: Dict[str, float] = {}
+            identity_counts: Dict[str, int] = {}
+            identity_conf_sum: Dict[str, float] = {}
             for name, conf in votes:
-                identity_scores[name] = identity_scores.get(name, 0.0) + conf
+                identity_counts[name] = identity_counts.get(name, 0) + 1
+                identity_conf_sum[name] = identity_conf_sum.get(name, 0.0) + conf
 
-            best_identity = max(identity_scores, key=identity_scores.get)
-            avg_confidence = identity_scores[best_identity] / sum(
-                1 for n, _ in votes if n == best_identity
+            best_identity = max(
+                identity_counts,
+                key=lambda n: (
+                    identity_counts[n],
+                    identity_conf_sum[n] / max(identity_counts[n], 1),
+                ),
+            )
+            avg_confidence = identity_conf_sum[best_identity] / max(
+                identity_counts[best_identity], 1
             )
             speaker_map[diar_label] = (best_identity, round(avg_confidence, 4))
 

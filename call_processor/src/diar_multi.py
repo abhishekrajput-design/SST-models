@@ -1,4 +1,4 @@
-﻿"""
+"""
 Voiceprint-first multi-speaker diarization.
 
 For each transcript segment, this module compares the segment voice embedding
@@ -157,6 +157,61 @@ def _is_filler_only(text: str, dur: float) -> bool:
            (len(_norm_words(text)) == 1 and _norm_words(text)[0] in _FILLER_WORDS))
 
 
+def _strip_shared_voiceprints(
+    voiceprints: Dict[str, Tuple[str, np.ndarray]],
+    threshold: float = 0.99,
+) -> Tuple[Dict[str, Tuple[str, np.ndarray]], Dict]:
+    """Drop voiceprint vectors that are (near-)identical across DIFFERENT agents.
+
+    A vector shared by two or more agents cannot be speaker-discriminative — it is
+    the signature of an enrollment write bug (the same embedding copied into several
+    agents' files). Such a vector matches arbitrary speakers at moderate cosine,
+    producing wrong-name labels and making the affected agents indistinguishable.
+
+    We remove every shared vector from every agent that carries it. Duplicates
+    WITHIN a single agent are kept (same speaker enrolled twice). Vectors of
+    differing dimensionality are never compared. Agents left with no vectors are
+    dropped — an honest "unknown" beats a confident wrong name. Stacks are assumed
+    L2-normalised (as produced by _load_voiceprints), so a dot product is cosine.
+
+    Returns (cleaned_voiceprints, report).
+    """
+    flat: List[Tuple[str, int, np.ndarray]] = []
+    for slug, (_name, stack) in voiceprints.items():
+        if getattr(stack, "ndim", 0) != 2:
+            continue
+        for k in range(stack.shape[0]):
+            flat.append((slug, k, stack[k]))
+
+    shared: set = set()
+    for i in range(len(flat)):
+        si, ki, vi = flat[i]
+        for j in range(i + 1, len(flat)):
+            sj, kj, vj = flat[j]
+            if si == sj or vi.shape[0] != vj.shape[0]:
+                continue
+            if float(vi @ vj) >= threshold:
+                shared.add((si, ki))
+                shared.add((sj, kj))
+
+    clean: Dict[str, Tuple[str, np.ndarray]] = {}
+    report: Dict = {"dropped_vectors": 0, "affected_agents": [], "emptied_agents": []}
+    for slug, (name, stack) in voiceprints.items():
+        if getattr(stack, "ndim", 0) != 2:
+            clean[slug] = (name, stack)
+            continue
+        keep = [stack[k] for k in range(stack.shape[0]) if (slug, k) not in shared]
+        dropped = stack.shape[0] - len(keep)
+        if dropped:
+            report["dropped_vectors"] += dropped
+            report["affected_agents"].append(slug)
+        if keep:
+            clean[slug] = (name, np.stack(keep).astype(np.float32))
+        else:
+            report["emptied_agents"].append(slug)
+    return clean, report
+
+
 def _load_voiceprints(path: Optional[str] = None) -> Dict[str, Tuple[str, np.ndarray]]:
     """Returns ``{slug: (display_name, stack)}`` where ``stack`` has shape
     ``(N, dim)``. Prefers the multi-VP ``voiceprints`` list; falls back to the
@@ -221,6 +276,21 @@ def _load_voiceprints(path: Optional[str] = None) -> Dict[str, Tuple[str, np.nda
         stack = np.stack(loaded).astype(np.float32)
         name = info.get("agent_name") or info.get("name") or slug
         out[slug] = (name, stack)
+
+    # Defend against enrollment corruption: a voiceprint vector shared across
+    # multiple agents is not speaker-specific and poisons matching (wrong names,
+    # indistinguishable agents). Strip such vectors before returning.
+    if os.getenv("SST_VOICEPRINT_DEDUP", "1").strip().lower() not in {"0", "false", "no", "off"}:
+        dup_sim = float(os.getenv("SST_VOICEPRINT_DUP_SIM", "0.99") or "0.99")
+        out, _dedup_report = _strip_shared_voiceprints(out, dup_sim)
+        if _dedup_report["dropped_vectors"]:
+            logger.warning(
+                "Voiceprint dedup: dropped %d cross-agent duplicate vector(s) from %s%s",
+                _dedup_report["dropped_vectors"],
+                _dedup_report["affected_agents"],
+                (" | EMPTIED (now unenrolled): " + str(_dedup_report["emptied_agents"]))
+                if _dedup_report["emptied_agents"] else "",
+            )
     return out
 
 
@@ -1199,6 +1269,17 @@ def diarize_multi(
 
     per_agent_thresh = _per_agent_thresholds(threshold, agents_index_path)
 
+    # ── H3 fix: set _is_filler and _snr_low for ALL segments regardless of
+    # embedding dimension.  Previously these flags were only set inside the
+    # dim==512 branch of _segment_embeddings_for_dim(), so 192-dim-only
+    # enrollments had filler weighting and SNR adaptation completely disabled.
+    call_snr = _estimate_snr(audio, sr)
+    is_low_snr = call_snr < SNR_LOW_DB
+    for seg in segments:
+        seg_dur = float(seg["end"]) - float(seg["start"])
+        seg["_is_filler"] = _is_filler_only(seg.get("text", ""), seg_dur)
+        seg["_snr_low"]   = is_low_snr
+
     embs_by_dim: Dict[int, List[Optional[np.ndarray]]] = {}
     valid_by_dim: Dict[int, np.ndarray] = {}
     sims_by_dim: Dict[int, np.ndarray] = {}
@@ -1248,10 +1329,15 @@ def diarize_multi(
             seg_weights[i] = FILLER_SIM_WEIGHT
 
     # â”€â”€ Progressive confidence: how much non-filler speech do we have? â”€â”€
+    # -- Progressive confidence: how much non-filler speech do we have? --
+    # C4 fix: use any() over per-dim validity arrays instead of concatenating
+    # them.  The old code concatenated all dims' boolean arrays into one flat
+    # array, so np.where() returned indices up to N*n_dims-1 instead of N-1,
+    # causing segments valid only in the 2nd dim to be silently excluded.
     non_filler_speech_s = sum(
         max(float(seg["end"]) - float(seg["start"]), 0.0)
         for i, seg in enumerate(segments)
-        if i in set(np.where(np.concatenate([valid_by_dim[d] for d in valid_by_dim.keys()]))[0])
+        if any(valid_by_dim[d][i] for d in valid_by_dim if i < len(valid_by_dim[d]))
         and not seg.get("_is_filler", False)
     )
     effective_min_matched = (PROG_CONF_MIN_MATCHED

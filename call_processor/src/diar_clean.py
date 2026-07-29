@@ -429,7 +429,16 @@ def select_multi_agent_cluster_matches(
         scored_by_speaker[spk] = scored
         top_slug, top_sim, top_name = scored[0]
         second_sim = scored[1][1] if len(scored) > 1 else 0.0
-        required_sim = max(float(presence_floor), float(thresholds.get(top_slug, presence_floor)))
+        # Contamination guard: a SECONDARY agent must clear a real similarity bar,
+        # not just presence_floor (0.35). With ~73 enrolled prints, the max-over-agents
+        # similarity of a customer/noise cluster routinely reaches 0.40-0.45 by chance,
+        # which previously surfaced off-call agent names (e.g. a customer labeled
+        # "Sylwia"). Genuine agents match their own print well above this floor.
+        required_sim = max(
+            float(presence_floor),
+            float(thresholds.get(top_slug, presence_floor)),
+            _env_float("SST_MULTI_AGENT_CLUSTER_MIN_SIM", 0.50),
+        )
         required_margin = float(margins.get(top_slug, _env_float("SST_MULTI_AGENT_CLUSTER_MIN_MARGIN", 0.10)))
         margin = top_sim - second_sim
         effective_margin = required_margin
@@ -518,6 +527,68 @@ def select_multi_agent_cluster_matches(
 # STAGE 3 — ROLE LABELING (no hardcoded "AGENT"/"CUSTOMER" strings — use constants)
 # ──────────────────────────────────────────────────────────────────────────────
 
+def _merge_customer_clusters(
+    speaker_segments: List[Dict],
+    cluster_centroids: Dict[str, np.ndarray],
+    protected_speakers: set,
+    merge_threshold: float,
+) -> Tuple[List[Dict], Dict[str, str]]:
+    """Collapse non-agent (customer) clusters whose centroids are near-duplicates.
+
+    Sortformer routinely over-segments a SINGLE customer on 8 kHz phone audio into
+    SPEAKER_01 / SPEAKER_02 / ... which then surface to QA as "Customer 2 / 3".
+    We merge any two NON-protected clusters whose centroid cosine >= threshold
+    (single-linkage via union-find). Protected speakers (matched agents) are never
+    touched — they are neither merged away nor used to absorb a customer cluster.
+
+    Centroids from compute_cluster_centroids() are already L2-normalised, so a dot
+    product is the cosine similarity.
+
+    Returns the rewritten segments and the {old_speaker: canonical_speaker} map.
+    """
+    protected = set(protected_speakers or set())
+    candidates = [spk for spk in cluster_centroids.keys() if spk not in protected]
+    if len(candidates) < 2:
+        return speaker_segments, {}
+
+    parent: Dict[str, str] = {spk: spk for spk in candidates}
+
+    def _find(x: str) -> str:
+        root = x
+        while parent[root] != root:
+            root = parent[root]
+        while parent[x] != root:
+            parent[x], x = root, parent[x]
+        return root
+
+    def _union(a: str, b: str) -> None:
+        ra, rb = _find(a), _find(b)
+        if ra == rb:
+            return
+        # Canonical id = lexicographically smaller == earliest arrival (zero-padded).
+        lo, hi = (ra, rb) if ra <= rb else (rb, ra)
+        parent[hi] = lo
+
+    for i in range(len(candidates)):
+        for j in range(i + 1, len(candidates)):
+            a, b = candidates[i], candidates[j]
+            ca, cb = cluster_centroids.get(a), cluster_centroids.get(b)
+            if ca is None or cb is None:
+                continue
+            if float(np.dot(ca, cb)) >= merge_threshold:
+                _union(a, b)
+
+    mapping = {spk: _find(spk) for spk in candidates if _find(spk) != spk}
+    if not mapping:
+        return speaker_segments, {}
+
+    out = []
+    for s in speaker_segments:
+        spk = s.get("speaker")
+        out.append({**s, "speaker": mapping[spk]} if spk in mapping else s)
+    return out, mapping
+
+
 def assign_roles(
     speaker_segments: List[Dict],
     agent_speaker_id: Optional[str],
@@ -581,9 +652,142 @@ def assign_roles(
     return out
 
 
+def stabilize_role_flips(
+    segments: List[Dict],
+    *,
+    max_flip_seconds: float = 1.0,
+    role_key: str = "identified_speaker",
+) -> Tuple[List[Dict], int]:
+    """Temporal hysteresis: flip isolated short role-outliers to match agreeing neighbours.
+
+    Per-segment voiceprint scoring decides each segment independently, so a lone
+    CUSTOMER lands inside a continuous AGENT run (or vice-versa) whenever a short
+    window dips below / above the similarity floor — the systemic "keeps switching
+    Agent to Customer" and "a little noise flips the label" feedback.
+
+    A segment is flipped ONLY when ALL hold:
+      * it is short (duration <= max_flip_seconds),
+      * its previous AND next segments share the SAME role, different from this one,
+      * both roles are real AGENT/CUSTOMER labels (UNKNOWN is left alone),
+      * its own diarized speaker cluster does not already have a clearly
+        established role that agrees with its current (pre-flip) label.
+    Sustained turns are never touched. Decisions use a snapshot of the original roles
+    so a flipped segment cannot cascade into its neighbour within one pass.
+
+    The cluster-establishment check exists because a short segment sandwiched
+    between two opposite-role turns is not always noise: a real "yeah"/"wow"
+    backchannel from the other party looks identical to this function's target
+    pattern. Without it, a customer's brief interjection between two agent turns
+    (or vice versa) gets relabeled to match its neighbours purely on sandwich
+    shape, even though its own speaker cluster is, e.g., 98% customer across the
+    whole call. Requiring the cluster to lack an established opposing history
+    keeps the hysteresis fix for genuine noise while sparing real short turns
+    from an already well-identified speaker.
+
+    Returns (new_segments, num_flipped).
+    """
+    if len(segments) < 3:
+        return [dict(s) for s in segments], 0
+
+    real_roles = {LABEL_AGENT, LABEL_CUSTOMER}
+    original_roles = [str(s.get(role_key) or LABEL_UNKNOWN) for s in segments]
+    out = [dict(s) for s in segments]
+    flipped = 0
+
+    # Duration-weighted per-speaker-cluster role vote from the ORIGINAL roles,
+    # used only to detect an already-established cluster identity below.
+    speaker_role_seconds: Dict[str, Dict[str, float]] = {}
+    for s, role in zip(segments, original_roles):
+        if role not in real_roles:
+            continue
+        spk = str(s.get("speaker") or "")
+        if not spk:
+            continue
+        dur = max(float(s.get("end", 0.0)) - float(s.get("start", 0.0)), 0.0)
+        bucket = speaker_role_seconds.setdefault(spk, {LABEL_AGENT: 0.0, LABEL_CUSTOMER: 0.0})
+        bucket[role] += dur
+
+    established_min_seconds = float(os.getenv("SST_ROLE_FLIP_ESTABLISHED_MIN_SECONDS", "5.0") or "5.0")
+    established_min_ratio = float(os.getenv("SST_ROLE_FLIP_ESTABLISHED_MIN_RATIO", "0.85") or "0.85")
+
+    def _established_role(spk: str) -> Optional[str]:
+        bucket = speaker_role_seconds.get(spk)
+        if not bucket:
+            return None
+        total = bucket[LABEL_AGENT] + bucket[LABEL_CUSTOMER]
+        if total < established_min_seconds:
+            return None
+        dominant = LABEL_AGENT if bucket[LABEL_AGENT] >= bucket[LABEL_CUSTOMER] else LABEL_CUSTOMER
+        if bucket[dominant] / total < established_min_ratio:
+            return None
+        return dominant
+
+    for i in range(1, len(segments) - 1):
+        cur_role = original_roles[i]
+        prev_role = original_roles[i - 1]
+        next_role = original_roles[i + 1]
+        if prev_role != next_role or prev_role == cur_role:
+            continue
+        if prev_role not in real_roles or cur_role not in real_roles:
+            continue
+        cur = segments[i]
+        dur = max(float(cur.get("end", 0.0)) - float(cur.get("start", 0.0)), 0.0)
+        if dur > max_flip_seconds:
+            continue
+        if (
+            cur_role == LABEL_AGENT
+            and str(cur.get("role_voiceprint_repair") or "") == "target_segment_voiceprint"
+        ):
+            continue
+        if _established_role(str(cur.get("speaker") or "")) == cur_role:
+            continue
+
+        template = segments[i - 1]
+        seg = out[i]
+        seg[role_key] = prev_role
+        seg["display_speaker"] = template.get("display_speaker", prev_role)
+        if prev_role == LABEL_AGENT:
+            if template.get("agent_name") is not None:
+                seg["agent_name"] = template.get("agent_name")
+            if template.get("agent_slug") is not None:
+                seg["agent_slug"] = template.get("agent_slug")
+        else:
+            seg.pop("agent_name", None)
+            seg.pop("agent_slug", None)
+        seg["role_flip_stabilized"] = True
+        flipped += 1
+
+    return out, flipped
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # MAIN PIPELINE
 # ──────────────────────────────────────────────────────────────────────────────
+
+def next_diarization_fallback(
+    *,
+    current_backend: str,
+    was_streaming: bool,
+    has_hf_token: bool,
+    pyannote_fallback_enabled: bool = True,
+) -> Optional[str]:
+    """Decide the next diarization attempt after a failure (typically CUDA OOM).
+
+    State machine (current_backend, was_streaming):
+      sortformer + full      -> "streaming"   (chunked, much smaller GPU footprint)
+      sortformer + streaming -> "pyannote"    (if token+enabled; avoids all-customer collapse)
+      anything else          -> None          (give up; caller falls back to all-customer)
+
+    Returns "streaming" | "pyannote" | None.
+    """
+    if current_backend == "sortformer":
+        if not was_streaming:
+            return "streaming"
+        if pyannote_fallback_enabled and has_hf_token:
+            return "pyannote"
+        return None
+    return None
+
 
 def diarize_clean(
     audio_path: str,
@@ -636,7 +840,16 @@ def diarize_clean(
     else:
         raise ValueError(f"unknown backend: {backend}")
 
-    speaker_segments = diarizer.diarize(audio_path, max_speakers=max_speakers)
+    try:
+        speaker_segments = diarizer.diarize(audio_path, max_speakers=max_speakers)
+    finally:
+        # NeMo Sortformer can retain enough CUDA memory to poison the next retry.
+        unload = getattr(diarizer, "unload", None)
+        if callable(unload):
+            try:
+                unload()
+            except Exception:
+                pass
     speaker_segments = _renumber_speakers_to_canonical(speaker_segments)
 
     speaker_count = len(set(s["speaker"] for s in speaker_segments))
@@ -731,6 +944,22 @@ def diarize_clean(
                 },
             )
 
+    # ── Stage 2.5: Merge over-segmented customer clusters (systemic fix) ──
+    # Sortformer often splits a single customer into multiple clusters on phone
+    # audio, surfacing as "Customer 2/3". Collapse near-duplicate NON-agent
+    # clusters before labeling. Protected = every matched agent cluster.
+    customer_cluster_merges: Dict[str, str] = {}
+    if _env_bool("SST_CUSTOMER_CLUSTER_MERGE", True):
+        protected_speakers = set(multi_agent_matches.keys())
+        if agent_spk:
+            protected_speakers.add(agent_spk)
+        merge_sim = _env_float("SST_CUSTOMER_CLUSTER_MERGE_SIM", 0.50)
+        speaker_segments, customer_cluster_merges = _merge_customer_clusters(
+            speaker_segments, cluster_centroids, protected_speakers, merge_sim
+        )
+        if customer_cluster_merges:
+            logger.info("Merged over-segmented customer clusters: %s", customer_cluster_merges)
+
     labeled_speaker_segments = assign_roles(
         speaker_segments,
         agent_spk,
@@ -764,6 +993,7 @@ def diarize_clean(
         "cluster_durations": {k: round(float(v), 3) for k, v in speaker_durations.items()},
         "agent_cluster_decision": agent_decision,
         "multi_agent_cluster_matches": multi_agent_matches,
+        "customer_cluster_merges": customer_cluster_merges,
         "identified_agents": [
             {
                 "speaker": spk,
@@ -823,10 +1053,10 @@ def _overlay_speakers_on_text(text_segments: List[Dict], speaker_segments: List[
     claiming a full customer utterance.
     """
     pad_s = float(os.getenv("SST_ROLE_OVERLAY_PAD_S", "0.35") or "0.35")
-    agent_min_ratio = float(os.getenv("SST_AGENT_OVERLAY_MIN_RATIO", "0.30") or "0.30")
-    agent_min_seconds = float(os.getenv("SST_AGENT_OVERLAY_MIN_SECONDS", "0.35") or "0.35")
-    agent_margin_ratio = float(os.getenv("SST_AGENT_OVERLAY_MARGIN_RATIO", "1.25") or "1.25")
-    agent_margin_seconds = float(os.getenv("SST_AGENT_OVERLAY_MARGIN_SECONDS", "0.15") or "0.15")
+    agent_min_ratio = float(os.getenv("SST_AGENT_OVERLAY_MIN_RATIO", "0.25") or "0.25")
+    agent_min_seconds = float(os.getenv("SST_AGENT_OVERLAY_MIN_SECONDS", "0.20") or "0.20")
+    agent_margin_ratio = float(os.getenv("SST_AGENT_OVERLAY_MARGIN_RATIO", "1.03") or "1.03")
+    agent_margin_seconds = float(os.getenv("SST_AGENT_OVERLAY_MARGIN_SECONDS", "0.02") or "0.02")
 
     out = []
     for ts in text_segments:
@@ -860,9 +1090,9 @@ def _overlay_speakers_on_text(text_segments: List[Dict], speaker_segments: List[
             if chosen_role == LABEL_AGENT:
                 agent_overlap = role_scores.get(LABEL_AGENT, 0.0)
                 customer_overlap = role_scores.get(LABEL_CUSTOMER, 0.0)
-                enough_agent_overlap = (
-                    agent_overlap >= min(agent_min_seconds, max(ts_dur * 0.60, 0.05))
-                    and (agent_overlap / ts_dur) >= agent_min_ratio
+                enough_agent_overlap = agent_overlap >= min(
+                    agent_min_seconds,
+                    max(ts_dur * agent_min_ratio, 0.05),
                 )
                 agent_dominates = agent_overlap >= (customer_overlap * agent_margin_ratio + agent_margin_seconds)
                 if not (enough_agent_overlap and agent_dominates):
